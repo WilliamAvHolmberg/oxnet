@@ -1,0 +1,22 @@
+h1 proxies
+table
+  tr
+    th IP
+    th Location
+    th Username
+    th Password
+    th Created At
+    th Linked Account
+  - @proxies.each do |proxy|
+    tr
+      th
+        a href="/proxies/#{proxy.id}" = proxy.ip
+      th = proxy.location
+      th = proxy.username
+      th = proxy.password
+      th = proxy.created_at
+      - if proxy.account_id != nil
+        th = Account.find(proxy.account_id).login
+      - else
+        th = "None"
+= link_to 'New', new_proxy_path

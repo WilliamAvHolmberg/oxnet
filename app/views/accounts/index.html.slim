@@ -1,0 +1,29 @@
+h1 Accounts
+table
+  tr
+    th ID
+    th Login
+    th Password
+    th Proxy
+    th Time Since logged in (Minutes)
+    th Total time logged in
+    th Money Invested
+    th Money Made
+    th Created At
+  - @accounts.each do |account|
+    tr
+      th = account.id
+      th
+        a href="/accounts/#{account.id}" = account.login
+      th = account.password
+      - if account.proxy != nil
+        th
+          a href="/proxies/#{account.proxy.id}/" = account.proxy.ip
+      - else
+        th = "None"
+      th = account.time_since_last_log
+      th Todo
+      th Todo
+      th Todo
+      th = account.created_at
+= link_to 'New', new_account_path

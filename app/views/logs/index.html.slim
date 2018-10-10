@@ -1,0 +1,18 @@
+h1 Logs
+table
+  tr
+    th ID
+    th Text
+    th Created At
+    th Linked Account
+  - @logs.each do |log|
+    tr
+      th
+        a href="/logs/#{log.id}" = log.id
+      th = log.text
+      th = log.created_at
+      - if log.account_id != nil
+        th = Account.find(log.account_id).login
+      - else
+        th = "None"
+= link_to 'New', new_log_path

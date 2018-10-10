@@ -1,0 +1,14 @@
+= form_with model: @log, local: true do |form|
+  - if @log.errors.any?
+    div id="error_explanation"
+      h2 = pluralize(@log.errors.count, "Error")
+      h2 = "Prohibited this log from being saved"
+      ul
+        -@log.errors.full_messages.each do |msg|
+          li = msg
+
+  p = form.label      :text
+  p = form.text_field :text
+
+  = collection_select(nil, :account_id, Account.all, :id, :login, {:include_blank => 'None'}, prompt:true, :selected => @log.account_id)
+  p = form.submit

@@ -1,0 +1,19 @@
+= form_with model: @proxy, local: true do |form|
+  - if @proxy.errors.any?
+    div id="error_explanation"
+      h2 = pluralize(@proxy.errors.count, "Error")
+      h2 = "Prohibited this proxy from being saved"
+      ul
+        -@proxy.errors.full_messages.each do |msg|
+          li = msg
+
+  p = form.label      :location
+  p = form.text_field :location
+  p = form.label      :ip
+  p = form.text_field :ip
+  p = form.label      :username
+  p = form.text_field :username
+  p = form.label      :password
+  p = form.text_field :password
+  = collection_select(nil, :account_id, Account.all, :id, :login, {:include_blank => 'None'}, prompt:true, :selected => @proxy.account_id)
+  p = form.submit

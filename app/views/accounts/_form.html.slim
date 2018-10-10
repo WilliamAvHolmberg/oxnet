@@ -1,0 +1,16 @@
+= form_with model: @account, local: true do |form|
+  - if @account.errors.any?
+    div id="error_explanation"
+      h2 = pluralize(@account.errors.count, "Error")
+      h2 = "Prohibited this account from being saved"
+      ul
+        -@account.errors.full_messages.each do |msg|
+          li = msg
+
+  p = form.label      :login
+  p = form.text_field :login
+  p = form.label      :password
+  p = form.text_field :password
+  - @available_proxies = Proxy.where(account_id: [false, nil])
+  = collection_select(nil, :proxy_id, @available_proxies, :id, :ip)
+  p = form.submit

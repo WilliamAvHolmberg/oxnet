@@ -1,0 +1,48 @@
+class ProxiesController < ApplicationController
+  def index
+    @proxies = Proxy.all
+  end
+  def show
+    @proxy = Proxy.find(params[:id])
+  end
+
+  def new
+    @proxy = Proxy.new
+  end
+
+  def edit
+    @proxy = Proxy.find(params[:id])
+  end
+
+
+
+  def create
+    @proxy = Proxy.new(proxy_params)
+    @proxy.update(:account_id => params[:account_id])
+    @proxy.save
+    redirect_to @proxy
+  end
+
+  def update
+    @proxy = Proxy.find(params[:id])
+
+    if @proxy.update(proxy_params)
+      @proxy.update(:account_id => params[:account_id])
+      redirect_to @proxy
+    else
+      render 'edit'
+    end
+  end
+
+  def destroy
+    @proxy = Proxy.find(params[:id])
+    @proxy.destroy
+
+    redirect_to proxies_path
+  end
+
+  private
+  def proxy_params
+    params.require(:proxy).permit(:location, :ip, :username, :password, :account_id)
+  end
+end

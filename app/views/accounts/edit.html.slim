@@ -1,0 +1,4 @@
+h1 Edit Account
+= render 'form'
+= link_to 'Destroy', account_path(@account), method: :delete, data: { confirm: 'Are you sure?'}
+= link_to 'Back', accounts_path

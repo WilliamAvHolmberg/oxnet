@@ -9,3 +9,4 @@ application up and running.
 visit website< localhost:3000/accounts
 
 
+<ruby nexus.rb

@@ -1,0 +1,25 @@
+h1 Listing computers
+
+table
+  thead
+    tr
+      th Ip
+      th Name
+      th Connected?
+      th Time Online
+      th
+
+  tbody
+    - @computers.each do |computer|
+      tr
+        td = computer.ip
+        td = computer.name
+        td = computer.is_connected
+        td = computer.get_time_online
+        td = link_to 'Show', computer
+        td = link_to 'Edit', edit_computer_path(computer)
+        td = link_to 'Destroy', computer, data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+
+= link_to 'New Computer', new_computer_path

@@ -1,0 +1,15 @@
+p#notice = notice
+
+p
+  strong Ip:
+  = @computer.ip
+p
+  strong Name:
+  = @computer.name
+- @computer.logs.each do |log|
+  p = log.created_at
+  p = log.text
+
+=> link_to 'Edit', edit_computer_path(@computer)
+'|
+=< link_to 'Back', computers_path

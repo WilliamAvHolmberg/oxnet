@@ -1,0 +1,24 @@
+= form_for @instruction do |f|
+  - if @instruction.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@instruction.errors.count, "error")} prohibited this instruction from being saved:"
+      ul
+        - @instruction.errors.full_messages.each do |message|
+          li = message
+
+  .field
+    - @available_computers = Computer.all.select {|comp| comp.is_connected}
+    - if @available_computers.length == 0
+      p = "There are no available computers at the moment"
+    - else
+      = f.label :instruction_type
+      = collection_select(:instruction, :computer_id, @available_computers, :id, :name)
+      - @instruction_types= InstructionType.all
+      - if @instruction_types.length != 0
+        = f.label :instruction_type
+        = collection_select(:instruction, :instruction_type_id, @instruction_types, :id, :name)
+      - else
+        = "Please create an instruction type before creating the instruction"
+    .actions = f.submit
+
+

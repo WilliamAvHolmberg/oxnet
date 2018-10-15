@@ -1,0 +1,24 @@
+h1 Listing instructions
+
+table
+  thead
+    tr
+      th Instruction type
+      th Computer name
+      th Executed?
+      th
+      th
+
+  tbody
+    - @instructions.each do |instruction|
+      tr
+        td = instruction.instruction_type.name
+        td = Computer.find(instruction.computer_id).name
+        td = instruction.completed
+        td = link_to 'Show', instruction
+        td = link_to 'Edit', edit_instruction_path(instruction)
+        td = link_to 'Destroy', instruction, data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+
+= link_to 'New Instruction', new_instruction_path

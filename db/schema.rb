@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_11_165428) do
+ActiveRecord::Schema.define(version: 2018_10_14_201220) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,22 @@ ActiveRecord::Schema.define(version: 2018_10_11_165428) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_computers_on_name", unique: true
+  end
+
+  create_table "instruction_types", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "instructions", force: :cascade do |t|
+    t.bigint "instruction_type_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "computer_id"
+    t.boolean "completed", default: false
+    t.index ["computer_id"], name: "index_instructions_on_computer_id"
+    t.index ["instruction_type_id"], name: "index_instructions_on_instruction_type_id"
   end
 
   create_table "logs", force: :cascade do |t|
@@ -55,4 +71,13 @@ ActiveRecord::Schema.define(version: 2018_10_11_165428) do
     t.index ["account_id"], name: "index_proxies_on_account_id"
   end
 
+  create_table "rooms", force: :cascade do |t|
+    t.string "name"
+    t.integer "number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["number"], name: "index_rooms_on_number", unique: true
+  end
+
+  add_foreign_key "instructions", "instruction_types"
 end

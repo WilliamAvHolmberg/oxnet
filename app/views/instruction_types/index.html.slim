@@ -1,0 +1,21 @@
+h1 Listing instruction_types
+
+table
+  thead
+    tr
+      th Name
+      th
+      th
+      th
+
+  tbody
+    - @instruction_types.each do |instruction_type|
+      tr
+        td = instruction_type.name
+        td = link_to 'Show', instruction_type
+        td = link_to 'Edit', edit_instruction_type_path(instruction_type)
+        td = link_to 'Destroy', instruction_type, data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+
+= link_to 'New Instruction type', new_instruction_type_path

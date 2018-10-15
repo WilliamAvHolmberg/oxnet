@@ -5,6 +5,9 @@ require_relative './models/account'
 require_relative './models/proxy'
 require_relative './models/log'
 require_relative './models/computer'
+require_relative './models/instruction'
+require_relative './models/instruction_type'
+
 
 
 def db_configuration
@@ -20,13 +23,17 @@ def get_respond(instruction_queue)
   if instruction_queue.empty?
     return "logged:fine"
   else
-    return instruction_queue.pop
+    ins = instruction_queue.pop
+    if ins.instruction_type.name == "NEW_CLIENT"
+      ins.update(:completed => true)
+    return "account_request"
+    end
+    return "logged:f"
   end
 end
 
+
 def computer_thread(client, computer)
-  instruction_queue = []
-  instruction_queue << "account_request"
   puts "started Thread for:#{computer.name} at ip:#{computer.ip}"
   while(!client.closed?)
     respond = client.gets.split(":")
@@ -45,17 +52,13 @@ def computer_thread(client, computer)
 
       end
     elsif respond[0] == "log"
+      #get new instructions
+      instruction_queue = Instruction.all.select{|ins| ins.computer_id = computer.id && ins.completed == false}
       puts "Log from: #{computer.name}:::log:#{respond}"
       log = Log.new(computer_id: computer.id, text: respond)
       log.save
       client.puts get_respond(instruction_queue)
     else
-
-
-
-
-
-
       client.puts "ok"
     end
     puts respond
@@ -84,14 +87,28 @@ def script_thread(client)
   puts "Script Thread for: #{client} has been closed"
 end
 
+def controller_thread
+  array = [Computer.all.length]
+  while true
+    instructions = Instruction.all.select{|ins| ins.completed == false}
+    instructions.each do |instruction|
+      puts instruction.instruction_type.name
+      array[instruction.computer_id]  == instruction.instruction_type.name
+      puts array[instruction.computer_id]
+    end
+    #sleep 1000
+    sleep(1)
+  end
+end
 
 ActiveRecord::Base.establish_connection(db_configuration["development"])
 
 
 
 server = TCPServer.new 2099 #Server bind to port 2050
-
+#controllerThread = Thread.new(controller_thread)
 loop do
+  begin
   client = server.accept
 
   respond = client.gets.split(":")
@@ -111,6 +128,9 @@ loop do
     client.puts "connected:1"
   end
   thread.join
+  rescue
+    puts "error happened"
+  end
 end
 
 

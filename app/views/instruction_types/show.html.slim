@@ -1,0 +1,9 @@
+p#notice = notice
+
+p
+  strong Name:
+  = @instruction_type.name
+
+=> link_to 'Edit', edit_instruction_type_path(@instruction_type)
+'|
+=< link_to 'Back', instruction_types_path

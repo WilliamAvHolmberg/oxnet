@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_14_201220) do
+ActiveRecord::Schema.define(version: 2018_10_16_115004) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,6 +42,8 @@ ActiveRecord::Schema.define(version: 2018_10_14_201220) do
     t.datetime "updated_at", null: false
     t.bigint "computer_id"
     t.boolean "completed", default: false
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_instructions_on_account_id"
     t.index ["computer_id"], name: "index_instructions_on_computer_id"
     t.index ["instruction_type_id"], name: "index_instructions_on_instruction_type_id"
   end
@@ -79,5 +81,6 @@ ActiveRecord::Schema.define(version: 2018_10_14_201220) do
     t.index ["number"], name: "index_rooms_on_number", unique: true
   end
 
+  add_foreign_key "instructions", "accounts"
   add_foreign_key "instructions", "instruction_types"
 end

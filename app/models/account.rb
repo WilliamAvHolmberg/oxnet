@@ -1,6 +1,7 @@
 class Account < ApplicationRecord
   has_one :proxy
   has_many :logs
+  has_many :instructions
   validates_uniqueness_of :login
 
   def last_log

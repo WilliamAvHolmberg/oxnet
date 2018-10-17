@@ -4,7 +4,8 @@ p
   strong Instruction type:
   = @instruction.instruction_type.name
   strong Computer name:
-  = Computer.find(@instruction.computer_id).name
+  - if @instruction.computer_id != nil
+    = Computer.find(@instruction.computer_id).name
 
 => link_to 'Edit', edit_instruction_path(@instruction)
 '|

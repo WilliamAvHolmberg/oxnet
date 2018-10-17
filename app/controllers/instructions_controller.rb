@@ -1,6 +1,5 @@
 class InstructionsController < ApplicationController
   before_action :set_instruction, only: [:show, :edit, :update, :destroy]
-
   # GET /instructions
   # GET /instructions.json
   def index
@@ -14,6 +13,8 @@ class InstructionsController < ApplicationController
 
   # GET /instructions/new
   def new
+    @available_accounts = Account.all.select {|acc| acc.is_available}
+    @available_computers = Computer.all.select {|comp| comp.is_connected}
     @instruction = Instruction.new
   end
 
@@ -27,13 +28,28 @@ class InstructionsController < ApplicationController
     @instruction = Instruction.new(instruction_params)
 
     respond_to do |format|
-      if @instruction.save
+       if @instruction.save
         format.html { redirect_to @instruction, notice: 'Instruction was successfully created.' }
         format.json { render :show, status: :created, location: @instruction }
       else
         format.html { render :new }
         format.json { render json: @instruction.errors, status: :unprocessable_entity }
       end
+    end
+  end
+
+  def get_accounts
+    @available_computers
+    @instruction
+    puts "called"
+    instruction_type_id = params[:instruction_type_id]
+    puts instruction_type_id
+    ##1 == new client
+    ##2 == disconnect client
+    if instruction_type_id == "2"
+      @available_accounts = Account.all.select {|acc| acc.is_available}
+    elsif instruction_type_id == "3"
+      @available_accounts = Account.all.select {|acc| !acc.is_available}
     end
   end
 
@@ -69,6 +85,6 @@ class InstructionsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def instruction_params
-      params.require(:instruction).permit(:instruction_type_id, :computer_id)
+      params.require(:instruction).permit(:instruction_type_id, :computer_id, :account_id)
     end
 end

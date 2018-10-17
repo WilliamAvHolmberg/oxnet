@@ -19,14 +19,45 @@ def find_suitable_account
   return Account.all.select{|a| a.is_available}.first
 end
 
-def get_respond(instruction_queue)
+def computer_get_respond(instruction_queue)
   if instruction_queue.empty?
     return "logged:fine"
   else
     ins = instruction_queue.pop
-    if ins.instruction_type.name == "NEW_CLIENT"
+
+    if ins.instruction_type.name == "NEW_CLIENT" && ins.account == nil
       ins.update(:completed => true)
-    return "account_request"
+    return "account_request:0"
+    elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account.id != nil
+      ins.update(:completed => true)
+      world = "424"
+      script = "NEXUS"
+      res =  "account_request:1:" + ins.account.login + ":" + ins.account.password + ":" + ins.account.proxy.ip + ":" + world + ":" + script
+      log = Log.new(computer_id: ins.computer_id, account_id: ins.account.id, text: "Account:#{ins.account.login} Handed out to: #{ins.computer.name}")
+      log.save
+      return res
+    end
+    return "logged:f"
+  end
+end
+
+def account_get_respond(instruction_queue)
+  if instruction_queue.empty?
+    return "logged:fine"
+  else
+    ins = instruction_queue.pop
+
+    if ins.instruction_type.name == "NEW_CLIENT" && ins.account == nil
+      ins.update(:completed => true)
+      return "account_request:0"
+    elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account.id != nil
+      ins.update(:completed => true)
+      world = "424"
+      script = "NEXUS"
+      res =  "account_request:1:" + ins.account.login + ":" + ins.account.password + ":" + ins.account.proxy.ip + ":" + world + ":" + script
+      log = Log.new(computer_id: ins.computer_id, account_id: ins.account.id, text: "Account:#{ins.account.login} Handed out to: #{ins.computer.name}")
+      log.save
+      return res
     end
     return "logged:f"
   end
@@ -35,6 +66,7 @@ end
 
 def computer_thread(client, computer)
   puts "started Thread for:#{computer.name} at ip:#{computer.ip}"
+  puts " my computer id: #{computer.id}"
   while(!client.closed?)
     respond = client.gets.split(":")
     puts respond.length
@@ -53,11 +85,11 @@ def computer_thread(client, computer)
       end
     elsif respond[0] == "log"
       #get new instructions
-      instruction_queue = Instruction.all.select{|ins| ins.computer_id = computer.id && ins.completed == false}
+      instruction_queue = Instruction.all.select{|ins| ins.computer_id == computer.id && ins.completed == false && ins.is_relevant}
       puts "Log from: #{computer.name}:::log:#{respond}"
       log = Log.new(computer_id: computer.id, text: respond)
       log.save
-      client.puts get_respond(instruction_queue)
+      client.puts computer_get_respond(instruction_queue)
     else
       client.puts "ok"
     end
@@ -66,7 +98,7 @@ def computer_thread(client, computer)
   puts "Computer Thread for: #{client} has been closed"
 end
 
-def script_thread(client)
+def script_thread(client, account)
   while(!client.closed?)
     instruction_queue = []
     respond = client.gets.split(":")
@@ -77,6 +109,8 @@ def script_thread(client)
       client.puts "task_request:1:WOODCUTTING:99"
       puts "sent ass"
     elsif respond[0] == "log"
+      #get new instructions
+      instruction_queue = Instruction.all.select{|ins| ins.account.id == account.id && ins.completed == false && ins.is_relevant}
       puts "assignment: " + respond[1] + " playTime: " + respond[2]
       client.puts get_respond(instruction_queue)
     else
@@ -87,19 +121,7 @@ def script_thread(client)
   puts "Script Thread for: #{client} has been closed"
 end
 
-def controller_thread
-  array = [Computer.all.length]
-  while true
-    instructions = Instruction.all.select{|ins| ins.completed == false}
-    instructions.each do |instruction|
-      puts instruction.instruction_type.name
-      array[instruction.computer_id]  == instruction.instruction_type.name
-      puts array[instruction.computer_id]
-    end
-    #sleep 1000
-    sleep(1)
-  end
-end
+
 
 ActiveRecord::Base.establish_connection(db_configuration["development"])
 
@@ -116,7 +138,8 @@ loop do
     #start new thread for computer
     ip = respond[2]
     name = respond[3]
-    computer = Computer.find_or_create_by(:name => name, :ip => ip)
+    computer = Computer.find_or_create_by(:name => name)
+    computer.update(:ip => ip)
     puts "New Computer Thread started for: #{computer}}"
     thread = Thread.new{computer_thread(client, computer)}
     client.puts "connected:1"

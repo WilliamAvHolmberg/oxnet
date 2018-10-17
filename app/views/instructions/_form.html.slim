@@ -7,18 +7,20 @@
           li = message
 
   .field
-    - @available_computers = Computer.all.select {|comp| comp.is_connected}
     - if @available_computers.length == 0
       p = "There are no available computers at the moment"
     - else
-      = f.label :instruction_type
-      = collection_select(:instruction, :computer_id, @available_computers, :id, :name)
+      = f.label :computer
+      = collection_select(:instruction, :computer_id, @available_computers, :id, :name,{include_blank: 'None'})
       - @instruction_types= InstructionType.all
-      - if @instruction_types.length != 0
-        = f.label :instruction_type
-        = collection_select(:instruction, :instruction_type_id, @instruction_types, :id, :name)
-      - else
-        = "Please create an instruction type before creating the instruction"
+      #instruction_select
+        - if @instruction_types.length != 0
+          = f.label :instruction_type
+          = collection_select(:instruction, :instruction_type_id, @instruction_types, :id, :name)
+        - else
+          = "Please create an instruction type before creating the instruction"
+      = f.label :account_id
+      = collection_select(:instruction, :account_id, @available_accounts, :id, :login,{include_blank: 'None'},{:id => "account_selection"})
     .actions = f.submit
 
 

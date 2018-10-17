@@ -5,7 +5,9 @@ table
     tr
       th Instruction type
       th Computer name
+      th Account name
       th Executed?
+      th Relevant? (Less than 1 min since creation
       th
       th
 
@@ -13,8 +15,10 @@ table
     - @instructions.each do |instruction|
       tr
         td = instruction.instruction_type.name
-        td = Computer.find(instruction.computer_id).name
+        td = if instruction.computer != nil then instruction.computer.name else "none"
+        td = if instruction.account != nil then instruction.account.login else "none"
         td = instruction.completed
+        td = instruction.is_relevant
         td = link_to 'Show', instruction
         td = link_to 'Edit', edit_instruction_path(instruction)
         td = link_to 'Destroy', instruction, data: { confirm: 'Are you sure?' }, method: :delete

@@ -1,0 +1,27 @@
+h1 Listing tasks
+
+table
+  thead
+    tr
+      th Name
+      th Bank area
+      th Action area
+      th Task type
+      th
+      th
+      th
+
+  tbody
+    - @tasks.each do |task|
+      tr
+        td = task.name
+        td = task.bank_area.name if task.bank_area != nil
+        td = task.action_area.name
+        td = task.task_type.name
+        td = link_to 'Show', task
+        td = link_to 'Edit', edit_task_path(task)
+        td = link_to 'Destroy', task, data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+
+= link_to 'New Task', new_task_path

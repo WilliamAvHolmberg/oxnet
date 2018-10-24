@@ -1,0 +1,18 @@
+p#notice = notice
+
+p
+  strong Name:
+  = @task.name
+p
+  strong Bank area:
+  = @task.bank_area.name if @task.bank_area != nil
+p
+  strong Action area:
+  = @task.action_area.name
+p
+  strong Task type:
+  = @task.task_type.name
+
+=> link_to 'Edit', edit_task_path(@task)
+'|
+=< link_to 'Back', tasks_path

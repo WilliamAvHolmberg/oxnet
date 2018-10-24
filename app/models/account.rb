@@ -1,7 +1,8 @@
 class Account < ApplicationRecord
   has_one :proxy
-  has_many :logs
-  has_many :instructions
+  has_many :logs, dependent: :destroy
+  has_many :instructions, dependent: :destroy
+
   validates_uniqueness_of :login
 
   def last_log
@@ -20,7 +21,7 @@ class Account < ApplicationRecord
 
   def is_available
     #if difference is larger than 5 minutes  we can suppose that the account is not logged in
-    return time_since_last_log > 5
+    return time_since_last_log > 1
   end
 
   def get_time_online

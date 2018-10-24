@@ -1,0 +1,32 @@
+= form_for @task do |f|
+  - if @task.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@task.errors.count, "error")} prohibited this task from being saved:"
+      ul
+        - @task.errors.full_messages.each do |message|
+          li = message
+
+  .field
+    = f.label :name
+    = f.text_field :name
+  .field
+    - if @areas != nil && @areas.length > 0
+      = f.label :bank_area
+      = collection_select(:task, :bank_area_id, @areas, :id, :name, {include_blank: 'None'})
+    - else
+      = "Please create a area before creating the task"
+  .field
+    - if @areas != nil && @areas.length > 0
+      = f.label :action_area
+      = collection_select(:task, :action_area_id, @areas, :id, :name)
+    - else
+      = "Please create a area before creating the task"
+    .field
+      - if @task_types != nil && @task_types.length > 0
+        = f.label :task_type
+        = collection_select(:task, :task_type_id, @task_types, :id, :name, {:id => "task_type_selection"})
+      - else
+        = "Please create a area before creating the task"
+  #wc_task style="display: none"
+    = render partial: 'woodcutting_form', locals:{items: @items, f: f}
+  .actions = f.submit

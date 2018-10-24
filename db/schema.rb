@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_16_115004) do
+ActiveRecord::Schema.define(version: 2018_10_24_101140) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -18,6 +18,13 @@ ActiveRecord::Schema.define(version: 2018_10_16_115004) do
   create_table "accounts", force: :cascade do |t|
     t.string "login"
     t.string "password"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "areas", force: :cascade do |t|
+    t.string "name"
+    t.text "coordinates"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -43,9 +50,11 @@ ActiveRecord::Schema.define(version: 2018_10_16_115004) do
     t.bigint "computer_id"
     t.boolean "completed", default: false
     t.bigint "account_id"
+    t.bigint "script_id"
     t.index ["account_id"], name: "index_instructions_on_account_id"
     t.index ["computer_id"], name: "index_instructions_on_computer_id"
     t.index ["instruction_type_id"], name: "index_instructions_on_instruction_type_id"
+    t.index ["script_id"], name: "index_instructions_on_script_id"
   end
 
   create_table "logs", force: :cascade do |t|
@@ -81,6 +90,51 @@ ActiveRecord::Schema.define(version: 2018_10_16_115004) do
     t.index ["number"], name: "index_rooms_on_number", unique: true
   end
 
+  create_table "rs_items", force: :cascade do |t|
+    t.integer "itemId"
+    t.string "itemName"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "scripts", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "task_types", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "tasks", force: :cascade do |t|
+    t.string "name"
+    t.bigint "bank_area_id"
+    t.bigint "action_area_id"
+    t.bigint "task_type_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "axe_id"
+    t.string "treeName"
+    t.index ["action_area_id"], name: "index_tasks_on_action_area_id"
+    t.index ["axe_id"], name: "index_tasks_on_axe_id"
+    t.index ["bank_area_id"], name: "index_tasks_on_bank_area_id"
+    t.index ["task_type_id"], name: "index_tasks_on_task_type_id"
+  end
+
+  create_table "woodcutting_tasks", force: :cascade do |t|
+    t.string "treeName"
+    t.bigint "axe_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["axe_id"], name: "index_woodcutting_tasks_on_axe_id"
+  end
+
   add_foreign_key "instructions", "accounts"
   add_foreign_key "instructions", "instruction_types"
+  add_foreign_key "instructions", "scripts"
+  add_foreign_key "tasks", "task_types"
 end

@@ -1,0 +1,2 @@
+class RsItem < ApplicationRecord
+end

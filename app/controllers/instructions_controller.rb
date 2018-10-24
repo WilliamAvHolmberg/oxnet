@@ -16,6 +16,7 @@ class InstructionsController < ApplicationController
     @available_accounts = Account.all.select {|acc| acc.is_available}
     @available_computers = Computer.all.select {|comp| comp.is_connected}
     @instruction = Instruction.new
+    @scripts = Script.all
   end
 
   # GET /instructions/1/edit
@@ -43,12 +44,15 @@ class InstructionsController < ApplicationController
     @instruction
     puts "called"
     instruction_type_id = params[:instruction_type_id]
+    computer_id = params[:computer_id]
     puts instruction_type_id
-    ##1 == new client
-    ##2 == disconnect client
+    ##2 == new client
+    ##3 == disconnect client
     if instruction_type_id == "2"
+      puts "conn"
       @available_accounts = Account.all.select {|acc| acc.is_available}
     elsif instruction_type_id == "3"
+      puts "disco"
       @available_accounts = Account.all.select {|acc| !acc.is_available}
     end
   end
@@ -85,6 +89,6 @@ class InstructionsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def instruction_params
-      params.require(:instruction).permit(:instruction_type_id, :computer_id, :account_id)
+      params.require(:instruction).permit(:instruction_type_id, :computer_id, :account_id, :script_id)
     end
 end

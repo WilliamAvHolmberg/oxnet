@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  resources :rs_items
+  resources :tasks
+  resources :areas
+  resources :task_types
+  resources :scripts
   resources :instructions do
     collection do
       get 'get_accounts', to: "instructions#get_accounts"

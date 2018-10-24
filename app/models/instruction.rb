@@ -2,6 +2,7 @@ class Instruction < ApplicationRecord
   belongs_to :instruction_type
   belongs_to :account, optional: true
   belongs_to :computer, optional: true
+  belongs_to :script, optional: true
 
 
   def time_since_last_log

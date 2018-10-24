@@ -1,0 +1,12 @@
+p#notice = notice
+
+p
+  strong Name:
+  = @area.name
+p
+  strong Coordinates:
+  = @area.coordinates
+
+=> link_to 'Edit', edit_area_path(@area)
+'|
+=< link_to 'Back', areas_path

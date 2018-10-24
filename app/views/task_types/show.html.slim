@@ -1,0 +1,9 @@
+p#notice = notice
+
+p
+  strong Name:
+  = @task_type.name
+
+=> link_to 'Edit', edit_task_type_path(@task_type)
+'|
+=< link_to 'Back', task_types_path

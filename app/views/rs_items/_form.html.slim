@@ -1,0 +1,15 @@
+= form_for @rs_item do |f|
+  - if @rs_item.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@rs_item.errors.count, "error")} prohibited this rs_item from being saved:"
+      ul
+        - @rs_item.errors.full_messages.each do |message|
+          li = message
+
+  .field
+    = f.label :itemId
+    = f.number_field :itemId
+  .field
+    = f.label :itemName
+    = f.text_field :itemName
+  .actions = f.submit

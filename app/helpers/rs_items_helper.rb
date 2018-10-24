@@ -1,0 +1,2 @@
+module RsItemsHelper
+end

@@ -1,0 +1,14 @@
+
+.field
+  = f.label :treeName
+  = f.text_field :treeName
+.field
+  = f.label :axe
+  - if items != nil && items.length > 0
+    = f.label :instruction_type
+    = collection_select(:task, :axe_id, items, :id, :itemName)
+  - else
+    = "Please create an item before creating the task"
+
+
+

@@ -1,0 +1,12 @@
+p#notice = notice
+
+p
+  strong Itemid:
+  = @rs_item.itemId
+p
+  strong Itemname:
+  = @rs_item.itemName
+
+=> link_to 'Edit', edit_rs_item_path(@rs_item)
+'|
+=< link_to 'Back', rs_items_path

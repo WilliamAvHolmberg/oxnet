@@ -11,16 +11,24 @@
       p = "There are no available computers at the moment"
     - else
       = f.label :computer
-      = collection_select(:instruction, :computer_id, @available_computers, :id, :name,{include_blank: 'None'})
+      = collection_select(:instruction, :computer_id, @available_computers, :id, :name,{include_blank: 'None', :id => "computer_selection"})
+    #instruction_select
       - @instruction_types= InstructionType.all
-      #instruction_select
-        - if @instruction_types.length != 0
-          = f.label :instruction_type
-          = collection_select(:instruction, :instruction_type_id, @instruction_types, :id, :name)
-        - else
-          = "Please create an instruction type before creating the instruction"
+      - if @instruction_types != nil
+        = f.label :instruction_type
+        = collection_select(:instruction, :instruction_type_id, @instruction_types, :id, :name)
+      - else
+        = "Please create an instruction type before creating the instruction"
+    - if @available_accounts.length == 0
+        p = "no available accounts"
+    - else
       = f.label :account_id
-      = collection_select(:instruction, :account_id, @available_accounts, :id, :login,{include_blank: 'None'},{:id => "account_selection"})
+      = collection_select(:instruction, :account_id, @available_accounts, :id, :login,{:id => "account_selection",include_blank: 'None'},)
+    - if @scripts.length == 0
+      p = "no available script"
+    - else
+    = f.label :script_id
+    = collection_select(:instruction, :script_id, @scripts, :id, :name, {:id => "scirpt_selection"},)
     .actions = f.submit
 
 

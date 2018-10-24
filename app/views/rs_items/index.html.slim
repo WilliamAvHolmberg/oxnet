@@ -1,0 +1,23 @@
+h1 Listing rs_items
+
+table
+  thead
+    tr
+      th Itemid
+      th Itemname
+      th
+      th
+      th
+
+  tbody
+    - @rs_items.each do |rs_item|
+      tr
+        td = rs_item.itemId
+        td = rs_item.itemName
+        td = link_to 'Show', rs_item
+        td = link_to 'Edit', edit_rs_item_path(rs_item)
+        td = link_to 'Destroy', rs_item, data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+
+= link_to 'New Rs item', new_rs_item_path

@@ -1,0 +1,21 @@
+h1 Listing task_types
+
+table
+  thead
+    tr
+      th Name
+      th
+      th
+      th
+
+  tbody
+    - @task_types.each do |task_type|
+      tr
+        td = task_type.name
+        td = link_to 'Show', task_type
+        td = link_to 'Edit', edit_task_type_path(task_type)
+        td = link_to 'Destroy', task_type, data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+
+= link_to 'New Task type', new_task_type_path

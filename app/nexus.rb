@@ -7,6 +7,7 @@ require_relative './models/log'
 require_relative './models/computer'
 require_relative './models/instruction'
 require_relative './models/instruction_type'
+require_relative './models/script'
 
 
 
@@ -25,15 +26,26 @@ def computer_get_respond(instruction_queue)
   else
     ins = instruction_queue.pop
 
-    if ins.instruction_type.name == "NEW_CLIENT" && ins.account == nil
+    puts ins.account
+    puts ins.instruction_type
+    puts ins.script
+    puts ins.account.proxy
+    puts ins.account.password
+
+    if ins.instruction_type.name == "NEW_CLIENT" && ins.account_id == nil
       ins.update(:completed => true)
+      puts "wrong"
     return "account_request:0"
-    elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account.id != nil
+    elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account_id != nil
       ins.update(:completed => true)
       world = "424"
-      script = "NEXUS"
-      res =  "account_request:1:" + ins.account.login + ":" + ins.account.password + ":" + ins.account.proxy.ip + ":" + world + ":" + script
-      log = Log.new(computer_id: ins.computer_id, account_id: ins.account.id, text: "Account:#{ins.account.login} Handed out to: #{ins.computer.name}")
+      res =  "account_request:1:" + ins.account.login + ":" + ins.account.password + ":" + ins.account.proxy.ip + ":" + world + ":" + ins.script.name
+      puts "res is fine"
+      if ins.computer != nil
+        log = Log.new(computer_id: ins.computer_id, account_id: ins.account.id, text: "Account:#{ins.account.login} Handed out to: #{ins.computer.name}")
+      else
+        log = Log.new(account_id: ins.account.id, text: "Account:#{ins.account.login} Handed out to: #{ins.computer.name}")
+      end
       log.save
       return res
     end
@@ -47,17 +59,15 @@ def account_get_respond(instruction_queue)
   else
     ins = instruction_queue.pop
 
-    if ins.instruction_type.name == "NEW_CLIENT" && ins.account == nil
-      ins.update(:completed => true)
-      return "account_request:0"
-    elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account.id != nil
-      ins.update(:completed => true)
-      world = "424"
-      script = "NEXUS"
-      res =  "account_request:1:" + ins.account.login + ":" + ins.account.password + ":" + ins.account.proxy.ip + ":" + world + ":" + script
-      log = Log.new(computer_id: ins.computer_id, account_id: ins.account.id, text: "Account:#{ins.account.login} Handed out to: #{ins.computer.name}")
+    if ins.instruction_type.name == "DISCONNECT"
+      puts "dis"
+      res =  "disconnect:1:"
+      log = Log.new(computer_id: ins.computer_id, account_id: ins.account.id, text: "Account:#{ins.account.login} shall disconnect")
       log.save
+      ins.update(:completed => true)
       return res
+    else
+      return "logged:fine"
     end
     return "logged:f"
   end
@@ -77,7 +87,6 @@ def computer_thread(client, computer)
         client.puts "account_request:0"
       else
         world = "424"
-        script = "NEXUS"
         client.puts "account_request:1:" + account.login + ":" + account.password + ":" + account.proxy.ip + ":" + world + ":" + script
         log = Log.new(computer_id: computer.id, account_id: account.id, text: "Account:#{account.login} Handed out to: #{computer.name}")
         log.save
@@ -90,6 +99,7 @@ def computer_thread(client, computer)
       log = Log.new(computer_id: computer.id, text: respond)
       log.save
       client.puts computer_get_respond(instruction_queue)
+      puts "sent"
     else
       client.puts "ok"
     end
@@ -103,16 +113,14 @@ def script_thread(client, account)
     instruction_queue = []
     respond = client.gets.split(":")
     puts respond.length
-    if respond[0] == "account"
-      client.puts account.login + ":" + account.password + ":" + account.proxy.ip + ":" + world + ":" + script
-    elsif respond[0] == "task_request"
-      client.puts "task_request:1:WOODCUTTING:99"
-      puts "sent ass"
-    elsif respond[0] == "log"
-      #get new instructions
-      instruction_queue = Instruction.all.select{|ins| ins.account.id == account.id && ins.completed == false && ins.is_relevant}
-      puts "assignment: " + respond[1] + " playTime: " + respond[2]
-      client.puts get_respond(instruction_queue)
+    if respond[0] == "log"
+      #get new instructionsp
+      puts "name"
+      instruction_queue = Instruction.all.select{|ins|ins.is_relevant && ins.account_id == account.id && ins.completed == false}
+      log = Log.new(computer_id: nil, account_id: account.id, text: respond)
+      log.save
+      puts "logged"
+      client.puts account_get_respond(instruction_queue)
     else
       client.puts "ok"
     end
@@ -129,32 +137,37 @@ ActiveRecord::Base.establish_connection(db_configuration["development"])
 
 server = TCPServer.new 2099 #Server bind to port 2050
 #controllerThread = Thread.new(controller_thread)
-loop do
-  begin
-  client = server.accept
 
-  respond = client.gets.split(":")
-  if respond[0] == "computer"
-    #start new thread for computer
-    ip = respond[2]
-    name = respond[3]
-    computer = Computer.find_or_create_by(:name => name)
-    computer.update(:ip => ip)
-    puts "New Computer Thread started for: #{computer}}"
-    thread = Thread.new{computer_thread(client, computer)}
-    client.puts "connected:1"
-  elsif respond[0] == "script"
-    # start new thread for script
-    # respond[2] == account login
-    puts "New Script Thread started for: #{respond[2]}"
-    thread =  Thread.new{script_thread(client)}
-    client.puts "connected:1"
-  end
-  thread.join
-  rescue
-    puts "error happened"
+loop do
+  thread = nil
+  puts "waiting for con"
+  Thread.new server.accept do |client|
+    puts "new client: #{client}"
+    respond = client.gets.split(":")
+    if respond[0] == "computer"
+      #start new thread for computer
+      ip = respond[2]
+      name = respond[3]
+      computer = Computer.find_or_create_by(:name => name)
+      computer.update(:ip => ip)
+      puts "New Computer Thread started for: #{computer}}"
+      thread = Thread.new{computer_thread(client, computer)}
+      client.puts "connected:1"
+    elsif respond[0] == "script"
+      # start new thread for script
+      account = Account.find_or_create_by(:login => respond[3].strip!)
+      puts "New Script Thread started for: #{respond[3]}"
+      thread =  Thread.new{script_thread(client, account)}
+      client.puts "connected:1"
+    end
+    puts "joined new thread"
+    if thread != nil
+    thread.join
+    thread = nil
+    end
   end
 end
+
 
 
 

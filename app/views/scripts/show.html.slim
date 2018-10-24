@@ -1,0 +1,12 @@
+p#notice = notice
+
+p
+  strong Name:
+  = @script.name
+p
+  strong Description:
+  = @script.description
+
+=> link_to 'Edit', edit_script_path(@script)
+'|
+=< link_to 'Back', scripts_path

@@ -1,0 +1,23 @@
+h1 Listing areas
+
+table
+  thead
+    tr
+      th Name
+      th Coordinates
+      th
+      th
+      th
+
+  tbody
+    - @areas.each do |area|
+      tr
+        td = area.name
+        td = area.coordinates
+        td = link_to 'Show', area
+        td = link_to 'Edit', edit_area_path(area)
+        td = link_to 'Destroy', area, data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+
+= link_to 'New Area', new_area_path

@@ -1,0 +1,21 @@
+h1 Listing break_conditions
+
+table
+  thead
+    tr
+      th Name
+      th
+      th
+      th
+
+  tbody
+    - @break_conditions.each do |break_condition|
+      tr
+        td = break_condition.name
+        td = link_to 'Show', break_condition
+        td = link_to 'Edit', edit_break_condition_path(break_condition)
+        td = link_to 'Destroy', break_condition, data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+
+= link_to 'New Break condition', new_break_condition_path

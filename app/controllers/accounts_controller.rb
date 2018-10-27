@@ -9,10 +9,12 @@ class AccountsController < ApplicationController
 
   def new
     @account = Account.new
+    @schemas = Schema.all
   end
 
   def edit
     @account = Account.find(params[:id])
+    @schemas = Schema.all
   end
 
 
@@ -48,6 +50,6 @@ class AccountsController < ApplicationController
 
   private
   def account_params
-    params.require(:account).permit(:login, :password, :proxy_id)
+    params.require(:account).permit(:login, :password, :proxy_id, :schema_id)
   end
 end

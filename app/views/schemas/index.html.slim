@@ -1,0 +1,21 @@
+h1 Listing schemas
+
+table
+  thead
+    tr
+      th Name
+      th
+      th
+      th
+
+  tbody
+    - @schemas.each do |schema|
+      tr
+        td = schema.name
+        td = link_to 'Show', schema
+        td = link_to 'Edit', edit_schema_path(schema)
+        td = link_to 'Destroy', schema, data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+
+= link_to 'New Schema', new_schema_path

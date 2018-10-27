@@ -1,0 +1,12 @@
+= form_for @break_condition do |f|
+  - if @break_condition.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@break_condition.errors.count, "error")} prohibited this break_condition from being saved:"
+      ul
+        - @break_condition.errors.full_messages.each do |message|
+          li = message
+
+  .field
+    = f.label :name
+    = f.text_field :name
+  .actions = f.submit

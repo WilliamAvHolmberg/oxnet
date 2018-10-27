@@ -1,0 +1,9 @@
+p#notice = notice
+
+p
+  strong Name:
+  = @break_condition.name
+
+=> link_to 'Edit', edit_break_condition_path(@break_condition)
+'|
+=< link_to 'Back', break_conditions_path

@@ -11,6 +11,14 @@
   p = form.text_field :login
   p = form.label      :password
   p = form.text_field :password
+  #schema
+    .field
+      - if @schemas != nil && @schemas.length > 0
+        = form.label :schema
+        = collection_select(:account, :schema_id, @schemas, :id, :name)
+      - else
+        = "Please create a schema before associating to account"
   - @available_proxies = Proxy.where(account_id: [false, nil])
+  p = form.label :proxy
   = collection_select(nil, :proxy_id, @available_proxies, :id, :ip)
   p = form.submit

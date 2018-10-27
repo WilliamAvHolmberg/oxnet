@@ -5,7 +5,7 @@ table
   tr
     th Time
     th Text
-  - @account.logs.each do |log|
+  - @account.logs.reverse.each do |log|
     tr
       th = log.created_at
       th = log.text

@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :schemas
+  resources :break_conditions
   resources :rs_items
   resources :tasks
   resources :areas

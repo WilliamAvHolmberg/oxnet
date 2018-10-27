@@ -29,4 +29,26 @@
         = "Please create a area before creating the task"
   #wc_task style="display: none"
     = render partial: 'woodcutting_form', locals:{items: @items, f: f}
+  #break_condition
+    .field
+      - if @break_conditions != nil && @break_conditions.length > 0
+        = f.label :break_condition
+        = collection_select(:task, :break_condition_id, @break_conditions, :id, :name, {:id => "break_condition_selection"})
+    .field
+      = f.label :break_after
+      = select(:task, :break_after, options_for_select(0..500))
+  #time_selection
+    .field
+      = f.label :start_time
+      = f.time_select :start_time
+    .field
+      = f.label :end_time
+      = f.time_select :end_time
+  #schema
+    .field
+      - if @schemas != nil && @schemas.length > 0
+        = f.label :schema
+        = collection_select(:task, :schema_id, @schemas, :id, :name)
+      - else
+        = "Please create a area before creating the task"
   .actions = f.submit

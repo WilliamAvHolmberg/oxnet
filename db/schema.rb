@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_24_101140) do
+ActiveRecord::Schema.define(version: 2018_10_27_204957) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,11 +20,19 @@ ActiveRecord::Schema.define(version: 2018_10_24_101140) do
     t.string "password"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "schema_id"
+    t.index ["schema_id"], name: "index_accounts_on_schema_id"
   end
 
   create_table "areas", force: :cascade do |t|
     t.string "name"
     t.text "coordinates"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "break_conditions", force: :cascade do |t|
+    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -97,6 +105,12 @@ ActiveRecord::Schema.define(version: 2018_10_24_101140) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "schemas", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "name"
+  end
+
   create_table "scripts", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -119,9 +133,16 @@ ActiveRecord::Schema.define(version: 2018_10_24_101140) do
     t.datetime "updated_at", null: false
     t.bigint "axe_id"
     t.string "treeName"
+    t.bigint "break_condition_id"
+    t.integer "break_after"
+    t.time "start_time"
+    t.time "end_time"
+    t.bigint "schema_id"
     t.index ["action_area_id"], name: "index_tasks_on_action_area_id"
     t.index ["axe_id"], name: "index_tasks_on_axe_id"
     t.index ["bank_area_id"], name: "index_tasks_on_bank_area_id"
+    t.index ["break_condition_id"], name: "index_tasks_on_break_condition_id"
+    t.index ["schema_id"], name: "index_tasks_on_schema_id"
     t.index ["task_type_id"], name: "index_tasks_on_task_type_id"
   end
 
@@ -133,8 +154,11 @@ ActiveRecord::Schema.define(version: 2018_10_24_101140) do
     t.index ["axe_id"], name: "index_woodcutting_tasks_on_axe_id"
   end
 
+  add_foreign_key "accounts", "schemas"
   add_foreign_key "instructions", "accounts"
   add_foreign_key "instructions", "instruction_types"
   add_foreign_key "instructions", "scripts"
+  add_foreign_key "tasks", "break_conditions"
+  add_foreign_key "tasks", "schemas"
   add_foreign_key "tasks", "task_types"
 end

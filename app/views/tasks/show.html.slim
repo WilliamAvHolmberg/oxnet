@@ -12,6 +12,27 @@ p
 p
   strong Task type:
   = @task.task_type.name
+p
+  strong Axe:
+  = @task.axe.itemName
+p
+  strong Break Condition:
+  = @task.break_condition.name
+p
+  strong Break After:
+  = @task.break_after
+p
+  strong Start time:
+  = @task.start_time
+p
+  strong End time
+  = @task.end_time
+p
+  strong Task duration
+  = " #{@task.get_task_duration.round} minutes"
+p
+  strong Schema
+  = @task.schema.name
 
 => link_to 'Edit', edit_task_path(@task)
 '|

@@ -1,16 +1,9 @@
 require 'socket'
 require 'active_record'
 require_relative '../app/models/application_record'
-require_relative './models/account'
-require_relative './models/proxy'
-require_relative './models/log'
-require_relative './models/computer'
-require_relative './models/instruction'
-require_relative './models/instruction_type'
-require_relative './models/script'
 
 
-
+@hello = 0
 def db_configuration
   db_configuration_file = File.join(File.expand_path('..', __FILE__), '..', 'config', 'database.yml')
   YAML.load(File.read(db_configuration_file))
@@ -53,7 +46,7 @@ def computer_get_respond(instruction_queue)
   end
 end
 
-def account_get_respond(instruction_queue)
+def account_get_instruction_respond(instruction_queue)
   if instruction_queue.empty?
     return "logged:fine"
   else
@@ -61,7 +54,7 @@ def account_get_respond(instruction_queue)
 
     if ins.instruction_type.name == "DISCONNECT"
       puts "dis"
-      res =  "disconnect:1:"
+      res =  "DISCONNECT:1:"
       log = Log.new(computer_id: ins.computer_id, account_id: ins.account.id, text: "Account:#{ins.account.login} shall disconnect")
       log.save
       ins.update(:completed => true)
@@ -71,6 +64,82 @@ def account_get_respond(instruction_queue)
     end
     return "logged:f"
   end
+end
+
+def account_get_direct_respond(message, account)
+  if message == nil
+    return "logged:fine"
+  else
+
+   if message == "task_request"
+      #one time do wc task
+      # one time do break..
+      # repeat (mod 2)
+      #
+      # get account.schema
+      # check if any available task
+      puts "before getting task"
+      task = account.schema.get_suitable_task
+      puts "after getting task"
+      if task != nil
+        puts "in task not nil"
+        res = get_task_respond(task,account)
+        return res
+      else
+        task_id = 0
+        #task = get when next task starts
+        res = "task_respond:1:BREAK:#{task_id}:TIME:1"
+        return res
+      end
+    else
+      return "logged:fine"
+    end
+    return "logged:f"
+  end
+end
+
+def get_task_respond(task, account)
+  task_type = task.task_type.name
+  puts "task type good"
+  if task.bank_area != nil
+    bank_area = task.bank_area.coordinates
+  else
+    bank_area = "none"
+  end
+  puts "bank not good"
+  action_area = task.action_area.coordinates
+  axeID = task.axe.itemId
+  axe_name = task.axe.itemName
+  tree_name = task.treeName
+  task_duration = ((task.get_end_time - Time.now.change(:month => 1, :day => 1, :year => 2000))/60).round
+  puts task_duration
+  log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
+  log.save
+  puts "all good saved log n all"
+  return "task_respond:1:#{task_type}:#{task.id}:#{bank_area}:#{action_area}:#{axeID}:#{axe_name}:#{tree_name}:TIME:#{task_duration}"
+end
+def get_wc_task_respond(account)
+  task = Task.first
+  task_type = task.task_type.name
+
+  if task.bank_area != nil
+    bank_area = task.bank_area.coordinates
+  else
+    bank_area = "none"
+  end
+  action_area = task.action_area.coordinates
+  axeID = task.axe.itemId
+  axe_name = task.axe.itemName
+  tree_name = task.treeName
+  puts "fine untill break"
+  break_condition = task.break_condition.name
+  puts "fine after break condition:#{break_condition}"
+  break_after = task.break_after
+  puts "fine after break after :#{break_after}"
+  puts "all fineasd:#{task.id}"
+  log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
+  log.save
+  return "task_respond:1:#{task_type}:#{task.id}:#{bank_area}:#{action_area}:#{axeID}:#{axe_name}:#{tree_name}:#{break_condition}:#{break_after}"
 end
 
 
@@ -112,15 +181,20 @@ def script_thread(client, account)
   while(!client.closed?)
     instruction_queue = []
     respond = client.gets.split(":")
-    puts respond.length
+    puts respond
     if respond[0] == "log"
       #get new instructionsp
-      puts "name"
       instruction_queue = Instruction.all.select{|ins|ins.is_relevant && ins.account_id == account.id && ins.completed == false}
       log = Log.new(computer_id: nil, account_id: account.id, text: respond)
       log.save
-      puts "logged"
-      client.puts account_get_respond(instruction_queue)
+      client.puts account_get_instruction_respond(instruction_queue)
+    elsif respond[0] == "TASK_LOG"
+      log = Log.new(computer_id: nil, account_id: account.id, text: respond)
+      log.save
+      client.puts "ok"
+      #TODO, ADD XP GAINED TO account etc...
+    elsif respond[0] == "task_request"
+      client.puts account_get_direct_respond(respond[0], account)
     else
       client.puts "ok"
     end
@@ -137,7 +211,13 @@ ActiveRecord::Base.establish_connection(db_configuration["development"])
 
 server = TCPServer.new 2099 #Server bind to port 2050
 #controllerThread = Thread.new(controller_thread)
+def require_all(_dir)
+  Dir[File.expand_path(File.join(File.dirname(File.absolute_path(__FILE__)), _dir)) + "/**/*.rb"].each do |file|
+    require file
+  end
+end
 
+require_all("./models/")
 loop do
   thread = nil
   puts "waiting for con"

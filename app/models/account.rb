@@ -2,6 +2,7 @@ class Account < ApplicationRecord
   has_one :proxy
   has_many :logs, dependent: :destroy
   has_many :instructions, dependent: :destroy
+  belongs_to :schema
 
   validates_uniqueness_of :login
 

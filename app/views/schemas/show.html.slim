@@ -1,0 +1,30 @@
+p#notice = notice
+
+h2 = @schema.name
+
+h3 Accounts using this schema
+- @schema.accounts.all.each do |account|
+  p = account.login
+h3 Tasks associated to this schema
+table
+  th Name
+  th TaskType
+  th Start time
+  th End time
+  th Duration
+  - @schema.tasks.all.each do |task|
+    tr
+      td
+        a href="/tasks/#{task.id}"
+          = task.name
+      td = task.task_type.name
+      td = task.start_time
+      td = task.end_time
+      td = task.get_task_duration
+
+
+
+
+=> link_to 'Edit', edit_schema_path(@schema)
+'|
+=< link_to 'Back', schemas_path

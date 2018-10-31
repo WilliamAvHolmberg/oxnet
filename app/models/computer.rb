@@ -15,6 +15,21 @@ class Computer < ApplicationRecord
     end
   end
 
+  def time_since_last_log_nexus
+    if last_log == nil
+      return 50000000000
+    else
+      last_logged = last_log.created_at
+      current_time = Time.now
+      return ((current_time - last_logged)).round # difference in seconds
+    end
+  end
+
+
+  def is_available_to_nexus
+    return time_since_last_log_nexus < 30
+  end
+
   def is_connected
     #if difference is larger than 30 seconds we can suppose that the computer is still connected to nexus
     return time_since_last_log < 30

@@ -26,25 +26,36 @@ class Account < ApplicationRecord
   end
 
   def get_time_online
-    logs = logs.all
     start_log = nil
     total_time = 0
     if logs != nil
+      puts logs.length
       logs.each_with_index do |current_log, index|
-        nextLog = logs.get(index)
+        puts "loop:#{index}"
+        nextLog = logs[index+1]
         if start_log == nil
           start_log = current_log
         elsif nextLog == nil
-          total_time += (current_log.created_at - start_log.created_at)/60
+          time = (current_log.created_at - start_log.created_at)
+          puts time
+          total_time += time
           return total_time
-        elsif nextLog.created_at - current_log.created_at/60 > 5
-          total_time += (current_log.created_at - start_log.created_at)/60
+        elsif (nextLog.created_at - current_log.created_at) > 35
+          time = (current_log.created_at - start_log.created_at)
+          puts time
+          total_time += time
           start_log = nextLog
         end
       end
     else
       return 0
     end
+    return total_time
+  end
+
+
+  def shall_do_task
+    return schema.get_suitable_task != nil
   end
 
 end

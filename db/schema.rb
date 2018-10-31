@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_27_204957) do
+ActiveRecord::Schema.define(version: 2018_10_30_134019) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 2018_10_27_204957) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "schema_id"
+    t.boolean "banned", default: false
     t.index ["schema_id"], name: "index_accounts_on_schema_id"
   end
 
@@ -87,6 +88,7 @@ ActiveRecord::Schema.define(version: 2018_10_27_204957) do
     t.string "password"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "port"
     t.index ["account_id"], name: "index_proxies_on_account_id"
   end
 

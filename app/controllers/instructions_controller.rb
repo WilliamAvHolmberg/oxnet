@@ -13,7 +13,7 @@ class InstructionsController < ApplicationController
 
   # GET /instructions/new
   def new
-    @available_accounts = Account.all.select {|acc| acc.is_available}
+    @available_accounts = Account.all.select {|acc| acc.is_available && !acc.banned}
     @available_computers = Computer.all.select {|comp| comp.is_connected}
     @instruction = Instruction.new
     @scripts = Script.all

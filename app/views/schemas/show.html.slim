@@ -5,6 +5,7 @@ h2 = @schema.name
 h3 Accounts using this schema
 - @schema.accounts.all.each do |account|
   p = account.login
+  p = "total duration: #{@schema.total_time_per_day}"
 h3 Tasks associated to this schema
 table
   th Name

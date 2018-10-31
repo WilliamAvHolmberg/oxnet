@@ -32,7 +32,8 @@ def computer_get_respond(instruction_queue)
     elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account_id != nil
       ins.update(:completed => true)
       world = "424"
-      res =  "account_request:1:" + ins.account.login + ":" + ins.account.password + ":" + ins.account.proxy.ip + ":" + world + ":" + ins.script.name
+      account = ins.account
+      res =  "account_request:1:" + account.login + ":" + account.password + ":" + account.proxy.ip + ":" + account.proxy.ip + ":" + account.proxy.username + ":" + account.proxy.password + ":" + world + ":" + ins.script.name
       puts "res is fine"
       if ins.computer != nil
         log = Log.new(computer_id: ins.computer_id, account_id: ins.account.id, text: "Account:#{ins.account.login} Handed out to: #{ins.computer.name}")
@@ -156,10 +157,9 @@ def computer_thread(client, computer)
         client.puts "account_request:0"
       else
         world = "424"
-        client.puts "account_request:1:" + account.login + ":" + account.password + ":" + account.proxy.ip + ":" + world + ":" + script
+        client.puts "account_request:1:" + account.login + ":" + account.password + ":" + account.proxy.ip + ":" + account.proxy.ip + ":" + account.proxy.username + ":" + account.proxy.password + ":" + world + ":" + script
         log = Log.new(computer_id: computer.id, account_id: account.id, text: "Account:#{account.login} Handed out to: #{computer.name}")
         log.save
-
       end
     elsif respond[0] == "log"
       #get new instructions
@@ -188,13 +188,16 @@ def script_thread(client, account)
       log = Log.new(computer_id: nil, account_id: account.id, text: respond)
       log.save
       client.puts account_get_instruction_respond(instruction_queue)
-    elsif respond[0] == "TASK_LOG"
+    elsif respond[0] == "task_log"
       log = Log.new(computer_id: nil, account_id: account.id, text: respond)
       log.save
       client.puts "ok"
       #TODO, ADD XP GAINED TO account etc...
     elsif respond[0] == "task_request"
       client.puts account_get_direct_respond(respond[0], account)
+    elsif respond[0] == "banned"
+      account.update(:banned => true)
+      client.puts("DISCONNECT:1")
     else
       client.puts "ok"
     end
@@ -204,12 +207,35 @@ def script_thread(client, account)
 end
 
 
+def main_thread
+  loop do
+    puts "main thread running"
+    accounts = Account.all.select{|acc| acc.is_available && acc.schema != nil &&  acc.shall_do_task && !acc.banned}
+    if accounts != nil && accounts.length > 0
+      puts "we found accounts."
+      accounts.each do |acc|
+        computers = Computer.all.select{|computer| computer.is_available_to_nexus}
+          puts "account name: #{acc.login}"
+        if computers != nil && computers.length > 0
+          puts "found computer: #{computers.first.name}"
+          Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computers.first.id, :account_id => acc.id, :script => Script.first).save
+          sleep(30)
+          break
+        else
+          puts "no computer"
+        end
+      end
+    end
+    sleep(10)
+  end
+end
+
 
 ActiveRecord::Base.establish_connection(db_configuration["development"])
 
 
 
-server = TCPServer.new 2099 #Server bind to port 2050
+server = TCPServer.new 43594 #Server bind to port 43594
 #controllerThread = Thread.new(controller_thread)
 def require_all(_dir)
   Dir[File.expand_path(File.join(File.dirname(File.absolute_path(__FILE__)), _dir)) + "/**/*.rb"].each do |file|
@@ -218,7 +244,16 @@ def require_all(_dir)
 end
 
 require_all("./models/")
+added_main_thread = false
 loop do
+  if added_main_thread == false
+    Thread.new do
+      added_main_thread = true
+      puts "new main thread"
+      thread =  Thread.new{main_thread}
+      thread.join
+    end
+  end
   thread = nil
   puts "waiting for con"
   Thread.new server.accept do |client|

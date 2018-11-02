@@ -50,6 +50,6 @@ class AccountsController < ApplicationController
 
   private
   def account_params
-    params.require(:account).permit(:login, :password, :proxy_id, :schema_id)
+    params.require(:account).permit(:login, :password, :proxy_id, :schema_id, :world)
   end
 end

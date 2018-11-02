@@ -31,7 +31,7 @@ def computer_get_respond(instruction_queue)
     return "account_request:0"
     elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account_id != nil
       ins.update(:completed => true)
-      world = "424"
+      world = ins.account.world
       account = ins.account
       res =  "account_request:1:" + account.login + ":" + account.password + ":" + account.proxy.ip + ":" + account.proxy.ip + ":" + account.proxy.username + ":" + account.proxy.password + ":" + world + ":" + ins.script.name
       puts "res is fine"

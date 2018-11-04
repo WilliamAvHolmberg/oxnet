@@ -28,6 +28,7 @@ class Account < ApplicationRecord
   def get_time_online
     start_log = nil
     total_time = 0
+    logs = self.logs.sort_by &:created_at
     if logs != nil
       puts logs.length
       logs.each_with_index do |current_log, index|

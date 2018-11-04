@@ -38,28 +38,31 @@ class Computer < ApplicationRecord
   def get_time_online
     start_log = nil
     total_time = 0
+    logs = self.logs.sort_by &:created_at
     if logs != nil
-      puts logs.length
       logs.each_with_index do |current_log, index|
-        puts "loop:#{index}"
         nextLog = logs[index+1]
         if start_log == nil
           start_log = current_log
         elsif nextLog == nil
           time = (current_log.created_at - start_log.created_at)
-          puts time
           total_time += time
-          return total_time
         elsif (nextLog.created_at - current_log.created_at) > 35
+          puts "current time: #{total_time}"
+          puts "created at: #{start_log.created_at}"
+          puts "this one: #{current_log.created_at}"
+          puts "difference: #{current_log.created_at - start_log.created_at}"
+          puts "next log: #{nextLog.created_at}"
           time = (current_log.created_at - start_log.created_at)
-          puts time
           total_time += time
           start_log = nextLog
+          puts total_time
         end
       end
     else
       return 0
     end
+    puts "hello: #{total_time}"
     return total_time
   end
 end

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :levels
   resources :schemas
   resources :break_conditions
   resources :rs_items

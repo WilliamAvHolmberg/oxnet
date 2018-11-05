@@ -48,21 +48,14 @@ class Computer < ApplicationRecord
           time = (current_log.created_at - start_log.created_at)
           total_time += time
         elsif (nextLog.created_at - current_log.created_at) > 35
-          puts "current time: #{total_time}"
-          puts "created at: #{start_log.created_at}"
-          puts "this one: #{current_log.created_at}"
-          puts "difference: #{current_log.created_at - start_log.created_at}"
-          puts "next log: #{nextLog.created_at}"
           time = (current_log.created_at - start_log.created_at)
           total_time += time
           start_log = nextLog
-          puts total_time
         end
       end
     else
       return 0
     end
-    puts "hello: #{total_time}"
     return total_time
   end
 end

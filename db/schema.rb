@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_02_130739) do
+ActiveRecord::Schema.define(version: 2018_11_04_173804) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -65,6 +65,15 @@ ActiveRecord::Schema.define(version: 2018_11_02_130739) do
     t.index ["computer_id"], name: "index_instructions_on_computer_id"
     t.index ["instruction_type_id"], name: "index_instructions_on_instruction_type_id"
     t.index ["script_id"], name: "index_instructions_on_script_id"
+  end
+
+  create_table "levels", force: :cascade do |t|
+    t.string "name"
+    t.string "level"
+    t.bigint "account_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_levels_on_account_id"
   end
 
   create_table "logs", force: :cascade do |t|
@@ -161,6 +170,7 @@ ActiveRecord::Schema.define(version: 2018_11_02_130739) do
   add_foreign_key "instructions", "accounts"
   add_foreign_key "instructions", "instruction_types"
   add_foreign_key "instructions", "scripts"
+  add_foreign_key "levels", "accounts"
   add_foreign_key "tasks", "break_conditions"
   add_foreign_key "tasks", "schemas"
   add_foreign_key "tasks", "task_types"

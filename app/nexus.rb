@@ -73,12 +73,6 @@ def account_get_direct_respond(message, account)
   else
 
    if message == "task_request"
-      #one time do wc task
-      # one time do break..
-      # repeat (mod 2)
-      #
-      # get account.schema
-      # check if any available task
       puts "before getting task"
       task = account.schema.get_suitable_task
       puts "after getting task"
@@ -99,8 +93,28 @@ def account_get_direct_respond(message, account)
   end
 end
 
+def update_task(task, account)
+  level = Level.find_by(name: "Woodcutting", account_id: account.id)
+  puts "updating taskz"
+  puts level.level
+  puts level.name
+  if level != nil && level.level.to_i > 0
+    if level.level.to_i < 21
+      puts "bronze axe"
+      axe = RsItem.find_by(itemName: "Bronze axe")
+    elsif level.level.to_i < 99
+      puts "rune axe"
+      axe = RsItem.find_by(itemName: "Rune axe")
+    end
+  end
+  task.axe = axe
+  task.save
+  puts "updated task"
+end
+
 def get_task_respond(task, account)
   task_type = task.task_type.name
+  update_task(task, account)
   puts "task type good"
   if task.bank_area != nil
     bank_area = task.bank_area.coordinates
@@ -119,29 +133,7 @@ def get_task_respond(task, account)
   puts "all good saved log n all"
   return "task_respond:1:#{task_type}:#{task.id}:#{bank_area}:#{action_area}:#{axeID}:#{axe_name}:#{tree_name}:TIME:#{task_duration}"
 end
-def get_wc_task_respond(account)
-  task = Task.first
-  task_type = task.task_type.name
 
-  if task.bank_area != nil
-    bank_area = task.bank_area.coordinates
-  else
-    bank_area = "none"
-  end
-  action_area = task.action_area.coordinates
-  axeID = task.axe.itemId
-  axe_name = task.axe.itemName
-  tree_name = task.treeName
-  puts "fine untill break"
-  break_condition = task.break_condition.name
-  puts "fine after break condition:#{break_condition}"
-  break_after = task.break_after
-  puts "fine after break after :#{break_after}"
-  puts "all fineasd:#{task.id}"
-  log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
-  log.save
-  return "task_respond:1:#{task_type}:#{task.id}:#{bank_area}:#{action_area}:#{axeID}:#{axe_name}:#{tree_name}:#{break_condition}:#{break_after}"
-end
 
 
 def computer_thread(client, computer)
@@ -177,6 +169,23 @@ def computer_thread(client, computer)
   puts "Computer Thread for: #{client} has been closed"
 end
 
+def updateAccountLevels(string, account)
+  string.slice! "skills;"
+  array = string.split(';')
+  array.each do |parsed|
+    intern_parse = parsed.split(',')
+    puts parsed
+    name = intern_parse[0]
+    level = intern_parse[1]
+    puts name
+    puts level
+    account_level = Level.find_or_initialize_by(account_id: account.id, name: name)
+    account_level.name = name
+    account_level.level = level
+    account_level.save
+  end
+end
+
 def script_thread(client, account)
   while(!client.closed?)
     instruction_queue = []
@@ -194,6 +203,7 @@ def script_thread(client, account)
       client.puts "ok"
       #TODO, ADD XP GAINED TO account etc...
     elsif respond[0] == "task_request"
+      updateAccountLevels(respond[2], account)
       client.puts account_get_direct_respond(respond[0], account)
     elsif respond[0] == "banned"
       account.update(:banned => true)
@@ -226,6 +236,7 @@ def main_thread
         end
       end
     end
+    puts "no accounts"
     sleep(10)
   end
 end

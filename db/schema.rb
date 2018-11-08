@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_05_200451) do
+ActiveRecord::Schema.define(version: 2018_11_08_195532) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(version: 2018_11_05_200451) do
     t.boolean "banned", default: false
     t.string "world", default: "439"
     t.bigint "account_type_id"
+    t.string "username"
     t.index ["account_type_id"], name: "index_accounts_on_account_type_id"
     t.index ["schema_id"], name: "index_accounts_on_schema_id"
   end

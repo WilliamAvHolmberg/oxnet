@@ -14,10 +14,7 @@ class Account < ApplicationRecord
   end
 
   def proxy_is_available?()
-    if Net::Ping::TCP.new(proxy.ip, proxy.port).ping != nil
-      return true
-    end
-    return false
+    return Net::Ping::TCP.new(proxy.ip, proxy.port).ping
   end
 
   def time_since_last_log

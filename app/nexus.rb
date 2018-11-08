@@ -1,7 +1,7 @@
 require 'socket'
 require 'active_record'
 require_relative '../app/models/application_record'
-
+require 'net/ping'
 
 @hello = 0
 def db_configuration
@@ -33,7 +33,8 @@ def computer_get_respond(instruction_queue)
       ins.update(:completed => true)
       world = ins.account.world
       account = ins.account
-      res =  "account_request:1:" + account.login + ":" + account.password + ":" + account.proxy.ip + ":" + account.proxy.ip + ":" + account.proxy.username + ":" + account.proxy.password + ":" + world + ":" + ins.script.name
+
+      res =  "account_request:1:" + account.login + ":" + account.password + ":" + account.proxy.ip + ":" + account.proxy.port + ":" + account.proxy.username + ":" + account.proxy.password + ":" + world + ":NEX"
       puts "res is fine"
       if ins.computer != nil
         log = Log.new(computer_id: ins.computer_id, account_id: ins.account.id, text: "Account:#{ins.account.login} Handed out to: #{ins.computer.name}")
@@ -146,7 +147,7 @@ def computer_thread(client, computer)
   puts " my computer id: #{computer.id}"
   while(!client.closed?)
     respond = client.gets.split(":")
-    puts respond.length
+    #puts respond.length
     if respond[0] == "account_request"
       account = find_suitable_account
       if account == nil
@@ -154,22 +155,22 @@ def computer_thread(client, computer)
         client.puts "account_request:0"
       else
         world = "424"
-        client.puts "account_request:1:" + account.login + ":" + account.password + ":" + account.proxy.ip + ":" + account.proxy.ip + ":" + account.proxy.username + ":" + account.proxy.password + ":" + world + ":" + script
+        client.puts "account_request:1:" + account.login + ":" + account.password + ":" + account.proxy.ip + ":" + account.proxy.port + ":" + account.proxy.username + ":" + account.proxy.password + ":" + world + ":" + script
         log = Log.new(computer_id: computer.id, account_id: account.id, text: "Account:#{account.login} Handed out to: #{computer.name}")
         log.save
       end
     elsif respond[0] == "log"
       #get new instructions
       instruction_queue = Instruction.all.select{|ins| ins.computer_id == computer.id && ins.completed == false && ins.is_relevant}
-      puts "Log from: #{computer.name}:::log:#{respond}"
+      #puts "Log from: #{computer.name}:::log:#{respond}"
       log = Log.new(computer_id: computer.id, text: respond)
       log.save
       client.puts computer_get_respond(instruction_queue)
-      puts "sent"
+      #puts "sent"
     else
       client.puts "ok"
     end
-    puts respond
+    #puts respond
   end
   puts "Computer Thread for: #{client} has been closed"
 end
@@ -192,13 +193,32 @@ def updateAccountLevels(string, account)
 end
 
 def get_mule_respond(respond, account)
-  mules = Account.all.select{|acc| acc.account_type != nil && acc.account_type.name == "MULE" && !acc.banned && acc.proxy_is_available? }
+  mules = Account.all.select{|acc| acc.account_type != nil && acc.account_type.name == "MULE" && !acc.banned && (acc.proxy_is_available? || acc.proxy.ip.length < 5) }
   if mules != nil && mules.length > 0
     puts "we found mule"
-    puts mules[0].login
+    #create new isntruction for mule
+    computers = Computer.all.select{|computer| computer.is_available_to_nexus}
+    if computers != nil && computers.length > 0
+      ins = Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computers.first.id, :account_id => mules[0].id, :script_id => Script.first.id)
+      ins.save
+      puts "created instruction"
+      #new mule task
+      mule = mules[0]
+      item_id = respond[1]
+      item_amount = respond[2]
+      trade_name = respond[3]
+      world = respond[4]
+      mule.world = world
+      mule.save
+      task = Task.new(:name => "Mule withdraw to :#{trade_name}",:schema_id => mule.schema.id, :start_time => Time.now, :end_time => Time.now + 60.minutes)
+      task.save
+      puts "succesffulllll"
+      return "SUCCESSFUL:#{mules[0].login}"
+    end
   else
-    puts "we found no mule"
+
   end
+  puts "we found no mule"
   return "not successfull"
 end
 
@@ -238,15 +258,16 @@ end
 def main_thread
   loop do
     puts "main thread running"
-    accounts = Account.all.select{|acc| acc.is_available && acc.schema != nil &&  acc.shall_do_task && !acc.banned && acc.proxy_is_available? && acc.account_type.name == "SLAVE"}
+    accounts = Account.all.select{|acc| acc.is_available && acc.schema != nil &&  acc.shall_do_task && !acc.banned && acc.proxy_is_available? &&  acc.account_type != nil && acc.account_type.name == "SLAVE"}
     if accounts != nil && accounts.length > 0
       puts "we found accounts."
       accounts.each do |acc|
         computers = Computer.all.select{|computer| computer.is_available_to_nexus}
           puts "account name: #{acc.login}"
+          puts "type: #{acc.account_type.name}"
         if computers != nil && computers.length > 0
           puts "found computer: #{computers.first.name}"
-          Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computers.first.id, :account_id => acc.id, :script => Script.first).save
+          Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computers.first.id, :account_id => acc.id, :script_id => Script.first.id).save
           sleep(30)
           break
         else
@@ -255,7 +276,7 @@ def main_thread
       end
     end
     puts "no accounts"
-    sleep(10)
+    sleep(2)
   end
 end
 

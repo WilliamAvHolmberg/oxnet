@@ -209,7 +209,7 @@ def get_mule_respond(respond, account)
       item_amount = respond[2]
       trade_name = respond[3]
       world = respond[4]
-      mule.world = world
+      mule.update(:world => world)
       mule.save
       task = Task.new(:name => "Mule withdraw to :#{trade_name}",:schema_id => mule.schema.id, :start_time => Time.now, :end_time => Time.now + 60.minutes)
       task.save

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :account_types
   resources :levels
   resources :schemas
   resources :break_conditions

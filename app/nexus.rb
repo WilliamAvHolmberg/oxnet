@@ -34,7 +34,7 @@ def computer_get_respond(instruction_queue)
       world = ins.account.world
       account = ins.account
 
-      res =  "account_request:1:" + account.login + ":" + account.password + ":" + account.proxy.ip + ":" + account.proxy.port + ":" + account.proxy.username + ":" + account.proxy.password + ":" + world.chomp + ":NEX"
+      res =  "account_request:1:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + world.chomp + ":NEX"
       puts res
       puts "res is fine"
       if ins.computer != nil

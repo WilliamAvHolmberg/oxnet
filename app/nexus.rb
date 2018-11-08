@@ -35,6 +35,7 @@ def computer_get_respond(instruction_queue)
       account = ins.account
 
       res =  "account_request:1:" + account.login + ":" + account.password + ":" + account.proxy.ip + ":" + account.proxy.port + ":" + account.proxy.username + ":" + account.proxy.password + ":" + world + ":NEX"
+      puts res
       puts "res is fine"
       if ins.computer != nil
         log = Log.new(computer_id: ins.computer_id, account_id: ins.account.id, text: "Account:#{ins.account.login} Handed out to: #{ins.computer.name}")

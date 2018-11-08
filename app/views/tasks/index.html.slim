@@ -16,7 +16,7 @@ table
       tr
         td = task.name
         td = task.bank_area.name if task.bank_area != nil
-        td = task.action_area.name
+        td = task.action_area.name if task.action_area != nil
         td = task.task_type.name
         td = link_to 'Show', task
         td = link_to 'Edit', edit_task_path(task)

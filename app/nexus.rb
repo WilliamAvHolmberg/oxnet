@@ -214,7 +214,7 @@ def get_mule_respond(respond, account)
       mule.save
       task = Task.new(:name => "Mule withdraw to :#{trade_name}", :task_type => TaskType.find_or_create_by(:name => "MULE_WITHDRAW"), :schema_id => mule.schema.id, :start_time => Time.now, :end_time => Time.now + 120.minutes)
       task.save
-      return "SUCCESSFUL:#{mule.username}:#{mule.world}"
+      return "SUCCESSFUL:#{mule.username.chomp}:#{mule.world}"
     end
   else
 

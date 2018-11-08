@@ -8,28 +8,28 @@ p
   = @task.bank_area.name if @task.bank_area != nil
 p
   strong Action area:
-  = @task.action_area.name
+  = @task.action_area.name if @task.action_area != nil
 p
   strong Task type:
-  = @task.task_type.name
+  = @task.task_type.name if @task.task_type!= nil
 p
   strong Axe:
-  = @task.axe.itemName
+  = @task.axe.itemName if @task.axe != nil
 p
   strong Break Condition:
-  = @task.break_condition.name
+  = @task.break_condition.name if @task.break_condition != nil
 p
   strong Break After:
-  = @task.break_after
+  = @task.break_after if @task.break_after != nil
 p
   strong Start time:
-  = @task.start_time
+  = @task.start_time if @task.start_time != nil
 p
   strong End time
-  = @task.end_time
+  = @task.end_time if @task.end_time != nil
 p
   strong Task duration
-  = " #{@task.get_task_duration.round} minutes"
+  = " #{@task.get_task_duration.round} minutes" if @task.get_task_duration != nil
 p
   strong Schema
   = @task.schema.name

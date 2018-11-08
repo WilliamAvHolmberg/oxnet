@@ -4,11 +4,20 @@ class Account < ApplicationRecord
   has_many :logs, dependent: :destroy
   has_many :instructions, dependent: :destroy
   belongs_to :schema
+  belongs_to :account_type
+
 
   validates_uniqueness_of :login
 
   def last_log
     return logs.last
+  end
+
+  def proxy_is_available?()
+    if Net::Ping::TCP.new(proxy.ip, proxy.port).ping != nil
+      return true
+    end
+    return false
   end
 
   def time_since_last_log

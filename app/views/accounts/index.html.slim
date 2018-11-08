@@ -4,14 +4,16 @@ table
     th ID
     th Login
     th Password
-    th Proxy
+    th Proxy (available?)
     th World
     th Time Since logged in (Minutes)
     th Total time logged in
     th Money Invested
     th Money Made
     th Created At
+    th Account Type
     th Banned?
+
   - @accounts.each do |account|
     tr
       th = account.id
@@ -20,7 +22,7 @@ table
       th = account.password
       - if account.proxy != nil
         th
-          a href="/proxies/#{account.proxy.id}/" = account.proxy.ip
+          a href="/proxies/#{account.proxy.id}/" = "#{account.proxy.ip} :::: #{account.proxy_is_available?}"
       - else
         th = "None"
       th = account.world
@@ -29,5 +31,6 @@ table
       th Todo
       th Todo
       th = account.created_at
+      th = account.account_type.name if account.account_type != nil
       th = account.banned
 = link_to 'New', new_account_path

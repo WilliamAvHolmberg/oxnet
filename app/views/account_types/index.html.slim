@@ -1,0 +1,21 @@
+h1 Listing account_types
+
+table
+  thead
+    tr
+      th Name
+      th
+      th
+      th
+
+  tbody
+    - @account_types.each do |account_type|
+      tr
+        td = account_type.name
+        td = link_to 'Show', account_type
+        td = link_to 'Edit', edit_account_type_path(account_type)
+        td = link_to 'Destroy', account_type, data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+
+= link_to 'New Account type', new_account_type_path

@@ -67,6 +67,14 @@ def account_get_instruction_respond(instruction_queue)
   end
 end
 
+def get_task_respond(task, account)
+  case task.task_type.name
+  when "WOODCUTTING"
+    return get_woodcutting_task_respond(task, account)
+    #other cases, such as combat, druids.. etc
+  end
+end
+
 def account_get_direct_respond(message, account)
   if message == nil
     return "logged:fine"
@@ -78,8 +86,8 @@ def account_get_direct_respond(message, account)
       puts "after getting task"
       if task != nil
         puts "in task not nil"
-        res = get_task_respond(task,account)
-        return res
+        res = get_woodcutting_task_respond(task, account)
+        return get_task_respond(task, account)
       else
         task_id = 0
         #task = get when next task starts
@@ -93,7 +101,7 @@ def account_get_direct_respond(message, account)
   end
 end
 
-def update_task(task, account)
+def update_woodcutting_task(task, account)
   level = Level.find_by(name: "Woodcutting", account_id: account.id)
   puts "updating taskz"
   puts level.level
@@ -112,16 +120,14 @@ def update_task(task, account)
   puts "updated task"
 end
 
-def get_task_respond(task, account)
+def get_woodcutting_task_respond(task, account)
   task_type = task.task_type.name
-  update_task(task, account)
-  puts "task type good"
+  update_woodcutting_task(task, account)
   if task.bank_area != nil
     bank_area = task.bank_area.coordinates
   else
     bank_area = "none"
   end
-  puts "bank not good"
   action_area = task.action_area.coordinates
   axeID = task.axe.itemId
   axe_name = task.axe.itemName
@@ -130,7 +136,6 @@ def get_task_respond(task, account)
   puts task_duration
   log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
   log.save
-  puts "all good saved log n all"
   return "task_respond:1:#{task_type}:#{task.id}:#{bank_area}:#{action_area}:#{axeID}:#{axe_name}:#{tree_name}:TIME:#{task_duration}"
 end
 
@@ -186,6 +191,17 @@ def updateAccountLevels(string, account)
   end
 end
 
+def get_mule_respond(respond, account)
+  mules = Account.all.select{|acc| acc.account_type != nil && acc.account_type.name == "MULE" && !acc.banned }
+  if mules != nil && mules.length > 0
+    puts "we found mule"
+    puts mules[0].login
+  else
+    puts "we found no mule"
+  end
+  return "not successfull"
+end
+
 def script_thread(client, account)
   while(!client.closed?)
     instruction_queue = []
@@ -208,6 +224,8 @@ def script_thread(client, account)
     elsif respond[0] == "banned"
       account.update(:banned => true)
       client.puts("DISCONNECT:1")
+    elsif respond[0] == "mule_request"
+      client.puts get_mule_respond(respond, account)
     else
       client.puts "ok"
     end

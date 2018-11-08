@@ -20,6 +20,13 @@
         = collection_select(:account, :schema_id, @schemas, :id, :name)
       - else
         = "Please create a schema before associating to account"
+  #accountType
+    .field
+      - if @account_types!= nil && @account_types.length > 0
+        = form.label :schema
+        = collection_select(:account, :account_type_id, @account_types, :id, :name)
+      - else
+        = "Please create an account typebefore associating to account"
   - @available_proxies = Proxy.where(account_id: [false, nil])
   p = form.label :proxy
   = collection_select(nil, :proxy_id, @available_proxies, :id, :ip)

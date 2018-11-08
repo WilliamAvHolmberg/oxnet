@@ -192,7 +192,7 @@ def updateAccountLevels(string, account)
 end
 
 def get_mule_respond(respond, account)
-  mules = Account.all.select{|acc| acc.account_type != nil && acc.account_type.name == "MULE" && !acc.banned }
+  mules = Account.all.select{|acc| acc.account_type != nil && acc.account_type.name == "MULE" && !acc.banned && acc.proxy_is_available? }
   if mules != nil && mules.length > 0
     puts "we found mule"
     puts mules[0].login
@@ -238,7 +238,7 @@ end
 def main_thread
   loop do
     puts "main thread running"
-    accounts = Account.all.select{|acc| acc.is_available && acc.schema != nil &&  acc.shall_do_task && !acc.banned}
+    accounts = Account.all.select{|acc| acc.is_available && acc.schema != nil &&  acc.shall_do_task && !acc.banned && acc.proxy_is_available? && acc.account_type.name == "SLAVE"}
     if accounts != nil && accounts.length > 0
       puts "we found accounts."
       accounts.each do |acc|

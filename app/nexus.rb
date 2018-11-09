@@ -87,7 +87,7 @@ def get_mule_withdraw_task_respond(account)
 
   log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
   log.save
-  res = "task_respond:1:#{task_type}:#{slave_name}:#{world}:#{item_id}:#{item_amount}"
+  res = "task_respond:1:#{task_type.name}:#{slave_name}:#{world}:#{item_id}:#{item_amount}"
   task.update(:executed => true)
   task.save
   puts res
@@ -250,7 +250,7 @@ def get_mule_respond(respond, account)
       puts world
       mule.update(:world => world)
       mule.save
-      task = MuleWithdrawTask.new(:name => "Mule withdraw to :#{trade_name}", :task_type => (TaskType.find_or_create_by(:name => "MULE_WITHDRAW")).name,  :account => mule, :item_id => item_id,
+      task = MuleWithdrawTask.new(:name => "Mule withdraw to :#{trade_name}", :task_type => (TaskType.find_or_create_by(:name => "MULE_WITHDRAW"),  :account => mule, :item_id => item_id,
                                   :item_amount => item_amount, :slave_name => trade_name, :world => world, :area => Area.find_by(:name => "GRAND_EXCHANGE"))
       task.update(:executed => false)
       task.save

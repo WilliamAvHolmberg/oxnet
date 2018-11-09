@@ -380,6 +380,7 @@ loop do
     end
   rescue Exception => ex
     puts ex
+    puts "errooorororo"
   end
 end
 

@@ -1,0 +1,37 @@
+h1 Listing mule_withdraw_tasks
+
+table
+  thead
+    tr
+      th Name
+      th Area
+      th Task type
+      th Slave name
+      th Item
+      th Item amount
+      th World
+      th Executed
+      th Account
+      th
+      th
+      th
+
+  tbody
+    - @mule_withdraw_tasks.each do |mule_withdraw_task|
+      tr
+        td = mule_withdraw_task.name
+        td = mule_withdraw_task.area
+        td = mule_withdraw_task.task_type
+        td = mule_withdraw_task.slave_name
+        td = mule_withdraw_task.item_id
+        td = mule_withdraw_task.item_amount
+        td = mule_withdraw_task.world
+        td = mule_withdraw_task.executed
+        td = mule_withdraw_task.account
+        td = link_to 'Show', mule_withdraw_task
+        td = link_to 'Edit', edit_mule_withdraw_task_path(mule_withdraw_task)
+        td = link_to 'Destroy', mule_withdraw_task, data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+
+= link_to 'New Mule withdraw task', new_mule_withdraw_task_path

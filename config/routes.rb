@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :mule_withdraw_tasks
   resources :account_types
   resources :levels
   resources :schemas

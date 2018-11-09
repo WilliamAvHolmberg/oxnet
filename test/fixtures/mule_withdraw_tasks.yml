@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  area: one
+  task_type: one
+  slave_name: MyString
+  item_id: MyString
+  item_amount: MyString
+  world: MyString
+  executed: false
+  account: one
+
+two:
+  name: MyString
+  area: two
+  task_type: two
+  slave_name: MyString
+  item_id: MyString
+  item_amount: MyString
+  world: MyString
+  executed: false
+  account: two

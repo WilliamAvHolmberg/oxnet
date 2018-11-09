@@ -1,0 +1,36 @@
+= form_for @mule_withdraw_task do |f|
+  - if @mule_withdraw_task.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@mule_withdraw_task.errors.count, "error")} prohibited this mule_withdraw_task from being saved:"
+      ul
+        - @mule_withdraw_task.errors.full_messages.each do |message|
+          li = message
+
+  .field
+    = f.label :name
+    = f.text_field :name
+  .field
+    = f.label :area
+    = f.text_field :area
+  .field
+    = f.label :task_type
+    = f.text_field :task_type
+  .field
+    = f.label :slave_name
+    = f.text_field :slave_name
+  .field
+    = f.label :item_id
+    = f.text_field :item_id
+  .field
+    = f.label :item_amount
+    = f.text_field :item_amount
+  .field
+    = f.label :world
+    = f.text_field :world
+  .field
+    = f.label :executed
+    = f.check_box :executed
+  .field
+    = f.label :account
+    = f.text_field :account
+  .actions = f.submit

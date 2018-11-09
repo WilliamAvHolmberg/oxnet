@@ -69,11 +69,35 @@ def account_get_instruction_respond(instruction_queue)
   end
 end
 
+
+def get_mule_withdraw_task_respond(account)
+  tasks = MuleWithdrawTask.all.select{|task| !task.account!= nil && task.account.id == account.id}
+  if tasks != nil && tasks.length > 0
+    task = tasks[0]
+  else
+    return "DISCONNECT:1"
+  end
+
+  task_type = task.task_type
+  item_id = task.item_id
+  item_amount = task.item_amount
+  world = task.world
+  slave_name = task.slave_name
+
+  log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
+  log.save
+  res = "task_respond:1:#{task_type}:#{slave_name}:#{world}:#{item_id}:#{item_amount}"
+  puts res
+  return res
+end
+
 def get_task_respond(task, account)
   case task.task_type.name
   when "WOODCUTTING"
     return get_woodcutting_task_respond(task, account)
     #other cases, such as combat, druids.. etc
+  when "MULE_WITHDRAW"
+    return get_mule_withdraw_task_respond(account)
   end
 end
 
@@ -82,25 +106,28 @@ def account_get_direct_respond(message, account)
     return "logged:fine"
   else
 
-   if message == "task_request"
+    if account.account_type == "MULE"
+      return get_mule_withdraw_task_respond(account)
+    else if message == "task_request"
       puts "before getting task"
       task = account.schema.get_suitable_task
       puts "after getting task"
-      if task != nil
-        puts "in task not nil"
-        res = get_woodcutting_task_respond(task, account)
-        return get_task_respond(task, account)
-      else
+      if task == nil
         task_id = 0
         #task = get when next task starts
         res = "task_respond:1:BREAK:#{task_id}:TIME:1"
         return res
-      end
+
+      else
+        puts "found task"
+        return get_task_respond(task, account)
+        end
     else
       return "logged:fine"
     end
     return "logged:f"
-  end
+    end
+    end
 end
 
 def update_woodcutting_task(task, account)
@@ -212,14 +239,16 @@ def get_mule_respond(respond, account)
       puts world
       mule.update(:world => world)
       mule.save
-      task = Task.new(:name => "Mule withdraw to :#{trade_name}", :task_type => TaskType.find_or_create_by(:name => "MULE_WITHDRAW"), :schema_id => mule.schema.id, :start_time => Time.now, :end_time => Time.now + 120.minutes)
+      task = MuleWithdrawTask.new(:name => "Mule withdraw to :#{trade_name}", :task_type => TaskType.find_or_create_by(:name => "MULE_WITHDRAW"),  :account.id => mule.id, :item_id => item_id,
+                                  :item_amount => item_amount, :slave_name => trade_name, :world => world, :area => Area.find_by(:name => "GRAND_EXCHANGE"))
+      task.update(:executed => false)
       task.save
       return "SUCCESSFUL:#{mule.username.chomp}:#{mule.world}"
     end
   else
-
+    puts "we found no mule"
   end
-  puts "we found no mule"
+  puts "we found no computer"
   return "not successfull"
 end
 

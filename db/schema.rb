@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_08_195532) do
+ActiveRecord::Schema.define(version: 2018_11_09_122210) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -92,6 +92,23 @@ ActiveRecord::Schema.define(version: 2018_11_08_195532) do
     t.datetime "updated_at", null: false
     t.integer "computer_id"
     t.index ["account_id"], name: "index_logs_on_account_id"
+  end
+
+  create_table "mule_withdraw_tasks", force: :cascade do |t|
+    t.string "name"
+    t.bigint "area_id"
+    t.bigint "task_type_id"
+    t.string "slave_name"
+    t.string "item_id"
+    t.string "item_amount"
+    t.string "world"
+    t.boolean "executed"
+    t.bigint "account_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_mule_withdraw_tasks_on_account_id"
+    t.index ["area_id"], name: "index_mule_withdraw_tasks_on_area_id"
+    t.index ["task_type_id"], name: "index_mule_withdraw_tasks_on_task_type_id"
   end
 
   create_table "npcs", force: :cascade do |t|
@@ -181,6 +198,9 @@ ActiveRecord::Schema.define(version: 2018_11_08_195532) do
   add_foreign_key "instructions", "instruction_types"
   add_foreign_key "instructions", "scripts"
   add_foreign_key "levels", "accounts"
+  add_foreign_key "mule_withdraw_tasks", "accounts"
+  add_foreign_key "mule_withdraw_tasks", "areas"
+  add_foreign_key "mule_withdraw_tasks", "task_types"
   add_foreign_key "tasks", "break_conditions"
   add_foreign_key "tasks", "schemas"
   add_foreign_key "tasks", "task_types"

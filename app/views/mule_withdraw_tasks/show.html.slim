@@ -1,0 +1,33 @@
+p#notice = notice
+
+p
+  strong Name:
+  = @mule_withdraw_task.name
+p
+  strong Area:
+  = @mule_withdraw_task.area
+p
+  strong Task type:
+  = @mule_withdraw_task.task_type
+p
+  strong Slave name:
+  = @mule_withdraw_task.slave_name
+p
+  strong Item:
+  = @mule_withdraw_task.item_id
+p
+  strong Item amount:
+  = @mule_withdraw_task.item_amount
+p
+  strong World:
+  = @mule_withdraw_task.world
+p
+  strong Executed:
+  = @mule_withdraw_task.executed
+p
+  strong Account:
+  = @mule_withdraw_task.account
+
+=> link_to 'Edit', edit_mule_withdraw_task_path(@mule_withdraw_task)
+'|
+=< link_to 'Back', mule_withdraw_tasks_path

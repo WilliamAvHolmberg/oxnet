@@ -31,6 +31,7 @@ def computer_get_respond(instruction_queue)
     return "account_request:0"
     elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account_id != nil
       ins.update(:completed => true)
+      ins.save
       world = ins.account.world
       account = ins.account
 
@@ -87,6 +88,8 @@ def get_mule_withdraw_task_respond(account)
   log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
   log.save
   res = "task_respond:1:#{task_type}:#{slave_name}:#{world}:#{item_id}:#{item_amount}"
+  task.update(:executed => true)
+  task.save
   puts res
   return res
 end
@@ -94,9 +97,11 @@ end
 def get_task_respond(task, account)
   case task.task_type.name
   when "WOODCUTTING"
+    puts " res wc respond"
     return get_woodcutting_task_respond(task, account)
     #other cases, such as combat, druids.. etc
   when "MULE_WITHDRAW"
+    puts "res mule respond"
     return get_mule_withdraw_task_respond(account)
   end
 end
@@ -107,6 +112,7 @@ def account_get_direct_respond(message, account)
   else
 
     if account.account_type == "MULE"
+      puts "mule"
       return get_mule_withdraw_task_respond(account)
     else if message == "task_request"
       puts "before getting task"
@@ -117,11 +123,10 @@ def account_get_direct_respond(message, account)
         #task = get when next task starts
         res = "task_respond:1:BREAK:#{task_id}:TIME:1"
         return res
-
       else
         puts "found task"
         return get_task_respond(task, account)
-        end
+      end
     else
       return "logged:fine"
     end
@@ -165,7 +170,9 @@ def get_woodcutting_task_respond(task, account)
   puts task_duration
   log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
   log.save
-  return "task_respond:1:#{task_type}:#{task.id}:#{bank_area}:#{action_area}:#{axeID}:#{axe_name}:#{tree_name}:TIME:#{task_duration}"
+  puts "sending resp"
+  res = "task_respond:1:#{task_type}:#{task.id}:#{bank_area}:#{action_area}:#{axeID}:#{axe_name}:#{tree_name}:TIME:#{task_duration}"
+  return res
 end
 
 
@@ -189,7 +196,10 @@ def computer_thread(client, computer)
       end
     elsif respond[0] == "log"
       #get new instructions
-      instruction_queue = Instruction.all.select{|ins| ins.computer_id == computer.id && ins.completed == false && ins.is_relevant}
+      instruction_queue = Instruction.all.select{|ins| ins.computer_id == computer.id && !ins.completed && ins.is_relevant}
+      if instruction_queue != nil
+        puts "Inustruction queue length:#{instruction_queue.length}"
+      end
       #puts "Log from: #{computer.name}:::log:#{respond}"
       log = Log.new(computer_id: computer.id, text: respond)
       log.save
@@ -239,7 +249,7 @@ def get_mule_respond(respond, account)
       puts world
       mule.update(:world => world)
       mule.save
-      task = MuleWithdrawTask.new(:name => "Mule withdraw to :#{trade_name}", :task_type => TaskType.find_or_create_by(:name => "MULE_WITHDRAW"),  :account.id => mule.id, :item_id => item_id,
+      task = MuleWithdrawTask.new(:name => "Mule withdraw to :#{trade_name}", :task_type => TaskType.find_or_create_by(:name => "MULE_WITHDRAW"),  :account => mule, :item_id => item_id,
                                   :item_amount => item_amount, :slave_name => trade_name, :world => world, :area => Area.find_by(:name => "GRAND_EXCHANGE"))
       task.update(:executed => false)
       task.save
@@ -298,8 +308,9 @@ def main_thread
         if computers != nil && computers.length > 0
           puts "found computer: #{computers.first.name}"
           Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computers.first.id, :account_id => acc.id, :script_id => Script.first.id).save
+          puts "Lets sleep"
           sleep(30)
-          break
+          puts "done sleeping"
         else
           puts "no computer"
         end
@@ -324,6 +335,9 @@ def require_all(_dir)
 end
 
 require_all("./models/")
+
+
+
 added_main_thread = false
 loop do
   if added_main_thread == false

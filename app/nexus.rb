@@ -87,7 +87,7 @@ def get_mule_withdraw_task_respond(account)
 
   log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
   log.save
-  res = "task_respond:1:#{task_type.name}:#{slave_name}:#{world}:#{item_id}:#{item_amount}"
+  res = "task_respond:1:#{task_type.name}:#{slave_name}:#{world.chomp}:#{item_id.chomp}:#{item_amount.chomp}"
   task.update(:executed => true)
   task.save
   puts res

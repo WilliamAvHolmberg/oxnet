@@ -72,7 +72,7 @@ end
 
 
 def get_mule_withdraw_task_respond(account)
-  tasks = MuleWithdrawTask.all.select{|task| !task.account!= nil && task.account.id == account.id}
+  tasks = MuleWithdrawTask.all.select{|task| !task.account!= nil && task.account.id == account.id && task.is_relevant}
   if tasks != nil && tasks.length > 0
     task = tasks[0]
   else

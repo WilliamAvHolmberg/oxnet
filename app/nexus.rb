@@ -349,32 +349,37 @@ loop do
       thread.join
     end
   end
-  thread = nil
-  puts "waiting for con"
-  Thread.new server.accept do |client|
-    puts "new client: #{client}"
-    respond = client.gets.split(":")
-    if respond[0] == "computer"
-      #start new thread for computer
-      ip = respond[2]
-      name = respond[3]
-      computer = Computer.find_or_create_by(:name => name)
-      computer.update(:ip => ip)
-      puts "New Computer Thread started for: #{computer}}"
-      thread = Thread.new{computer_thread(client, computer)}
-      client.puts "connected:1"
-    elsif respond[0] == "script"
-      # start new thread for script
-      account = Account.find_or_create_by(:login => respond[3].strip!)
-      puts "New Script Thread started for: #{respond[3]}"
-      thread =  Thread.new{script_thread(client, account)}
-      client.puts "connected:1"
-    end
-    puts "joined new thread"
-    if thread != nil
-    thread.join
+  begin
     thread = nil
+    puts "waiting for con"
+    Thread.new server.accept do |client|
+      puts "new client: #{client}"
+      respond = client.gets.split(":")
+      if respond[0] == "computer"
+        #start new thread for computer
+        ip = respond[2]
+        name = respond[3]
+        computer = Computer.find_or_create_by(:name => name)
+        computer.update(:ip => ip)
+        puts "New Computer Thread started for: #{computer}}"
+        thread = Thread.new{computer_thread(client, computer)}
+        client.puts "connected:1"
+      elsif respond[0] == "script"
+        # start new thread for script
+        account = Account.find_or_create_by(:login => respond[3].strip!)
+        puts "New Script Thread started for: #{respond[3]}"
+        thread =  Thread.new{script_thread(client, account)}
+        client.puts "connected:1"
+      end
+      puts "joined new thread"
+      if thread != nil
+      thread.join
+      thread = nil
+      end
+
     end
+  rescue Exception => ex
+    puts ex
   end
 end
 

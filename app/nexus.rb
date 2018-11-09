@@ -362,20 +362,20 @@ loop do
         computer = Computer.find_or_create_by(:name => name)
         computer.update(:ip => ip)
         puts "New Computer Thread started for: #{computer}}"
-        thread = Thread.new{computer_thread(client, computer)}
+        thread = Thread.fork{computer_thread(client, computer)}
         client.puts "connected:1"
       elsif respond[0] == "script"
         # start new thread for script
         account = Account.find_or_create_by(:login => respond[3].strip!)
         puts "New Script Thread started for: #{respond[3]}"
-        thread =  Thread.new{script_thread(client, account)}
+        thread =  Thread.fork{script_thread(client, account)}
         client.puts "connected:1"
       end
       puts "joined new thread"
-      if thread != nil
-      thread.join
-      thread = nil
-      end
+      #if thread != nil
+     # thread.join
+      #thread = nil
+      #end
 
     end
   rescue Exception => ex

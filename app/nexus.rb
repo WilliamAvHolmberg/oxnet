@@ -111,7 +111,7 @@ def account_get_direct_respond(message, account)
     return "logged:fine"
   else
 
-    if account.account_type == "MULE"
+    if account.account_type.name == "MULE"
       puts "mule"
       return get_mule_withdraw_task_respond(account)
     else if message == "task_request"

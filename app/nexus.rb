@@ -370,6 +370,8 @@ loop do
         puts "New Script Thread started for: #{respond[3]}"
         thread =  Thread.fork{script_thread(client, account)}
         client.puts "connected:1"
+      else
+        puts "hello"
       end
       puts "joined new thread"
       #if thread != nil

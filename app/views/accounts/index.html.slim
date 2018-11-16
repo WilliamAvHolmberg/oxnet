@@ -12,6 +12,7 @@ table
     th Money Made
     th Created At
     th Account Type
+    th Time until next
     th Banned?
 
   - @accounts.each do |account|
@@ -32,5 +33,6 @@ table
       th Todo
       th = account.created_at
       th = account.account_type.name if account.account_type != nil
+      th = account.schema.get_time_unil_next_task if account.schema != nil
       th = account.banned
 = link_to 'New', new_account_path

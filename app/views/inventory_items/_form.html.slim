@@ -1,0 +1,18 @@
+= form_for @inventory_item do |f|
+  - if @inventory_item.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@inventory_item.errors.count, "error")} prohibited this inventory_item from being saved:"
+      ul
+        - @inventory_item.errors.full_messages.each do |message|
+          li = message
+
+  .field
+    = f.label :item
+    = collection_select(:inventory_item, :item_id, @items, :id, :itemName)
+  .field
+    = f.label :Inventory
+    = collection_select(:inventory_item, :inventory_id, Inventory.all, :id, :name)
+  .field
+    = f.label :amount
+    = f.number_field :amount
+  .actions = f.submit

@@ -16,6 +16,28 @@ class SchemasController < ApplicationController
   def new
     @schema = Schema.new
   end
+  def remove_task
+    @schema = Schema.find(params[:id])
+    task = Task.find(params[:task_id])
+    @schema.tasks.delete(task)
+    @schema.save
+    render 'show'
+  end
+  def copy
+    @source = Schema.find(params[:id])
+    @schema = @source.dup
+    @schema.save
+    @schema.tasks.destroy
+    if @source.tasks != nil
+      @source.tasks.each do |task|
+        puts "putting object"
+        new_task = task.dup
+        new_task.update(:schema_id => @schema.id)
+        new_task.save
+      end
+    end
+    render 'new'
+  end
 
   # GET /schemas/1/edit
   def edit
@@ -69,7 +91,7 @@ class SchemasController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def schema_params
-      params.require(:schema).permit(:name)
+      params.require(:schema).permit(:name, :task_id)
     end
 
 

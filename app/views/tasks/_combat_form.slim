@@ -1,0 +1,29 @@
+= render partial: 'area_form', locals:{items: @items, f: f}
+.field
+  = f.label :monster_name
+  = f.text_field :monster_name
+.field
+  = f.label :loot_threshold
+  = f.number_field :loot_threshold
+.field
+  - if Gear.all != nil && Gear.all.length > 0
+    = f.label :Gear
+    = collection_select(:task, :gear_id, Gear.all, :id, :name)
+  - else
+    = "Please create a gear before creating the task"
+.field
+  - if Inventory.all != nil && Inventory.all.length > 0
+    = f.label :Inventory
+    = collection_select(:task, :inventory_id, Inventory.all, :id, :name, {include_blank: 'None'})
+  - else
+    = "Please create a gear before creating the task"
+.field
+  - if @items != nil && @items.length > 0
+    = f.label :Food
+    = collection_select(:task, :food_id, @items, :id, :itemName)
+  - else
+    = "Please create a gear before creating the task"
+
+
+
+

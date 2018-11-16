@@ -1,0 +1,23 @@
+h1 Listing inventory_items
+
+table
+  thead
+    tr
+      th Item
+      th Amount
+      th
+      th
+      th
+
+  tbody
+    - @inventory_items.each do |inventory_item|
+      tr
+        td = inventory_item.item
+        td = inventory_item.amount
+        td = link_to 'Show', inventory_item
+        td = link_to 'Edit', edit_inventory_item_path(inventory_item)
+        td = link_to 'Destroy', inventory_item, data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+
+= link_to 'New Inventory item', new_inventory_item_path

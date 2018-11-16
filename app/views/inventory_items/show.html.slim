@@ -1,0 +1,12 @@
+p#notice = notice
+
+p
+  strong Item:
+  = @inventory_item.item
+p
+  strong Amount:
+  = @inventory_item.amount
+
+=> link_to 'Edit', edit_inventory_item_path(@inventory_item)
+'|
+=< link_to 'Back', inventory_items_path

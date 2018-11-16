@@ -47,6 +47,18 @@ class TasksController < ApplicationController
     end
   end
 
+  def copy
+    @areas = Area.all
+    @task_types = TaskType.all
+    @items = RsItem.all
+    @break_conditions = BreakCondition.all
+    @schemas = Schema.all
+
+    @source = Task.find(params[:id])
+    @task = @source.dup
+    render 'new'
+  end
+
   # PATCH/PUT /tasks/1
   # PATCH/PUT /tasks/1.json
   def update
@@ -82,6 +94,8 @@ class TasksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def task_params
-      params.require(:task).permit(:name, :bank_area_id, :action_area_id, :task_type_id, :axe_id, :treeName, :break_condition_id, :break_after, :start_time, :end_time, :schema_id)
+      params.require(:task).permit(:name, :bank_area_id, :action_area_id, :task_type_id, :axe_id, :treeName,
+                                   :break_condition_id, :break_after, :start_time, :end_time, :schema_id, :monster_name,
+                                   :gear_id, :food_id, :inventory_id, :loot_threshold, :skill)
     end
 end

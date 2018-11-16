@@ -1,0 +1,11 @@
+p#notice = notice
+
+p
+  strong Name:
+  = @inventory.name
+- @inventory.inventory_items.each do |item|
+  p = "Item: #{item.item.itemName}  Amount: #{item.amount}"
+
+=> link_to 'Edit', edit_inventory_path(@inventory)
+
+=< link_to 'Back', inventories_path

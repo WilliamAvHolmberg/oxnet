@@ -14,6 +14,7 @@ table
         td = schema.name
         td = link_to 'Show', schema
         td = link_to 'Edit', edit_schema_path(schema)
+        td = link_to 'Copy', copy_schema_path(schema)
         td = link_to 'Destroy', schema, data: { confirm: 'Are you sure?' }, method: :delete
 
 br

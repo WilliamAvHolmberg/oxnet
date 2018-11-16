@@ -1,0 +1,46 @@
+h1 Listing gears
+
+table
+  thead
+    tr
+      th Name
+      th Head
+      th Cape
+      th Neck
+      th Ammunition
+      th Weapon
+      th Chest
+      th Shield
+      th Legs
+      th Hands
+      th Feet
+      th Ring
+      th Ammunition amount
+      th
+      th
+      th
+
+  tbody
+    - @gears.each do |gear|
+      tr
+        td = gear.name
+        td = gear.head
+        td = gear.cape
+        td = gear.neck
+        td = gear.ammunition
+        td = gear.weapon
+        td = gear.chest
+        td = gear.shield
+        td = gear.legs
+        td = gear.hands
+        td = gear.feet
+        td = gear.ring
+        td = gear.ammunition_amount
+        td = link_to 'Show', gear
+        td = link_to 'Edit', edit_gear_path(gear)
+        td = link_to 'Copy', copy_gear_path(gear)
+        td = link_to 'Destroy', gear, data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+
+= link_to 'New Gear', new_gear_path

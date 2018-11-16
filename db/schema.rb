@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_09_122210) do
+ActiveRecord::Schema.define(version: 2018_11_14_213406) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,6 +56,35 @@ ActiveRecord::Schema.define(version: 2018_11_09_122210) do
     t.index ["name"], name: "index_computers_on_name", unique: true
   end
 
+  create_table "gears", force: :cascade do |t|
+    t.integer "ammunition_amount"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "head_id"
+    t.bigint "cape_id"
+    t.bigint "neck_id"
+    t.bigint "ammunition_id"
+    t.bigint "weapon_id"
+    t.bigint "shield_id"
+    t.bigint "legs_id"
+    t.bigint "hands_id"
+    t.bigint "feet_id"
+    t.bigint "ring_id"
+    t.string "name"
+    t.bigint "chest_id"
+    t.index ["ammunition_id"], name: "index_gears_on_ammunition_id"
+    t.index ["cape_id"], name: "index_gears_on_cape_id"
+    t.index ["chest_id"], name: "index_gears_on_chest_id"
+    t.index ["feet_id"], name: "index_gears_on_feet_id"
+    t.index ["hands_id"], name: "index_gears_on_hands_id"
+    t.index ["head_id"], name: "index_gears_on_head_id"
+    t.index ["legs_id"], name: "index_gears_on_legs_id"
+    t.index ["neck_id"], name: "index_gears_on_neck_id"
+    t.index ["ring_id"], name: "index_gears_on_ring_id"
+    t.index ["shield_id"], name: "index_gears_on_shield_id"
+    t.index ["weapon_id"], name: "index_gears_on_weapon_id"
+  end
+
   create_table "instruction_types", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -74,6 +103,22 @@ ActiveRecord::Schema.define(version: 2018_11_09_122210) do
     t.index ["computer_id"], name: "index_instructions_on_computer_id"
     t.index ["instruction_type_id"], name: "index_instructions_on_instruction_type_id"
     t.index ["script_id"], name: "index_instructions_on_script_id"
+  end
+
+  create_table "inventories", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "inventory_items", force: :cascade do |t|
+    t.integer "amount"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "item_id"
+    t.bigint "inventory_id"
+    t.index ["inventory_id"], name: "index_inventory_items_on_inventory_id"
+    t.index ["item_id"], name: "index_inventory_items_on_item_id"
   end
 
   create_table "levels", force: :cascade do |t|
@@ -176,10 +221,19 @@ ActiveRecord::Schema.define(version: 2018_11_09_122210) do
     t.time "start_time"
     t.time "end_time"
     t.bigint "schema_id"
+    t.string "monster_name"
+    t.bigint "gear_id"
+    t.bigint "food_id"
+    t.bigint "inventory_id"
+    t.integer "loot_threshold"
+    t.string "skill"
     t.index ["action_area_id"], name: "index_tasks_on_action_area_id"
     t.index ["axe_id"], name: "index_tasks_on_axe_id"
     t.index ["bank_area_id"], name: "index_tasks_on_bank_area_id"
     t.index ["break_condition_id"], name: "index_tasks_on_break_condition_id"
+    t.index ["food_id"], name: "index_tasks_on_food_id"
+    t.index ["gear_id"], name: "index_tasks_on_gear_id"
+    t.index ["inventory_id"], name: "index_tasks_on_inventory_id"
     t.index ["schema_id"], name: "index_tasks_on_schema_id"
     t.index ["task_type_id"], name: "index_tasks_on_task_type_id"
   end
@@ -197,11 +251,14 @@ ActiveRecord::Schema.define(version: 2018_11_09_122210) do
   add_foreign_key "instructions", "accounts"
   add_foreign_key "instructions", "instruction_types"
   add_foreign_key "instructions", "scripts"
+  add_foreign_key "inventory_items", "inventories"
   add_foreign_key "levels", "accounts"
   add_foreign_key "mule_withdraw_tasks", "accounts"
   add_foreign_key "mule_withdraw_tasks", "areas"
   add_foreign_key "mule_withdraw_tasks", "task_types"
   add_foreign_key "tasks", "break_conditions"
+  add_foreign_key "tasks", "gears"
+  add_foreign_key "tasks", "inventories"
   add_foreign_key "tasks", "schemas"
   add_foreign_key "tasks", "task_types"
 end

@@ -3,8 +3,11 @@ class Task < ApplicationRecord
   belongs_to :action_area, :class_name => "Area"
   belongs_to :task_type
   belongs_to :axe, :class_name => "RsItem", optional: true
+  belongs_to :food, :class_name => "RsItem", optional: true
   belongs_to :break_condition
   belongs_to :schema, optional:true
+  belongs_to :inventory, optional:true
+  belongs_to :gear, optional:true
 
   def self.inherited(subklass)
     self.inherit_attributes(subklass)

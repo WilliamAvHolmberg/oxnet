@@ -72,9 +72,9 @@ end
 
 
 def get_mule_withdraw_task_respond(account)
-  tasks = MuleWithdrawTask.all.select{|task| !task.executed  && !task.account!= nil && task.account.id == account.id && task.is_relevant}
-  if tasks != nil && tasks.length > 0
-    task = tasks[0]
+  mule_withdraw_tasks = MuleWithdrawTask.all.select{|task| !task.executed  && !task.account!= nil && task.account.id == account.id && task.is_relevant}
+  if mule_withdraw_tasks != nil && mule_withdraw_tasks.length > 0
+    task = mule_withdraw_tasks[0]
   else
     return "DISCONNECT:1"
   end
@@ -84,6 +84,7 @@ def get_mule_withdraw_task_respond(account)
   item_amount = task.item_amount
   world = task.world
   slave_name = task.slave_name
+
 
   log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
   log.save
@@ -101,8 +102,12 @@ def get_task_respond(task, account)
     return get_woodcutting_task_respond(task, account)
     #other cases, such as combat, druids.. etc
   when "MULE_WITHDRAW"
+  when "MULE_DEPOSIT"
     puts "res mule respond"
     return get_mule_withdraw_task_respond(account)
+  when "COMBAT"
+    puts "combat res"
+    return get_combat_task_respond(task,account)
   end
 end
 
@@ -117,12 +122,12 @@ def account_get_direct_respond(message, account)
       return get_mule_withdraw_task_respond(account)
     else if message == "task_request"
       puts "before getting task"
-      task = account.schema.get_suitable_task
+      task = account.schema.get_suitable_task(account)
       puts "after getting task"
       if task == nil
         task_id = 0
         #task = get when next task starts
-        res = "task_respond:1:BREAK:#{task_id}:TIME:1"
+        res = "TASK_RESPOND:1:BREAK:#{task_id}:TIME:#{account.schema.get_time_unil_next_task}"
         return res
       else
         puts "found task"
@@ -155,6 +160,52 @@ def update_woodcutting_task(task, account)
   puts "updated task"
 end
 
+def get_combat_task_respond(task, account)
+  puts "get combat respond"
+  task_type = task.task_type.name
+  if task.bank_area != nil
+    bank_area = task.bank_area.coordinates
+  else
+    bank_area = "none"
+  end
+  action_area = task.action_area.coordinates
+  monster_name = task.monster_name
+  if task.gear.head != nil then head = task.gear.head.formated_name else head = "none" end
+  if task.gear.cape != nil then cape = task.gear.cape.formated_name else cape = "none" end
+  if task.gear.neck != nil then neck = task.gear.neck.formated_name else neck = "none" end
+  if task.gear.weapon != nil then weapon = task.gear.weapon.formated_name else weapon = "none" end
+  if task.gear.chest != nil then chest = task.gear.chest.formated_name else chest = "none" end
+  if task.gear.shield != nil then shield = task.gear.shield.formated_name else shield = "none" end
+  if task.gear.legs != nil then legs = task.gear.legs.formated_name else legs = "none" end
+  if task.gear.hands != nil then hands = task.gear.hands.formated_name else hands = "none" end
+  if task.gear.feet != nil then feet = task.gear.feet.formated_name else feet = "none" end
+  if task.gear.ring != nil then ring = task.gear.ring.formated_name else ring = "none" end
+  if task.gear.ammunition != nil then ammunition = task.gear.ammunition.formated_name else ammunition = "none" end
+  if task.gear.ammunition_amount != nil then ammunition_amount= task.gear.ammunition_amount else "none" end
+  if task.inventory != nil then inventory = task.inventory.get_parsed_message else inventory ="none" end
+
+  break_condition = task.break_condition.name
+  puts "breakcondition::::: #{break_condition}"
+  task_duration = "99"
+  if break_condition == "TIME"
+    task_duration = ((task.get_end_time - Time.now.change(:month => 1, :day => 1, :year => 2000))/60).round
+    level_goal = "99"
+  elsif break_condition == "LEVEL" && task.break_after != nil
+    task_duration = "999999"
+    level_goal = task.break_after
+  elsif break_condition == "TIME_OR_LEVEL"
+    task_duration = ((task.get_end_time - Time.now.change(:month => 1, :day => 1, :year => 2000))/60).round
+    level_goal = task.break_after
+    puts task_duration
+  end
+  if task.food != nil then food = task.food.formated_name else food = "none" end
+  if task.loot_threshold != nil then loot_threshold = task.loot_threshold else loot_threshold = 100 end
+  log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
+  log.save
+  puts "sending resp"
+  res = "task_respond:1:#{task_type}:#{task.id}:#{bank_area}:#{action_area}:#{monster_name}:#{break_condition}:#{task_duration}:#{head}:#{cape}:#{neck}:#{weapon}:#{chest}:#{shield}:#{legs}:#{hands}:#{feet}:#{ring}:#{ammunition}:#{ammunition_amount}:#{food}:#{inventory}:#{loot_threshold}:#{task.skill}:#{level_goal}"
+  return res
+end
 def get_woodcutting_task_respond(task, account)
   task_type = task.task_type.name
   update_woodcutting_task(task, account)
@@ -247,20 +298,29 @@ def get_mule_respond(respond, account)
       item_amount = respond[2]
       trade_name = respond[3]
       world = respond[4]
+      mule_type = respond[5]
+      puts "MULE_tyPE:#{mule_type}"
       puts world
       mule.update(:world => world)
       mule.save
-      task = MuleWithdrawTask.new(:name => "Mule withdraw to :#{trade_name}", :task_type => TaskType.find_or_create_by(:name => "MULE_WITHDRAW"),  :account => mule, :item_id => item_id,
-                                  :item_amount => item_amount, :slave_name => trade_name, :world => world, :area => Area.find_by(:name => "GRAND_EXCHANGE"))
+      if mule_type.include?("deposit")
+        task = MuleWithdrawTask.new(:name => "Mule deposit from :#{trade_name}", :task_type => TaskType.find_or_create_by(:name => "MULE_DEPOSIT"),  :account => mule, :item_id => item_id,
+                                    :item_amount => item_amount, :slave_name => trade_name, :world => world, :area => Area.find_by(:name => "GRAND_EXCHANGE"))
+        puts "mule deposit"
+      elsif mule_type.include?("withdraw")
+        puts "mule_withdraw"
+        task = MuleWithdrawTask.new(:name => "Mule withdraw to :#{trade_name}", :task_type => TaskType.find_or_create_by(:name => "MULE_WITHDRAW"),  :account => mule, :item_id => item_id,
+                                    :item_amount => item_amount, :slave_name => trade_name, :world => world, :area => Area.find_by(:name => "GRAND_EXCHANGE"))
+      end
       task.update(:executed => false)
       task.save
-      return "SUCCESSFUL:#{mule.username.chomp}:#{mule.world}"
+      return "SUCCESSFUL_MULE_REQUEST:#{mule.username.chomp}:#{mule.world}:#{mule_type}"
     end
   else
     puts "we found no mule"
   end
   puts "we found no computer"
-  return "not successfull"
+  return "UNSUCCESSFUL_MULE_REQUEST"
 end
 
 def script_thread(client, account)

@@ -1,0 +1,39 @@
+= form_for @gear do |f|
+  - if @gear.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@gear.errors.count, "error")} prohibited this gear from being saved:"
+      ul
+        - @gear.errors.full_messages.each do |message|
+          li = message
+
+  - if @items != nil && @items.length > 0
+    = f.label :name
+    = f.text_field :name
+    = f.label :head
+    = collection_select(:gear, :head_id, @items, :id, :itemName, {include_blank: 'None'})
+    = f.label :cape
+    = collection_select(:gear, :cape_id, @items, :id, :itemName, {include_blank: 'None'})
+    = f.label :neck
+    = collection_select(:gear, :neck_id, @items, :id, :itemName, {include_blank: 'None'})
+    = f.label :weapon
+    = collection_select(:gear, :weapon_id, @items, :id, :itemName, {include_blank: 'None'})
+    = f.label :chest
+    = collection_select(:gear, :chest_id, @items, :id, :itemName, {include_blank: 'None'})
+    = f.label :shield
+    = collection_select(:gear, :shield_id, @items, :id, :itemName, {include_blank: 'None'})
+    = f.label :legs
+    = collection_select(:gear, :legs_id, @items, :id, :itemName, {include_blank: 'None'})
+    = f.label :hands
+    = collection_select(:gear, :hands_id, @items, :id, :itemName, {include_blank: 'None'})
+    = f.label :feet
+    = collection_select(:gear, :feet_id, @items, :id, :itemName, {include_blank: 'None'})
+    = f.label :ring
+    = collection_select(:gear, :ring_id, @items, :id, :itemName, {include_blank: 'None'})
+    = f.label :ammunition
+    = collection_select(:gear, :ammunition_id, @items, :id, :itemName, {include_blank: 'None'})
+    = f.label :ammunition_amount
+    = f.number_field :ammunition_amount
+
+
+
+  .actions = f.submit

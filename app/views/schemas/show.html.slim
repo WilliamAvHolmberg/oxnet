@@ -13,6 +13,9 @@ table
   th Start time
   th End time
   th Duration
+  th Weapon
+  th
+  th
   - @schema.tasks.all.each do |task|
     tr
       td
@@ -22,6 +25,8 @@ table
       td = task.start_time
       td = task.end_time
       td = task.get_task_duration
+      td = task.gear.weapon.itemName
+      td = link_to 'Remove', remove_task_schema_path(schema: @schema, task_id: task.id)
 
 
 

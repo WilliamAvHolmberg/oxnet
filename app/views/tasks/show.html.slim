@@ -33,6 +33,12 @@ p
 p
   strong Schema
   = @task.schema.name
+p
+  strong Skill
+  = @task.skill if @task.skill != nil
+p
+  strong Inventory
+  = @task.inventory.name
 
 => link_to 'Edit', edit_task_path(@task)
 '|

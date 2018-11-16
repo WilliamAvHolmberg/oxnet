@@ -1,0 +1,27 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  head: 
+  cape: 
+  neck: 
+  ammunition: 
+  weapon: 
+  shield: 
+  legs: 
+  hands: 
+  feet: 
+  ring: 
+  ammunition_amount: 1
+
+two:
+  head: 
+  cape: 
+  neck: 
+  ammunition: 
+  weapon: 
+  shield: 
+  legs: 
+  hands: 
+  feet: 
+  ring: 
+  ammunition_amount: 1

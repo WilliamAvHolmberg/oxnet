@@ -15,6 +15,9 @@ class Account < ApplicationRecord
   end
 
   def proxy_is_available?()
+    if proxy == nil || proxy.ip.length < 5
+      return true
+    end
     return Net::Ping::TCP.new(proxy.ip, proxy.port).ping
   end
 
@@ -64,7 +67,7 @@ class Account < ApplicationRecord
 
 
   def shall_do_task
-    return schema.get_suitable_task != nil
+    return schema.get_suitable_task(self) != nil
   end
 
 end

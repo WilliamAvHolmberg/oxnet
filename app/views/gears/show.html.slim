@@ -1,0 +1,39 @@
+p#notice = notice
+
+p
+  strong Head:
+  = @gear.head
+p
+  strong Cape:
+  = @gear.cape
+p
+  strong Neck:
+  = @gear.neck
+p
+  strong Ammunition:
+  = @gear.ammunition
+p
+  strong Weapon:
+  = @gear.weapon
+p
+  strong Shield:
+  = @gear.shield
+p
+  strong Legs:
+  = @gear.legs
+p
+  strong Hands:
+  = @gear.hands
+p
+  strong Feet:
+  = @gear.feet
+p
+  strong Ring:
+  = @gear.ring
+p
+  strong Ammunition amount:
+  = @gear.ammunition_amount
+
+=> link_to 'Edit', edit_gear_path(@gear)
+'|
+=< link_to 'Back', gears_path

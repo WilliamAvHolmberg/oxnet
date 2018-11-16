@@ -1,0 +1,24 @@
+#break_condition
+  .field
+    - if @break_conditions != nil && @break_conditions.length > 0
+      = f.label :break_condition
+      = collection_select(:task, :break_condition_id, @break_conditions, :id, :name, {:id => "break_condition_selection"})
+#time_selection style="display: none"
+  .field
+    = f.label :start_time
+    = f.time_select :start_time
+  .field
+    = f.label :end_time
+    = f.time_select :end_time
+#level_selection style="display: none"
+  .field
+    = f.label :skill
+    - values = (Level.all.collect{ |level| level.name}).uniq
+    = f.select :skill, options_for_select(values)
+  .field
+    = f.label :break_after
+    = f.number_field :break_after
+
+
+
+

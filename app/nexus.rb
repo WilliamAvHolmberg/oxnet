@@ -367,26 +367,17 @@ end
 
 def main_thread
   loop do
-    puts "main thread running"
     accounts = Account.all.select{|acc| acc.is_available && acc.schema != nil &&  acc.shall_do_task && !acc.banned && acc.proxy_is_available? &&  acc.account_type != nil && acc.account_type.name == "SLAVE"}
     if accounts != nil && accounts.length > 0
-      puts "we found accounts."
       accounts.each do |acc|
         computers = Computer.all.select{|computer| computer.is_available_to_nexus}
-          puts "account name: #{acc.login}"
-          puts "type: #{acc.account_type.name}"
         if computers != nil && computers.length > 0
-          puts "found computer: #{computers.first.name}"
           Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computers.first.id, :account_id => acc.id, :script_id => Script.first.id).save
-          puts "Lets sleep"
           sleep(30)
-          puts "done sleeping"
         else
-          puts "no computer"
         end
       end
     end
-    puts "no accounts"
     sleep(2)
   end
 end

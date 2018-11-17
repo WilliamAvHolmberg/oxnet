@@ -398,7 +398,7 @@ end
 require_all("./models/")
 
 
-
+Thread::abort_on_exception = true
 added_main_thread = false
 loop do
   if added_main_thread == false
@@ -413,6 +413,7 @@ loop do
     thread = nil
     puts "waiting for con"
     Thread.new server.accept do |client|
+
       puts "new client: #{client}"
       respond = client.gets.split(":")
       if respond[0] == "computer"

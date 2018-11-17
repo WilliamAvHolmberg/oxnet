@@ -318,7 +318,7 @@ def get_mule_respond(respond, account)
       if task != nil
         puts "task not nil"
       end
-      task.update(:executed => false)
+      #task.update(:executed => false)
       puts "task updated"
       task.save
       puts "lets send mess back"

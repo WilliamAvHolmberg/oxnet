@@ -313,8 +313,11 @@ def get_mule_respond(respond, account)
         task = MuleWithdrawTask.new(:name => "Mule withdraw to :#{trade_name}", :task_type => TaskType.find_or_create_by(:name => "MULE_WITHDRAW"),  :account => mule, :item_id => item_id,
                                     :item_amount => item_amount, :slave_name => trade_name, :world => world, :area => Area.find_by(:name => "GRAND_EXCHANGE"))
       end
+      puts "task created"
       task.update(:executed => false)
+      puts "task updated"
       task.save
+      puts "lets send mess back"
       return "SUCCESSFUL_MULE_REQUEST:#{mule.username.chomp}:#{mule.world}:#{mule_type}"
     end
   else

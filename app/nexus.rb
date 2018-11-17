@@ -127,7 +127,8 @@ def account_get_direct_respond(message, account)
       if task == nil
         task_id = 0
         #task = get when next task starts
-        res = "TASK_RESPOND:1:BREAK:#{task_id}:TIME:#{account.schema.get_time_unil_next_task}"
+        #res = "TASK_RESPOND:1:BREAK:#{task_id}:TIME:#{account.schema.get_time_unil_next_task}"
+        res = "DISCONNECT:1"
         return res
       else
         puts "found task"

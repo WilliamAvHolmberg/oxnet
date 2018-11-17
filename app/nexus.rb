@@ -304,6 +304,7 @@ def get_mule_respond(respond, account)
       puts world
       mule.update(:world => world)
       mule.save
+      task = nil
       if mule_type.include?("deposit")
         task = MuleWithdrawTask.new(:name => "Mule deposit from :#{trade_name}", :task_type => TaskType.find_or_create_by(:name => "MULE_DEPOSIT"),  :account => mule, :item_id => item_id,
                                     :item_amount => item_amount, :slave_name => trade_name, :world => world, :area => Area.find_by(:name => "GRAND_EXCHANGE"))
@@ -314,6 +315,9 @@ def get_mule_respond(respond, account)
                                     :item_amount => item_amount, :slave_name => trade_name, :world => world, :area => Area.find_by(:name => "GRAND_EXCHANGE"))
       end
       puts "task created"
+      if task != nil
+        puts "task not nil"
+      end
       task.update(:executed => false)
       puts "task updated"
       task.save

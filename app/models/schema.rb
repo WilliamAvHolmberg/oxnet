@@ -7,7 +7,7 @@ class Schema < ApplicationRecord
       if task.break_condition == nil
       elsif task.break_condition.name == "TIME_OR_LEVEL" && task.skill != nil
         accounts= Level.where(:account => account).select {|level| level.name == task.skill}
-        if accounts == nil && accounts.first != nil && account.first.level != nil
+        if accounts == nil && accounts.first != nil && accounts.first.level != nil
 
         account_level = accounts.first.level
         time = Time.now.change(:month => 1, :day => 1, :year => 2000)

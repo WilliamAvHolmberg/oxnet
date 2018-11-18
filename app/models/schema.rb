@@ -3,10 +3,8 @@ class Schema < ApplicationRecord
   has_many :accounts
 
   def get_suitable_task(account)
-    puts "lets get a task"
     self.tasks.all.each do |task|
       if task.break_condition == nil
-        puts "bad task, move on"
       elsif task.break_condition.name == "TIME_OR_LEVEL" && task.skill != nil
         account_level = Level.where(:account => account).select {|level| level.name == task.skill}.first.level
         time = Time.now.change(:month => 1, :day => 1, :year => 2000)
@@ -29,6 +27,7 @@ class Schema < ApplicationRecord
         end
       end
     end
+    puts "found no task for:#{account.username}"
     return nil
   end
 

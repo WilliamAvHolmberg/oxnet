@@ -6,7 +6,21 @@ class Schema < ApplicationRecord
     self.tasks.all.each do |task|
       if task.break_condition == nil
       elsif task.break_condition.name == "TIME_OR_LEVEL" && task.skill != nil
-        account_level = Level.where(:account => account).select {|level| level.name == task.skill}.first.level
+        accounts= Level.where(:account => account).select {|level| level.name == task.skill}
+        if accounts == nil
+          return nil
+        end
+
+        account = accounts.first
+
+        if account == nil 
+          return nil
+        end
+
+        account_level = account.level
+        if account_level == nil
+          return nil
+        end
         time = Time.now.change(:month => 1, :day => 1, :year => 2000)
         if time > task.get_start_time && time < task.get_end_time && account_level.to_i < task.break_after.to_i
           return task

@@ -15,7 +15,7 @@ end
 
 def computer_get_respond(instruction_queue)
   if instruction_queue.empty?
-    return "logged:fine"
+    #return "logged:fine"
   else
     ins = instruction_queue.pop
 

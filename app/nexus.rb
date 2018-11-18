@@ -367,11 +367,14 @@ end
 
 def main_thread
   loop do
+    puts "looing for available accounts"
     accounts = Account.all.select{|acc| acc.is_available && acc.schema != nil &&  acc.shall_do_task && !acc.banned && acc.proxy_is_available? &&  acc.account_type != nil && acc.account_type.name == "SLAVE"}
     if accounts != nil && accounts.length > 0
+      puts "we found acc"
       accounts.each do |acc|
         computers = Computer.all.select{|computer| computer.is_available_to_nexus}
         if computers != nil && computers.length > 0
+          puts "creating new instruction"
           Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computers.first.id, :account_id => acc.id, :script_id => Script.first.id).save
           sleep(30)
         else

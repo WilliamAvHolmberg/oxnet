@@ -13,7 +13,6 @@ class Schema < ApplicationRecord
           return task
           end
       elsif task.break_condition.name == "TIME"
-      puts "time task"
       time = Time.now.change(:month => 1, :day => 1, :year => 2000)
         if time > task.get_start_time && time < task.get_end_time
           puts "found task for:#{account.username}"
@@ -27,7 +26,6 @@ class Schema < ApplicationRecord
         end
       end
     end
-    puts "found no task for:#{account.username}"
     return nil
   end
 

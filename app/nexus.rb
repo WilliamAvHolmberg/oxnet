@@ -250,7 +250,7 @@ def computer_thread(client, computer)
     elsif respond[0] == "log"
       #get new instructions
       instruction_queue = Instruction.all.select{|ins| ins.computer_id == computer.id && !ins.completed && ins.is_relevant}
-      if instruction_queue != nilx
+      if instruction_queue != nil
         puts "Inustruction queue length:#{instruction_queue.length}"
       end
       #puts "Log from: #{computer.name}:::log:#{respond}"

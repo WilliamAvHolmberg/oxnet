@@ -15,7 +15,7 @@ end
 
 def computer_get_respond(instruction_queue)
   if instruction_queue.empty?
-    #return "logged:fine"
+    return "logged:fine"
   else
     ins = instruction_queue.pop
 
@@ -250,7 +250,7 @@ def computer_thread(client, computer)
     elsif respond[0] == "log"
       #get new instructions
       instruction_queue = Instruction.all.select{|ins| ins.computer_id == computer.id && !ins.completed && ins.is_relevant}
-      if instruction_queue != nil
+      if instruction_queue != nilx
         puts "Inustruction queue length:#{instruction_queue.length}"
       end
       #puts "Log from: #{computer.name}:::log:#{respond}"

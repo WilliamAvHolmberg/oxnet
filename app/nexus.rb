@@ -378,9 +378,11 @@ def main_thread
           Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computers.first.id, :account_id => acc.id, :script_id => Script.first.id).save
           sleep(30)
         else
+          puts "no computer found"
         end
       end
     end
+    puts "no accounts found"
     sleep(2)
   end
 end

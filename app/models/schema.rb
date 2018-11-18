@@ -11,17 +11,20 @@ class Schema < ApplicationRecord
         account_level = Level.where(:account => account).select {|level| level.name == task.skill}.first.level
         time = Time.now.change(:month => 1, :day => 1, :year => 2000)
         if time > task.get_start_time && time < task.get_end_time && account_level.to_i < task.break_after.to_i
+          puts "found task for:#{account.username}"
           return task
           end
       elsif task.break_condition.name == "TIME"
       puts "time task"
       time = Time.now.change(:month => 1, :day => 1, :year => 2000)
         if time > task.get_start_time && time < task.get_end_time
+          puts "found task for:#{account.username}"
           return task
         end
       elsif task.break_condition.name == "LEVEL" && task.skill != nil
         account_level = Level.where(:account => account).select {|level| level.name == task.skill}.first.level
         if account_level.to_i < task.break_after.to_i
+          puts "found task for:#{account.username}"
           return task
         end
       end

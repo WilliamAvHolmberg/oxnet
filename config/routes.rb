@@ -18,6 +18,8 @@ Rails.application.routes.draw do
     member do
       get 'copy'
       get 'remove_task'
+      get 'move_up_task'
+      get 'move_down_task'
     end
   end
   resources :break_conditions

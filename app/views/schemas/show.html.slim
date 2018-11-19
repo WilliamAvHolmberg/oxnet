@@ -12,6 +12,7 @@ table
   th TaskType
   th Start time
   th Weapon
+  th Position
   th
   th
   - @schema.tasks.all.each do |task|
@@ -22,7 +23,10 @@ table
       td = task.task_type.name
       td = task.get_task_duration
       td = task.gear.weapon.itemName
+      td = task.position
       td = link_to 'Remove', remove_task_schema_path(schema: @schema, task_id: task.id)
+      td = link_to 'Move_up', move_up_task_schema_path(schema: @schema, task_id: task.id)
+      td = link_to 'Move_down', move_down_task_schema_path(schema: @schema, task_id: task.id)
 
 
 

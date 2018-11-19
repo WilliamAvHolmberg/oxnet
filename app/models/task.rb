@@ -9,6 +9,8 @@ class Task < ApplicationRecord
   belongs_to :inventory, optional:true
   belongs_to :gear, optional:true
 
+  acts_as_list :scope => :schema
+
   def self.inherited(subklass)
     self.inherit_attributes(subklass)
   end

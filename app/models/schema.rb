@@ -1,7 +1,8 @@
 class Schema < ApplicationRecord
-  has_many :tasks, dependent: :destroy
+  has_many :tasks, -> { order(position: :asc) }, dependent: :destroy
   has_many :accounts
   has_many :time_intervals
+
 
 
 

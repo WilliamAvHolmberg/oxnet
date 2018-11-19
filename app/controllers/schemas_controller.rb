@@ -16,6 +16,19 @@ class SchemasController < ApplicationController
   def new
     @schema = Schema.new
   end
+
+  def move_down_task
+    @schema = Schema.find(params[:id])
+    task = Task.find(params[:task_id])
+    task.move_lower
+    render 'show'
+  end
+  def move_up_task
+    @schema = Schema.find(params[:id])
+    task = Task.find(params[:task_id])
+    task.move_higher
+    render 'show'
+  end
   def remove_task
     @schema = Schema.find(params[:id])
     task = Task.find(params[:task_id])

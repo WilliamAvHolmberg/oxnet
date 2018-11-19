@@ -372,7 +372,8 @@ def task_log(account, respond)
   money = parsed_respond[5].split(";")[1]
   TaskLog.new(:account_id => account.id, :task_id => task_id,
               :position => position, :xp_per_hour => xp,
-              :money_per_hour => money)
+              :money_per_hour => money, :respond => respond).save
+  Log.new(computer_id: nil, account_id: account.id, text: respond).save
 end
 def script_thread(client, account)
   while(!client.closed?)

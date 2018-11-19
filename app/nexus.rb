@@ -377,10 +377,11 @@ end
 def script_thread(client, account)
   while(!client.closed?)
     instruction_queue = []
+    respond = client.gets
     if respond == nil
       client.puts "ok"
     end
-    respond = client.gets.split(":")
+    respond = respond.split(":")
     puts respond
     if respond[0] == "log"
       #get new instructions

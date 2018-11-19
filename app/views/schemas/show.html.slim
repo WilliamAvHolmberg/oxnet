@@ -28,7 +28,7 @@ table
       td = link_to 'Move_up', move_up_task_schema_path(schema: @schema, task_id: task.id)
       td = link_to 'Move_down', move_down_task_schema_path(schema: @schema, task_id: task.id)
 
-
+h3 = "Schedule for this schema. Total-time: #{@schema.total_time_per_day} minutes out of #{24*60} minutes"
 
 table
   th Name

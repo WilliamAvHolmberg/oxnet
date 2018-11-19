@@ -364,20 +364,29 @@ def get_mule_respond(respond, account)
   return "UNSUCCESSFUL_MULE_REQUEST"
 end
 
+def task_log(account, respond)
+  parsed_respond = respond.split(":")
+  task_id = parsed_respond[2]
+  position = parsed_respond[3]
+  xp = parsed_respond[4].split(";")[1]
+  money = parsed_respond[5].split(";")[1]
+  TaskLog.new(:account_id => account.id, :task_id => task_id,
+              :position => position, :xp_per_hour => xp,
+              :money_per_hour => money)
+end
 def script_thread(client, account)
   while(!client.closed?)
     instruction_queue = []
     respond = client.gets.split(":")
     puts respond
     if respond[0] == "log"
-      #get new instructionsp
+      #get new instructions
       instruction_queue = Instruction.all.select{|ins|ins.is_relevant && ins.account_id == account.id && ins.completed == false}
       log = Log.new(computer_id: nil, account_id: account.id, text: respond)
       log.save
       client.puts account_get_instruction_respond(instruction_queue)
     elsif respond[0] == "task_log"
-      log = Log.new(computer_id: nil, account_id: account.id, text: respond)
-      log.save
+      task_log(account, respond)
       client.puts "ok"
       #TODO, ADD XP GAINED TO account etc...
     elsif respond[0] == "task_request"

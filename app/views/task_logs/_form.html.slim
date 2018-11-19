@@ -1,0 +1,27 @@
+= form_for @task_log do |f|
+  - if @task_log.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@task_log.errors.count, "error")} prohibited this task_log from being saved:"
+      ul
+        - @task_log.errors.full_messages.each do |message|
+          li = message
+
+  .field
+    = f.label :money_per_hour
+    = f.text_field :money_per_hour
+  .field
+    = f.label :xp_per_hour
+    = f.text_field :xp_per_hour
+  .field
+    = f.label :account
+    = f.text_field :account
+  .field
+    = f.label :task
+    = f.text_field :task
+  .field
+    = f.label :respond
+    = f.text_area :respond
+  .field
+    = f.label :position
+    = f.text_field :position
+  .actions = f.submit

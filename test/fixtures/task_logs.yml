@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  money_per_hour: MyString
+  xp_per_hour: MyString
+  account: one
+  task: one
+  respond: MyText
+  position: MyString
+
+two:
+  money_per_hour: MyString
+  xp_per_hour: MyString
+  account: two
+  task: two
+  respond: MyText
+  position: MyString

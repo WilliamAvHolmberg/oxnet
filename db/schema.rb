@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_19_105437) do
+ActiveRecord::Schema.define(version: 2018_11_19_150144) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -201,6 +201,19 @@ ActiveRecord::Schema.define(version: 2018_11_19_105437) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "task_logs", force: :cascade do |t|
+    t.string "money_per_hour"
+    t.string "xp_per_hour"
+    t.bigint "account_id"
+    t.bigint "task_id"
+    t.text "respond"
+    t.string "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_task_logs_on_account_id"
+    t.index ["task_id"], name: "index_task_logs_on_task_id"
+  end
+
   create_table "task_types", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -267,6 +280,8 @@ ActiveRecord::Schema.define(version: 2018_11_19_105437) do
   add_foreign_key "mule_withdraw_tasks", "accounts"
   add_foreign_key "mule_withdraw_tasks", "areas"
   add_foreign_key "mule_withdraw_tasks", "task_types"
+  add_foreign_key "task_logs", "accounts"
+  add_foreign_key "task_logs", "tasks"
   add_foreign_key "tasks", "break_conditions"
   add_foreign_key "tasks", "gears"
   add_foreign_key "tasks", "inventories"

@@ -1,0 +1,31 @@
+h1 Listing task_logs
+
+table
+  thead
+    tr
+      th Money per hour
+      th Xp per hour
+      th Account
+      th Task
+      th Respond
+      th Position
+      th
+      th
+      th
+
+  tbody
+    - @task_logs.each do |task_log|
+      tr
+        td = task_log.money_per_hour
+        td = task_log.xp_per_hour
+        td = task_log.account
+        td = task_log.task
+        td = task_log.respond
+        td = task_log.position
+        td = link_to 'Show', task_log
+        td = link_to 'Edit', edit_task_log_path(task_log)
+        td = link_to 'Destroy', task_log, data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+
+= link_to 'New Task log', new_task_log_path

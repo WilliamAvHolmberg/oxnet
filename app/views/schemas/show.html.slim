@@ -9,9 +9,9 @@ h3 Accounts using this schema
 h3 Tasks associated to this schema
 table
   th Name
-  th TaskType
+  th Skill
+  th Level
   th Start time
-  th Weapon
   th Position
   th
   th
@@ -20,9 +20,9 @@ table
       td
         a href="/tasks/#{task.id}"
           = task.name
-      td = task.task_type.name
+      td = task.skill
+      td = task.break_after
       td = task.get_task_duration
-      td = task.gear.weapon.itemName
       td = task.position
       td = link_to 'Remove', remove_task_schema_path(schema: @schema, task_id: task.id)
       td = link_to 'Move_up', move_up_task_schema_path(schema: @schema, task_id: task.id)

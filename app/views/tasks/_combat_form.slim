@@ -12,12 +12,6 @@
   - else
     = "Please create a gear before creating the task"
 .field
-  - if Inventory.all != nil && Inventory.all.length > 0
-    = f.label :Inventory
-    = collection_select(:task, :inventory_id, Inventory.all, :id, :name, {include_blank: 'None'})
-  - else
-    = "Please create a gear before creating the task"
-.field
   - if @items != nil && @items.length > 0
     = f.label :Food
     = collection_select(:task, :food_id, @items, :id, :itemName)

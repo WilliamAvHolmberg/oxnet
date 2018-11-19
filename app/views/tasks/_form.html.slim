@@ -14,12 +14,15 @@
         = f.label :task_type
         = collection_select(:task, :task_type_id, @task_types, :id, :name, {:id => "task_type_selection"})
       - else
-        = "Please create a area before creating the task"
+        = "Please create a task type before creating the task"
+  #agility_task style="display: none"
+    = render partial: 'agility_form', locals: {items: @items, f: f}
   #wc_task style="display: none"
     = render partial: 'woodcutting_form', locals:{items: @items, f: f}
   #combat_task style="display: none"
     = render partial: 'combat_form', locals: {items: @items, f: f}
   = render partial: 'break_form', locals:{items: @items, f: f}
+  = render partial: 'inventory_form', locals:{items: @items, f: f}
   #schema
     .field
       - if @schemas != nil && @schemas.length > 0

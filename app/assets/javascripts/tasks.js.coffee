@@ -26,14 +26,16 @@ $(document).ready ->
     console.log($('#task_task_type_id option:selected').val())
     if $('#task_task_type_id option:selected').val() == "1"
       $('#wc_task').show()
-      $('#combat_task').show()
     else
       $('#wc_task').hide()
     if $('#task_task_type_id option:selected').val() == "3"
       $('#combat_task').show()
-      $('#wc_task').hide()
     else
       $('#combat_task').hide()
+    if $('#task_task_type_id option:selected').val() == "5"
+      $('#agility_task').show()
+    else
+      $('#agility_task').hide()
 
 
 

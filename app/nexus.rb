@@ -98,6 +98,9 @@ end
 
 def get_task_respond(task, account)
   case task.task_type.name
+  when "AGILITY"
+    puts "agil respond"
+    return get_agility_task_respond(task, account)
   when "WOODCUTTING"
     puts " res wc respond"
     return get_woodcutting_task_respond(task, account)
@@ -160,6 +163,34 @@ def update_woodcutting_task(task, account)
   task.axe = axe
   task.save
   puts "updated task"
+end
+
+
+def get_agility_task_respond(task, account)
+  puts "get agility respond"
+  task_type = task.task_type.name
+
+  break_condition = task.break_condition.name
+  puts "breakcondition::::: #{break_condition}"
+  if task.inventory != nil then inventory = task.inventory.get_parsed_message else inventory ="none" end
+
+  task_duration = "99"
+  if break_condition == "TIME"
+    task_duration = ((task.get_end_time - Time.now.change(:month => 1, :day => 1, :year => 2000))/60).round
+    level_goal = "99"
+  elsif break_condition == "LEVEL" && task.break_after != nil
+    task_duration = "999999"
+    level_goal = task.break_after
+  elsif break_condition == "TIME_OR_LEVEL"
+    task_duration = ((task.get_end_time - Time.now.change(:month => 1, :day => 1, :year => 2000))/60).round
+    level_goal = task.break_after
+    puts task_duration
+  end
+  log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
+  log.save
+  puts "sending resp"
+  res = "task_respond:1:#{task_type}:#{task.id}:#{break_condition}:#{task_duration}:#{inventory}:#{level_goal}"
+  return res
 end
 
 def get_combat_task_respond(task, account)

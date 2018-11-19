@@ -364,16 +364,15 @@ def get_mule_respond(respond, account)
   return "UNSUCCESSFUL_MULE_REQUEST"
 end
 
-def task_log(account, respond)
-  parsed_respond = respond.split(":")
+def task_log(account, parsed_respond)
   task_id = parsed_respond[2]
   position = parsed_respond[3]
   xp = parsed_respond[4].split(";")[1]
   money = parsed_respond[5].split(";")[1]
   TaskLog.new(:account_id => account.id, :task_id => task_id,
               :position => position, :xp_per_hour => xp,
-              :money_per_hour => money, :respond => respond).save
-  Log.new(computer_id: nil, account_id: account.id, text: respond).save
+              :money_per_hour => money, :respond => parsed_respond).save
+  Log.new(computer_id: nil, account_id: account.id, text: parsed_respond).save
 end
 def script_thread(client, account)
   while(!client.closed?)

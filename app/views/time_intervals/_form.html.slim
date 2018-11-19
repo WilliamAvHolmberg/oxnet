@@ -1,0 +1,25 @@
+= form_for @time_interval do |f|
+  - if @time_interval.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@time_interval.errors.count, "error")} prohibited this time_interval from being saved:"
+      ul
+        - @time_interval.errors.full_messages.each do |message|
+          li = message
+
+  .field
+    = f.label :name
+    = f.text_field :name
+  .field
+    = f.label :start_time
+    = f.time_select :start_time
+  .field
+    = f.label :end_time
+    = f.time_select :end_time
+  #schema
+    .field
+      - if @schemas != nil && @schemas.length > 0
+        = f.label :schema
+        = collection_select(:time_interval, :schema_id, @schemas, :id, :name)
+      - else
+        = "Please create a area before creating the task"
+  .actions = f.submit

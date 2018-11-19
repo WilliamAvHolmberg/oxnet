@@ -1,0 +1,27 @@
+h1 Listing time_intervals
+
+table
+  thead
+    tr
+      th Name
+      th Start time
+      th End time
+      th Schema
+      th
+      th
+      th
+
+  tbody
+    - @time_intervals.each do |time_interval|
+      tr
+        td = time_interval.name
+        td = time_interval.start_time
+        td = time_interval.end_time
+        td = time_interval.schema
+        td = link_to 'Show', time_interval
+        td = link_to 'Edit', edit_time_interval_path(time_interval)
+        td = link_to 'Destroy', time_interval, data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+
+= link_to 'New Time interval', new_time_interval_path

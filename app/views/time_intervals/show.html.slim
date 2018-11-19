@@ -1,0 +1,18 @@
+p#notice = notice
+
+p
+  strong Name:
+  = @time_interval.name
+p
+  strong Start time:
+  = @time_interval.start_time
+p
+  strong End time:
+  = @time_interval.end_time
+p
+  strong Schema:
+  = @time_interval.schema
+
+=> link_to 'Edit', edit_time_interval_path(@time_interval)
+'|
+=< link_to 'Back', time_intervals_path

@@ -19,11 +19,13 @@ class TasksController < ApplicationController
     @task_types = TaskType.all
     @items = RsItem.all
     @break_conditions = BreakCondition.all
+    @time_intervalls = TimeInterval.all
     @schemas = Schema.all
   end
 
   # GET /tasks/1/edit
   def edit
+    @time_intervalls = TimeInterval.all
     @areas = Area.all
     @task_types = TaskType.all
     @items = RsItem.all

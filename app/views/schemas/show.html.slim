@@ -11,8 +11,6 @@ table
   th Name
   th TaskType
   th Start time
-  th End time
-  th Duration
   th Weapon
   th
   th
@@ -22,11 +20,20 @@ table
         a href="/tasks/#{task.id}"
           = task.name
       td = task.task_type.name
-      td = task.start_time
-      td = task.end_time
       td = task.get_task_duration
       td = task.gear.weapon.itemName
       td = link_to 'Remove', remove_task_schema_path(schema: @schema, task_id: task.id)
+
+
+
+table
+  th Name
+  th Start Time
+  th End Time
+  - @schema.time_intervals.all.each do |interval|
+    tr
+      td = interval.start_time
+      td = interval.end_time
 
 
 

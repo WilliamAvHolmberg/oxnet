@@ -1,27 +1,29 @@
 class Schema < ApplicationRecord
   has_many :tasks, dependent: :destroy
   has_many :accounts
+  has_many :time_intervals
+
+
+
+
+  def time_is_right
+    self.time_interval.all.each do |interval|
+      time = Time.now.change(:month => 1, :day => 1, :year => 2000)
+      if time > task.get_start_time && time < task.get_end_time
+        puts "found right time."
+        return true
+      end
+    end
+    return false
+  end
 
   def get_suitable_task(account)
-    self.tasks.all.each do |task|
-      if task.break_condition == nil
-      elsif task.break_condition.name == "TIME_OR_LEVEL" && task.skill != nil
-        account_level = Level.where(:account => account).select {|level| level.name == task.skill}.first.level
-        time = Time.now.change(:month => 1, :day => 1, :year => 2000)
-        if time > task.get_start_time && time < task.get_end_time && account_level.to_i < task.break_after.to_i
-          puts "found task for:#{account.username}"
-          return task
-          end
-      elsif task.break_condition.name == "TIME"
-      time = Time.now.change(:month => 1, :day => 1, :year => 2000)
-        if time > task.get_start_time && time < task.get_end_time
-          puts "found task for:#{account.username}"
-          return task
-        end
-      elsif task.break_condition.name == "LEVEL" && task.skill != nil
+    if time_is_right == false
+      return nil
+    else
+      self.tasks.all.each do |task|
         account_level = Level.where(:account => account).select {|level| level.name == task.skill}.first.level
         if account_level.to_i < task.break_after.to_i
-          puts "found task for:#{account.username}"
           return task
         end
       end

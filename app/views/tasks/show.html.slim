@@ -18,15 +18,7 @@ p
 p
   strong Break Condition:
   = @task.break_condition.name if @task.break_condition != nil
-p
-  strong Break After:
-  = @task.break_after if @task.break_after != nil
-p
-  strong Start time:
-  = @task.start_time if @task.start_time != nil
-p
-  strong End time
-  = @task.end_time if @task.end_time != nil
+
 p
   strong Task duration
   = " #{@task.get_task_duration.round} minutes" if @task.get_task_duration != nil

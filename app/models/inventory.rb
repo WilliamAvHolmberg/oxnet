@@ -12,7 +12,7 @@ class Inventory < ApplicationRecord
       puts inventory_items.all
       self.inventory_items.each do |inventory_item|
         puts inventory_item.item.formated_name
-        message << "#{inventory_item.item.formated_name},#{inventory_item.amount};"
+        message << "#{inventory_item.item.formated_name},#{inventory_item.amount},#{inventory_item.buy_amount};"
       end
     end
     puts "out of parsed mess"

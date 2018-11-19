@@ -13,6 +13,9 @@
     = f.label :Inventory
     = collection_select(:inventory_item, :inventory_id, Inventory.all, :id, :name)
   .field
-    = f.label :amount
+    = f.label :amounts
     = f.number_field :amount
+  .field
+    = f.label :buy_amount
+    = f.number_field :buy_amount
   .actions = f.submit

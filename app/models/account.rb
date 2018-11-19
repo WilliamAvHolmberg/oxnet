@@ -4,6 +4,7 @@ class Account < ApplicationRecord
   has_many :logs, dependent: :destroy
   has_many :instructions, dependent: :destroy
   has_many :mule_withdraw_tasks, dependent: :destroy
+  has_many :task_logs, dependent: :destroy
   belongs_to :schema
   belongs_to :account_type
 
@@ -63,6 +64,22 @@ class Account < ApplicationRecord
       return 0
     end
     return total_time
+  end
+
+  def get_average_money
+    if task_logs != nil && task_logs.all.length > 0
+      amount_of_logs = task_logs.all.length
+      total_amount_of_money = 0
+      task_logs.all.each do |log|
+        if log.money_per_hour != nil
+        total_amount_of_money += log.money_per_hour.to_i
+        else
+          amount_of_logs -=1
+        end
+      end
+      return total_amount_of_money/amount_of_logs
+    end
+    return 0
   end
 
 

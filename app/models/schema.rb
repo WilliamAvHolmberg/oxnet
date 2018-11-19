@@ -7,9 +7,9 @@ class Schema < ApplicationRecord
 
 
   def time_is_right
-    self.time_interval.all.each do |interval|
+    self.time_intervals.all.each do |interval|
       time = Time.now.change(:month => 1, :day => 1, :year => 2000)
-      if time > task.get_start_time && time < task.get_end_time
+      if time > interval.get_start_time && time < interval.get_end_time
         puts "found right time."
         return true
       end
@@ -17,13 +17,26 @@ class Schema < ApplicationRecord
     return false
   end
 
+  def get_time_interval
+    self.time_intervals.all.each do |interval|
+      time = Time.now.change(:month => 1, :day => 1, :year => 2000)
+      if time > interval.get_start_time && time < interval.get_end_time
+        return interval
+      end
+    end
+    return nil
+  end
+
   def get_suitable_task(account)
     if time_is_right == false
       return nil
     else
+      interval = get_time_interval
       self.tasks.all.each do |task|
         account_level = Level.where(:account => account).select {|level| level.name == task.skill}.first.level
         if account_level.to_i < task.break_after.to_i
+          task.update(:start_time => interval.start_time)
+          task.update(:end_time => interval.end_time)
           return task
         end
       end

@@ -2,6 +2,7 @@ require 'socket'
 require 'active_record'
 require_relative '../app/models/application_record'
 require 'net/ping'
+require 'acts_as_list'
 
 @hello = 0
 def db_configuration

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :lives
   resources :task_logs
   resources :time_intervals
   resources :inventories do

@@ -1,0 +1,9 @@
+= form_for @life do |f|
+  - if @life.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@life.errors.count, "error")} prohibited this life from being saved:"
+      ul
+        - @life.errors.full_messages.each do |message|
+          li = message
+
+  .actions = f.submit

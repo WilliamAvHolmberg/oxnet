@@ -12,8 +12,9 @@ table
     th Average money per hour
     th Created At
     th Account Type
-    th Time until next
+    th Time per day
     th Banned?
+    th
 
   - @accounts.each do |account|
     tr
@@ -33,6 +34,7 @@ table
       th = account.get_average_money
       th = account.created_at
       th = account.account_type.name if account.account_type != nil
-      th = account.schema.get_time_unil_next_task if account.schema != nil
+      th = account.schema.total_time_per_day if account.schema != nil
       th = account.banned
+      td = link_to 'Destroy', account, data: {confirm: 'Are you sure?'}, method: :delete
 = link_to 'New', new_account_path

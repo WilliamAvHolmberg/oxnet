@@ -1,0 +1,29 @@
+h1 Computers online:
+table
+  tr
+    th Name
+    th Task
+    th Money per Hour
+    th XP per hour
+    th Location
+    th Break after level
+    th Break after time
+  - (Account.all.select {|acc| !acc.is_available}).each do |account|
+    tr
+      td
+        a href="/accounts/#{account.id}" = account.username
+      td = account.task_logs.all.last.task.name
+      td = account.task_logs.all.last.money_per_hour
+      td = account.task_logs.all.last.xp_per_hour
+      td = account.task_logs.all.last.position
+      td = account.task_logs.all.last.task.break_after
+      td = account.task_logs.all.last.task.end_time
+
+h1 Accounts online:
+table
+  tr
+    th Name
+  - (Computer.all.select {|acc| acc.is_available_to_nexus}).each do |computer|
+    tr
+      td
+        a href="/computers/#{computer.id}" = computer.name

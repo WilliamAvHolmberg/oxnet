@@ -16,7 +16,9 @@
   p = form.label :world
   p = form.text_field :world
   p = form.label :banned
-  p = form.text_field :banned
+  p = form.check_box :banned
+  p = form.label :should_mule
+  p = form.check_box :should_mule
   #schema
     .field
       - if @schemas != nil && @schemas.length > 0

@@ -155,6 +155,9 @@ def update_woodcutting_task(task, account)
     if level.level.to_i < 21
       puts "bronze axe"
       axe = RsItem.find_by(itemName: "Bronze axe")
+    elsif level.level.to_i < 41
+      puts "rune axe"
+      axe = RsItem.find_by(itemName: "Mithril axe")
     elsif level.level.to_i < 99
       puts "rune axe"
       axe = RsItem.find_by(itemName: "Rune axe")

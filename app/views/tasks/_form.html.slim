@@ -21,6 +21,7 @@
     = render partial: 'woodcutting_form', locals:{items: @items, f: f}
   #combat_task style="display: none"
     = render partial: 'combat_form', locals: {items: @items, f: f}
+  = render partial: 'area_form', locals:{items: @items, f: f}
   = render partial: 'break_form', locals:{items: @items, f: f}
   = render partial: 'inventory_form', locals:{items: @items, f: f}
   #schema

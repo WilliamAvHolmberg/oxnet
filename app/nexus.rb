@@ -251,12 +251,22 @@ def get_woodcutting_task_respond(task, account)
   axeID = task.axe.itemId
   axe_name = task.axe.itemName
   tree_name = task.treeName
-  task_duration = ((task.get_end_time - Time.now.change(:month => 1, :day => 1, :year => 2000))/60).round
-  puts task_duration
+  break_condition = task.break_condition.name
+  if break_condition == "TIME"
+    task_duration = ((task.get_end_time - Time.now.change(:month => 1, :day => 1, :year => 2000))/60).round
+    level_goal = "99"
+  elsif break_condition == "LEVEL" && task.break_after != nil
+    task_duration = "999999"
+    level_goal = task.break_after
+  elsif break_condition == "TIME_OR_LEVEL"
+    task_duration = ((task.get_end_time - Time.now.change(:month => 1, :day => 1, :year => 2000))/60).round
+    level_goal = task.break_after
+    puts task_duration
+  end
   log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
   log.save
   puts "sending resp"
-  res = "task_respond:1:#{task_type}:#{task.id}:#{bank_area}:#{action_area}:#{axeID}:#{axe_name}:#{tree_name}:TIME:#{task_duration}"
+  res = "task_respond:1:#{task_type}:#{task.id}:#{bank_area}:#{action_area}:#{axeID}:#{axe_name}:#{tree_name}:TIME:#{task_duration}:#{level_goal}"
   return res
 end
 

@@ -12,6 +12,7 @@ class AccountsController < ApplicationController
     @schemas = Schema.all
     @account_types = AccountType.all
     @computers = Computer.all
+    @mules = Account.all.select {|acc| acc.account_type.name == "MULE"}
   end
 
   def edit
@@ -19,6 +20,7 @@ class AccountsController < ApplicationController
     @schemas = Schema.all
     @account_types = AccountType.all
     @computers = Computer.all
+    @mules = Account.all.select {|acc| acc.account_type != nil && acc.account_type.name == "MULE"}
   end
 
 
@@ -54,6 +56,6 @@ class AccountsController < ApplicationController
 
   private
   def account_params
-    params.require(:account).permit(:login, :password, :proxy_id, :schema_id, :world, :account_type_id, :username, :banned, :should_mule, :computer_id)
+    params.require(:account).permit(:login, :password, :proxy_id, :schema_id, :world, :account_type_id, :username, :banned, :should_mule, :computer_id, :mule_id)
   end
 end

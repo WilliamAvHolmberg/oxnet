@@ -26,6 +26,13 @@
         = collection_select(:account, :computer_id, @computers, :id, :name)
       - else
         = "Please create a computer before associating to account"
+  #mule
+    .field
+      - if @mules != nil && @mules.length > 0
+        = form.label :mule
+        = collection_select(:account, :mule_id, @mules, :id, :username)
+      - else
+        = "Please create a computer before associating to account"
   #schema
     .field
       - if @schemas != nil && @schemas.length > 0

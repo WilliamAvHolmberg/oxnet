@@ -329,8 +329,8 @@ def updateAccountLevels(string, account)
 end
 
 def get_mule_respond(respond, account)
-  mules = Account.all.select{|acc| acc.account_type != nil && acc.account_type.name == "MULE" && !acc.banned && (acc.proxy_is_available? || acc.proxy.ip.length < 5) }
-  if mules != nil && mules.length > 0
+  mule = account.mule
+  if mule != nil && !mule.banned && (mule.proxy_is_available? || acc.proxy.ip.length < 5)
     puts "we found mule"
     #create new isntruction for mule
     computers = Computer.all.select{|computer| computer.is_available_to_nexus}
@@ -339,7 +339,6 @@ def get_mule_respond(respond, account)
       ins.save
       puts "created instruction"
       #new mule task
-      mule = mules[0]
       item_id = respond[1]
       item_amount = respond[2]
       trade_name = respond[3]

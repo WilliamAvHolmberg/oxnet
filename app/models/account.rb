@@ -8,6 +8,8 @@ class Account < ApplicationRecord
   belongs_to :schema
   belongs_to :account_type
   belongs_to :computer
+  has_many :slaves, :class_name => "Account"
+  belongs_to :mule, :class_name => "Account", foreign_key: "mule_id"
 
 
   validates_uniqueness_of :login

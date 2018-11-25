@@ -12,7 +12,7 @@ class AccountsController < ApplicationController
     @schemas = Schema.all
     @account_types = AccountType.all
     @computers = Computer.all
-    @mules = Account.all.select {|acc| acc.account_type.name == "MULE"}
+    @mules = Account.all.select {|acc| acc.account_type != nil && acc.account_type.name == "MULE"}
   end
 
   def edit

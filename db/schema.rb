@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_23_153935) do
+ActiveRecord::Schema.define(version: 2018_11_25_143526) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,7 +32,9 @@ ActiveRecord::Schema.define(version: 2018_11_23_153935) do
     t.bigint "account_type_id"
     t.string "username"
     t.boolean "should_mule", default: false
+    t.bigint "computer_id"
     t.index ["account_type_id"], name: "index_accounts_on_account_type_id"
+    t.index ["computer_id"], name: "index_accounts_on_computer_id"
     t.index ["schema_id"], name: "index_accounts_on_schema_id"
   end
 
@@ -278,6 +280,7 @@ ActiveRecord::Schema.define(version: 2018_11_23_153935) do
   end
 
   add_foreign_key "accounts", "account_types"
+  add_foreign_key "accounts", "computers"
   add_foreign_key "accounts", "schemas"
   add_foreign_key "instructions", "accounts"
   add_foreign_key "instructions", "instruction_types"

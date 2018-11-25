@@ -14,6 +14,7 @@ table
     th Account Type
     th Time per day
     th Should mule?
+    th Computer
     th Banned?
     th
 
@@ -37,6 +38,7 @@ table
       th = account.account_type.name if account.account_type != nil
       th = account.schema.total_time_per_day if account.schema != nil
       th = account.should_mule
+      th = account.computer.name if account.computer != nil
       th = account.banned
       td = link_to 'Destroy', account, data: {confirm: 'Are you sure?'}, method: :delete
 = link_to 'New', new_account_path

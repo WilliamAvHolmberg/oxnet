@@ -430,7 +430,8 @@ def main_thread
     if accounts != nil && accounts.length > 0
       puts "we found acc"
       accounts.each do |acc|
-        computers = Computer.all.select{|computer| computer.is_available_to_nexus}
+        if acc.computer_id != nil
+        computers = Computer.all.select{|computer| computer.id == acc.computer_id && computer.is_available_to_nexus}
         if computers != nil && computers.length > 0
           puts "creating new instruction"
           Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computers.first.id, :account_id => acc.id, :script_id => Script.first.id).save
@@ -438,6 +439,8 @@ def main_thread
         else
           puts "no computer found"
         end
+        end
+        puts "no computer associated to acc"
       end
     end
     puts "no accounts found"

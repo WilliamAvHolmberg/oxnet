@@ -11,12 +11,14 @@ class AccountsController < ApplicationController
     @account = Account.new
     @schemas = Schema.all
     @account_types = AccountType.all
+    @computers = Computer.all
   end
 
   def edit
     @account = Account.find(params[:id])
     @schemas = Schema.all
     @account_types = AccountType.all
+    @computers = Computer.all
   end
 
 
@@ -52,6 +54,6 @@ class AccountsController < ApplicationController
 
   private
   def account_params
-    params.require(:account).permit(:login, :password, :proxy_id, :schema_id, :world, :account_type_id, :username, :banned, :should_mule)
+    params.require(:account).permit(:login, :password, :proxy_id, :schema_id, :world, :account_type_id, :username, :banned, :should_mule, :computer_id)
   end
 end

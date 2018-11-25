@@ -7,6 +7,7 @@ class Account < ApplicationRecord
   has_many :task_logs, dependent: :destroy
   belongs_to :schema
   belongs_to :account_type
+  belongs_to :computer
 
 
   validates_uniqueness_of :login

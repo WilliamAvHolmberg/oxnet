@@ -1,5 +1,6 @@
 class Computer < ApplicationRecord
   has_many :logs
+  has_many :accounts
 
   def last_log
     return logs.last

@@ -19,6 +19,13 @@
   p = form.check_box :banned
   p = form.label :should_mule
   p = form.check_box :should_mule
+  #computer
+    .field
+      - if @computers != nil && @computers.length > 0
+        = form.label :computer
+        = collection_select(:account, :computer_id, @computers, :id, :name)
+      - else
+        = "Please create a computer before associating to account"
   #schema
     .field
       - if @schemas != nil && @schemas.length > 0

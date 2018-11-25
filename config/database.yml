@@ -24,10 +24,10 @@ default: &default
 development:
   adapter: postgresql
   encoding: utf8
-  database: d393jg5cl7jeu0
-  host: ec2-46-51-184-229.eu-west-1.compute.amazonaws.com
-  username: skvuvwnbvseadd
-  password: '626c42afac67296c6d5117a929c61bf3653f5479769b6d88ba27a17e607ec8fe'
+  database: test1
+  host: 138.197.176.126
+  username: root
+  password: 'Lifeunixbook123'
   port: 5432
 
 

@@ -494,7 +494,7 @@ loop do
         client.puts "connected:1"
       elsif respond[0] == "script"
         # start new thread for script
-        login = respond[3]
+        login = respond[3].chomp!
         if Account.where(:login => login) != nil && Account.where(:login => login).length > 0
           puts "Login: #{login}"
           account = Account.where(:login => login).first

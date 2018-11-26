@@ -502,7 +502,7 @@ loop do
           username = respond[5]
           world = respond[6]
           account = Account.new(:login => login, :password => password, :username => username, :world => world,
-                                :computer_id => Computer.find_by(:name => "William").id, :account_type => AccountType.find_by(:name => "SLAVE")).save!
+                                :computer_id => Computer.where(:name => "William").first.id, :account_type => AccountType.where(:name => "SLAVE").first).save!
           puts "acount not found but created: #{account.login}"
         end
         puts "New Script Thread started for: #{respond[3]}"

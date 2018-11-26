@@ -494,7 +494,7 @@ loop do
         # start new thread for script
         login = respond[3].strip!
         if Account.where(:login => login) != nil && Account.where(:login => login).length > 0
-
+          puts "Login: #{login}"
           account = Account.where(:login => login).first
           puts "account found:#{account.login}"
         else

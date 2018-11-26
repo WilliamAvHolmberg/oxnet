@@ -494,13 +494,16 @@ loop do
         # start new thread for script
         login = respond[3].strip!
         if Account.where(:login => login) != nil && Account.where(:login => login).length > 0
+
           account = Account.where(:login => login).first
+          puts "account found:#{account.login}"
         else
           password = respond[4].strip!
           username = respond[5].strip!
           world = respond[6].strip!
           account = Account.new(:login => login, :password => password, :username => username, :world => world,
                                 :computer_id => Computer.find_by(:name => "William").id, :account_type => AccountType.find_by(:name => "SLAVE")).save!
+          puts "acount not found but created: #{account.login}"
         end
         puts "New Script Thread started for: #{respond[3]}"
         thread =  Thread.fork{script_thread(client, account)}

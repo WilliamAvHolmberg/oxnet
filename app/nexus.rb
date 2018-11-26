@@ -498,11 +498,13 @@ loop do
           account = Account.where(:login => login).first
           puts "account found:#{account.login}"
         else
+          ip = respond[2]
           password = respond[4]
           username = respond[5]
           world = respond[6]
           account = Account.new(:login => login, :password => password, :username => username, :world => world,
-                                :computer => Computer.find_or_create_by(:name => "Suicide"), :account_type => AccountType.where(:name => "SLAVE").first, :schema => Schema.find_or_create_by(:name => "Suicide"))
+                                :computer => Computer.find_or_create_by(:name => "Suicide"), :account_type => AccountType.where(:name => "SLAVE").first,
+                                :schema => Schema.find_or_create_by(:name => "Suicide"), :proxy => Proxy.find_or_create_by(:port => "8080", :ip => ip, :location => "#{username} proxy"), :username => " ", :password => " ")
           account.save
           puts "acount not found but created: #{account.login}"
         end

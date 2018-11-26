@@ -494,7 +494,7 @@ loop do
         # start new thread for script
         login = respond[3].strip!
         if Account.where(:login => login) != nil
-          account = Account.where(:login => login)
+          account = Account.where(:login => login).first
         else
           password = respond[4].strip!
           username = respond[5].strip!

@@ -493,8 +493,8 @@ loop do
       elsif respond[0] == "script"
         # start new thread for script
         login = respond[3].strip!
-        if Account.find_by(:login => login) != nil
-          account = Account.find_or_create_by(:login => respond[3].strip!)
+        if Account.where(:login => login) != nil
+          account = Account.where(:login => login)
         else
           password = respond[4].strip!
           username = respond[5].strip!

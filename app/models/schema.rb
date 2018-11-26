@@ -42,6 +42,7 @@ class Schema < ApplicationRecord
           task.update(:end_time => interval.end_time)
           return task
         end
+        else
           return task
           end
       end

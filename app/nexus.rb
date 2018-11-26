@@ -121,7 +121,7 @@ def account_get_direct_respond(message, account)
   else
 
     puts "Task request"
-    if account.account_type.name == "MULE"
+    if account.account_type != nil && account.account_type.name == "MULE"
       puts "mule"
       return get_mule_withdraw_task_respond(account)
     else if message == "task_request"
@@ -496,7 +496,6 @@ loop do
         if Account.find_by(:login => login) != nil
           account = Account.find_or_create_by(:login => respond[3].strip!)
         else
-
           password = respond[4].strip!
           username = respond[5].strip!
           world = respond[6].strip!

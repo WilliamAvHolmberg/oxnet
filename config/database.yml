@@ -23,6 +23,8 @@ default: &default
   timeout: 15000
 
 development:
+  pool: 150
+  timeout: 15000
   adapter: postgresql
   encoding: utf8
   database: test1

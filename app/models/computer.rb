@@ -1,4 +1,5 @@
 class Computer < ApplicationRecord
+  validates :name, presence: true
   has_many :logs
   has_many :accounts
 

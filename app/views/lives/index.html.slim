@@ -1,4 +1,4 @@
-h1 Computers online:
+h1 Accounts online:
 table
   tr
     th Name
@@ -12,14 +12,14 @@ table
     tr
       td
         a href="/accounts/#{account.id}" = account.username
-      td = account.task_logs.all.last.task.name
-      td = account.task_logs.all.last.money_per_hour
-      td = account.task_logs.all.last.xp_per_hour
-      td = account.task_logs.all.last.position
-      td = account.task_logs.all.last.task.break_after
-      td = account.task_logs.all.last.task.end_time
+      td = account.task_logs.all.last.task.name if account.task_logs.all.size > 0
+      td = account.task_logs.all.last.money_per_hour if account.task_logs.all.size > 0
+      td = account.task_logs.all.last.xp_per_hour if account.task_logs.all.size > 0
+      td = account.task_logs.all.last.position if account.task_logs.all.size > 0
+      td = account.task_logs.all.last.task.break_after if account.task_logs.all.size > 0
+      td = account.task_logs.all.last.task.end_time if account.task_logs.all.size > 0
 
-h1 Accounts online:
+h1 Computers online:
 table
   tr
     th Name

@@ -386,6 +386,7 @@ def task_log(account, parsed_respond)
               :money_per_hour => money, :respond => parsed_respond).save
   Log.new(computer_id: nil, account_id: account.id, text: parsed_respond).save
 end
+
 def script_thread(client, account)
   while(!client.closed?)
     instruction_queue = []
@@ -462,6 +463,7 @@ end
 
 require_all("./models/")
 
+@worlds = [175,173,174,170,172,176,177,169,171,178,94,93,179,98,99,152,157,159,156,154,155,160,153,158,151]
 
 Thread::abort_on_exception = true
 added_main_thread = false
@@ -502,7 +504,7 @@ loop do
           password = respond[4]
           username = respond[5]
           world = respond[6]
-          account = Account.new(:login => login, :password => password, :username => username, :world => world,
+          account = Account.new(:login => login, :password => password, :username => username, :world => @worlds.sample,
                                 :computer => Computer.find_or_create_by(:name => "Suicide"), :account_type => AccountType.where(:name => "SLAVE").first,
                                 :schema => Schema.find_or_create_by(:name => "Suicide"), :proxy => Proxy.find_or_create_by(:port => " ", :ip => " ", :location => "#{username} proxy", :username => " ", :password => " "))
           account.save

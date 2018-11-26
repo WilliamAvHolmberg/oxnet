@@ -484,7 +484,7 @@ loop do
       if respond[0] == "computer"
         #start new thread for computer
         ip = respond[2]
-        name = respond[3]
+        name = respond[3].chomp!
         computer = Computer.find_or_create_by(:name => name)
         computer.update(:ip => ip)
         puts "New Computer Thread started for: #{computer}}"

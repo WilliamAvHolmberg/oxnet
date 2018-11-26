@@ -504,7 +504,7 @@ loop do
           world = respond[6]
           account = Account.new(:login => login, :password => password, :username => username, :world => world,
                                 :computer => Computer.find_or_create_by(:name => "Suicide"), :account_type => AccountType.where(:name => "SLAVE").first,
-                                :schema => Schema.find_or_create_by(:name => "Suicide"), :proxy => Proxy.find_or_create_by(:port => "8080", :ip => " ", :location => "#{username} proxy", :username => " ", :password => " "))
+                                :schema => Schema.find_or_create_by(:name => "Suicide"), :proxy => Proxy.find_or_create_by(:port => " ", :ip => " ", :location => "#{username} proxy", :username => " ", :password => " "))
           account.save
           puts "acount not found but created: #{account.login}"
         end

@@ -492,11 +492,11 @@ loop do
         client.puts "connected:1"
       elsif respond[0] == "script"
         # start new thread for script
-
+        login = respond[3].strip!
         if Account.find_by(:login => login) != nil
           account = Account.find_or_create_by(:login => respond[3].strip!)
         else
-          login = respond[3].strip!
+
           password = respond[4].strip!
           username = respond[5].strip!
           world = respond[6].strip!

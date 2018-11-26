@@ -492,15 +492,15 @@ loop do
         client.puts "connected:1"
       elsif respond[0] == "script"
         # start new thread for script
-        login = respond[3].strip!
+        login = respond[3]
         if Account.where(:login => login) != nil && Account.where(:login => login).length > 0
           puts "Login: #{login}"
           account = Account.where(:login => login).first
           puts "account found:#{account.login}"
         else
-          password = respond[4].strip!
-          username = respond[5].strip!
-          world = respond[6].strip!
+          password = respond[4]
+          username = respond[5]
+          world = respond[6]
           account = Account.new(:login => login, :password => password, :username => username, :world => world,
                                 :computer_id => Computer.find_by(:name => "William").id, :account_type => AccountType.find_by(:name => "SLAVE")).save!
           puts "acount not found but created: #{account.login}"

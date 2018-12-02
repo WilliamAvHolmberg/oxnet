@@ -1,4 +1,5 @@
 h1 Accounts online:
+- @money = 0
 table
   tr
     th Name
@@ -9,6 +10,7 @@ table
     th Break after level
     th Break after time
   - (Account.all.select {|acc| !acc.is_available}).each do |account|
+    - @money += account.task_logs.all.last.money_per_hour.to_i if account.task_logs.all.size > 0
     tr
       td
         a href="/accounts/#{account.id}" = account.username
@@ -18,6 +20,7 @@ table
       td = account.task_logs.all.last.position if account.task_logs.all.size > 0
       td = account.task_logs.all.last.task.break_after if account.task_logs.all.size > 0
       td = account.task_logs.all.last.task.end_time if account.task_logs.all.size > 0
+h2 = "MONEY #{@money}"
 
 h1 Computers online:
 table

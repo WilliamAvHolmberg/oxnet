@@ -330,12 +330,17 @@ end
 
 def get_mule_respond(respond, account)
   mule = account.mule
-  if mule != nil && !mule.banned && (mule.proxy_is_available? || acc.proxy.ip.length < 5)
+  if mule != nil && !mule.banned && (mule.proxy_is_available? || mule.proxy.ip.length < 5)
+    if !mule.is_available
+      puts "mule is unavailable atm"
+      return "MULE_BUSY"
+    end
     puts "we found mule"
-    #create new isntruction for mule
-    computers = Computer.all.select{|computer| computer.is_available_to_nexus}
-    if computers != nil && computers.length > 0
-      ins = Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computers.first.id, :account_id => mules[0].id, :script_id => Script.first.id)
+    #create new isntruction for mulec
+    computer = mule.computer
+    if computer != nil && computer.is_available_to_nexus
+      puts "we found computer"
+      ins = Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computer.id, :account_id => mule.id, :script_id => Script.first.id)
       ins.save
       puts "created instruction"
       #new mule task
@@ -367,12 +372,14 @@ def get_mule_respond(respond, account)
       #task.update(:executed => false)
       puts "task updated"
       puts "lets send mess back"
+      Log.new(computer_id: nil, account_id: mule.id, text: "new mule request from slave:#{trade_name} to #{mule}").save
       return "SUCCESSFUL_MULE_REQUEST:#{mule.username.chomp}:#{mule.world}:#{mule_type}"
+    else
+      puts "we found no computer"
     end
   else
     puts "we found no mule"
   end
-  puts "we found no computer"
   return "UNSUCCESSFUL_MULE_REQUEST"
 end
 
@@ -393,31 +400,30 @@ def script_thread(client, account)
     respond = client.gets
     if respond == nil
       client.puts "ok"
-    end
-    respond = respond.split(":")
-    puts respond
-    if respond[0] == "log"
-      #get new instructions
-      instruction_queue = Instruction.all.select{|ins|ins.is_relevant && ins.account_id == account.id && ins.completed == false}
-      log = Log.new(computer_id: nil, account_id: account.id, text: respond)
-      log.save
-      client.puts account_get_instruction_respond(instruction_queue)
-    elsif respond[0] == "task_log"
-      task_log(account, respond)
-      client.puts "ok"
-      #TODO, ADD XP GAINED TO account etc...
-    elsif respond[0] == "task_request"
-      updateAccountLevels(respond[2], account)
-      client.puts account_get_direct_respond(respond[0], account)
-    elsif respond[0] == "banned"
-      account.update(:banned => true)
-      client.puts("DISCONNECT:1")
-    elsif respond[0] == "mule_request"
-      client.puts get_mule_respond(respond, account)
     else
-      client.puts "ok"
-    end
-    puts respond
+      respond = respond.split(":")
+      if respond[0] == "log"
+        #get new instructions
+        instruction_queue = Instruction.all.select{|ins|ins.is_relevant && ins.account_id == account.id && ins.completed == false}
+        log = Log.new(computer_id: nil, account_id: account.id, text: respond)
+        log.save
+        client.puts account_get_instruction_respond(instruction_queue)
+      elsif respond[0] == "task_log"
+        task_log(account, respond)
+        client.puts "ok"
+        #TODO, ADD XP GAINED TO account etc...
+      elsif respond[0] == "task_request"
+        updateAccountLevels(respond[2], account)
+        client.puts account_get_direct_respond(respond[0], account)
+      elsif respond[0] == "banned"
+        account.update(:banned => true)
+        client.puts("DISCONNECT:1")
+      elsif respond[0] == "mule_request"
+        client.puts get_mule_respond(respond, account)
+      else
+        client.puts "ok"
+      end
+      end
   end
   puts "Script Thread for: #{client} has been closed"
 end
@@ -425,25 +431,20 @@ end
 
 def main_thread
   loop do
-    puts "looing for available accounts"
     accounts = Account.all.select{|acc| acc.is_available && acc.schema != nil &&  acc.shall_do_task && !acc.banned && acc.proxy_is_available? &&  acc.account_type != nil && acc.account_type.name == "SLAVE"}
     if accounts != nil && accounts.length > 0
-      puts "we found acc"
       accounts.each do |acc|
         if acc.computer_id != nil
         computers = Computer.all.select{|computer| computer.id == acc.computer_id && computer.is_available_to_nexus}
         if computers != nil && computers.length > 0
-          puts "creating new instruction"
           Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computers.first.id, :account_id => acc.id, :script_id => Script.first.id).save
-          sleep(30)
+          Log.new(computer_id: computers.first.id, account_id: acc.id, text: "Instruction created")
+          sleep(25)
         else
-          puts "no computer found"
         end
         end
-        puts "no computer associated to acc"
       end
     end
-    puts "no accounts found"
     sleep(2)
   end
 end
@@ -463,7 +464,7 @@ end
 
 require_all("./models/")
 
-@worlds = [175,173,174,170,172,176,177,169,171,178,94,93,179,98,99,152,157,159,156,154,155,160,153,158,151]
+@worlds = [475,473,474,470,472,476,477,469,471,478,394,393,479,398,399,452,457,459,356,454,455,460,453,458,451]
 
 Thread::abort_on_exception = true
 added_main_thread = false
@@ -494,7 +495,7 @@ loop do
         client.puts "connected:1"
       elsif respond[0] == "script"
         # start new thread for script
-        login = respond[3].chomp!
+        login = respond[3].chomp
         if Account.where(:login => login) != nil && Account.where(:login => login).length > 0
           puts "Login: #{login}"
           account = Account.where(:login => login).first
@@ -505,8 +506,8 @@ loop do
           username = respond[5]
           world = respond[6]
           account = Account.new(:login => login, :password => password, :username => username, :world => @worlds.sample,
-                                :computer => Computer.find_or_create_by(:name => "Suicide"), :account_type => AccountType.where(:name => "SLAVE").first,
-                                :schema => Schema.find_or_create_by(:name => "Suicide"), :proxy => Proxy.find_or_create_by(:port => " ", :ip => " ", :location => "#{username} proxy", :username => " ", :password => " "))
+                                :computer => Computer.find_or_create_by(:name => "Suicide"), :account_type => AccountType.where(:name => "SLAVE").first,:mule => Account.where(:login => "ad_da_mig1@hotmail.com").first,
+                                :schema => Schema.find_or_create_by(:name => "Suicide"), :proxy => Proxy.find_or_create_by(:port => " ", :ip => " ", :location => "#{username} proxy", :username => " ", :password => " "), :should_mule => true)
           account.save
           puts "acount not found but created: #{account.login}"
         end

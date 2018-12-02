@@ -11,7 +11,6 @@ class Schema < ApplicationRecord
     self.time_intervals.all.each do |interval|
       time = Time.now.change(:month => 1, :day => 1, :year => 2000)
       if time > interval.get_start_time && time < interval.get_end_time
-        puts "found right time."
         return true
       end
     end
@@ -54,9 +53,6 @@ class Schema < ApplicationRecord
     time_left = 1000000
     self.tasks.all.each do |task|
       time = Time.now.change(:month => 1, :day => 1, :year => 2000)
-      puts time_left
-      task_time_left = task.get_start_time - time
-      puts task_time_left
       if time < task.get_start_time && task.get_start_time - time < time_left
         time_left = task.get_start_time - time
       end

@@ -35,7 +35,7 @@ class Schema < ApplicationRecord
       self.tasks.all.each do |task|
         if task.quest != nil #IF task is quest
           quest = Quest.where(:account => account).select{|quest| quest.name == task.quest.name}.first
-          if quest != nil || !quest.completed
+          if quest == nil || (quest != nil && !quest.completed)
             return task
           end
         else

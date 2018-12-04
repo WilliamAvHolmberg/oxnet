@@ -339,13 +339,13 @@ def updateAccountQuests(string, account)
     puts name
     puts completed
     if completed != nil
-    if completed.include? "true"
-      completed = true
-    else
-      completed = false
-    end
+      puts "in here"
     account_quest = Quest.find_or_initialize_by(account_id: account.id, name: name)
-    account_quest.update(:completed => completed)
+      if completed.include? "true"
+        account_quest.update(:completed => true)
+      else
+        account_quest.update(:completed => false)
+      end
     puts account_quest.name
     puts account_quest.completed
     account_quest.save

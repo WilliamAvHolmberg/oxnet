@@ -25,8 +25,13 @@ def computer_get_respond(instruction_queue)
     puts ins.script
     puts ins.account.proxy
     puts ins.account.password
-
-    if ins.instruction_type.name == "NEW_CLIENT" && ins.account_id == nil
+    if ins.instruction_type.name == "CREATE_ACCOUNT"
+      account = ins.account
+      log = Log.new(account_id: ins.account.id, text: "Account:#{ins.account.login} Handed out for the first time to: #{ins.computer.name}")
+      log.save
+      res =  "create_account:#{account.username}:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + world.chomp + ":NEX"
+      return res
+    elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account_id == nil
       ins.update(:completed => true)
       puts "wrong"
     return "account_request:0"
@@ -542,6 +547,10 @@ loop do
           puts "Login: #{login}"
           account = Account.where(:login => login).first
           puts "account found:#{account.login}"
+          if !account.created
+            account.update(:created => true)
+            account.save
+          end
         else
           ip = respond[2]
           proxy = Proxy.find_or_initialize_by(:ip => ip)

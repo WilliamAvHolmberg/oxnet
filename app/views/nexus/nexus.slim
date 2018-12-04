@@ -1,0 +1,22 @@
+h1 Generate accounts
+h2 Schemas
+= form_tag("/create_accounts", method:"post") do
+  p = label_tag :email
+  p = text_field_tag :email
+  p = label_tag :username
+  p = text_field_tag :username
+  p = label_tag :password
+  p = text_field_tag :password
+  p = label_tag :Schema
+  = select_tag 'schema_id', options_for_select(@schemas.collect{ |u| [u.name, u.id] })
+  p = label_tag :Mule
+  = select_tag 'mule_id', options_for_select(@mules.collect{ |u| [u.username, u.id] })
+  p = label_tag :Computer
+  = select_tag 'computer_id', options_for_select(@computers.collect {|u| [u.name, u.id]})
+  p = label_tag :Proxy
+  = select_tag 'proxy_id', options_for_select(@proxies.collect {|u| [u.location, u.id]})
+  p = label_tag :amount_of_accounts
+  p = number_field_tag :amount_of_accounts
+  p = label_tag :start_accounts
+  p = check_box_tag :start_accounts
+  = submit_tag("Create")

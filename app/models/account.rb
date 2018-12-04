@@ -89,7 +89,7 @@ class Account < ApplicationRecord
 
 
   def shall_do_task
-    return schema.get_suitable_task(self) != nil
+    return created && schema.get_suitable_task(self) != nil
   end
 
 end

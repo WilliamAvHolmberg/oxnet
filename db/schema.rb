@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_04_131145) do
+ActiveRecord::Schema.define(version: 2018_12_04_140636) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,6 +35,7 @@ ActiveRecord::Schema.define(version: 2018_12_04_131145) do
     t.bigint "computer_id"
     t.bigint "mule_id"
     t.bigint "proxy_id"
+    t.boolean "created", default: true
     t.index ["account_type_id"], name: "index_accounts_on_account_type_id"
     t.index ["computer_id"], name: "index_accounts_on_computer_id"
     t.index ["mule_id"], name: "index_accounts_on_mule_id"

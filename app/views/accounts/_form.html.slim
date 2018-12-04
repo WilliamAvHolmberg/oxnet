@@ -19,6 +19,8 @@
   p = form.check_box :banned
   p = form.label :should_mule
   p = form.check_box :should_mule
+  p = form.label :created
+  p = form.check_box :created
   #computer
     .field
       - if @computers != nil && @computers.length > 0
@@ -49,5 +51,5 @@
         = "Please create an account typebefore associating to account"
   - @available_proxies = Proxy.all
   p = form.label :proxy
-  = collection_select(nil, :proxy_id, @available_proxies, :id, :ip)
+  = collection_select(nil, :proxy_id, @available_proxies, :id, :location)
   p = form.submit

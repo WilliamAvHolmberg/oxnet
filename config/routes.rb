@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'nexus', action: :show, controller: 'nexus'
+  post 'create_accounts', action: :create_accounts, controller: 'nexus'
   resources :quests
   resources :lives
   resources :task_logs

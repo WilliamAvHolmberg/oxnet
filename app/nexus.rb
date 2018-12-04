@@ -344,7 +344,7 @@ def updateAccountQuests(string, account)
     else
       completed = false
     end
-    account_quest = Account.find_or_initialize_by(account_id: account.id, name: name)
+    account_quest = Quest.find_or_initialize_by(account_id: account.id, name: name)
     account_quest.name = name
     account_quest.update(:completed => completed)
     account_quest.save

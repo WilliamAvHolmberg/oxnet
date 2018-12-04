@@ -1,0 +1,18 @@
+= form_for @quest do |f|
+  - if @quest.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@quest.errors.count, "error")} prohibited this quest from being saved:"
+      ul
+        - @quest.errors.full_messages.each do |message|
+          li = message
+
+  .field
+    = f.label :name
+    = f.text_field :name
+  .field
+    = f.label :completed
+    = f.check_box :completed
+  .field
+    = f.label :account
+    = f.text_field :account
+  .actions = f.submit

@@ -328,6 +328,29 @@ def updateAccountLevels(string, account)
   end
 end
 
+def updateAccountQuests(string, account)
+  string.slice! "quests;"
+  array = string.split(';')
+  array.each do |parsed|
+    intern_parse = parsed.split(',')
+    puts parsed
+    name = intern_parse[0]
+    config = intern_parse[1]
+    completed = intern_parse[2]
+    puts name
+    puts completed
+    if(completed.include("true"))
+      completed = true
+    else
+      completed = false
+    end
+    account_quest = Account.find_or_initialize_by(account_id: account.id, name: name)
+    account_quest.name = name
+    account_quest.update(:completed => completed)
+    account_quest.save
+  end
+end
+
 def get_mule_respond(respond, account)
   mule = account.mule
   if mule != nil && !mule.banned && (mule.proxy_is_available? || mule.proxy.ip.length < 5)
@@ -414,6 +437,7 @@ def script_thread(client, account)
         #TODO, ADD XP GAINED TO account etc...
       elsif respond[0] == "task_request"
         updateAccountLevels(respond[2], account)
+        updateAccountQuests(respond[3], account)
         client.puts account_get_direct_respond(respond[0], account)
       elsif respond[0] == "banned"
         account.update(:banned => true)

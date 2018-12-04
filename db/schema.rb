@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_26_141939) do
+ActiveRecord::Schema.define(version: 2018_12_04_055858) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -184,6 +184,15 @@ ActiveRecord::Schema.define(version: 2018_11_26_141939) do
     t.index ["account_id"], name: "index_proxies_on_account_id"
   end
 
+  create_table "quests", force: :cascade do |t|
+    t.string "name"
+    t.boolean "completed"
+    t.bigint "account_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_quests_on_account_id"
+  end
+
   create_table "rooms", force: :cascade do |t|
     t.string "name"
     t.integer "number"
@@ -292,6 +301,7 @@ ActiveRecord::Schema.define(version: 2018_11_26_141939) do
   add_foreign_key "mule_withdraw_tasks", "accounts"
   add_foreign_key "mule_withdraw_tasks", "areas"
   add_foreign_key "mule_withdraw_tasks", "task_types"
+  add_foreign_key "quests", "accounts"
   add_foreign_key "task_logs", "accounts"
   add_foreign_key "task_logs", "tasks"
   add_foreign_key "tasks", "break_conditions"

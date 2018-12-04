@@ -13,7 +13,7 @@ class Instruction < ApplicationRecord
 
   def is_relevant
     #if difference is larger than 5 minutes  we can suppose that the account is not logged in
-    return time_since_last_log < 1
+    return time_since_last_log < 10
   end
 
   def get_time_since_creation

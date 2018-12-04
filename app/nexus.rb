@@ -338,6 +338,7 @@ def updateAccountQuests(string, account)
     completed = intern_parse[1]
     puts name
     puts completed
+    puts completed == nil
     if completed != nil
       puts "in here"
     account_quest = Quest.find_or_initialize_by(account_id: account.id, name: name)

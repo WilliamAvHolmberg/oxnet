@@ -30,6 +30,8 @@ def computer_get_respond(instruction_queue)
       log = Log.new(account_id: ins.account.id, text: "Account:#{ins.account.login} Handed out for the first time to: #{ins.computer.name}")
       log.save
       res =  "create_account:#{account.username}:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + account.world.chomp + ":NEX"
+      ins.update(:completed => true)
+      ins.save
       return res
     elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account_id == nil
       ins.update(:completed => true)

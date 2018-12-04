@@ -338,7 +338,7 @@ def updateAccountQuests(string, account)
     completed = intern_parse[1]
     puts name
     puts completed
-    if completed.length > 3
+    if completed != nil
     if completed.include? "true"
       completed = true
     else

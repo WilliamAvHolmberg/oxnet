@@ -1,6 +1,7 @@
 class Account < ApplicationRecord
   has_one :proxy
   has_many :levels, dependent: :destroy
+  has_many :quests, dependent: :destroy
   has_many :logs, dependent: :destroy
   has_many :instructions, dependent: :destroy
   has_many :mule_withdraw_tasks, dependent: :destroy

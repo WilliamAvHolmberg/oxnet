@@ -33,7 +33,7 @@ class Schema < ApplicationRecord
     else
       interval = get_time_interval
       self.tasks.all.each do |task|
-        if task.quest != nil #IF task is quest
+        if task.quest != nil && task.task_type == task.task_type.name #IF task is quest
           quest = Quest.where(:account => account).select{|quest| quest.name == task.quest.name}.first
           if quest == nil || (quest != nil && !quest.completed)
             return task

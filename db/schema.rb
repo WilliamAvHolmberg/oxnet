@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_04_055858) do
+ActiveRecord::Schema.define(version: 2018_12_04_064410) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -261,6 +261,7 @@ ActiveRecord::Schema.define(version: 2018_12_04_055858) do
     t.integer "loot_threshold"
     t.string "skill"
     t.integer "position"
+    t.bigint "quest_id"
     t.index ["action_area_id"], name: "index_tasks_on_action_area_id"
     t.index ["axe_id"], name: "index_tasks_on_axe_id"
     t.index ["bank_area_id"], name: "index_tasks_on_bank_area_id"
@@ -268,6 +269,7 @@ ActiveRecord::Schema.define(version: 2018_12_04_055858) do
     t.index ["food_id"], name: "index_tasks_on_food_id"
     t.index ["gear_id"], name: "index_tasks_on_gear_id"
     t.index ["inventory_id"], name: "index_tasks_on_inventory_id"
+    t.index ["quest_id"], name: "index_tasks_on_quest_id"
     t.index ["schema_id"], name: "index_tasks_on_schema_id"
     t.index ["task_type_id"], name: "index_tasks_on_task_type_id"
   end
@@ -307,6 +309,7 @@ ActiveRecord::Schema.define(version: 2018_12_04_055858) do
   add_foreign_key "tasks", "break_conditions"
   add_foreign_key "tasks", "gears"
   add_foreign_key "tasks", "inventories"
+  add_foreign_key "tasks", "quests"
   add_foreign_key "tasks", "schemas"
   add_foreign_key "tasks", "task_types"
   add_foreign_key "time_intervals", "schemas"

@@ -36,6 +36,12 @@ $(document).ready ->
       $('#agility_task').show()
     else
       $('#agility_task').hide()
+    if $('#task_task_type_id option:selected').val() == "6"
+      console.log("hiquest")
+      $('#quest_task').show()
+    else
+      $('#quest_task').hide()
+
 
 
 

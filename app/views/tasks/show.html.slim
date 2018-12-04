@@ -29,6 +29,9 @@ p
   strong Skill
   = @task.skill if @task.skill != nil
 p
+  strong Quest
+  = @task.quest.name if @task.quest != nil
+p
   strong Inventory
   = @task.inventory.name
 

@@ -33,17 +33,24 @@ class Schema < ApplicationRecord
     else
       interval = get_time_interval
       self.tasks.all.each do |task|
+        if task.quest != nil #IF task is quest
+          quest = Quest.where(:account => account).select{|quest| quest.name = task.quest.name}.first
+          if quest.completed == false
+            return task
+          end
+        else
         level = Level.where(:account => account).select {|level| level.name == task.skill}.first
         if level != nil
-        account_level = level.level
-        if account_level.to_i < task.break_after.to_i
-          task.update(:start_time => interval.start_time)
-          task.update(:end_time => interval.end_time)
-          return task
-        end
-        else
-          return task
+          account_level = level.level
+          if account_level.to_i < task.break_after.to_i
+            task.update(:start_time => interval.start_time)
+            task.update(:end_time => interval.end_time)
+            return task
           end
+          else
+            return task
+          end
+        end
       end
     end
     return nil

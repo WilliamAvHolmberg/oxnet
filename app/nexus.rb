@@ -112,7 +112,22 @@ def get_task_respond(task, account)
   when "COMBAT"
     puts "combat res"
     return get_combat_task_respond(task,account)
+  when "QUEST"
+    puts "quest ress"
+    return get_quest_task_respond(task, account)
   end
+end
+
+def get_quest_task_respond(task, account)
+  puts "get agility respond"
+  task_type = task.task_type.name
+
+
+  log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
+  log.save
+  puts "sending resp"
+  res = "task_respond:1:#{task_type}:#{task.id}:#{task.quest.name}"
+  return res
 end
 
 def account_get_direct_respond(message, account)

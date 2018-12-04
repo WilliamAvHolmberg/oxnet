@@ -1,0 +1,5 @@
+#quest_selection
+  .field
+    = f.label :quest
+    - values = Quest.all.collect.uniq
+    = collection_select(:task, :quest_id, values, :id, :name, {:id => "quest_selection"})

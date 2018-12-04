@@ -8,6 +8,7 @@ class Task < ApplicationRecord
   belongs_to :schema, optional:true
   belongs_to :inventory, optional:true
   belongs_to :gear, optional:true
+  belongs_to :quest
   has_many :task_logs, dependent: :destroy
 
   acts_as_list :scope => :schema

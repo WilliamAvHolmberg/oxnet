@@ -15,7 +15,7 @@ table
       tr
         td = level.name
         td = level.level
-        td = level.account
+        td = level.account.username
         td = link_to 'Show', level
         td = link_to 'Edit', edit_level_path(level)
         td = link_to 'Destroy', level, data: { confirm: 'Are you sure?' }, method: :delete

@@ -34,8 +34,8 @@ class Schema < ApplicationRecord
       interval = get_time_interval
       self.tasks.all.each do |task|
         if task.quest != nil #IF task is quest
-          quest = Quest.where(:account => account).select{|quest| quest.name = task.quest.name}.first
-          if quest.completed == false
+          quest = Quest.where(:account => account).select{|quest| quest.name == task.quest.name}.first
+          if quest != nil && !quest.completed
             return task
           end
         else

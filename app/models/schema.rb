@@ -41,6 +41,7 @@ class Schema < ApplicationRecord
         else
         level = Level.where(:account => account).select {|level| level.name == task.skill}.first
         if level != nil
+          puts "WOODCUTTIN LEVEL: #{level}"
           account_level = level.level
           if account_level.to_i < task.break_after.to_i
             task.update(:start_time => interval.start_time)

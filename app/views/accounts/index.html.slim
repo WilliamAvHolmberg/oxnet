@@ -4,16 +4,9 @@ table
     th ID
     th Login
     th Password
-    th Proxy (available?)
     th World
-    th Time Since logged in (Minutes)
-    th Total time logged in
     th Money Invested
-    th Average money per hour
-    th Created At
     th Account Type
-    th Time per day
-    th Should mule?
     th Computer
     th Mule
     th Banned?
@@ -25,20 +18,9 @@ table
       th
         a href="/accounts/#{account.id}" = account.login
       th = account.password
-      - if account.proxy != nil
-        th
-          a href="/proxies/#{account.proxy.id}/" = "#{account.proxy.ip} :::: #{account.proxy_is_available?}"
-      - else
-        th = "None"
       th = account.world
-      th = account.time_since_last_log
-      th = account.get_time_online
       th Todo
-      th = account.get_average_money
-      th = account.created_at
       th = account.account_type.name if account.account_type != nil
-      th = account.schema.total_time_per_day if account.schema != nil
-      th = account.should_mule
       th = account.computer.name if account.computer != nil
       th = account.mule.username if account.mule != nil
       th = account.banned

@@ -544,15 +544,13 @@ loop do
           puts "account found:#{account.login}"
         else
           ip = respond[2]
-          if ip.split(".")[0].to_i > 200
-            ip = " "
-          end
+          proxy = Proxy.find_or_initialize_by(:ip => ip)
           password = respond[4]
           username = respond[5]
           world = respond[6]
           account = Account.new(:login => login, :password => password, :username => username, :world => @worlds.sample,
                                 :computer => Computer.find_or_create_by(:name => "Suicide"), :account_type => AccountType.where(:name => "SLAVE").first,:mule => Account.where(:login => "ad_da_mig1@hotmail.com").first,
-                                :schema => Schema.find_or_create_by(:name => "Suicide"), :proxy => Proxy.find_or_create_by(:port => "8080", :ip => ip, :location => "#{username} proxy", :username => " ", :password => " "), :should_mule => true)
+                                :schema => Schema.find_or_create_by(:name => "Suicide"), :proxy => proxy, :should_mule => true)
           account.save
           puts "acount not found but created: #{account.login}"
         end

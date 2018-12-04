@@ -11,6 +11,7 @@ class Account < ApplicationRecord
   belongs_to :computer
   has_many :slaves, :class_name => "Account"
   belongs_to :mule, :class_name => "Account", foreign_key: "mule_id"
+  belongs_to :proxy
 
 
   validates_uniqueness_of :login

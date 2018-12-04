@@ -17,10 +17,6 @@ table
       th = proxy.username
       th = proxy.password
       th = proxy.created_at
-      - account = Account.find(proxy.account_id).login rescue nil
-      - if account != nil
-        th = account
-      - else
-        th = "none"
-
+      th = proxy.accounts.length
+      td = link_to 'Destroy', proxy, method: :delete
 = link_to 'New', new_proxy_path

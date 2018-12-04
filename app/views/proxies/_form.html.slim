@@ -17,5 +17,4 @@
   p = form.text_field :username
   p = form.label      :password
   p = form.text_field :password
-  = collection_select(nil, :account_id, Account.all, :id, :login, {:include_blank => 'None'}, prompt:true, :selected => @proxy.account_id)
   p = form.submit

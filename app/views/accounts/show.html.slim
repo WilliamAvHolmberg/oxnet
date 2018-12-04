@@ -21,7 +21,7 @@ table
   tr
     th = @account.id
     th
-      a href="/accounts/#{@ccount.id}" = @account.login
+      a href="/accounts/#{@account.id}" = @account.login
     th = @account.password
     - if @account.proxy != nil
       th
@@ -34,7 +34,7 @@ table
     th Todo
     th = @account.get_average_money
     th = @account.created_at
-    th = @account.@account_type.name if @account.@account_type != nil
+    th = @account.account_type.name if @account.account_type != nil
     th = @account.schema.total_time_per_day if @account.schema != nil
     th = @account.should_mule
     th = @account.computer.name if @account.computer != nil

@@ -47,7 +47,7 @@
         = collection_select(:account, :account_type_id, @account_types, :id, :name)
       - else
         = "Please create an account typebefore associating to account"
-  - @available_proxies = Proxy.where(account_id: [false, nil])
+  - @available_proxies = Proxy.all
   p = form.label :proxy
   = collection_select(nil, :proxy_id, @available_proxies, :id, :ip)
   p = form.submit

@@ -1,3 +1,3 @@
 class Proxy < ApplicationRecord
-  belongs_to :account, optional: true
+  has_many :accounts
 end

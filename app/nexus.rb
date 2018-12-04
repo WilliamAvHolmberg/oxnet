@@ -338,7 +338,7 @@ def updateAccountQuests(string, account)
     completed = intern_parse[1]
     puts name
     puts completed
-    if(completed.include("true"))
+    if completed.include? "true"
       completed = true
     else
       completed = false

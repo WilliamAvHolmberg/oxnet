@@ -335,8 +335,7 @@ def updateAccountQuests(string, account)
     intern_parse = parsed.split(',')
     puts parsed
     name = intern_parse[0]
-    config = intern_parse[1]
-    completed = intern_parse[2]
+    completed = intern_parse[1]
     puts name
     puts completed
     if(completed.include("true"))

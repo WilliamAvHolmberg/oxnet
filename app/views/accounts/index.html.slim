@@ -10,6 +10,7 @@ table
     th Computer
     th Mule
     th Banned?
+    th Created?
     th
 
   - @accounts.each do |account|
@@ -24,5 +25,6 @@ table
       th = account.computer.name if account.computer != nil
       th = account.mule.username if account.mule != nil
       th = account.banned
+      th = account.created
       td = link_to 'Destroy', account, data: {confirm: 'Are you sure?'}, method: :delete
 = link_to 'New', new_account_path

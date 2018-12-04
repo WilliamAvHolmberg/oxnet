@@ -35,7 +35,7 @@ class Schema < ApplicationRecord
       self.tasks.all.each do |task|
         if task.quest != nil #IF task is quest
           quest = Quest.where(:account => account).select{|quest| quest.name == task.quest.name}.first
-          if quest != nil && !quest.completed
+          if quest != nil || !quest.completed
             return task
           end
         else
@@ -48,10 +48,8 @@ class Schema < ApplicationRecord
             task.update(:end_time => interval.end_time)
             return task
           end
-          else
-            return task
           end
-        end
+          end
       end
     end
     return nil

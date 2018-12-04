@@ -338,6 +338,7 @@ def updateAccountQuests(string, account)
     completed = intern_parse[1]
     puts name
     puts completed
+    if completed.length > 3
     if completed.include? "true"
       completed = true
     else
@@ -347,7 +348,8 @@ def updateAccountQuests(string, account)
     account_quest.name = name
     account_quest.update(:completed => completed)
     account_quest.save
-  end
+    end
+    end
 end
 
 def get_mule_respond(respond, account)

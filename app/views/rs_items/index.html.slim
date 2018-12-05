@@ -12,6 +12,10 @@ table
       th Actions
       th Tradeable
       th itemprice
+      th attack req
+      th str req
+      th defence req
+      th range req
       th
       th
 
@@ -27,6 +31,10 @@ table
         td = rs_item.interface_options if rs_item.interface_options != nil
         td = rs_item.tradeable if rs_item.tradeable != nil
         td = rs_item.exchange if rs_item.exchange != nil
+        td = rs_item.attack_requirement if rs_item.attack_requirement != nil
+        td = rs_item.strength_requirement if rs_item.strength_requirement != nil
+        td = rs_item.defence_requirement if rs_item.defence_requirement != nil
+        td = rs_item.range_requirement if rs_item.range_requirement != nil
         td = link_to 'Show', rs_item
         td = link_to 'Edit', edit_rs_item_path(rs_item)
         td = link_to 'Destroy', rs_item, data: { confirm: 'Are you sure?' }, method: :delete

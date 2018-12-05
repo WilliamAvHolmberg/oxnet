@@ -179,13 +179,13 @@ def update_woodcutting_task(task, account)
   if level != nil && level.level.to_i > 0
     if level.level.to_i < 21
       puts "bronze axe"
-      axe = RsItem.find_by(itemName: "Bronze axe")
+      axe = RsItem.where(itemName: "Bronze axe", stackable: false)
     elsif level.level.to_i < 41
       puts "rune axe"
-      axe = RsItem.find_by(itemName: "Mithril axe")
+      axe = RsItem.where(itemName: "Mithril axe", stackable: false)
     elsif level.level.to_i < 99
       puts "rune axe"
-      axe = RsItem.find_by(itemName: "Rune axe")
+      axe = RsItem.where(itemName: "Rune axe", stackable: false)
     end
   end
   task.axe = axe

@@ -38,8 +38,21 @@ def puts_prices(id)
   range_req = data_hash[id]["requirements"][4]
   puts defence_req
   puts range_req
+end
+file = File.read("../item_defs.json")
+data_hash = JSON.parse(file)
+i = 0
+RsItem.where(tradeable: true, members: false).all.each do |item|
+  if item.itemName.include? "Adamant"
+    if item.equipment_slot == "2h" || item.equipment_slot == "weapon"
+    puts item.itemName
+    puts item.equipment_slot
+      item.update(attack_requirement: 30)
+    end
   end
-Account.destroy_all
+
+end
+puts i
 #(0..10).each do |i|
-  puts_prices(1135)
+#puts_prices(1135)
 #end

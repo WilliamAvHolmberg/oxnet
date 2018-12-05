@@ -380,14 +380,10 @@ def updateAccountQuests(string, account)
 end
 
 def get_mule_respond(respond, account)
-  mule = Account.all.select{|acc| !acc.banned && acc.account_type.name == "MULE" && (acc.proxy_is_available? || acc.proxy.ip.length < 5)}
+  mule = Account.all.select{|acc| acc.is_available && !acc.banned && acc.account_type.name == "MULE" && (acc.proxy_is_available? || acc.proxy.ip.length < 5)}
   #if mule != nil && !mule.banned && (mule.proxy_is_available? || mule.proxy.ip.length < 5)
   if mule != nil && mule.length > 0
     mule = mule.first
-    if !mule.is_available
-      puts "mule is unavailable atm"
-      return "MULE_BUSY"
-    end
     puts "we found mule"
     #create new isntruction for mulec
     computer = mule.computer
@@ -433,7 +429,7 @@ def get_mule_respond(respond, account)
   else
     puts "we found no mule"
   end
-  return "UNSUCCESSFUL_MULE_REQUEST"
+  return "MULE_BUSY"
 end
 
 def task_log(account, parsed_respond)

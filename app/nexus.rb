@@ -23,6 +23,7 @@ def computer_get_respond(instruction_queue)
     puts ins.account
     puts ins.instruction_type
     puts ins.script
+    if ins.account != nil
     puts ins.account.proxy
     puts ins.account.password
     if ins.instruction_type.name == "CREATE_ACCOUNT"
@@ -53,6 +54,7 @@ def computer_get_respond(instruction_queue)
       end
       log.save
       return res
+    end
     end
     return "logged:f"
   end

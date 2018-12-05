@@ -39,7 +39,7 @@ def puts_prices(id)
   puts defence_req
   puts range_req
   end
-
+Account.destroy_all
 #(0..10).each do |i|
   puts_prices(1135)
 #end

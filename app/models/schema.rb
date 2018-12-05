@@ -35,7 +35,6 @@ class Schema < ApplicationRecord
       self.tasks.all.each do |task|
         if task.quest != nil && task.task_type.name == "QUEST" #IF task is quest
           quest = Quest.where(:account => account).select{|quest| quest.name == task.quest.name}.first
-          puts "questtt"
           if quest == nil || (quest != nil && !quest.completed)
             return task
           end

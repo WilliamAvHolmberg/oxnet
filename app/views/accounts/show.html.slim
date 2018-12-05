@@ -40,6 +40,9 @@ table
     th = @account.computer.name if @account.computer != nil
     th = @account.mule.username if @account.mule != nil
     th = @account.banned
+
+
 = link_to 'Edit', edit_account_path(@account)
 = link_to 'Back', accounts_path
+
 

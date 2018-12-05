@@ -24,7 +24,7 @@ class Account < ApplicationRecord
     if read_attribute(:proxy) != nil
       return read_attribute(:proxy)
     end
-    return Proxy.first_or_initialize(ip: " ", port: " ", username: " ", password: " ", location: "none")
+    return Proxy.find_or_initialize_by(ip: " ", port: " ", username: " ", password: " ", location: "none")
   end
 
   def proxy_is_available?()

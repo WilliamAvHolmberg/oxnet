@@ -26,6 +26,7 @@ def computer_get_respond(instruction_queue)
     if ins.account != nil
     puts ins.account.proxy
     puts ins.account.password
+
     if ins.instruction_type.name == "CREATE_ACCOUNT"
       account = ins.account
       log = Log.new(account_id: ins.account.id, text: "Account:#{ins.account.login} Handed out for the first time to: #{ins.computer.name}")

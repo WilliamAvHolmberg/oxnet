@@ -20,6 +20,13 @@ class Account < ApplicationRecord
     return logs.last
   end
 
+  def proxy
+    if self.proxy != nil
+      return self.proxy
+    end
+    return Proxy.first_or_initialize(ip: " ", port: " ", username: " ", password: " ", location: "none")
+  end
+
   def proxy_is_available?()
     if proxy == nil || proxy.ip.length < 5
       return true

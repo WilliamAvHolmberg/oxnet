@@ -13,8 +13,7 @@
 #level_selection style="display: none"
   .field
     = f.label :skill
-    - values = (Level.all.collect{ |level| level.name}).uniq
-    = f.select :skill, options_for_select(values)
+    = collection_select(:task, :skill_id, Skill.all, :id, :name)
   .field
     = f.label :break_after
     = f.number_field :break_after

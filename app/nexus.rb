@@ -172,10 +172,8 @@ def account_get_direct_respond(message, account)
 end
 
 def update_woodcutting_task(task, account)
-  level = Level.find_by(name: "Woodcutting", account_id: account.id)
+  level = account.stats.find_by(skill: Skill.find_by(name: "Woodcutting"))
   puts "updating taskz"
-  puts level.level
-  puts level.name
   if level != nil && level.level.to_i > 0
     if level.level.to_i < 21
       puts "bronze axe"
@@ -346,9 +344,8 @@ def updateAccountLevels(string, account)
     level = intern_parse[1]
     puts name
     puts level
-    account_level = Level.find_or_initialize_by(account_id: account.id, name: name)
-    account_level.name = name
-    account_level.level = level
+    account_level = Stat.find_or_initialize_by(account_id: account.id, skill: Skill.find_by(name: name))
+    account_level.update(level: level)
     account_level.save
   end
 end
@@ -366,13 +363,13 @@ def updateAccountQuests(string, account)
     puts name == nil
     if completed != nil
       puts "in here"
-    account_quest = Quest.find_or_initialize_by(account_id: account.id, name: name)
+    account_quest = QuestStat.find_or_initialize_by(account_id: account.id, quest: Quest.find_by(name: name))
       if completed.include? "true"
         account_quest.update(:completed => true)
       else
         account_quest.update(:completed => false)
       end
-    puts account_quest.name
+    puts account_quest.quest.name
     puts account_quest.completed
     account_quest.save
     end
@@ -514,7 +511,7 @@ end
 
 require_all("./models/")
 
-@worlds = [475,473,474,470,472,476,477,469,471,478,394,393,479,398,399,452,457,459,356,454,455,460,453,458,451]
+@worlds = [475,473,474,470,472,476,477,469,471,478,394,393,479,398,399,452,457,459,454,455,460,453,458,451]
 
 Thread::abort_on_exception = true
 added_main_thread = false

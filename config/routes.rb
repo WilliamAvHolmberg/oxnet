@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  resources :quest_stats
+  resources :stats
+  resources :requirements
+  resources :skills
   get 'nexus', action: :show, controller: 'nexus'
   post 'create_accounts', action: :create_accounts, controller: 'nexus'
   resources :quests
@@ -18,7 +22,6 @@ Rails.application.routes.draw do
   end
   resources :mule_withdraw_tasks
   resources :account_types
-  resources :levels
   resources :schemas do
     member do
       get 'copy'

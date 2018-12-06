@@ -1,0 +1,25 @@
+h1 Listing requirements
+
+table
+  thead
+    tr
+      th Skill
+      th Level
+      th Task
+      th
+      th
+      th
+
+  tbody
+    - @requirements.each do |requirement|
+      tr
+        td = requirement.skill
+        td = requirement.level
+        td = requirement.task
+        td = link_to 'Show', requirement
+        td = link_to 'Edit', edit_requirement_path(requirement)
+        td = link_to 'Destroy', requirement, data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+
+= link_to 'New Requirement', new_requirement_path

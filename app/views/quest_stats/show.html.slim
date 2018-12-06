@@ -1,0 +1,15 @@
+p#notice = notice
+
+p
+  strong Quest:
+  = @quest_stat.quest
+p
+  strong Completed:
+  = @quest_stat.completed
+p
+  strong Account:
+  = @quest_stat.account
+
+=> link_to 'Edit', edit_quest_stat_path(@quest_stat)
+'|
+=< link_to 'Back', quest_stats_path

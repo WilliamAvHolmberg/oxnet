@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_05_174123) do
+ActiveRecord::Schema.define(version: 2018_12_06_085254) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -187,13 +187,30 @@ ActiveRecord::Schema.define(version: 2018_12_05_174123) do
     t.index ["account_id"], name: "index_proxies_on_account_id"
   end
 
-  create_table "quests", force: :cascade do |t|
-    t.string "name"
+  create_table "quest_stats", force: :cascade do |t|
+    t.bigint "quest_id"
     t.boolean "completed"
     t.bigint "account_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["account_id"], name: "index_quests_on_account_id"
+    t.index ["account_id"], name: "index_quest_stats_on_account_id"
+    t.index ["quest_id"], name: "index_quest_stats_on_quest_id"
+  end
+
+  create_table "quests", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "requirements", force: :cascade do |t|
+    t.bigint "skill_id"
+    t.integer "level"
+    t.bigint "task_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["skill_id"], name: "index_requirements_on_skill_id"
+    t.index ["task_id"], name: "index_requirements_on_task_id"
   end
 
   create_table "rooms", force: :cascade do |t|
@@ -235,6 +252,22 @@ ActiveRecord::Schema.define(version: 2018_12_05_174123) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "skills", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "stats", force: :cascade do |t|
+    t.bigint "skill_id"
+    t.integer "level"
+    t.bigint "account_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_stats_on_account_id"
+    t.index ["skill_id"], name: "index_stats_on_skill_id"
+  end
+
   create_table "task_logs", force: :cascade do |t|
     t.string "money_per_hour"
     t.string "xp_per_hour"
@@ -273,9 +306,9 @@ ActiveRecord::Schema.define(version: 2018_12_05_174123) do
     t.bigint "food_id"
     t.bigint "inventory_id"
     t.integer "loot_threshold"
-    t.string "skill"
     t.integer "position"
     t.bigint "quest_id"
+    t.bigint "skill_id"
     t.index ["action_area_id"], name: "index_tasks_on_action_area_id"
     t.index ["axe_id"], name: "index_tasks_on_axe_id"
     t.index ["bank_area_id"], name: "index_tasks_on_bank_area_id"
@@ -285,6 +318,7 @@ ActiveRecord::Schema.define(version: 2018_12_05_174123) do
     t.index ["inventory_id"], name: "index_tasks_on_inventory_id"
     t.index ["quest_id"], name: "index_tasks_on_quest_id"
     t.index ["schema_id"], name: "index_tasks_on_schema_id"
+    t.index ["skill_id"], name: "index_tasks_on_skill_id"
     t.index ["task_type_id"], name: "index_tasks_on_task_type_id"
   end
 
@@ -318,7 +352,12 @@ ActiveRecord::Schema.define(version: 2018_12_05_174123) do
   add_foreign_key "mule_withdraw_tasks", "accounts"
   add_foreign_key "mule_withdraw_tasks", "areas"
   add_foreign_key "mule_withdraw_tasks", "task_types"
-  add_foreign_key "quests", "accounts"
+  add_foreign_key "quest_stats", "accounts"
+  add_foreign_key "quest_stats", "quests"
+  add_foreign_key "requirements", "skills"
+  add_foreign_key "requirements", "tasks"
+  add_foreign_key "stats", "accounts"
+  add_foreign_key "stats", "skills"
   add_foreign_key "task_logs", "accounts"
   add_foreign_key "task_logs", "tasks"
   add_foreign_key "tasks", "break_conditions"
@@ -326,6 +365,7 @@ ActiveRecord::Schema.define(version: 2018_12_05_174123) do
   add_foreign_key "tasks", "inventories"
   add_foreign_key "tasks", "quests"
   add_foreign_key "tasks", "schemas"
+  add_foreign_key "tasks", "skills"
   add_foreign_key "tasks", "task_types"
   add_foreign_key "time_intervals", "schemas"
 end

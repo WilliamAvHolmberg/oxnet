@@ -42,16 +42,22 @@ end
 file = File.read("../item_defs.json")
 data_hash = JSON.parse(file)
 i = 0
-RsItem.where(tradeable: true, members: false).all.each do |item|
-  if item.itemName.include? "Adamant"
-    if item.equipment_slot == "2h" || item.equipment_slot == "weapon"
-    puts item.itemName
-    puts item.equipment_slot
-      item.update(attack_requirement: 30)
-    end
+slots = ["legs","neck","body","ammo","feet","head","hands","ring","cape","shield"]
+#RsItem.where(tradeable: true, members: false).each do |item|
+  #if (item.itemName.include? "Black") && item.equipment_slot != "weapon" && item.equipment_slot != "2h"
+ #   #item.update(:defence_requirement => 20)
+#    puts item.defence_requirement
+#    puts item.itemName
+#  end
+#end
+slots.each do |slot|
+  item = RsItem.where(tradeable: true, members: false,equipment_slot: slot, defence_requirement: 0, range_requirement: 0).sample
+  if item != nil
+    puts "Slot:#{slot} item:#{item.itemName}"
   end
-
 end
+
+
 puts i
 #(0..10).each do |i|
 #puts_prices(1135)

@@ -4,8 +4,6 @@ table
   thead
     tr
       th Name
-      th Completed
-      th Account
       th
       th
       th
@@ -14,8 +12,6 @@ table
     - @quests.each do |quest|
       tr
         td = quest.name
-        td = quest.completed
-        td = quest.account
         td = link_to 'Show', quest
         td = link_to 'Edit', edit_quest_path(quest)
         td = link_to 'Destroy', quest, data: { confirm: 'Are you sure?' }, method: :delete

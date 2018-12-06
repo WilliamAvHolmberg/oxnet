@@ -1,7 +1,7 @@
 class AccountsController < ApplicationController
 
   def index
-    @accounts = Account.all
+    @accounts = Account.where(banned: false)
   end
   def show
     @account = Account.find(params[:id])

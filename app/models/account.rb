@@ -1,11 +1,11 @@
 class Account < ApplicationRecord
   has_one :proxy
-  has_many :levels, dependent: :destroy
-  has_many :quests, dependent: :destroy
+  has_many :quest_stats, dependent: :destroy
   has_many :logs, dependent: :destroy
   has_many :instructions, dependent: :destroy
   has_many :mule_withdraw_tasks, dependent: :destroy
   has_many :task_logs, dependent: :destroy
+  has_many :stats, dependent: :destroy
   belongs_to :schema
   belongs_to :account_type
   belongs_to :computer
@@ -96,7 +96,7 @@ class Account < ApplicationRecord
 
 
   def shall_do_task
-    return created && schema.get_suitable_task(self) != nil
+    return !banned && created && schema.get_suitable_task(self) != nil
   end
 
 end

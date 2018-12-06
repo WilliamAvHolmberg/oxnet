@@ -1,4 +1,4 @@
 class Quest < ApplicationRecord
-  belongs_to :account
+  has_many :quest_stats
   has_many :tasks
 end

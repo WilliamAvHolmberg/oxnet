@@ -1,0 +1,15 @@
+p#notice = notice
+
+p
+  strong Skill:
+  = @stat.skill
+p
+  strong Level:
+  = @stat.level
+p
+  strong Account:
+  = @stat.account
+
+=> link_to 'Edit', edit_stat_path(@stat)
+'|
+=< link_to 'Back', stats_path

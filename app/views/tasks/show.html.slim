@@ -27,13 +27,18 @@ p
   = @task.schema.name
 p
   strong Skill
-  = @task.skill if @task.skill != nil
+  = @task.skill.name if @task.skill != nil
 p
   strong Quest
   = @task.quest.name if @task.quest != nil
 p
   strong Inventory
-  = @task.inventory.name
+  = @task.inventory.name if @task.inventory != nil
+h1 Reqs
+- @task.requirements.each do |req|
+  p = req.skill.name
+  p = req.level
+  = link_to 'Destroy', req, data: { confirm: 'Are you sure?' }, method: :delete
 
 => link_to 'Edit', edit_task_path(@task)
 '|

@@ -1,0 +1,2 @@
+module QuestStatsHelper
+end

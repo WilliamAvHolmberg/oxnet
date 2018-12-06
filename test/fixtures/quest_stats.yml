@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  quest: one
+  completed: false
+  account: one
+
+two:
+  quest: two
+  completed: false
+  account: two

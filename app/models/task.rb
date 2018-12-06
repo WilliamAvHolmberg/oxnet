@@ -9,7 +9,11 @@ class Task < ApplicationRecord
   belongs_to :inventory, optional:true
   belongs_to :gear, optional:true
   belongs_to :quest
+  belongs_to :skill
   has_many :task_logs, dependent: :destroy
+  has_many :requirements
+
+  accepts_nested_attributes_for :requirements
 
   acts_as_list :scope => :schema
 
@@ -26,5 +30,48 @@ class Task < ApplicationRecord
   end
   def get_end_time
     return self.end_time - 3600
+  end
+
+  def should_do(account)
+    puts "DO TASK:#{name}?"
+    puts "is completed?:#{is_completed(account)}"
+    puts "can undertake#{can_undertake(account)}"
+    return can_undertake(account) && !is_completed(account)
+  end
+  def can_undertake(account)
+    if requirements.length == 0
+      return true
+    end
+
+    requirements.each do |req|
+      account_level = account.stats.find_by(skill: req.skill)
+      if account_level == nil
+        puts "level: nil for #{account.username}"
+        return true
+      end
+      account_level = account_level.level.to_i
+      if account_level < req.level.to_i
+        return false
+      end
+    end
+    return true
+  end
+
+  def is_completed(account)
+    if task_type.name == "QUEST" && quest != nil
+      if account.quest_stats.find_by(quest: quest) == nil
+        return false
+      elsif account.quest_stats.find_by(quest: quest).completed
+        return true
+      end
+    else
+      if account.stats.find_by(skill: skill) == nil
+        return false
+      end
+      if break_after.to_i <= account.stats.find_by(skill: skill).level.to_i
+        return true
+      end
+    end
+    return false
   end
 end

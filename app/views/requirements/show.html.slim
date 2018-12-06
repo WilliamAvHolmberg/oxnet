@@ -1,0 +1,15 @@
+p#notice = notice
+
+p
+  strong Skill:
+  = @requirement.skill
+p
+  strong Level:
+  = @requirement.level
+p
+  strong Task:
+  = @requirement.task
+
+=> link_to 'Edit', edit_requirement_path(@requirement)
+'|
+=< link_to 'Back', requirements_path

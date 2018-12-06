@@ -84,7 +84,7 @@ puts (i..u).to_a.sample
 # give schema to account
 #
 #
-# 
+#
 #puts "Strength: #{account.levels.where(:name => "Strength").first.level}"
 #Task.all.each do |task|
 #  puts task.name

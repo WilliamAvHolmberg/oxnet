@@ -46,7 +46,7 @@ class Account < ApplicationRecord
 
   def is_available
     #if difference is larger than 5 minutes  we can suppose that the account is not logged in
-    return time_since_last_log > 1
+    return time_since_last_log > 3
   end
 
   def get_time_online

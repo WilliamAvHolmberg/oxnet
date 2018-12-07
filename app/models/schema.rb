@@ -34,7 +34,7 @@ class Schema < ApplicationRecord
       interval = get_time_interval
       task = tasks.select{|t| t.should_do(account) && t.task_type == "QUEST"}.sample
       if task != nil
-        
+
         task.update(:start_time => interval.start_time)
         task.update(:end_time => interval.end_time)
         return task

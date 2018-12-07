@@ -9,7 +9,7 @@ class NexusController < ApplicationController
   end
 
   def create_accounts
-    worlds = [385,468,476,473,469,472,474,475,470,471,394,414,413,456,451,457,455,398,459,454,397,500,502,497,499,501,453]
+    worlds = [404,403,402,401,400, 399, 398, 397, 377, 376, 375, 374, 373, 372, 371, 370, 369, 359, 358, 357, 356, 355,354, 353, 352, 351, 340, 339, 338, 337, 336, 335, 334 ,333, 331, 330, 326, 3325]
     password = params[:password]
     schema = Schema.find(params[:schema_id])
     mule = Account.find(params[:mule_id])

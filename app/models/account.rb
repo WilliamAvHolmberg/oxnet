@@ -1,5 +1,4 @@
 class Account < ApplicationRecord
-  has_one :proxy
   has_many :quest_stats, dependent: :destroy
   has_many :logs, dependent: :destroy
   has_many :instructions, dependent: :destroy
@@ -21,10 +20,12 @@ class Account < ApplicationRecord
   end
 
   def proxy
-    if read_attribute(:proxy) != nil
-      return read_attribute(:proxy)
+    proxy = Proxy.all.select{|proxy| proxy.accounts.include? self}.first
+    if proxy == nil
+      return Proxy.find_or_initialize_by(ip: " ", port: " ", username: " ", password: " ", location: "none")
+    else
+      return proxy
     end
-    return Proxy.find_or_initialize_by(ip: " ", port: " ", username: " ", password: " ", location: "none")
   end
 
   def proxy_is_available?()

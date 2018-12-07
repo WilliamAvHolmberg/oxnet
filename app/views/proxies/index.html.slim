@@ -1,6 +1,7 @@
 h1 proxies
 table
   tr
+    th index
     th IP
     th PORT
     th Location
@@ -10,6 +11,7 @@ table
     th Linked Account
   - @proxies.each do |proxy|
     tr
+      th = proxy.id
       th
         a href="/proxies/#{proxy.id}" = proxy.ip
       th = proxy.port

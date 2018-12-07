@@ -15,13 +15,17 @@ class NexusController < ApplicationController
     mule = Account.find(params[:mule_id])
     computer = Computer.find(params[:computer_id])
     proxy = Proxy.find(params[:proxy_id])
+    puts "Proxy. #{proxy.location}"
+    puts "proxy. #{proxy.ip}"
+    puts "picked proxy: #{params[:proxy_id]}"
     i = 1
     params[:amount_of_accounts].to_i.times do
       email = "#{i}#{params[:email]}"
       username = "#{params[:username]}#{i}"
       account = Account.new(:login => email, :password => password, :username => username, :world => worlds.sample,
                             :computer => computer, :account_type => AccountType.where(:name => "SLAVE").first,:mule => mule,
-                            :schema => schema, :proxy => proxy, :should_mule => true, :created => false)
+                            :schema => schema, :proxy => Proxy.find(params[:proxy_id]), :should_mule => true, :created => false)
+      puts proxy.location
 
       account.save
       if params[:start_accounts] != nil

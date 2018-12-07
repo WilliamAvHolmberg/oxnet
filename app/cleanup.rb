@@ -1,7 +1,7 @@
 require 'socket'
 require 'active_record'
 require_relative '../app/models/application_record'
-
+require 'acts_as_list'
 
 
 
@@ -23,9 +23,11 @@ end
 ActiveRecord::Base.establish_connection(db_configuration["development"])
 
 
-MuleWithdrawTask.all.each do |task|
-  task.destroy
-  task.save
+Account.where(created: false).each do |acc|
+  puts "acc: #{acc.username}"
+  if acc.username != "lastteslod1"
+  acc.destroy!
+  end
 end
 
 #end

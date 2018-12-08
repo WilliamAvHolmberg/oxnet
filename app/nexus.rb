@@ -513,7 +513,6 @@ require_all("./models/")
 
 @worlds = [397,398,399,425,426,430,431,433,434,435,437,438,439,440,451,452,453,454,455,456,457,458,459,469,470,471,472,473,474,475]
 
-
 Thread::abort_on_exception = true
 added_main_thread = false
 loop do

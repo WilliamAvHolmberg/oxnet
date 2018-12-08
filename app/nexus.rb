@@ -361,7 +361,7 @@ def updateAccountQuests(string, account)
     puts name
     puts completed
     puts name == nil
-    if completed != nil
+    if completed != nil && name != nil
       puts "in here"
     account_quest = QuestStat.find_or_initialize_by(account_id: account.id, quest: Quest.find_by(name: name))
       if completed.include? "true"
@@ -369,8 +369,6 @@ def updateAccountQuests(string, account)
       else
         account_quest.update(:completed => false)
       end
-    puts account_quest.quest.name
-    puts account_quest.completed
     account_quest.save
     end
     end

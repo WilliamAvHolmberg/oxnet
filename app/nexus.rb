@@ -434,6 +434,14 @@ def task_log(account, parsed_respond)
   Log.new(computer_id: nil, account_id: account.id, text: parsed_respond).save
 end
 
+def mule_log(account, parsed_respond)
+  item_amount = parsed_respond[2]
+  mule = parsed_respond[3]
+
+  MuleLog.new(:account_id => account.id, :mule => mule, :item_amount => item_amount).save
+  Log.new(computer_id: nil, account_id: account.id, text: parsed_respond).save
+end
+
 def script_thread(client, account)
   while(!client.closed?)
     instruction_queue = []
@@ -450,6 +458,10 @@ def script_thread(client, account)
         client.puts account_get_instruction_respond(instruction_queue)
       elsif respond[0] == "task_log"
         task_log(account, respond)
+        client.puts "ok"
+        #TODO, ADD XP GAINED TO account etc...
+      elsif respond[0] == "mule_log"
+        mule_log(account, respond)
         client.puts "ok"
         #TODO, ADD XP GAINED TO account etc...
       elsif respond[0] == "task_request"

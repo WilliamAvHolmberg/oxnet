@@ -1,0 +1,18 @@
+= form_for @mule_log do |f|
+  - if @mule_log.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@mule_log.errors.count, "error")} prohibited this mule_log from being saved:"
+      ul
+        - @mule_log.errors.full_messages.each do |message|
+          li = message
+
+  .field
+    = f.label :account
+    = f.text_field :account
+  .field
+    = f.label :item_amount
+    = f.number_field :item_amount
+  .field
+    = f.label :mule
+    = f.text_field :mule
+  .actions = f.submit

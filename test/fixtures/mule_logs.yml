@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  account: one
+  item_amount: 1
+  mule: MyString
+
+two:
+  account: two
+  item_amount: 1
+  mule: MyString

@@ -4,6 +4,7 @@ class Account < ApplicationRecord
   has_many :instructions, dependent: :destroy
   has_many :mule_withdraw_tasks, dependent: :destroy
   has_many :task_logs, dependent: :destroy
+  has_many :mule_logs, dependent: :destroy
   has_many :stats, dependent: :destroy
   belongs_to :schema
   belongs_to :account_type

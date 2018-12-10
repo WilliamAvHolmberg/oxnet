@@ -1,0 +1,25 @@
+h1 Listing mule_logs
+
+table
+  thead
+    tr
+      th Account
+      th Item amount
+      th Mule
+      th
+      th
+      th
+
+  tbody
+    - @mule_logs.each do |mule_log|
+      tr
+        td = mule_log.account
+        td = mule_log.item_amount
+        td = mule_log.mule
+        td = link_to 'Show', mule_log
+        td = link_to 'Edit', edit_mule_log_path(mule_log)
+        td = link_to 'Destroy', mule_log, data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+
+= link_to 'New Mule log', new_mule_log_path

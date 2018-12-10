@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_06_085254) do
+ActiveRecord::Schema.define(version: 2018_12_10_184503) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -151,6 +151,15 @@ ActiveRecord::Schema.define(version: 2018_12_06_085254) do
     t.datetime "updated_at", null: false
     t.integer "computer_id"
     t.index ["account_id"], name: "index_logs_on_account_id"
+  end
+
+  create_table "mule_logs", force: :cascade do |t|
+    t.bigint "account_id"
+    t.integer "item_amount"
+    t.string "mule"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_mule_logs_on_account_id"
   end
 
   create_table "mule_withdraw_tasks", force: :cascade do |t|
@@ -349,6 +358,7 @@ ActiveRecord::Schema.define(version: 2018_12_06_085254) do
   add_foreign_key "instructions", "scripts"
   add_foreign_key "inventory_items", "inventories"
   add_foreign_key "levels", "accounts"
+  add_foreign_key "mule_logs", "accounts"
   add_foreign_key "mule_withdraw_tasks", "accounts"
   add_foreign_key "mule_withdraw_tasks", "areas"
   add_foreign_key "mule_withdraw_tasks", "task_types"

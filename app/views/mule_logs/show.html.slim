@@ -1,0 +1,15 @@
+p#notice = notice
+
+p
+  strong Account:
+  = @mule_log.account
+p
+  strong Item amount:
+  = @mule_log.item_amount
+p
+  strong Mule:
+  = @mule_log.mule
+
+=> link_to 'Edit', edit_mule_log_path(@mule_log)
+'|
+=< link_to 'Back', mule_logs_path

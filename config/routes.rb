@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :mule_logs
   resources :quest_stats
   resources :stats
   resources :requirements

@@ -1,4 +1,29 @@
-h1 Listing mule_logs
+h1 Mules today:
+- money_made_today = 0
+- total_money_made = 0
+table
+  thead
+    tr
+      th Account
+      th Item amount
+      th Mule
+      th
+      th
+      th
+
+  tbody
+    - @mule_logs.where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day).each do |mule_log|
+      - money_made_today += mule_log.item_amount
+      tr
+        td = mule_log.account.username
+        td = mule_log.item_amount
+        td = mule_log.mule
+        td = link_to 'Show', mule_log
+        td = link_to 'Edit', edit_mule_log_path(mule_log)
+        td = link_to 'Destroy', mule_log, data: { confirm: 'Are you sure?' }, method: :delete
+h2 = "money made today:#{money_made_today} "
+
+h1 Listing all mule _logs
 
 table
   thead
@@ -12,8 +37,9 @@ table
 
   tbody
     - @mule_logs.each do |mule_log|
+      - total_money_made += mule_log.item_amount
       tr
-        td = mule_log.account
+        td = mule_log.account.username
         td = mule_log.item_amount
         td = mule_log.mule
         td = link_to 'Show', mule_log
@@ -21,5 +47,5 @@ table
         td = link_to 'Destroy', mule_log, data: { confirm: 'Are you sure?' }, method: :delete
 
 br
-
+h2 = "total money made :#{total_money_made} "
 = link_to 'New Mule log', new_mule_log_path

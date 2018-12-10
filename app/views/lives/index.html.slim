@@ -29,4 +29,4 @@ table
   - (Computer.all.select {|acc| acc.is_available_to_nexus}).each do |computer|
     tr
       td
-        a href="/computers/#{computer.id}" = computer.name
+        a href="/computers/#{computer.id}" = "#{computer.name}-----#{Account.where(computer: computer, banned: false, created: true).select{|acc| !acc.is_available}.length}/#{Account.where(computer: computer, banned: false, created: true).select{|acc| acc.proxy_is_available?}.length}"

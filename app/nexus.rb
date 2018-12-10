@@ -475,7 +475,6 @@ end
 
 
 def main_thread
-  lastcomputer = 1000000
   loop do
     accounts = Account.all.select{|acc| acc.is_available && acc.schema != nil &&  acc.shall_do_task && !acc.banned && acc.proxy_is_available? &&  acc.account_type != nil && acc.account_type.name == "SLAVE"}
     if accounts != nil && accounts.length > 0
@@ -485,11 +484,7 @@ def main_thread
         if computers != nil && computers.length > 0
           Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computers.first.id, :account_id => acc.id, :script_id => Script.first.id).save
           Log.new(computer_id: computers.first.id, account_id: acc.id, text: "Instruction created")
-          sleep(5)
-          if lastcomputer == computers.first.id
-           sleep(20)
-          end
-          lastcomputer = computers.first.id
+          sleep(1)
         else
         end
         end

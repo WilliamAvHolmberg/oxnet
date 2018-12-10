@@ -20,12 +20,10 @@ def computer_get_respond(instruction_queue)
   else
     ins = instruction_queue.pop
 
-    puts ins.account
-    puts ins.instruction_type
-    puts ins.script
+    puts "ACC: #{ins.account}"
+
     if ins.account != nil
-    puts ins.account.proxy
-    puts ins.account.password
+
 
     if ins.instruction_type.name == "CREATE_ACCOUNT"
       account = ins.account
@@ -46,8 +44,6 @@ def computer_get_respond(instruction_queue)
       account = ins.account
 
       res =  "account_request:1:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + world.chomp + ":NEX"
-      puts res
-      puts "res is fine"
       if ins.computer != nil
         log = Log.new(computer_id: ins.computer_id, account_id: ins.account.id, text: "Account:#{ins.account.login} Handed out to: #{ins.computer.name}")
       else
@@ -484,7 +480,7 @@ def main_thread
         if computers != nil && computers.length > 0
           Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computers.first.id, :account_id => acc.id, :script_id => Script.first.id).save
           Log.new(computer_id: computers.first.id, account_id: acc.id, text: "Instruction created")
-          sleep(1)
+          sleep(5)
         else
         end
         end

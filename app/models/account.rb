@@ -55,20 +55,16 @@ class Account < ApplicationRecord
     total_time = 0
     logs = self.logs.sort_by &:created_at
     if logs != nil
-      puts logs.length
       logs.each_with_index do |current_log, index|
-        puts "loop:#{index}"
         nextLog = logs[index+1]
         if start_log == nil
           start_log = current_log
         elsif nextLog == nil
           time = (current_log.created_at - start_log.created_at)
-          puts time
           total_time += time
           return total_time
         elsif (nextLog.created_at - current_log.created_at) > 35
           time = (current_log.created_at - start_log.created_at)
-          puts time
           total_time += time
           start_log = nextLog
         end

@@ -33,9 +33,6 @@ class Task < ApplicationRecord
   end
 
   def should_do(account)
-    puts "DO TASK:#{name}?"
-    puts "is completed?:#{is_completed(account)}"
-    puts "can undertake#{can_undertake(account)}"
     return can_undertake(account) && !is_completed(account)
   end
   def can_undertake(account)
@@ -46,7 +43,6 @@ class Task < ApplicationRecord
     requirements.each do |req|
       account_level = account.stats.find_by(skill: req.skill)
       if account_level == nil
-        puts "level: nil for #{account.username}"
         return true
       end
       account_level = account_level.level.to_i

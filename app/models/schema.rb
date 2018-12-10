@@ -41,7 +41,6 @@ class Schema < ApplicationRecord
       end
       task = tasks.select{|t| t.should_do(account)}.sample
       if task == nil
-        puts "No task available"
         return nil
       elsif task.task_type.name == "QUEST"
         return task

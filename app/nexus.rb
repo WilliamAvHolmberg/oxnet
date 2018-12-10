@@ -485,6 +485,7 @@ def main_thread
         if computers != nil && computers.length > 0
           Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computers.first.id, :account_id => acc.id, :script_id => Script.first.id).save
           Log.new(computer_id: computers.first.id, account_id: acc.id, text: "Instruction created")
+          sleep(5)
           if lastcomputer == computers.first.id
            sleep(20)
           end

@@ -33,11 +33,11 @@ def computer_get_respond(instruction_queue)
       ins.update(:completed => true)
       ins.save
       return res
-    elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account_id == nil && !ins.account.is_connected
+    elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account_id == nil
       ins.update(:completed => true)
       puts "wrong"
     return "account_request:0"
-    elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account_id != nil && !ins.account.is_connected
+    elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account_id != nil 
       ins.update(:completed => true)
       ins.save
       world = ins.account.world

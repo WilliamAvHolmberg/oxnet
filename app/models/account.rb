@@ -56,7 +56,6 @@ class Account < ApplicationRecord
       return true
     else
     return time_since_last_log > 6
-      return true
     end
   end
 

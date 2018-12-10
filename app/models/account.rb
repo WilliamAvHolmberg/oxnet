@@ -47,7 +47,7 @@ class Account < ApplicationRecord
   end
 
   def is_connected
-    return time_since_last_log > 1
+    return time_since_last_log < 1
   end
 
   def is_available

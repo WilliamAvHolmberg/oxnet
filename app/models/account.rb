@@ -46,6 +46,10 @@ class Account < ApplicationRecord
     end
   end
 
+  def is_connected
+    return time_since_last_log > 1
+  end
+
   def is_available
     #if difference is larger than 6 minutes  we can assume that the account is not logged in
     if account_type.name == "MULE"

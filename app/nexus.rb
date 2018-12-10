@@ -33,11 +33,11 @@ def computer_get_respond(instruction_queue)
       ins.update(:completed => true)
       ins.save
       return res
-    elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account_id == nil
+    elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account_id == nil && !ins.account.is_connected
       ins.update(:completed => true)
       puts "wrong"
     return "account_request:0"
-    elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account_id != nil
+    elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account_id != nil && !ins.account.is_connected
       ins.update(:completed => true)
       ins.save
       world = ins.account.world
@@ -380,8 +380,10 @@ def get_mule_respond(respond, account)
     computer = mule.computer
     if computer != nil && computer.is_available_to_nexus
       puts "we found computer"
-      ins = Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computer.id, :account_id => mule.id, :script_id => Script.first.id)
-      ins.save
+      if !mule.is_connected
+        ins = Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computer.id, :account_id => mule.id, :script_id => Script.first.id)
+        ins.save
+      end
       puts "created instruction"
       #new mule task
       item_id = respond[1]

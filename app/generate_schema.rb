@@ -37,9 +37,6 @@ def generate_account
     QuestStat.find_or_create_by(quest: quest, account: account, completed: false)
   end
 
-  account.quest_stats.each do |quest|
-    puts "#{quest.quest.name}:#{quest.completed}"
-  end
 
   Skill.all.each do |level|
     Stat.create(:skill => level, :level => 1, :account => account)
@@ -48,21 +45,32 @@ def generate_account
   #account.levels.find_by(name: "Woodcutting").update(level: 99)
   account.update(schema: Schema.where(name: "Suicide").first)
 
-  5.times do
+  new_schema = Schema.create
+  new_schema.update(name: "#{account.username}'s Schema'")
+  while account.schema.get_suitable_task(account) != nil
     task = account.schema.get_suitable_task(account)
     if task == nil
       puts "No task available"
     elsif task.task_type.name == "QUEST"
       quest = Quest.find_or_initialize_by(name: task.quest.name)
-      puts "Done quest: #{quest.name} #{quest.completed}"
+      QuestStat.where(account: account, quest: quest).first.update(completed: true)
+      puts "Done quest: #{quest.name} #{account.quest_stats.where(quest: quest).first.completed}"
+      new_task = task.dup
+      new_task.update(schema: new_schema, name: "#{account.username} --- #{new_task.name}")
+      puts "#{new_task.name} in schema #{new_task.schema.name}"
+
     else
       level = account.stats.find_by(skill: task.skill)
       wanted_level = task.break_after
-      puts (level.level.to_i..wanted_level.to_i).sample
-      level.update(level: task.break_after)
+      our_level = ((level.level.to_i + 1)..wanted_level.to_i).to_a.sample
+      level.update(level: our_level)
       puts "#{level.skill.name} is now level :#{level.level}"
-
+      new_task = task.dup
+      new_task.update(schema: new_schema, break_after: our_level, name: "#{account.username} --- #{new_task.name}")
+      puts "#{new_task.name}, break after: #{new_task.break_after}, in schema #{new_task.schema.name}"
     end
+    new_task.move_to_bottom
+
   end
   #Task.all.each do |task|
   #  puts "Task: #{task.name}"
@@ -70,10 +78,11 @@ def generate_account
   #end
 
   account.destroy
+  return new_schema
 end
-i = 1
-u = 30
-puts (i..u).to_a.sample
+
+puts generate_account.name
+
 
 #create new schema
 # loop through all tasks
@@ -84,7 +93,7 @@ puts (i..u).to_a.sample
 # give schema to account
 #
 #
-#
+#generate_schema.rb
 #puts "Strength: #{account.levels.where(:name => "Strength").first.level}"
 #Task.all.each do |task|
 #  puts task.name

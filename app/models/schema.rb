@@ -32,14 +32,14 @@ class Schema < ApplicationRecord
       return nil
     else
       interval = get_time_interval
-      task = tasks.select{|t| t.should_do(account) && t.task_type.name == "QUEST"}.sample
+      task = tasks.select{|t| t.should_do(account) && t.task_type.name == "QUEST"}.first
       if task != nil
 
         task.update(:start_time => interval.start_time)
         task.update(:end_time => interval.end_time)
         return task
       end
-      task = tasks.select{|t| t.should_do(account)}.sample
+      task = tasks.select{|t| t.should_do(account)}.first
       if task == nil
         return nil
       elsif task.task_type.name == "QUEST"

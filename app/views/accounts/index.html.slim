@@ -11,6 +11,7 @@ table
     th Mule
     th Banned?
     th Created?
+    th Time Per Day
     th
 
   - @available_accounts.each do |account|
@@ -26,6 +27,7 @@ table
       th = account.mule.username if account.mule != nil
       th = account.banned
       th = account.created
+      th = account.schema.total_time_per_day if account.schema != nil
       td = link_to 'Destroy', account, data: {confirm: 'Are you sure?'}, method: :delete
 h1 Accounts
 table

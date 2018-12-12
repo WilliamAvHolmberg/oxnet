@@ -13,9 +13,9 @@ table
   tbody
     - @requirements.each do |requirement|
       tr
-        td = requirement.skill
+        td = requirement.skill.name
         td = requirement.level
-        td = requirement.task
+        td = requirement.task.name if requirement.task != nil
         td = link_to 'Show', requirement
         td = link_to 'Edit', edit_requirement_path(requirement)
         td = link_to 'Destroy', requirement, data: { confirm: 'Are you sure?' }, method: :delete

@@ -82,6 +82,10 @@ def generate_email(name)
   return name + "@" + get_random_domain
 end
 
+def find_available_proxy
+  return Proxy.select{|proxy| proxy.is_available}.sample
+end
+
 
 def create_account
   name = generate_name
@@ -127,7 +131,8 @@ def create_account(computer, boolean)
   password = "ugot00wned2"
   schema = Schema.where(name: "Suicide").first #generate schema in the future
   mule = Account.where(username: "SirJolefon").first #not needed. random
-  proxy = Proxy.find(140)
+  proxy = find_available_proxy
+  #proxy = Proxy.find(140)
   account = Account.new(:login => email, :password => password, :username => name, :world => world,
                         :computer => computer, :account_type => AccountType.where(:name => "SLAVE").first,:mule => mule,
                         :schema => schema, :proxy => proxy, :should_mule => true, :created => false)
@@ -220,4 +225,9 @@ def generate_schedule(account)
   return new_schema
 end
 
-create_accounts_for_all_computers
+computer = Computer.where(name: "VPS").first
+puts computer.name
+5.times do
+create_account(computer, true)
+  end
+#create_accounts_for_all_computers

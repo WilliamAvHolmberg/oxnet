@@ -573,7 +573,7 @@ loop do
         end
         puts "New Script Thread started for: #{respond[3]}"
         thread =  Thread.fork{script_thread(client, account)}
-        client.puts "connected:1"
+        client.puts "connected:1:#{account.username}"
       else
         puts "hello"
       end

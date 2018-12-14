@@ -1,7 +1,5 @@
 require 'socket'
 require 'active_record'
-require 'HTTParty'
-require 'Nokogiri'
 require 'acts_as_list'
 require_relative '../app/models/application_record'
 require 'json'

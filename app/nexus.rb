@@ -11,7 +11,7 @@ def db_configuration
 end
 
 def find_suitable_account
-  return Account.all.select{|a| a.is_available}.first
+  return Account.where(banned: false, created: true).select{|a| a.is_available}.first
 end
 
 def computer_get_respond(instruction_queue)
@@ -371,7 +371,7 @@ def updateAccountQuests(string, account)
 end
 
 def get_mule_respond(respond, account)
-  mule = Account.all.where(banned: false).select{|acc| acc.is_available && acc.account_type.name == "MULE" && (acc.proxy_is_available? || acc.proxy.ip.length < 5)}
+  mule = Account.where(banned: false, created: true).select{|acc| acc.is_available && acc.account_type.name == "MULE" && (acc.proxy_is_available? || acc.proxy.ip.length < 5)}
   #if mule != nil && !mule.banned && (mule.proxy_is_available? || mule.proxy.ip.length < 5)
   if mule != nil && mule.length > 0
     mule = mule.sample
@@ -486,7 +486,7 @@ end
 
 def main_thread
   loop do
-    accounts = Account.all.select{|acc| acc.is_available && acc.schema != nil &&  acc.shall_do_task && !acc.banned && acc.proxy_is_available? &&  acc.account_type != nil && acc.account_type.name == "SLAVE"}
+    accounts = Account.where(banned: false, created: true).select{|acc| acc.is_available && acc.schema != nil &&  acc.shall_do_task && !acc.banned && acc.proxy_is_available? &&  acc.account_type != nil && acc.account_type.name == "SLAVE"}
     if accounts != nil && accounts.length > 0
       accounts.each do |acc|
         if acc.computer_id != nil

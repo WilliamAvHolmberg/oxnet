@@ -3,7 +3,7 @@ require 'active_record'
 require_relative '../app/models/application_record'
 require 'net/ping'
 require 'acts_as_list'
-require 'generate_account'
+require_relative 'generate_account'
 
 @hello = 0
 def db_configuration
@@ -38,7 +38,7 @@ loop do
   if Time.now > last_check +  interval
     last_check = Time.now
     puts "hello"
-    generate_account.generate
+    generate_account.create_accounts_for_all_computers
   else
 
     puts "no hello"

@@ -3,6 +3,7 @@ require 'active_record'
 require_relative '../app/models/application_record'
 require 'net/ping'
 require 'acts_as_list'
+require_relative 'generate_account'
 
 @hello = 0
 def db_configuration
@@ -79,7 +80,7 @@ end
 
 
 def get_mule_withdraw_task_respond(account)
-  mule_withdraw_tasks = MuleWithdrawTask.all.select{|task| !task.executed  && !task.account!= nil && task.account.id == account.id && task.is_relevant}
+  mule_withdraw_tasks = MuleWithdrawTask.where(executed: false, relevant: true).select{|task| !task.executed  && !task.account!= nil && task.account.id == account.id && task.is_relevant}
   if mule_withdraw_tasks != nil && mule_withdraw_tasks.length > 0
     task = mule_withdraw_tasks[0]
   else
@@ -313,7 +314,7 @@ def computer_thread(client, computer)
       end
     elsif respond[0] == "log"
       #get new instructions
-      instruction_queue = Instruction.all.select{|ins| ins.computer_id == computer.id && !ins.completed && ins.is_relevant}
+      instruction_queue = Instruction.where(completed: false).select{|ins| ins.computer_id == computer.id && !ins.completed && ins.is_relevant}
       if instruction_queue != nil
         puts "Inustruction queue length:#{instruction_queue.length}"
       end
@@ -454,7 +455,7 @@ def script_thread(client, account)
       respond = respond.split(":")
       if respond[0] == "log"
         #get new instructions
-        instruction_queue = Instruction.all.select{|ins|ins.is_relevant && ins.account_id == account.id && ins.completed == false}
+        instruction_queue = Instruction.where(completed: false).select{|ins|ins.is_relevant && ins.account_id == account.id && ins.completed == false}
         log = Log.new(computer_id: nil, account_id: account.id, text: respond)
         log.save
         client.puts account_get_instruction_respond(instruction_queue)
@@ -485,6 +486,10 @@ end
 
 
 def main_thread
+  last_check = 0
+  interval = 10.minute
+  generate_account = GenerateAccount.new
+
   loop do
     accounts = Account.where(banned: false, created: true).select{|acc| acc.is_available && acc.schema != nil &&  acc.shall_do_task && !acc.banned && acc.proxy_is_available? &&  acc.account_type != nil && acc.account_type.name == "SLAVE"}
     if accounts != nil && accounts.length > 0
@@ -499,6 +504,14 @@ def main_thread
         end
         end
       end
+    end
+
+    if Time.now > last_check +  interval
+      last_check = Time.now
+      puts "lets create accounts"
+      generate_account.create_accounts_for_all_computers
+    else
+      puts "next check: #{(last_check + interval - Time.now)}"
     end
     sleep(2)
   end

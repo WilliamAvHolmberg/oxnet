@@ -5,6 +5,7 @@ require 'net/ping'
 require 'acts_as_list'
 require_relative 'generate_account'
 
+
 @hello = 0
 def db_configuration
   db_configuration_file = File.join(File.expand_path('..', __FILE__), '..', 'config', 'database.yml')

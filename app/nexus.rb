@@ -371,7 +371,7 @@ def updateAccountQuests(string, account)
 end
 
 def get_mule_respond(respond, account)
-  mule = Account.where(banned: false, created: true).select{|acc| acc.is_available && acc.account_type.name == "MULE" && (acc.proxy_is_available? || acc.proxy.ip.length < 5)}
+  mule = Account.where(banned: false, created: true).select{|acc| acc.computer.is_connected && acc.is_available && acc.account_type.name == "MULE" && (acc.proxy_is_available? || acc.proxy.ip.length < 5)}
   #if mule != nil && !mule.banned && (mule.proxy_is_available? || mule.proxy.ip.length < 5)
   if mule != nil && mule.length > 0
     mule = mule.sample

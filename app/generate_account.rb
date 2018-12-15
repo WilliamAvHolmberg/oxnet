@@ -156,7 +156,7 @@ class GenerateAccount
   #todo fix size (13 atm)
   public
     def create_accounts_for_all_computers
-      account_threshold = 14
+      account_threshold = 10
       computers = find_available_computers
       computers.each do |computer|
         current_amount_of_accounts = get_available_accounts_on_computer(computer)

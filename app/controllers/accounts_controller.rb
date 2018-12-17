@@ -18,30 +18,31 @@ class AccountsController < ApplicationController
   end
 
   def json
+    @account = Account.find(params[:id])
 
-    render json: '{
-  "Clients": [{
-    "UseProxy": false,
-    "ScriptArgs": "",
-    "RsPassword": "Lifepeerbook123",
-    "Config": {
-      "EngineTickDelay": 0,
-      "DisableModelRendering": false,
-      "LowCpuMode": true,
-      "DisableSceneRendering": false,
-      "SuperLowCpuMode": true
+    render json: "{
+  'Clients': [{
+    'UseProxy': false,
+    'ScriptArgs': '',
+    'RsPassword': '#{@account.password}',
+    'Config': {
+      'EngineTickDelay': 0,
+      'DisableModelRendering': false,
+      'LowCpuMode': true,
+      'DisableSceneRendering': false,
+      'SuperLowCpuMode': true
     },
-    "ScriptName": "nex",
-    "ProxyIp": "",
-    "ProxyUser": "",
-    "IsRepoScript": false,
-    "World": 301,
-    "ProxyPort": 0,
-    "RsUsername": "william",
-    "ProxyPass": ""
+    'ScriptName': 'nex',
+    'ProxyIp': '',
+    'ProxyUser': '',
+    'IsRepoScript': false,
+    'World': #{@account.world},
+    'ProxyPort': 0,
+    'RsUsername': '#{@account.login}',
+    'ProxyPass': ''
   }],
-  "AutoUpdateClient": true
-}'
+  'AutoUpdateClient': true
+}"
   end
 
   def edit

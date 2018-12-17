@@ -49,7 +49,11 @@ Rails.application.routes.draw do
   resources :instruction_types
   resources :computers
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-  resources :accounts
+  resources :accounts do
+    member do
+      get 'json'
+    end
+  end
   resources :proxies
   resources :logs
 end

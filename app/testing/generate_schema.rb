@@ -3,7 +3,7 @@ require 'active_record'
 require 'HTTParty'
 require 'Nokogiri'
 require 'acts_as_list'
-require_relative '../app/models/application_record'
+require_relative '../app/models/ication_record'
 require 'json'
 
 

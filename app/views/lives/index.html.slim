@@ -10,17 +10,19 @@ table
     th Location
     th Break after level
     th Break after time
-  - (Account.all.select {|acc| !acc.is_available}).each do |account|
-    - @money += account.task_logs.last.money_per_hour.to_i if account.task_logs.all.size > 0
+  - Account.where(banned: false, created: true).select {|acc| !acc.is_available}.each do |account|
+    - last_log = account.task_logs.last
     tr
       td
         a href="/accounts/#{account.id}" = account.username
-      td = account.task_logs.last.task.name if account.task_logs.all.size > 0
-      td = account.task_logs.last.money_per_hour if account.task_logs.all.size > 0
-      td = account.task_logs.last.xp_per_hour if account.task_logs.all.size > 0
-      td = account.task_logs.last.position if account.task_logs.all.size > 0
-      td = account.task_logs.last.task.break_after if account.task_logs.all.size > 0
-      td = account.task_logs.last.task.end_time if account.task_logs.all.size > 0
+      - if last_log != nil && last_log.size > 0
+        - @money +=  last_log.money_per_hour.to_i
+        td = last_log.task.name
+        td = last_log.task_logs.last.money_per_hour
+        td = last_log.task_logs.last.xp_per_hour
+        td = last_log.task_logs.last.position
+        td = last_log.task_logs.last.task.break_after
+        td = last_log.ask_logs.last.task.end_time
 h2 = "MONEY #{@money}"
 
 h1 Computers online:

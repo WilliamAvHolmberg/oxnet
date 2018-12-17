@@ -17,6 +17,33 @@ class AccountsController < ApplicationController
     @mules = Account.all.select {|acc| acc.account_type != nil && acc.account_type.name == "MULE"}
   end
 
+  def json
+
+    render json: '{
+  "Clients": [{
+    "UseProxy": false,
+    "ScriptArgs": "",
+    "RsPassword": "Lifepeerbook123",
+    "Config": {
+      "EngineTickDelay": 0,
+      "DisableModelRendering": false,
+      "LowCpuMode": true,
+      "DisableSceneRendering": false,
+      "SuperLowCpuMode": true
+    },
+    "ScriptName": "nex",
+    "ProxyIp": "",
+    "ProxyUser": "",
+    "IsRepoScript": false,
+    "World": 301,
+    "ProxyPort": 0,
+    "RsUsername": "william",
+    "ProxyPass": ""
+  }],
+  "AutoUpdateClient": true
+}'
+  end
+
   def edit
     @account = Account.find(params[:id])
     @schemas = Schema.all

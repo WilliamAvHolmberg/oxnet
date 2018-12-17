@@ -53,6 +53,20 @@ class Schema < ApplicationRecord
     return nil
   end
 
+  def get_available_tasks(account)
+    old_tasks = tasks.select{|t| t.should_do(account) && t.task_type.name == "QUEST"}
+    if old_tasks != nil && old_tasks.length > 0
+      return old_tasks
+    end
+
+    old_tasks = tasks.select{|t| t.should_do(account)}
+    if old_tasks != nil && old_tasks.length > 0
+      return old_tasks
+    end
+
+    return nil
+  end
+
   def get_time_unil_next_task
     time_left = 1000000
     self.tasks.all.each do |task|

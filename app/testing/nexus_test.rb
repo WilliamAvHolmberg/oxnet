@@ -1,6 +1,6 @@
 require 'socket'
 require 'active_record'
-require_relative '../app/models/application_record'
+require_relative '../app/models/ication_record'
 require 'net/ping'
 require 'acts_as_list'
 require_relative 'generate_account'

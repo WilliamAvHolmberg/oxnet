@@ -1,6 +1,6 @@
 require 'socket'
 require 'active_record'
-require_relative '../app/models/application_record'
+require_relative '../app/models/ication_record'
 require 'net/ping'
 
 @hello = 0

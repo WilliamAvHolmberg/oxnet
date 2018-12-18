@@ -1,6 +1,6 @@
 require 'socket'
 require 'active_record'
-require_relative '../app/models/ication_record'
+require_relative '../app/models/application_record'
 require 'acts_as_list'
 
 
@@ -23,11 +23,13 @@ end
 ActiveRecord::Base.establish_connection(db_configuration["development"])
 
 
-Account.where(created: false).each do |acc|
-  puts "acc: #{acc.username}"
-  if acc.username != "lastteslod1"
-  acc.destroy!
-  end
+puts Account.all.size
+puts TaskLog.all.size
+
+10.times do
+  puts "destroy"
+  Task.limit(10).destroy_all
 end
+
 
 #end

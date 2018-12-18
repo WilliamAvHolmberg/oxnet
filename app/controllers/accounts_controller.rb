@@ -28,9 +28,9 @@ class AccountsController < ApplicationController
     'Config': {
       'EngineTickDelay': 0,
       'DisableModelRendering': false,
-      'LowCpuMode': true,
+      'LowCpuMode': false,
       'DisableSceneRendering': false,
-      'SuperLowCpuMode': true
+      'SuperLowCpuMode': false
     },
     'ScriptName': 'nex',
     'ProxyIp': '',

@@ -4,15 +4,36 @@ require 'acts_as_list'
 require_relative '../app/models/application_record'
 require 'json'
 require 'net/ping'
+require_relative 'generate_gear'
+require_relative 'generate_schema'
 
 
 class GenerateAccount
+  public
+    def create_account
+      name = generate_name
+      email = generate_email(name)
+      world = get_random_world
+      password = "ugot00wned2"
+      schema = Schema.where(name: "RSPEER").first #generate schema in the future
+      mule = Account.where(username: "SirJolefon").first #not needed. random
+      computer = Computer.all.sample
+      proxy = Proxy.find(140)
+      account = Account.new(:login => email, :password => password, :username => name, :world => world,
+                            :computer => computer, :account_type => AccountType.where(:name => "SLAVE").first,:mule => mule,
+                            :schema => schema, :proxy => proxy, :should_mule => true, :created => false)
 
-
+      account.save
+      ins = Instruction.new(:instruction_type_id => InstructionType.select{|ins| ins.name == "CREATE_ACCOUNT"}.first.id, :computer_id => computer.id, :account_id => account.id, :script_id => Script.first.id)
+      ins.save
+      puts "#{name} created for computer #{computer.name} with schema #{schema.name}"
+    end
 
   def initialize
     ActiveRecord::Base.establish_connection(db_configuration["development"])
     require_all("./models/")
+    @generate_gear = GenerateGear.new
+    @generate_schema = GenerateSchema.new
   end
 
   def require_all(_dir)
@@ -95,31 +116,14 @@ class GenerateAccount
     end
 
   public
-    def create_account
-      name = generate_name
-      email = generate_email(name)
-      world = get_random_world
-      password = "ugot00wned2"
-      schema = Schema.where(name: "Suicide").first #generate schema in the future
-      mule = Account.where(username: "SirJolefon").first #not needed. random
-      computer = find_available_computers.sample
-      proxy = Proxy.find(140)
-      account = Account.new(:login => email, :password => password, :username => name, :world => world,
-                            :computer => computer, :account_type => AccountType.where(:name => "SLAVE").first,:mule => mule,
-                            :schema => schema, :proxy => proxy, :should_mule => true, :created => false)
 
-      account.save
-      ins = Instruction.new(:instruction_type_id => InstructionType.select{|ins| ins.name == "CREATE_ACCOUNT"}.first.id, :computer_id => computer.id, :account_id => account.id, :script_id => Script.first.id)
-      ins.save
-      puts "#{name} created for computer #{computer.name} with schema #{schema.name}"
-    end
 
     def create_account(computer)
       name = generate_name
       email = generate_email(name)
       world = get_random_world
       password = "ugot00wned2"
-      schema = Schema.where(name: "Suicide").first #generate schema in the future
+      schema = Schema.where(name: "RSPEER").first #generate schema in the future
       mule = Account.where(username: "SirJolefon").first #not needed. random
       proxy = Proxy.find(140)
       account = Account.new(:login => email, :password => password, :username => name, :world => world,
@@ -137,7 +141,7 @@ class GenerateAccount
       email = generate_email(name)
       world = get_random_world
       password = "ugot00wned2"
-      schema = Schema.where(name: "Suicide").first #generate schema in the future
+      schema = Schema.where(name: "RSPEER").first #generate schema in the future
       mule = Account.where(username: "SirJolefon").first #not needed. random
       #proxy = find_available_proxy
       proxy = Proxy.find(140)
@@ -146,11 +150,12 @@ class GenerateAccount
                             :schema => schema, :proxy => proxy, :should_mule => true, :created => false)
 
       account.save
+      new_schema = @generate_schema.generate_schedule(account)
+      account.update(schema: new_schema)
+      puts "id: #{account.id}:#{name} created for computer #{computer.name} with schema #{schema.name}"
+      account.save
       ins = Instruction.new(:instruction_type_id => InstructionType.select{|ins| ins.name == "CREATE_ACCOUNT"}.first.id, :computer_id => computer.id, :account_id => account.id, :script_id => Script.first.id)
       ins.save
-      new_schema = generate_schedule(account)
-      account.update(schema: new_schema)
-      puts "#{name} created for computer #{computer.name} with schema #{schema.name}"
     end
 
   #todo fix size (13 atm)
@@ -173,90 +178,17 @@ class GenerateAccount
   #todo fix size (13 atm)
   public
   def create_accounts(number)
-    computers = find_available_computers
-    computers.each do |computer|
+    computer = Computer.where(name: "Suicide").first
 
       number.times do
         create_account(computer, true)
-      end
     end
   end
-  private
-    def generate_schedule(account)
 
-      puts account.username
-      quests = Quest.all
-      quests.each do |quest|
-        QuestStat.find_or_create_by(quest: quest, account: account, completed: false)
-      end
-
-
-      Skill.all.each do |level|
-        Stat.create(:skill => level, :level => 1, :account => account)
-        #puts level
-      end
-
-
-      new_schema = Schema.create
-      new_schema.update(name: "#{account.username}'s Schema'")
-
-      while account.schema.get_available_tasks(account) != nil && account.schema.get_available_tasks(account).length > 0
-        task = account.schema.get_available_tasks(account).sample
-        if task == nil
-          puts "No task available"
-        elsif task.task_type.name == "QUEST"
-          quest = Quest.find_or_initialize_by(name: task.quest.name)
-          QuestStat.where(account: account, quest: quest).first.update(completed: true)
-          puts "Done quest: #{quest.name} #{account.quest_stats.where(quest: quest).first.completed}"
-          new_task = task.dup
-          new_task.update(schema: new_schema, name: "#{account.username} --- #{new_task.name}")
-          puts "#{new_task.name} in schema #{new_task.schema.name}"
-
-        else
-          level = account.stats.find_by(skill: task.skill)
-          wanted_level = task.break_after
-          our_level = ((level.level.to_i + 1)..wanted_level.to_i).to_a.sample
-          level.update(level: our_level)
-          puts "#{level.skill.name} is now level :#{level.level}"
-          new_task = task.dup
-          new_task.update(schema: new_schema, break_after: our_level, name: "#{account.username} --- #{new_task.name}")
-          puts "#{new_task.name}, break after: #{new_task.break_after}, in schema #{new_task.schema.name}"
-        end
-
-        ##fix order of tasks
-        new_task.move_to_bottom
-        account.quest_stats.each do |quest|
-          quest.update(completed: false)
-        end
-
-
-
-       # puts "schema generated"
-      end
-      #Task.all.each do |task|
-      #  puts "Task: #{task.name}"
-      #  puts "should do:#{task.should_do(account)}"
-      #end
-
-      account.stats.each do |skill|
-        skill.update(level: 1)
-      end
-      account.schema.time_intervals.each do |time_interval|
-        new_time = time_interval.dup
-        new_time.update(schema: new_schema)
-        new_time.save
-      end
-      return new_schema
-    end
 
 end
 
-gen = GenerateAccount.new
-gen.create_accounts(1)
 #computer = Computer.where(name: "Suicide").first
-#computer = Computer.where(name: "VPS").first
-#puts computer.name
-#5.times do
-#create_account(computer, true)
- # end
+generate_account = GenerateAccount.new
+generate_account.create_accounts(1)
 #create_accounts_for_all_computers

@@ -31,7 +31,7 @@ def computer_get_respond(instruction_queue)
       account = ins.account
       log = Log.new(account_id: ins.account.id, text: "Account:#{ins.account.login} Handed out for the first time to: #{ins.computer.name}")
       log.save
-      res =  "create_account:#{account.username}:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + account.world.chomp + ":NEX"
+      res =  "create_account:#{account.username}:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + account.world.chomp + ":NEX" + ":http://oxnetserver.ddns.net:3000/accounts/#{account.id}/json"
       ins.update(:completed => true)
       ins.save
       return res
@@ -45,7 +45,9 @@ def computer_get_respond(instruction_queue)
       world = ins.account.world
       account = ins.account
 
-      res =  "account_request:1:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + world.chomp + ":NEX"
+      #res =  "account_request:1:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + world.chomp + ":NEX"
+      res =  "account_request:1:" + "http://oxnetserver.ddns.net:3000/accounts/#{account.id}/json"
+
       if ins.computer != nil
         log = Log.new(computer_id: ins.computer_id, account_id: ins.account.id, text: "Account:#{ins.account.login} Handed out to: #{ins.computer.name}")
       else
@@ -81,10 +83,11 @@ end
 
 
 def get_mule_withdraw_task_respond(account)
-  mule_withdraw_tasks = MuleWithdrawTask.select{|task| !task.executed && !task.account!= nil && task.account.id == account.id && task.is_relevant}
+  mule_withdraw_tasks = MuleWithdrawTask.where(:account => account).select{|task| task.is_relevant && !task.executed && !task.account!= nil && task.account.id == account.id }
   if mule_withdraw_tasks != nil && mule_withdraw_tasks.length > 0
     task = mule_withdraw_tasks[0]
   else
+    puts "dc player"
     return "DISCONNECT:1"
   end
 
@@ -113,6 +116,9 @@ def get_task_respond(task, account)
     puts " res wc respond"
     return get_woodcutting_task_respond(task, account)
     #other cases, such as combat, druids.. etc
+  when "MINING"
+    puts " res mining respond"
+    return get_mining_task_respond(task, account)
   when "MULE_WITHDRAW"
   when "MULE_DEPOSIT"
     puts "res mule respond"
@@ -260,7 +266,70 @@ def get_combat_task_respond(task, account)
   log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
   log.save
   puts "sending resp"
-  res = "task_respond:1:#{task_type}:#{task.id}:#{bank_area}:#{action_area}:#{monster_name}:#{break_condition}:#{task_duration}:#{head}:#{cape}:#{neck}:#{weapon}:#{chest}:#{shield}:#{legs}:#{hands}:#{feet}:#{ring}:#{ammunition}:#{ammunition_amount}:#{food}:#{inventory}:#{loot_threshold}:#{task.skill}:#{level_goal}:#{account.should_mule}"
+  res = "task_respond:1:#{task_type}:#{task.id}:#{bank_area}:#{action_area}:#{monster_name}:#{break_condition}:#{task_duration}:#{head}:#{cape}:#{neck}:#{weapon}:#{chest}:#{shield}:#{legs}:#{hands}:#{feet}:#{ring}:#{ammunition}:#{ammunition_amount}:#{food}:#{inventory}:#{loot_threshold}:#{task.skill.name}:#{level_goal}:#{account.should_mule}"
+  return res
+end
+
+def update_mining_task(task, account)
+  level = account.stats.find_by(skill: Skill.find_by(name: "Mining"))
+  puts "updating taskz"
+  if level != nil && level.level.to_i > 0
+    if level.level.to_i < 21
+      puts "bronze axe"
+      axe = RsItem.where(itemName: "Bronze pickaxe", stackable: false).first
+    elsif level.level.to_i < 41
+      puts "rune axe"
+      axe = RsItem.where(itemName: "Mithril pickaxe", stackable: false).first
+    elsif level.level.to_i < 99
+      puts "rune axe"
+      axe = RsItem.where(itemName: "Rune pickaxe", stackable: false).first
+    end
+  end
+  task.axe = axe
+  task.save
+  puts "updated task"
+end
+def get_mining_task_respond(task, account)
+  task_type = task.task_type.name
+  update_mining_task(task, account)
+  if task.bank_area != nil
+    bank_area = task.bank_area.coordinates
+  else
+    bank_area = "none"
+  end
+  action_area = task.action_area.coordinates
+  axeID = task.axe.itemId
+  axe_name = task.axe.itemName
+  ores = task.ores
+  break_condition = task.break_condition.name
+  if break_condition == "TIME"
+    task_duration = ((task.get_end_time - Time.now.change(:month => 1, :day => 1, :year => 2000))/60).round
+    level_goal = "99"
+  elsif break_condition == "LEVEL" && task.break_after != nil
+    task_duration = "999999"
+    level_goal = task.break_after
+  elsif break_condition == "TIME_OR_LEVEL"
+    task_duration = ((task.get_end_time - Time.now.change(:month => 1, :day => 1, :year => 2000))/60).round
+    level_goal = task.break_after
+    puts task_duration
+  end
+  if task.gear.head != nil then head = task.gear.head.formated_name else head = "none" end
+  if task.gear.cape != nil then cape = task.gear.cape.formated_name else cape = "none" end
+  if task.gear.neck != nil then neck = task.gear.neck.formated_name else neck = "none" end
+  if task.gear.weapon != nil then weapon = task.gear.weapon.formated_name else weapon = "none" end
+  if task.gear.chest != nil then chest = task.gear.chest.formated_name else chest = "none" end
+  if task.gear.shield != nil then shield = task.gear.shield.formated_name else shield = "none" end
+  if task.gear.legs != nil then legs = task.gear.legs.formated_name else legs = "none" end
+  if task.gear.hands != nil then hands = task.gear.hands.formated_name else hands = "none" end
+  if task.gear.feet != nil then feet = task.gear.feet.formated_name else feet = "none" end
+  if task.gear.ring != nil then ring = task.gear.ring.formated_name else ring = "none" end
+  if task.gear.ammunition != nil then ammunition = task.gear.ammunition.formated_name else ammunition = "none" end
+  if task.gear.ammunition_amount != nil then ammunition_amount= task.gear.ammunition_amount else "none" end
+  if task.inventory != nil then inventory = task.inventory.get_parsed_message else inventory ="none" end
+  log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
+  log.save
+  puts "sending resp"
+  res = "task_respond:1:#{task_type}:#{task.id}:#{bank_area}:#{action_area}:#{axeID}:#{axe_name}:#{ores}:#{break_condition}:#{task_duration}:#{level_goal}:#{head}:#{cape}:#{neck}:#{weapon}:#{chest}:#{shield}:#{legs}:#{hands}:#{feet}:#{ring}:#{ammunition}:#{ammunition_amount}"
   return res
 end
 def get_woodcutting_task_respond(task, account)
@@ -287,10 +356,23 @@ def get_woodcutting_task_respond(task, account)
     level_goal = task.break_after
     puts task_duration
   end
+  if task.gear.head != nil then head = task.gear.head.formated_name else head = "none" end
+  if task.gear.cape != nil then cape = task.gear.cape.formated_name else cape = "none" end
+  if task.gear.neck != nil then neck = task.gear.neck.formated_name else neck = "none" end
+  if task.gear.weapon != nil then weapon = task.gear.weapon.formated_name else weapon = "none" end
+  if task.gear.chest != nil then chest = task.gear.chest.formated_name else chest = "none" end
+  if task.gear.shield != nil then shield = task.gear.shield.formated_name else shield = "none" end
+  if task.gear.legs != nil then legs = task.gear.legs.formated_name else legs = "none" end
+  if task.gear.hands != nil then hands = task.gear.hands.formated_name else hands = "none" end
+  if task.gear.feet != nil then feet = task.gear.feet.formated_name else feet = "none" end
+  if task.gear.ring != nil then ring = task.gear.ring.formated_name else ring = "none" end
+  if task.gear.ammunition != nil then ammunition = task.gear.ammunition.formated_name else ammunition = "none" end
+  if task.gear.ammunition_amount != nil then ammunition_amount= task.gear.ammunition_amount else "none" end
+  if task.inventory != nil then inventory = task.inventory.get_parsed_message else inventory ="none" end
   log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
   log.save
   puts "sending resp"
-  res = "task_respond:1:#{task_type}:#{task.id}:#{bank_area}:#{action_area}:#{axeID}:#{axe_name}:#{tree_name}:#{break_condition}:#{task_duration}:#{level_goal}"
+  res = "task_respond:1:#{task_type}:#{task.id}:#{bank_area}:#{action_area}:#{axeID}:#{axe_name}:#{tree_name}:#{break_condition}:#{task_duration}:#{level_goal}:#{head}:#{cape}:#{neck}:#{weapon}:#{chest}:#{shield}:#{legs}:#{hands}:#{feet}:#{ring}:#{ammunition}:#{ammunition_amount}"
   return res
 end
 
@@ -510,7 +592,7 @@ def main_thread
     if Time.now > last_check +  interval
       last_check = Time.now
       puts "lets create accounts"
-      generate_account.create_accounts_for_all_computers
+      #generate_account.create_accounts_for_all_computers
     else
       puts "next check: #{(last_check + interval - Time.now)}"
     end

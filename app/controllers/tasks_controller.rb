@@ -101,6 +101,6 @@ class TasksController < ApplicationController
     def task_params
       params.require(:task).permit(:name, :bank_area_id, :action_area_id, :task_type_id, :axe_id, :treeName,
                                    :break_condition_id, :break_after, :start_time, :end_time, :schema_id, :monster_name,
-                                   :gear_id, :food_id, :inventory_id, :loot_threshold, :skill_id, :quest_id)
+                                   :gear_id, :food_id, :inventory_id, :loot_threshold, :skill_id, :quest_id, :ores)
     end
 end

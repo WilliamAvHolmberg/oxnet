@@ -12,7 +12,7 @@ class MuleWithdrawTask < ApplicationRecord
 
   def is_relevant
     #if difference is larger than 5 minutes  we can suppose that the account is not logged in
-    puts time_since_last_log
+    puts "nowayyy"
     return time_since_last_log < 10
   end
 end

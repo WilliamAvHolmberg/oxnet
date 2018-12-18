@@ -41,6 +41,11 @@ $(document).ready ->
       $('#quest_task').show()
     else
       $('#quest_task').hide()
+    if $('#task_task_type_id option:selected').val() == "7"
+      console.log("hiquest")
+      $('#mining_task').show()
+    else
+      $('#mining_task').hide()
 
 
 

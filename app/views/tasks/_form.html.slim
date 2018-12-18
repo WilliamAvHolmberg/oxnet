@@ -26,6 +26,8 @@
   = render partial: 'inventory_form', locals:{items: @items, f: f}
   #quest_task style="display: none"
     = render partial: 'quest_form', locals: {items: @items, f: f}
+  #mining_task style="display: none"
+    = render partial: 'mining_form', locals: {items: @items, f: f}
   #schema
     .field
       - if @schemas != nil && @schemas.length > 0

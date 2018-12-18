@@ -1,0 +1,14 @@
+.field
+  = f.label :ores
+  = f.text_field :ores
+.field
+  = f.label :axe
+  - if items != nil && items.length > 0
+    = f.label :instruction_type
+    = collection_select(:task, :axe_id, items.select{|item| item.itemName.include?("pickaxe")}, :id, :formated_name)
+  - else
+    = "Please create an item before creating the task"
+
+
+
+

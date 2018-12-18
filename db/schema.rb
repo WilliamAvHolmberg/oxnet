@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_10_184503) do
+ActiveRecord::Schema.define(version: 2018_12_18_135641) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -128,15 +128,6 @@ ActiveRecord::Schema.define(version: 2018_12_10_184503) do
     t.integer "buy_amount", default: 1
     t.index ["inventory_id"], name: "index_inventory_items_on_inventory_id"
     t.index ["item_id"], name: "index_inventory_items_on_item_id"
-  end
-
-  create_table "levels", force: :cascade do |t|
-    t.string "name"
-    t.string "level"
-    t.bigint "account_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["account_id"], name: "index_levels_on_account_id"
   end
 
   create_table "lives", force: :cascade do |t|
@@ -318,6 +309,7 @@ ActiveRecord::Schema.define(version: 2018_12_10_184503) do
     t.integer "position"
     t.bigint "quest_id"
     t.bigint "skill_id"
+    t.string "ores"
     t.index ["action_area_id"], name: "index_tasks_on_action_area_id"
     t.index ["axe_id"], name: "index_tasks_on_axe_id"
     t.index ["bank_area_id"], name: "index_tasks_on_bank_area_id"
@@ -357,7 +349,6 @@ ActiveRecord::Schema.define(version: 2018_12_10_184503) do
   add_foreign_key "instructions", "instruction_types"
   add_foreign_key "instructions", "scripts"
   add_foreign_key "inventory_items", "inventories"
-  add_foreign_key "levels", "accounts"
   add_foreign_key "mule_logs", "accounts"
   add_foreign_key "mule_withdraw_tasks", "accounts"
   add_foreign_key "mule_withdraw_tasks", "areas"

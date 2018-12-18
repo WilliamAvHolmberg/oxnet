@@ -5,7 +5,7 @@ class Account < ApplicationRecord
   has_many :mule_withdraw_tasks, dependent: :destroy
   has_many :task_logs, dependent: :destroy
   has_many :mule_logs, dependent: :destroy
-  has_many :stats, dependent: :destroy
+  has_many :stats
   belongs_to :schema
   belongs_to :account_type
   belongs_to :computer
@@ -55,7 +55,7 @@ class Account < ApplicationRecord
     if account_type.name == "MULE"
       return true
     else
-    return time_since_last_log > 6
+    return time_since_last_log > 3
     end
   end
 

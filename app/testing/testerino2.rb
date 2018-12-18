@@ -3,7 +3,7 @@ require 'active_record'
 require 'HTTParty'
 require 'Nokogiri'
 require 'acts_as_list'
-require_relative '../app/models/ication_record'
+require_relative './models/application_record'
 require 'json'
 
 
@@ -30,17 +30,7 @@ ActiveRecord::Base.establish_connection(db_configuration["development"])
 
 
 
-def puts_prices(id)
-  file = File.read("../item_defs.json")
-  data_hash = JSON.parse(file)
-  attack_req = data_hash[id]["requirements"][0]
-  defence_req = data_hash[id]["requirements"][1]
-  range_req = data_hash[id]["requirements"][4]
-  puts defence_req
-  puts range_req
-end
-file = File.read("../item_defs.json")
-data_hash = JSON.parse(file)
+
 i = 0
 slots = ["legs","neck","body","ammo","feet","head","hands","ring","cape","shield"]
 #RsItem.where(tradeable: true, members: false).each do |item|

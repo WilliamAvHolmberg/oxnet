@@ -33,13 +33,13 @@ class AccountsController < ApplicationController
       'SuperLowCpuMode': false
     },
     'ScriptName': 'nex',
-    'ProxyIp': '',
-    'ProxyUser': '',
+    'ProxyIp': '#{@account.proxy.ip}',
+    'ProxyUser': '#{@account.proxy.username}',
     'IsRepoScript': false,
     'World': #{@account.world},
-    'ProxyPort': 0,
+    'ProxyPort': #{@account.proxy.port},
     'RsUsername': '#{@account.login}',
-    'ProxyPass': ''
+    'ProxyPass': '#{@account.proxy.password}'
   }],
   'AutoUpdateClient': true
 }"

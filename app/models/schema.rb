@@ -28,9 +28,9 @@ class Schema < ApplicationRecord
   end
 
   def get_suitable_task(account)
-    #if time_is_right == false
-    #  return nil
-    #else
+    if time_is_right == false
+      return nil
+    else
       interval = get_time_interval
       task = tasks.select{|t| t.should_do(account) && t.task_type.name == "QUEST"}.first
       if task != nil
@@ -49,7 +49,7 @@ class Schema < ApplicationRecord
         task.update(:end_time => interval.end_time)
         return task
       end
-   # end
+    end
     return nil
   end
 

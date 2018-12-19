@@ -22,7 +22,7 @@ class AccountsController < ApplicationController
 
     render json: "{
   'Clients': [{
-    'UseProxy': false,
+    'UseProxy': true,
     'ScriptArgs': '',
     'RsPassword': '#{@account.password}',
     'Config': {

@@ -18,7 +18,7 @@ class GenerateAccount
       schema = Schema.where(name: "RSPEER").first #generate schema in the future
       mule = Account.where(username: "SirJolefon").first #not needed. random
       computer = Computer.all.sample
-      proxy = Proxy.find(141)
+      proxy = Proxy.find(140)
       account = Account.new(:login => email, :password => password, :username => name, :world => world,
                             :computer => computer, :account_type => AccountType.where(:name => "SLAVE").first,:mule => mule,
                             :schema => schema, :proxy => proxy, :should_mule => true, :created => false)
@@ -125,7 +125,7 @@ class GenerateAccount
       password = "ugot00wned2"
       schema = Schema.where(name: "RSPEER").first #generate schema in the future
       mule = Account.where(username: "SirJolefon").first #not needed. random
-      proxy = Proxy.find(141)
+      proxy = Proxy.find(140)
       account = Account.new(:login => email, :password => password, :username => name, :world => world,
                             :computer => computer, :account_type => AccountType.where(:name => "SLAVE").first,:mule => mule,
                             :schema => schema, :proxy => proxy, :should_mule => true, :created => false)
@@ -144,7 +144,7 @@ class GenerateAccount
       schema = Schema.where(name: "RSPEER").first #generate schema in the future
       mule = Account.where(username: "SirJolefon").first #not needed. random
       #proxy = find_available_proxy
-      proxy = Proxy.find(141)
+      proxy = Proxy.find(140)
       account = Account.new(:login => email, :password => password, :username => name, :world => world,
                             :computer => computer, :account_type => AccountType.where(:name => "SLAVE").first,:mule => mule,
                             :schema => schema, :proxy => proxy, :should_mule => true, :created => false)

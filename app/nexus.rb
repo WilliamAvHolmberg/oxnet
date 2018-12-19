@@ -381,6 +381,7 @@ end
 def computer_thread(client, computer)
   puts "started Thread for:#{computer.name} at ip:#{computer.ip}"
   puts " my computer id: #{computer.id}"
+  begin
   while(!client.closed?)
     respond = client.gets.split(":")
     #puts respond.length
@@ -411,7 +412,9 @@ def computer_thread(client, computer)
     end
     #puts respond
   end
-  puts "Computer Thread for: #{client} has been closed"
+  rescue
+    puts "Computer Thread for: #{client} has been closed"
+  end
 end
 
 def updateAccountLevels(string, account)
@@ -529,6 +532,7 @@ def mule_log(account, parsed_respond)
 end
 
 def script_thread(client, account)
+  begin
   while(!client.closed?)
     instruction_queue = []
     respond = client.gets
@@ -564,7 +568,9 @@ def script_thread(client, account)
       end
       end
   end
-  puts "Script Thread for: #{client} has been closed"
+  rescue
+    puts "Script Thread for: #{client} has been closed"
+  end
 end
 
 
@@ -572,7 +578,7 @@ def main_thread
   last_check = 0
   interval = 10.minute
   generate_account = GenerateAccount.new
-
+  begin
   loop do
     accounts = Account.where(banned: false, created: true).select{|acc| acc.is_available && acc.schema != nil &&  acc.shall_do_task && !acc.banned && acc.proxy_is_available? &&  acc.account_type != nil && acc.account_type.name == "SLAVE"}
     if accounts != nil && accounts.length > 0
@@ -597,6 +603,9 @@ def main_thread
       puts "next check: #{(last_check + interval - Time.now)}"
     end
     sleep(2)
+  end
+  rescue
+    puts "Main loop ended"
   end
 end
 

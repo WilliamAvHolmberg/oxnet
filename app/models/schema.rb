@@ -10,11 +10,8 @@ class Schema < ApplicationRecord
   def time_is_right
     self.time_intervals.all.each do |interval|
       time = Time.now.change(:month => 1, :day => 1, :year => 2000)
-      puts time
-      puts interval.get_start_time.getutc
-      puts interval.get_start_time
       if time > interval.get_start_time && time < interval.get_end_time
-        puts "true"
+        puts "time is right"
         return true
       end
     end

@@ -7,9 +7,9 @@ class TimeInterval < ApplicationRecord
   end
 
   def get_start_time
-    return self.start_time - 3600
+    return self.start_time
   end
   def get_end_time
-    return self.end_time - 3600
+    return self.end_time
   end
 end

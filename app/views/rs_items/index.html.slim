@@ -3,45 +3,47 @@ h1 Listing rs_items
   p
     = text_field_tag :search, params[:search]
     = submit_tag "Search", :name => nil
-table
-  thead
-    tr
-      th item_id
-      th item_name
-      th Members
-      th Stackable
-      th EquipmentSlot
-      th WeaponType
-      th Actions
-      th Tradeable
-      th itemprice
-      th attack req
-      th str req
-      th defence req
-      th range req
-      th
-      th
-
-  tbody
-    - @rs_items.each do |rs_item|
+- if @rs_items != nil
+  table
+    thead
       tr
-        td = rs_item.item_id if rs_item.item_id != nil
-        td = rs_item.item_name if rs_item.item_name != nil
-        td = rs_item.members if rs_item.members != nil
-        td = rs_item.stackable if rs_item.stackable != nil
-        td = rs_item.equipment_slot if rs_item.equipment_slot != nil
-        td = rs_item.weapon_type if rs_item.weapon_type != nil
-        td = rs_item.interface_options if rs_item.interface_options != nil
-        td = rs_item.tradeable if rs_item.tradeable != nil
-        td = rs_item.exchange if rs_item.exchange != nil
-        td = rs_item.attack_requirement if rs_item.attack_requirement != nil
-        td = rs_item.strength_requirement if rs_item.strength_requirement != nil
-        td = rs_item.defence_requirement if rs_item.defence_requirement != nil
-        td = rs_item.range_requirement if rs_item.range_requirement != nil
-        td = link_to 'Show', rs_item
-        td = link_to 'Edit', edit_rs_item_path(rs_item)
-        td = link_to 'Destroy', rs_item, data: { confirm: 'Are you sure?' }, method: :delete
+        th item_id
+        th item_name
+        th Members
+        th Stackable
+        th EquipmentSlot
+        th WeaponType
+        th Actions
+        th Tradeable
+        th itemprice
+        th attack req
+        th str req
+        th defence req
+        th range req
+        th
+        th
 
-br
+
+    tbody
+      - @rs_items.each do |rs_item|
+        tr
+          td = rs_item.item_id if rs_item.item_id != nil
+          td = rs_item.item_name if rs_item.item_name != nil
+          td = rs_item.members if rs_item.members != nil
+          td = rs_item.stackable if rs_item.stackable != nil
+          td = rs_item.equipment_slot if rs_item.equipment_slot != nil
+          td = rs_item.weapon_type if rs_item.weapon_type != nil
+          td = rs_item.interface_options if rs_item.interface_options != nil
+          td = rs_item.tradeable if rs_item.tradeable != nil
+          td = rs_item.exchange if rs_item.exchange != nil
+          td = rs_item.attack_requirement if rs_item.attack_requirement != nil
+          td = rs_item.strength_requirement if rs_item.strength_requirement != nil
+          td = rs_item.defence_requirement if rs_item.defence_requirement != nil
+          td = rs_item.range_requirement if rs_item.range_requirement != nil
+          td = link_to 'Show', rs_item
+          td = link_to 'Edit', edit_rs_item_path(rs_item)
+          td = link_to 'Destroy', rs_item, data: { confirm: 'Are you sure?' }, method: :delete
+
+  br
 
 = link_to 'New Rs item', new_rs_item_path

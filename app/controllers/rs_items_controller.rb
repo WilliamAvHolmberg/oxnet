@@ -4,7 +4,7 @@ class RsItemsController < ApplicationController
   # GET /rs_items
   # GET /rs_items.json
   def index
-    @rs_items = RsItem.all
+    @rs_items = RsItem.search(params[:search])
   end
 
   # GET /rs_items/1
@@ -69,6 +69,6 @@ class RsItemsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def rs_item_params
-      params.require(:rs_item).permit(:itemId, :itemName)
+      params.require(:rs_item).permit(:item_id, :item_name, :search)
     end
 end

@@ -181,13 +181,13 @@ def update_woodcutting_task(task, account)
   if level != nil && level.level.to_i > 0
     if level.level.to_i < 21
       puts "bronze axe"
-      axe = RsItem.where(itemName: "Bronze axe", stackable: false).first
+      axe = RsItem.where(item_name: "Bronze axe", stackable: false).first
     elsif level.level.to_i < 41
       puts "rune axe"
-      axe = RsItem.where(itemName: "Mithril axe", stackable: false).first
+      axe = RsItem.where(item_name: "Mithril axe", stackable: false).first
     elsif level.level.to_i < 99
       puts "rune axe"
-      axe = RsItem.where(itemName: "Rune axe", stackable: false).first
+      axe = RsItem.where(item_name: "Rune axe", stackable: false).first
     end
   end
   task.axe = axe
@@ -276,13 +276,13 @@ def update_mining_task(task, account)
   if level != nil && level.level.to_i > 0
     if level.level.to_i < 21
       puts "bronze axe"
-      axe = RsItem.where(itemName: "Bronze pickaxe", stackable: false).first
+      axe = RsItem.where(item_name: "Bronze pickaxe", stackable: false).first
     elsif level.level.to_i < 41
       puts "rune axe"
-      axe = RsItem.where(itemName: "Mithril pickaxe", stackable: false).first
+      axe = RsItem.where(item_name: "Mithril pickaxe", stackable: false).first
     elsif level.level.to_i < 99
       puts "rune axe"
-      axe = RsItem.where(itemName: "Rune pickaxe", stackable: false).first
+      axe = RsItem.where(item_name: "Rune pickaxe", stackable: false).first
     end
   end
   task.axe = axe
@@ -298,8 +298,8 @@ def get_mining_task_respond(task, account)
     bank_area = "none"
   end
   action_area = task.action_area.coordinates
-  axeID = task.axe.itemId
-  axe_name = task.axe.itemName
+  axeID = task.axe.item_id
+  axe_name = task.axe.item_name
   ores = task.ores
   break_condition = task.break_condition.name
   if break_condition == "TIME"
@@ -341,8 +341,8 @@ def get_woodcutting_task_respond(task, account)
     bank_area = "none"
   end
   action_area = task.action_area.coordinates
-  axeID = task.axe.itemId
-  axe_name = task.axe.itemName
+  axeID = task.axe.item_id
+  axe_name = task.axe.item_name
   tree_name = task.treeName
   break_condition = task.break_condition.name
   if break_condition == "TIME"

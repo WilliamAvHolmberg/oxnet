@@ -17,7 +17,7 @@ class RsItemsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create rs_item" do
     assert_difference('RsItem.count') do
-      post rs_items_url, params: { rs_item: { itemId: @rs_item.itemId, itemName: @rs_item.itemName } }
+      post rs_items_url, params: { rs_item: { item_id: @rs_item.item_id, item_name: @rs_item.item_name } }
     end
 
     assert_redirected_to rs_item_url(RsItem.last)
@@ -34,7 +34,7 @@ class RsItemsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update rs_item" do
-    patch rs_item_url(@rs_item), params: { rs_item: { itemId: @rs_item.itemId, itemName: @rs_item.itemName } }
+    patch rs_item_url(@rs_item), params: { rs_item: { item_id: @rs_item.item_id, item_name: @rs_item.item_name } }
     assert_redirected_to rs_item_url(@rs_item)
   end
 

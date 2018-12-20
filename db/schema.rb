@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_18_135641) do
+ActiveRecord::Schema.define(version: 2018_12_20_231753) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -222,8 +222,8 @@ ActiveRecord::Schema.define(version: 2018_12_18_135641) do
   end
 
   create_table "rs_items", force: :cascade do |t|
-    t.integer "itemId"
-    t.string "itemName"
+    t.integer "item_id"
+    t.string "item_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "members"

@@ -96,7 +96,7 @@ class GenerateAccount
     def generate_name
 
       name = RsItem.order("RANDOM()").limit(1).first
-      subbed_name = name.itemName.gsub(/[^a-zA-Z]/, '')
+      subbed_name = name.item_name.gsub(/[^a-zA-Z]/, '')
       sliced_name = subbed_name.slice(0, Random.new.rand(7..9))
       numbered_name = + sliced_name + Random.new.rand(1..30).to_s
 

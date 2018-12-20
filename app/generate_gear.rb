@@ -53,7 +53,7 @@ class GenerateGear
       end
 
       if item != nil
-        puts "Slot:#{slot} item:#{item.itemName}"
+        puts "Slot:#{slot} item:#{item.item_name}"
         gear.update("#{get_slot(slot.to_s)}" => item)
       end
     end
@@ -78,7 +78,7 @@ class GenerateGear
 
   def get_best_weapon(account)
     best_weapon_type = get_best_weapon_type(account)
-    return RsItem.where(tradeable: true, members: false,equipment_slot: "weapon").select{|i| i.attack_requirement == best_weapon_type.to_i && i.itemName.include?("scimitar")}.sample
+    return RsItem.where(tradeable: true, members: false,equipment_slot: "weapon").select{|i| i.attack_requirement == best_weapon_type.to_i && i.item_name.include?("scimitar")}.sample
   end
 
   def get_best_armour(account, slot)

@@ -1,30 +1,36 @@
 h1 Listing tasks
 
-table
-  thead
-    tr
-      th Name
-      th Bank area
-      th Action area
-      th Task type
-      th Gear
-      th
-      th
-      th
+= form_tag tasks_path, :method => 'get', :id => "tasks_search" do
+  p
+    = text_field_tag :search, params[:search]
+    = submit_tag "Search", :name => nil
+#tasks
+  - if @tasks != nil
+    table
+      thead
+        tr
+          th Name
+          th Bank area
+          th Action area
+          th Task type
+          th Gear
+          th
+          th
+          th
 
-  tbody
-    - @tasks.each do |task|
-      tr
-        td = task.name
-        td = task.bank_area.name if task.bank_area != nil
-        td = task.action_area.name if task.action_area != nil
-        td = task.task_type.name if task.task_type != nil
-        td = task.gear.name if task.gear != nil
-        td = link_to 'Show', task
-        td = link_to 'Edit', edit_task_path(task)
-        td = link_to 'Copy', copy_task_path(task)
-        td = link_to 'Destroy', task, data: { confirm: 'Are you sure?' }, method: :delete
+      tbody
+        - @tasks.each do |task|
+          tr
+            td = task.name
+            td = task.bank_area.name if task.bank_area != nil
+            td = task.action_area.name if task.action_area != nil
+            td = task.task_type.name if task.task_type != nil
+            td = task.gear.name if task.gear != nil
+            td = link_to 'Show', task
+            td = link_to 'Edit', edit_task_path(task)
+            td = link_to 'Copy', copy_task_path(task)
+            td = link_to 'Destroy', task, data: { confirm: 'Are you sure?' }, method: :delete
 
-br
+    br
 
 = link_to 'New Task', new_task_path

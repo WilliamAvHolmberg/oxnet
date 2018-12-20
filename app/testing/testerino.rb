@@ -44,7 +44,7 @@ def puts_prices(id)
   tradeable = doc.parsed_response['tradeable']
   exchange = doc.parsed_response['cost']
   puts "#{name},#{id},#{member}, #{stackable}, #{equipment_slot},  #{tradeable}, #{exchange}"
-  item = RsItem.find_or_create_by(itemName: name, itemId: id, members: member, stackable:stackable,
+  item = RsItem.find_or_create_by(item_name: name, item_id: id, members: member, stackable:stackable,
                                   equipment_slot: equipment_slot,
                                    tradeable: tradeable,
                                   exchange: exchange)

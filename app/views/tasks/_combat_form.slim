@@ -13,7 +13,7 @@
 .field
   - if @items != nil && @items.length > 0
     = f.label :Food
-    = collection_select(:task, :food_id, @items, :id, :itemName)
+    = collection_select(:task, :food_id, @items, :id, :item_name)
   - else
     = "Please create a gear before creating the task"
 

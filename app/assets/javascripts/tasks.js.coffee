@@ -2,6 +2,7 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 $(document).ready ->
+
   console.log("reasssdsddssy")
   $("#task_break_condition_id").on "change", ->
     console.log("heeellloooo")

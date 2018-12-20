@@ -17,6 +17,14 @@ class Task < ApplicationRecord
 
   acts_as_list :scope => :schema
 
+
+  def self.search(search)
+    if search
+      where('UPPER(name) LIKE ?', "%#{search.upcase}%")
+    else
+      nil
+    end
+  end
   def self.inherited(subklass)
     self.inherit_attributes(subklass)
   end

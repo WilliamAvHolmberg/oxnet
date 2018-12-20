@@ -14,8 +14,8 @@ class RsItemsTest < ApplicationSystemTestCase
     visit rs_items_url
     click_on "New Rs Item"
 
-    fill_in "Itemid", with: @rs_item.itemId
-    fill_in "Itemname", with: @rs_item.itemName
+    fill_in "item_id", with: @rs_item.item_id
+    fill_in "item_name", with: @rs_item.item_name
     click_on "Create Rs item"
 
     assert_text "Rs item was successfully created"
@@ -26,8 +26,8 @@ class RsItemsTest < ApplicationSystemTestCase
     visit rs_items_url
     click_on "Edit", match: :first
 
-    fill_in "Itemid", with: @rs_item.itemId
-    fill_in "Itemname", with: @rs_item.itemName
+    fill_in "item_id", with: @rs_item.item_id
+    fill_in "item_name", with: @rs_item.item_name
     click_on "Update Rs item"
 
     assert_text "Rs item was successfully updated"

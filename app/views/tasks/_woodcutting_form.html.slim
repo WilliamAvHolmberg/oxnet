@@ -5,7 +5,7 @@
   = f.label :axe
   - if items != nil && items.length > 0
     = f.label :instruction_type
-    = collection_select(:task, :axe_id, items.select{|item| item.itemName.include?("axe")}, :id, :formated_name)
+    = collection_select(:task, :axe_id, items.select{|item| item.item_name.include?("axe")}, :id, :formated_name)
   - else
     = "Please create an item before creating the task"
 

@@ -3,14 +3,17 @@ class TasksController < ApplicationController
 
   # GET /tasks
   # GET /tasks.json
+
   def index
-    @tasks = Task.all
+    @tasks = Task.search(params[:search])
   end
 
   # GET /tasks/1
   # GET /tasks/1.json
   def show
   end
+
+
 
   # GET /tasks/new
   def new
@@ -101,6 +104,6 @@ class TasksController < ApplicationController
     def task_params
       params.require(:task).permit(:name, :bank_area_id, :action_area_id, :task_type_id, :axe_id, :treeName,
                                    :break_condition_id, :break_after, :start_time, :end_time, :schema_id, :monster_name,
-                                   :gear_id, :food_id, :inventory_id, :loot_threshold, :skill_id, :quest_id, :ores)
+                                   :gear_id, :food_id, :inventory_id, :loot_threshold, :skill_id, :quest_id, :ores, :search)
     end
 end

@@ -29,33 +29,3 @@ table
       th = account.created
       th = account.schema.total_time_per_day if account.schema != nil
       td = link_to 'Destroy', account, data: {confirm: 'Are you sure?'}, method: :delete
-h1 Accounts
-table
-  tr
-    th ID
-    th Login
-    th Password
-    th World
-    th Money Invested
-    th Account Type
-    th Computer
-    th Mule
-    th Banned?
-    th Created?
-    th
-
-  - @banned_accounts.each do |account|
-    tr
-      th = account.id
-      th
-        a href="/accounts/#{account.id}" = account.login
-      th = account.password
-      th = account.world
-      th Todo
-      th = account.account_type.name if account.account_type != nil
-      th = account.computer.name if account.computer != nil
-      th = account.mule.username if account.mule != nil
-      th = account.banned
-      th = account.created
-      td = link_to 'Destroy', account, data: {confirm: 'Are you sure?'}, method: :delete
-= link_to 'New', new_account_path

@@ -1,10 +1,13 @@
 h1 Listing rs_items
-
+= form_tag rs_items_path, :method => 'get' do
+  p
+    = text_field_tag :search, params[:search]
+    = submit_tag "Search", :name => nil
 table
   thead
     tr
-      th Itemid
-      th Itemname
+      th item_id
+      th item_name
       th Members
       th Stackable
       th EquipmentSlot
@@ -22,8 +25,8 @@ table
   tbody
     - @rs_items.each do |rs_item|
       tr
-        td = rs_item.itemId if rs_item.itemId != nil
-        td = rs_item.itemName if rs_item.itemName != nil
+        td = rs_item.item_id if rs_item.item_id != nil
+        td = rs_item.item_name if rs_item.item_name != nil
         td = rs_item.members if rs_item.members != nil
         td = rs_item.stackable if rs_item.stackable != nil
         td = rs_item.equipment_slot if rs_item.equipment_slot != nil

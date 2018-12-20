@@ -12,17 +12,18 @@ table
       th
 
   tbody
-    - @mule_logs.where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day).each do |mule_log|
+    - @mules = (Account.where(banned: false).select{|account| account.account_type.name == "MULE"}).map{|n| n.username.downcase}
+    h1 = @mules
+    - @mule_logs.where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day).select {|log|log.mule.chomp.downcase.in?@mules}.each do |mule_log|
       - money_made_today += mule_log.item_amount
       tr
-        td = mule_log.account.username
+        td = mule_log.account.id
         td = mule_log.item_amount
         td = mule_log.mule
         td = link_to 'Show', mule_log
         td = link_to 'Edit', edit_mule_log_path(mule_log)
-        td = link_to 'Destroy', mule_log, data: { confirm: 'Are you sure?' }, method: :delete
-h2 = "money made today:#{money_made_today} "
-
+        td = link_to 'Destroy', mule_log, data: {confirm: 'Are you sure?'}, method: :delete
+    h2 = "money made today:#{money_made_today} "
 h1 Listing all mule _logs
 
 table
@@ -44,7 +45,7 @@ table
         td = mule_log.mule
         td = link_to 'Show', mule_log
         td = link_to 'Edit', edit_mule_log_path(mule_log)
-        td = link_to 'Destroy', mule_log, data: { confirm: 'Are you sure?' }, method: :delete
+        td = link_to 'Destroy', mule_log, data: {confirm: 'Are you sure?'}, method: :delete
 
 br
 h2 = "total money made :#{total_money_made} "

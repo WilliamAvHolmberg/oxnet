@@ -577,7 +577,7 @@ end
 def main_thread
   last_check = 0
   interval = 10.minute
-  generate_account = GenerateAccount.new
+  #generate_account = GenerateAccount.new
   begin
   loop do
     accounts = Account.where(banned: false, created: true).select{|acc| acc.is_available && acc.schema != nil &&  acc.shall_do_task && !acc.banned && acc.proxy_is_available? &&  acc.account_type != nil && acc.account_type.name == "SLAVE"}

@@ -189,6 +189,6 @@ class GenerateAccount
 end
 
 #computer = Computer.where(name: "Suicide").first
-#generate_account = GenerateAccount.new
-#generate_account.create_accounts(5)
+generate_account = GenerateAccount.new
+generate_account.create_accounts(1)
 #create_accounts_for_all_computers

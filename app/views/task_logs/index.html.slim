@@ -1,5 +1,9 @@
 h1 Listing task_logs
-
+= form_tag tasks_path, :method => 'get', :id => "tasks_search" do
+  p
+    = text_field_tag :search, params[:search]
+    = submit_tag "Search", :name => nil
+- if @task_logs != nil
 table
   thead
     tr

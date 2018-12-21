@@ -20,7 +20,7 @@ class Task < ApplicationRecord
 
   def self.search(search)
     if search
-      where('UPPER(name) LIKE ?', "%#{search.upcase}%")
+      where('UPPER(created_at) LIKE ?', "%#{search.upcase}%")
     else
       nil
     end

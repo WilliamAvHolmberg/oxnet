@@ -4,7 +4,10 @@ class TaskTypesController < ApplicationController
   # GET /task_types
   # GET /task_types.json
   def index
-    @task_types = TaskType.all
+    if params[:search] == nil
+      @task_logs = TaskLog.where("DATE(created_at) = ?", Date.today)
+    end
+    @task_logs = TaskLog.search(params[:search])
   end
 
   # GET /task_types/1

@@ -138,16 +138,23 @@ body
                 .card-header.card-header-success
                   #dailySalesChart.ct-chart
                 .card-body
-                  h4.card-title Daily Sales
-                  p.card-category
-                    span.text-success
-                      i.fa.fa-long-arrow-up
-                      | 55%
-                    | increase in today sales.
-                .card-footer
-                  .stats
-                    i.material-icons access_time
-                    | updated 4 minutes ago
+                  h4.card-title Latest task logs
+                  table.table.table-hover
+                    thead.text-warning
+                      th Seconds ago
+                      th Account
+                      th Task
+                      th Experience
+                      th Money
+                    tbody
+                      - @latest_task_logs.each do |log|
+                        tr
+                          td = Time.now - log.created_at
+                          td = log.account.username
+                          td = log.task.name
+                          td = log.xp_per_hour
+                          td = log.money_per_hour
+
             .col-md-4
               .card.card-chart
                 .card-header.card-header-warning
@@ -257,7 +264,7 @@ body
             .col-lg-6.col-md-12
               .card
                 .card-header.card-header-warning
-                  h4.card-title = "Money made today: #{@money_made_today}"
+                  h4.card-title = "Money made today: #{@money_made_today}: PER HOUR --#{@money_made_today / Time.now.hour}"
                   p.card-category No info here atm
                 .card-body.table-responsive
                   table.table.table-hover

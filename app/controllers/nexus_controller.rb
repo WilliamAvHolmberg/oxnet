@@ -7,6 +7,7 @@ class NexusController < ApplicationController
     @mule_logs = MuleLog.where("DATE(created_at) = ?", Date.today)
     @active_accounts = Account.where(banned: false, created: true).select{|acc| !acc.is_available}
     @money_made_today = 0
+    @latest_task_logs = TaskLog.limit(5).order('id desc')
     @mule_logs.each do |a|
       @money_made_today+=a.item_amount.to_i
     end

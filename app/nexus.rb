@@ -560,6 +560,7 @@ def script_thread(client, account)
         client.puts account_get_direct_respond(respond[0], account)
       elsif respond[0] == "banned"
         account.update(:banned => true)
+        log = Log.new(computer_id: nil, account_id: account.id, text: respond)
         client.puts("DISCONNECT:1")
       elsif respond[0] == "mule_request"
         client.puts get_mule_respond(respond, account)

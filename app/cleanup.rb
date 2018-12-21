@@ -26,15 +26,8 @@ ActiveRecord::Base.establish_connection(db_configuration["development"])
 puts Account.all.size
 puts TaskLog.all.size
 
-noted_items = RsItem.all
-noted_items.each do |item|
-  equal_items = RsItem.where(:item_name => "#{item.item_name}")
-  min_id = equal_items.map{|n| n.item_id}.min
-  new_item = RsItem.where(item_id: min_id).first
-  puts "#{new_item.item_name}:#{new_item.stackable}"
-  equal_items = equal_items.select{|item| item.item_id != min_id}
-  equal_items.each do |it|
-    it.destroy
-  end
+banned = Log.where('UPPER(text) LIKE ?', "%BAN%")
+banned.each do |log|
+  puts log.text
 end
 #end

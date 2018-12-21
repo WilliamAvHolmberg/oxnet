@@ -91,10 +91,8 @@ body
                 .card-header.card-header-warning.card-header-icon
                   .card-icon
                     i.material-icons content_copy
-                  p.card-category Used Space
-                  h3.card-title
-                    | 49/50
-                    small GB
+                  p.card-category Available slaves
+                  h3.card-title = @slaves.size
                 .card-footer
                   .stats
                     i.material-icons.text-danger warning
@@ -104,8 +102,8 @@ body
                 .card-header.card-header-success.card-header-icon
                   .card-icon
                     i.material-icons store
-                  p.card-category Revenue
-                  h3.card-title $34,245
+                  p.card-category Mules
+                  h3.card-title = @mules.size
                 .card-footer
                   .stats
                     i.material-icons date_range

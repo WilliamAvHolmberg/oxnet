@@ -35,13 +35,13 @@ class Schema < ApplicationRecord
       interval = get_time_interval
       task = tasks.select{|t| t.should_do(account) && t.task_type.name == "QUEST"}.first
       if task != nil
-
         task.update(:start_time => interval.start_time)
         task.update(:end_time => interval.end_time)
         return task
       end
       task = tasks.select{|t| t.should_do(account)}.first
       if task == nil
+        puts "nil: for #{account.username}"
         return nil
       elsif task.task_type.name == "QUEST"
         return task

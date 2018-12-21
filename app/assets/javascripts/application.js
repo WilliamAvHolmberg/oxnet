@@ -16,4 +16,4 @@
 //= require turbolinks
 //= require bootstrap
 //= require_tree .
-
+//= require material/material-dashboard.js

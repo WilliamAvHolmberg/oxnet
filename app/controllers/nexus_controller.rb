@@ -1,10 +1,8 @@
 class NexusController < ApplicationController
 
   def show
-    @schemas = Schema.all
-    @mules = Account.select{|acc| acc.account_type.name == "MULE"}
-    @proxies = Proxy.all
-    @computers = Computer.all
+    @mule_logs = MuleLog.all.select{|log| log.created_at.day == Time.now.day}
+    @active_accounts = Account.where(banned: false, created: true).select{|acc| !acc.is_available}
     render 'nexus'
   end
 

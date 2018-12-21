@@ -18,6 +18,7 @@ gem 'uglifier', '>= 1.3.0'
 # gem 'mini_racer', platforms: :ruby
 gem 'jquery-rails', '~> 4.3', '>= 4.3.3'
 gem 'rails-ujs', '~> 0.1.0'
+gem 'font-awesome-rails'
 gem 'slim-rails'
 
 gem 'net-ping'

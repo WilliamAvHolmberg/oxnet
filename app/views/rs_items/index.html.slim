@@ -1,10 +1,12 @@
-h1 Listing rs_items
+h1 Items
 = form_tag rs_items_path, :method => 'get' do
-  p
-    = text_field_tag :search, params[:search]
-    = submit_tag "Search", :name => nil
+
+  .form-group
+    p
+      = text_field_tag :search, params[:search]
+      = submit_tag "Search", :name => nil
 - if @rs_items != nil
-  table
+  table.table.table-bordered.table-dark
     thead
       tr
         th item_id

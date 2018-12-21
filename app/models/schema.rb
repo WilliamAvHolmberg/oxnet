@@ -20,7 +20,7 @@ class Schema < ApplicationRecord
 
   def get_time_interval
     self.time_intervals.all.each do |interval|
-      time = Time.now.change(:month => 1, :day => 1, :year => 2000) -- 1.hour
+      time = Time.now.change(:month => 1, :day => 1, :year => 2000)
       if time > interval.get_start_time && time < interval.get_end_time
         return interval
       end

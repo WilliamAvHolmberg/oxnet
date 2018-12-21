@@ -15,6 +15,7 @@ class Schema < ApplicationRecord
         return true
       end
     end
+    puts interval.get_start_time.time
     return false
   end
 
@@ -25,7 +26,6 @@ class Schema < ApplicationRecord
         return interval
       end
     end
-    puts interval.get_start_time.time
     return nil
   end
 

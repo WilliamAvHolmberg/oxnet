@@ -165,8 +165,7 @@ body
                   #completedTasksChart.ct-chart
                 .card-body
                   h4.card-title Completed Tasks
-                  - @mule_logs.each do |log|
-                    p.card-category = "#{log.account.username}:#{log.item_amount}:#{log.mule} --- #{(Time.now - log.created_at)}"
+                    p.card-category = "Nothing yet"
                 .card-footer
                   .stats
                     i.material-icons access_time
@@ -192,7 +191,7 @@ body
                         li.nav-item
                           a.nav-link data-toggle="tab" href="#settings"
                             i.material-icons cloud
-                            | Server
+                            | Create bots
                             .ripple-container
                 .card-body
                   .tab-content
@@ -212,46 +211,9 @@ body
                                 i.material-icons edit
                               button.btn.btn-danger.btn-link.btn-sm rel="tooltip" title="Remove" type="button"
                                 i.material-icons close
-                          tr
-                            td
-                              .form-check
-                                label.form-check-label
-                                  input.form-check-input type="checkbox" value="" /
-                                  span.form-check-sign
-                                    span.check
-                            td Lines From Great Russian Literature? Or E-mails From My Boss?
-                            td.td-actions.text-right
-                              button.btn.btn-primary.btn-link.btn-sm rel="tooltip" title=("Edit Task") type="button"
-                                i.material-icons edit
-                              button.btn.btn-danger.btn-link.btn-sm rel="tooltip" title="Remove" type="button"
-                                i.material-icons close
-                          tr
-                            td
-                              .form-check
-                                label.form-check-label
-                                  input.form-check-input type="checkbox" value="" /
-                                  span.form-check-sign
-                                    span.check
-                            td
-                              | Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit
-                            td.td-actions.text-right
-                              button.btn.btn-primary.btn-link.btn-sm rel="tooltip" title=("Edit Task") type="button"
-                                i.material-icons edit
-                              button.btn.btn-danger.btn-link.btn-sm rel="tooltip" title="Remove" type="button"
-                                i.material-icons close
-                          tr
-                            td
-                              .form-check
-                                label.form-check-label
-                                  input.form-check-input checked="checked" type="checkbox" value="" /
-                                  span.form-check-sign
-                                    span.check
-                            td Create 4 Invisible User Experiences you Never Knew About
-                            td.td-actions.text-right
-                              button.btn.btn-primary.btn-link.btn-sm rel="tooltip" title=("Edit Task") type="button"
-                                i.material-icons edit
-                              button.btn.btn-danger.btn-link.btn-sm rel="tooltip" title="Remove" type="button"
-                                i.material-icons close
+
+
+
                     #messages.tab-pane
                       table.table
                         tbody
@@ -283,53 +245,20 @@ body
                               button.btn.btn-danger.btn-link.btn-sm rel="tooltip" title="Remove" type="button"
                                 i.material-icons close
                     #settings.tab-pane
-                      table.table
-                        tbody
-                          tr
-                            td
-                              .form-check
-                                label.form-check-label
-                                  input.form-check-input type="checkbox" value="" /
-                                  span.form-check-sign
-                                    span.check
-                            td Lines From Great Russian Literature? Or E-mails From My Boss?
-                            td.td-actions.text-right
-                              button.btn.btn-primary.btn-link.btn-sm rel="tooltip" title=("Edit Task") type="button"
-                                i.material-icons edit
-                              button.btn.btn-danger.btn-link.btn-sm rel="tooltip" title="Remove" type="button"
-                                i.material-icons close
-                          tr
-                            td
-                              .form-check
-                                label.form-check-label
-                                  input.form-check-input checked="checked" type="checkbox" value="" /
-                                  span.form-check-sign
-                                    span.check
-                            td
-                              | Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit
-                            td.td-actions.text-right
-                              button.btn.btn-primary.btn-link.btn-sm rel="tooltip" title=("Edit Task") type="button"
-                                i.material-icons edit
-                              button.btn.btn-danger.btn-link.btn-sm rel="tooltip" title="Remove" type="button"
-                                i.material-icons close
-                          tr
-                            td
-                              .form-check
-                                label.form-check-label
-                                  input.form-check-input checked="checked" type="checkbox" value="" /
-                                  span.form-check-sign
-                                    span.check
-                            td Sign contract for "What are conference organizers afraid of?"
-                            td.td-actions.text-right
-                              button.btn.btn-primary.btn-link.btn-sm rel="tooltip" title=("Edit Task") type="button"
-                                i.material-icons edit
-                              button.btn.btn-danger.btn-link.btn-sm rel="tooltip" title="Remove" type="button"
-                                i.material-icons close
+                      = form_tag("/create_accounts", method: "post") do
+                        p = label_tag :Computer
+                        = select_tag 'computer_id', options_for_select(@computers.collect {|u| [u.name, u.id]})
+                        p = label_tag :Proxy
+                        = select_tag 'proxy_id', options_for_select(@proxies.collect {|u| [u.location, u.id]})
+                        p = label_tag :amount_of_accounts
+                        p = number_field_tag :amount_of_accounts
+                        = submit_tag("Create")
+
             .col-lg-6.col-md-12
               .card
                 .card-header.card-header-warning
-                  h4.card-title Money made today: amount....
-                  p.card-category New employees on 15th September, 2016
+                  h4.card-title = "Money made today: #{@money_made_today}"
+                  p.card-category No info here atm
                 .card-body.table-responsive
                   table.table.table-hover
                     thead.text-warning

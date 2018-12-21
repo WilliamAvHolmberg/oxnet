@@ -136,7 +136,7 @@ class GenerateAccount
       puts "#{name} created for computer #{computer.name} with schema #{schema.name}"
     end
   private
-    def create_account(computer, boolean)
+    def create_account(computer, proxy)
       name = generate_name
       email = generate_email(name)
       world = get_random_world
@@ -144,7 +144,6 @@ class GenerateAccount
       schema = Schema.where(name: "RSPEER").first #generate schema in the future
       mule = Account.where(username: "SirJolefon").first #not needed. random
       #proxy = find_available_proxy
-      proxy = Proxy.find(140)
       account = Account.new(:login => email, :password => password, :username => name, :world => world,
                             :computer => computer, :account_type => AccountType.where(:name => "SLAVE").first,:mule => mule,
                             :schema => schema, :proxy => proxy, :should_mule => true, :created => false)
@@ -177,11 +176,10 @@ class GenerateAccount
     end
   #todo fix size (13 atm)
   public
-  def create_accounts(number)
-    computer = Computer.where(name: "Suicide").first
+  def create_accounts(number, computer, proxy)
 
       number.times do
-        create_account(computer, true)
+        create_account(computer, proxy)
     end
   end
 

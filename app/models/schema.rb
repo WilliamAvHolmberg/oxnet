@@ -14,8 +14,8 @@ class Schema < ApplicationRecord
         puts "time is right"
         return true
       end
+      puts interval.get_start_time - time
     end
-    puts interval.get_start_time.time
     return false
   end
 

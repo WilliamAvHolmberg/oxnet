@@ -51,7 +51,7 @@ var seq2 = 0,
 
 $(document).ready(function() {
 
-  $('body').bootstrapMaterialDesign();
+
 
   $sidebar = $('.sidebar');
 

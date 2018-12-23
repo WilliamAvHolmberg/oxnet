@@ -69,6 +69,6 @@ class ComputersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def computer_params
-      params.require(:computer).permit(:ip, :name)
+      params.require(:computer).permit(:ip, :name, :max_slaves)
     end
 end

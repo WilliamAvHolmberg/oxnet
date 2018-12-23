@@ -262,7 +262,7 @@ body
             .col-lg-6.col-md-12
               .card
                 .card-header.card-header-warning
-                  h4.card-title = "Money made today: #{@money_made_today}: PER HOUR --#{@money_made_today / Time.now.hour}"
+                  h4.card-title = "Money made today: #{@money_made_today}: PER HOUR --#{@money_made_today / (Time.now.hour + 0.1)}"
                   p.card-category No info here atm
                 .card-body.table-responsive
                   table.table.table-hover

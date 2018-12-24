@@ -604,7 +604,8 @@ def main_thread
     end
     sleep(2)
   end
-  rescue
+  rescue => error
+    puts error.backtrace
     puts "Main loop ended"
     main_thread
   end

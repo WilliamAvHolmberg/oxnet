@@ -602,7 +602,7 @@ def main_thread
         end
       end
     end
-
+    sleep(2)
   end
   rescue
     puts "Main loop ended"

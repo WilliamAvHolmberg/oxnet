@@ -607,6 +607,7 @@ def main_thread
   end
   rescue
     puts "Main loop ended"
+    main_thread
   end
 end
 

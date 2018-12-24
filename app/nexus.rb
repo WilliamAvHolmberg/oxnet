@@ -381,6 +381,9 @@ end
 def computer_thread(client, computer)
   puts "started Thread for:#{computer.name} at ip:#{computer.ip}"
   puts " my computer id: #{computer.id}"
+  last_check = 0
+  interval = 60
+  generate_account = GenerateAccount.new
   begin
   while(!client.closed?)
     respond = client.gets.split(":")
@@ -411,6 +414,14 @@ def computer_thread(client, computer)
       client.puts "ok"
     end
     #puts respond
+    #
+    if Time.now > last_check + interval
+      last_check = Time.now
+      puts "lets create accounts"
+      generate_account.create_accounts_for_all_computers
+    else
+      puts "next check: #{(last_check + interval - Time.now)}"
+    end
   end
   rescue
     puts "Computer Thread for: #{client} has been closed"
@@ -576,9 +587,6 @@ end
 
 
 def main_thread
-  last_check = 0
-  interval = 90
-  generate_account = GenerateAccount.new
   begin
   loop do
     accounts = Account.where(banned: false, created: true).select{|acc| acc.is_available && acc.schema != nil &&  acc.shall_do_task && !acc.banned && acc.proxy_is_available? &&  acc.account_type != nil && acc.account_type.name == "SLAVE"}

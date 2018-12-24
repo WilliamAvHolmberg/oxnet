@@ -170,16 +170,14 @@ class GenerateAccount
   #todo fix size (13 atm)
   public
     def create_accounts_for_all_computers
-      should_do = true
       computers = find_available_computers
       computers.each do |computer|
         account_threshold = computer.max_slaves
         current_amount_of_accounts = get_available_accounts_on_computer(computer)
-        if should_do && current_amount_of_accounts != nil && current_amount_of_accounts.size < account_threshold
+        if current_amount_of_accounts != nil && current_amount_of_accounts.size < account_threshold
           puts current_amount_of_accounts.size
             create_account(computer, Proxy.find(140))
             #puts "lets create acc for #{computer.name}"
-            should_do = false
         end
       end
     end

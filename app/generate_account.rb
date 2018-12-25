@@ -177,7 +177,7 @@ class GenerateAccount
         current_amount_of_accounts = get_available_accounts_on_computer(computer)
         if should_do && current_amount_of_accounts != nil && current_amount_of_accounts.size < account_threshold
           puts current_amount_of_accounts.size
-          proxy = [140,144].sample
+          proxy = [144].sample
             create_account(computer, Proxy.find(proxy))
             #puts "lets create acc for #{computer.name}"
             should_do = false

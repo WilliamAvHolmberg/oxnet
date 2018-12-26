@@ -27,6 +27,7 @@ ActiveRecord::Base.establish_connection(db_configuration["development"])
 
 accounts = Account.all
 accounts.each do |acc|
+  puts acc.name
   acc.stats.destroy_all
   acc.quest_stats.destroy_all
 end

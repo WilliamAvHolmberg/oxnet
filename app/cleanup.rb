@@ -25,10 +25,7 @@ end
 ActiveRecord::Base.establish_connection(db_configuration["development"])
 
 
-accounts = Account.where(banned: false, created:true).select{|acc| acc.schema.get_suitable_task(acc) == nil}
-accounts.each do |acc|
-  puts acc.username
-  acc.stats.destroy_all
-  acc.quest_stats.destroy_all
-end
+account = Account.where(banned: true, created:true).first
+ga = GenerateSchema.new
+ga.generate_schedule(account)
 #end

@@ -60,7 +60,6 @@ class GenerateSchema
         elsif task.task_type.name == "QUEST"
           quest = Quest.find_or_initialize_by(name: task.quest.name)
           QuestStat.where(account: account, quest: quest).first.update(completed: true)
-          puts "Done quest: #{quest.name} #{account.quest_stats.where(quest: quest).first.completed}"
           new_task = task.dup
           new_task.update(schema: new_schema, name: "#{account.username} --- #{new_task.name}")
           puts "#{new_task.name} in schema #{new_task.schema.name}"

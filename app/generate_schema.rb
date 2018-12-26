@@ -91,19 +91,15 @@ class GenerateSchema
 
         ##fix order of tasks
         new_task.move_to_bottom
-        account.quest_stats.each do |quest|
-          quest.update(completed: false)
-        end
-
           last_gear = gear
           last_weapon_type = current_weapon_type
           last_armour_type = current_armour_type
 
       end
 
-      account.stats.each do |skill|
-        skill.update(level: 1)
-      end
+
+      account.stats.destroy_all
+      account.quest_stats.destroy_all
       account.save!
       account.schema.time_intervals.each do |time_interval|
         new_time = time_interval.dup

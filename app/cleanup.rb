@@ -25,10 +25,10 @@ end
 ActiveRecord::Base.establish_connection(db_configuration["development"])
 
 
-mules = MuleWithdrawTask.all
-mules.each do |mule|
-  puts mule.executed
-  mule.destroy
+accounts = Account.where(banned: false, created:true).select{|acc| acc.schema.get_suitable_task(acc) == nil}
+accounts.each do |acc|
+  puts acc.username
+  acc.stats.destroy_all
+  acc.quest_stats.destroy_all
 end
-
 #end

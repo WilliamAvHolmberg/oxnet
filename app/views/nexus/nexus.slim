@@ -158,12 +158,18 @@ body
                 .card-header.card-header-warning
                   #websiteViewsChart.ct-chart
                 .card-body
-                  h4.card-title Email Subscriptions
-                  p.card-category Last Campaign Performance
-                .card-footer
-                  .stats
-                    i.material-icons access_time
-                    | campaign sent 2 days ago
+                  h4.card-title = "Computers connected:#{@connected_computers.size} "
+                  table.table.table-hover
+                    thead.text-warning
+                      th Computer Name
+                      th Accounts connected
+                      th Max limit
+                    tbody
+                      - @connected_computers.each do |comp|
+                        tr
+                          td = comp.name
+                          td = comp.get_connected_accounts.size
+                          td = comp.max_slaves
             .col-md-4
               .card.card-chart
                 .card-header.card-header-danger

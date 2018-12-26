@@ -23,11 +23,6 @@ end
 ActiveRecord::Base.establish_connection(db_configuration["development"])
 
 
-puts Account.all.size
-puts TaskLog.all.size
+puts Account.where(created: false, banned: false).size
 
-banned = Log.where('UPPER(text) LIKE ?', "%BAN%")
-banned.each do |log|
-  puts log.text
-end
 #end

@@ -11,7 +11,7 @@ class Task < ApplicationRecord
   belongs_to :quest
   belongs_to :skill
   has_many :task_logs, dependent: :destroy
-  has_many :requirements
+  has_many :requirements, dependent: :destroy
 
   accepts_nested_attributes_for :requirements
 

@@ -25,9 +25,11 @@ end
 ActiveRecord::Base.establish_connection(db_configuration["development"])
 
 
-account = Account.where(banned: true, created:true).first
-ga = GenerateSchema.new
-ga.generate_schedule(account)
-puts account.id
+accounts = Account.where(banned: false, created:true)
+accounts.each do |acc|
+  acc.stats.destroy_all
+  acc.quest_stats.destroy_all
+end
+
 
 #end

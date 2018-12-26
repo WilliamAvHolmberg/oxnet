@@ -13,7 +13,7 @@ table
   tbody
     - @stats.each do |stat|
       tr
-        td = stat.skill
+        td = stat.skill.name
         td = stat.level
         td = stat.account.username
         td = link_to 'Show', stat

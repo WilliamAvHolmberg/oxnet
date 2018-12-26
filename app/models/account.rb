@@ -59,6 +59,16 @@ class Account < ApplicationRecord
     end
   end
 
+  @worlds = [326,371,372,379,380,382,383,384,393,
+             394,397,398,399,418,425,426,430,431,
+             433,434,435,436,437,438,439,440,451,
+             452,453,454,455,456,457,458,459,469,
+             470,471,472,473,474,475,376,477,497,
+             498,499,500,501,502,503,504]
+  def world
+    return @worlds.sample
+  end
+
   def get_time_online
     start_log = nil
     total_time = 0

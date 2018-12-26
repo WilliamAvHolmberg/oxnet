@@ -42,7 +42,6 @@ def computer_get_respond(instruction_queue)
     elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account_id != nil
       ins.update(:completed => true)
       ins.save
-      world = ins.account.world
       account = ins.account
 
       #res =  "account_request:1:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + world.chomp + ":NEX"
@@ -57,6 +56,7 @@ def computer_get_respond(instruction_queue)
       return res
     end
     end
+    puts "handed out"
     return "logged:f"
   end
 end

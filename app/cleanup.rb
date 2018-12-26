@@ -25,12 +25,10 @@ end
 ActiveRecord::Base.establish_connection(db_configuration["development"])
 
 
-accounts = Account.all
-accounts.each do |acc|
-  puts acc.name
-  acc.stats.destroy_all
-  acc.quest_stats.destroy_all
+mules = MuleWithdrawTask.all
+mules.each do |mule|
+  puts mule.executed
+  mule.destroy
 end
-
 
 #end

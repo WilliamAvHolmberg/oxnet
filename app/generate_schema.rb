@@ -33,9 +33,12 @@ class GenerateSchema
     def generate_schedule(account)
 
       puts account.username
+      account.quest_stats.destroy_all
+      account.stats.destroy_all
       quests = Quest.all
       quests.each do |quest|
-        QuestStat.find_or_create_by(quest: quest, account: account, completed: false)
+        quest_stat = QuestStat.find_or_create_by(quest: quest, account: account)
+        quest_stat.update(completed: false)
       end
 
 

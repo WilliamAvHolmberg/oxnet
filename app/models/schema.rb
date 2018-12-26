@@ -30,9 +30,10 @@ class Schema < ApplicationRecord
   end
 
   def get_suitable_task(account)
-    if time_is_right == false
-      return nil
-    else
+    #24/7 now
+    #if time_is_right == false
+    #  return nil
+    #else
       interval = get_time_interval
       task = tasks.select{|t| t.should_do(account) && t.task_type.name == "QUEST"}.first
       if task != nil
@@ -53,7 +54,7 @@ class Schema < ApplicationRecord
       end
     end
     return nil
-  end
+  #end
 
   def get_available_tasks(account)
     old_tasks = tasks.select{|t| t.should_do(account) && t.task_type.name == "QUEST"}

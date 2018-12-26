@@ -34,7 +34,7 @@
         = form.label :mule
         = collection_select(:account, :mule_id, @mules, :id, :username)
       - else
-        = "Please create a computer before associating to account"
+        = "Please create a mule"
   #schema
     .field
       - if @schemas != nil && @schemas.length > 0

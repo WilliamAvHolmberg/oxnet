@@ -167,6 +167,10 @@ class GenerateAccount
       #puts "lets create acc for #{computer.name}"
     end
   end
+
+  def get_random_proxy
+    return Proxy.all.select{|proxy| proxy.is_available}.sample
+  end
   #todo fix size (13 atm)
   public
     def create_accounts_for_all_computers
@@ -177,7 +181,7 @@ class GenerateAccount
         current_amount_of_accounts = get_available_accounts_on_computer(computer)
         if should_do && current_amount_of_accounts != nil && current_amount_of_accounts.size < account_threshold
           puts current_amount_of_accounts.size
-          proxy = [144].sample
+          proxy = get_random_proxy
             create_account(computer, Proxy.find(proxy))
             #puts "lets create acc for #{computer.name}"
             should_do = false

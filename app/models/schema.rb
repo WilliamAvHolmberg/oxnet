@@ -52,9 +52,9 @@ class Schema < ApplicationRecord
         task.update(:end_time => interval.end_time)
         return task
       end
-    end
+    #end
     return nil
-  #end
+  end
 
   def get_available_tasks(account)
     old_tasks = tasks.select{|t| t.should_do(account) && t.task_type.name == "QUEST"}

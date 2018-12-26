@@ -104,6 +104,7 @@ class GenerateSchema
       account.stats.each do |skill|
         skill.update(level: 1)
       end
+      account.save!
       account.schema.time_intervals.each do |time_interval|
         new_time = time_interval.dup
         new_time.update(schema: new_schema)

@@ -25,9 +25,10 @@ end
 ActiveRecord::Base.establish_connection(db_configuration["development"])
 
 gen = GenerateSchema.new
-#rspeer = Schema.where(name: "RSPEER").first
+rspeer = Schema.where(name: "RSPEER").first
 accounts = Account.all
 accounts.each do |acc|
+  acc.update(schema: rspeer)
   schema = gen.generate_schedule(acc)
   acc.update(schema: schema)
 end

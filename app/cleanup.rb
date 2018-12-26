@@ -3,6 +3,7 @@ require 'active_record'
 require_relative '../app/models/application_record'
 require 'acts_as_list'
 require 'net/ping'
+require_relative 'generate_schema'
 
 
 

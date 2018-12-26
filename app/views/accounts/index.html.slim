@@ -5,6 +5,7 @@ table
     th Login
     th Password
     th World
+    th Proxy
     th Money Invested
     th Account Type
     th Computer
@@ -21,6 +22,7 @@ table
         a href="/accounts/#{account.id}" = account.login
       th = account.password
       th = account.world
+      th = account.proxy.location
       th Todo
       th = account.account_type.name if account.account_type != nil
       th = account.computer.name if account.computer != nil

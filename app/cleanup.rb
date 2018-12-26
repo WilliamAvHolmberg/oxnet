@@ -23,8 +23,13 @@ end
 
 ActiveRecord::Base.establish_connection(db_configuration["development"])
 
+gen = GenerateSchema.new
+#rspeer = Schema.where(name: "RSPEER").first
+accounts = Account.all
+accounts.each do |acc|
+  schema = gen.generate_schedule(acc)
+  acc.update(schema: schema)
+end
 
-proxy = Proxy.all.select{|proxy| proxy.is_available}.sample
-puts proxy.location
 
 #end

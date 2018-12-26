@@ -107,4 +107,20 @@ class Account < ApplicationRecord
     return !banned && created && schema.get_suitable_task(self) != nil
   end
 
+  def get_money_withdrawn(mule_logs)
+    money_withdrawn = 0
+    mule_logs.select {|log| log.mule.downcase.include? username.downcase}.each do |log|
+      money_withdrawn += log.item_amount
+    end
+    return money_withdrawn
+  end
+
+  def get_money_deposited
+    money_deposited = 0
+    mule_logs.each do |log|
+      money_deposited += log.item_amount
+    end
+    return money_deposited
+  end
+
 end

@@ -157,6 +157,13 @@ class GenerateAccount
       new_schema = @generate_schema.generate_schedule(account)
       account.update(schema: new_schema)
       puts "id: #{account.id}:#{name} created for computer #{computer.name} with schema #{schema.name}"
+      if account.stats != nil
+       account.stats.destroy_all
+      end
+      if account.quest_stats != nil
+        account.quest_stats.destroy_all
+      end
+      account.save!
       account.save
       ins = Instruction.new(:instruction_type_id => InstructionType.select{|ins| ins.name == "CREATE_ACCOUNT"}.first.id, :computer_id => computer.id, :account_id => account.id, :script_id => Script.first.id)
       ins.save

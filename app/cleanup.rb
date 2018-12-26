@@ -28,4 +28,6 @@ ActiveRecord::Base.establish_connection(db_configuration["development"])
 account = Account.where(banned: true, created:true).first
 ga = GenerateSchema.new
 ga.generate_schedule(account)
+puts account.id
+
 #end

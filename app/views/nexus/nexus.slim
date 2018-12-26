@@ -175,12 +175,23 @@ body
                 .card-header.card-header-danger
                   #completedTasksChart.ct-chart
                 .card-body
-                  h4.card-title Completed Tasks
+                  h4.card-title Money
                     p.card-category = "Nothing yet"
-                .card-footer
-                  .stats
-                    i.material-icons access_time
-                    | campaign sent 2 days ago
+                table.table.table-hover
+                  thead.text-warning
+                    th Mule
+                    th Money deposited
+                    th Money withdrawn
+                  tbody
+
+                    - @mules.each do |mule|
+                      tr
+                        td = mule.username
+                        td = mule.get_money_deposited
+                        td = mule.get_money_withdrawn(@mule_logs)
+
+
+
           .row
             .col-lg-6.col-md-12
               .card
@@ -268,8 +279,8 @@ body
             .col-lg-6.col-md-12
               .card
                 .card-header.card-header-warning
-                  h4.card-title = "Money made today: #{@money_made_today}: PER HOUR --#{@money_made_today / (Time.now.hour + 0.1)}"
-                  p.card-category No info here atm
+                  h4.card-title = "Money made today: #{money_made_today}: PER HOUR --#{money_made_today / (Time.now.hour + 0.1)}"
+                  p.card-category = get_mules
                 .card-body.table-responsive
                   table.table.table-hover
                     thead.text-warning

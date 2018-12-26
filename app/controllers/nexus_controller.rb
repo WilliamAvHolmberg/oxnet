@@ -10,11 +10,9 @@ class NexusController < ApplicationController
     @active_accounts = @available_accounts.select{|acc| !acc.is_available}
     @mules = @available_accounts.select{|acc| acc.account_type.name == "MULE"}
     @slaves = @available_accounts.select{|acc| acc.account_type.name == "SLAVE"}
-    @money_made_today = 0
     @latest_task_logs = TaskLog.limit(5).order('id desc')
-    @mule_logs.each do |a|
-      @money_made_today+=a.item_amount.to_i
-    end
+
+
     render 'nexus'
   end
 

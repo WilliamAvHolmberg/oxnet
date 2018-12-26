@@ -34,12 +34,10 @@ class Task < ApplicationRecord
   end
 
   def get_start_time
-    #return self.start_time - 3600
-    return date.to_time.beginning_of_day
+    return self.start_time - 3600
   end
   def get_end_time
-    #return self.end_time - 3600
-    return date.to_time.end_of_day
+    return self.end_time - 3600
   end
 
   def should_do(account)

@@ -26,14 +26,17 @@ end
 ActiveRecord::Base.establish_connection(db_configuration["development"])
 
 
+#ga = GenerateAccount.new
 
+#account = Account.where(banned: false, created: true).select{|acc| acc.world == "372"}
 
-skills = Skill.all
-skills.each do |skill|
-  hiscore = Hiscore.new(skill:skill)
-  hiscore.save
-end
-
+#account.each do |acc|
+#  puts acc.username
+#  world = RsWorld.where(number: 397).first
+#  acc.update(rs_world: world)
+#  acc.update(world: world.number)
+#  acc.save
+#end
 
 #accounts.each do |acc|
 #  acc.stats.destroy_all

@@ -82,14 +82,24 @@ class GenerateAccount
       return accounts
     end
   private
+    def get_least_used_worlds
+      rs_worlds = RsWorld.all
+      worlds = Array.new
+      current_lowest = 10000
+      rs_worlds.each do |world|
+        player_amount = world.get_amount_of_players
+        if player_amount < current_lowest
+          worlds.clear
+          worlds.push(world)
+          current_lowest = player_amount
+        elsif player_amount == current_lowest
+          worlds.push(world)
+        end
+      end
+      return worlds
+    end
     def get_random_world
-      @worlds = [326,371,372,379,380,382,383,384,393,
-                394,397,398,399,418,425,430,431,
-                433,434,435,436,437,438,439,440,451,
-                452,453,454,455,456,457,458,459,469,
-                470,471,472,473,474,475,376,477,497,
-                498,499,500,501,502,503,504]
-      return @worlds.sample
+      return get_least_used_worlds.sample
     end
 
   private
@@ -123,23 +133,7 @@ class GenerateAccount
   public
 
 
-    def create_account(computer)
-      name = generate_name
-      email = generate_email(name)
-      world = get_random_world
-      password = "ugot00wned2"
-      schema = Schema.where(name: "RSPEER").first #generate schema in the future
-      mule = Account.where(username: "SirJolefon").first #not needed. random
-      proxy = Proxy.find(140)
-      account = Account.new(:login => email, :password => password, :username => name, :world => world,
-                            :computer => computer, :account_type => AccountType.where(:name => "SLAVE").first,:mule => mule,
-                            :schema => schema, :proxy => proxy, :should_mule => true, :created => false)
 
-      account.save
-      ins = Instruction.new(:instruction_type_id => InstructionType.select{|ins| ins.name == "CREATE_ACCOUNT"}.first.id, :computer_id => computer.id, :account_id => account.id, :script_id => Script.first.id)
-      ins.save
-      puts "#{name} created for computer #{computer.name} with schema #{schema.name}"
-    end
   public
     def create_account(computer, proxy)
       name = generate_name
@@ -149,9 +143,9 @@ class GenerateAccount
       schema = Schema.where(name: "RSPEER").first #generate schema in the future
       mule = Account.where(username: "SirJolefon").first #not needed. random
       #proxy = find_available_proxy
-      account = Account.new(:login => email, :password => password, :username => name, :world => world,
+      account = Account.new(:login => email, :password => password, :username => name, :world => world.number,
                             :computer => computer, :account_type => AccountType.where(:name => "SLAVE").first,:mule => mule,
-                            :schema => schema, :proxy => proxy, :should_mule => true, :created => false)
+                            :schema => schema, :proxy => proxy, :should_mule => true, :created => false, :rs_world => world)
 
       account.save
       new_schema = @generate_schema.generate_schedule(account)

@@ -4,6 +4,7 @@ require_relative '../app/models/application_record'
 require 'acts_as_list'
 require 'net/ping'
 require_relative 'generate_account'
+require_relative 'helpers/rs_worlds_helper'
 
 
 
@@ -24,10 +25,12 @@ end
 
 ActiveRecord::Base.establish_connection(db_configuration["development"])
 
-comp = Computer.find(16)
+
+
+
 ga = GenerateAccount.new
-proxy = ga.get_random_proxy
-ga.create_account(comp, proxy)
+
+ga.create_account(Computer.all.sample, Proxy.all.sample)
 
 #accounts.each do |acc|
 #  acc.stats.destroy_all

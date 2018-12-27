@@ -1,0 +1,25 @@
+h1 Listing rs_worlds
+
+table
+  thead
+    tr
+      th Number
+      th Members only
+      th Account
+      th
+      th
+      th
+
+  tbody
+    - @rs_worlds.each do |rs_world|
+      tr
+        td = rs_world.number
+        td = rs_world.members_only
+        td = get_amount_of_players(rs_world)
+        td = link_to 'Show', rs_world
+        td = link_to 'Edit', edit_rs_world_path(rs_world)
+        td = link_to 'Destroy', rs_world, data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+
+= link_to 'New Rs world', new_rs_world_path

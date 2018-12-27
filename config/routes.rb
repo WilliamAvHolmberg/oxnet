@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :rs_worlds
   resources :mule_logs
   resources :quest_stats
   resources :stats

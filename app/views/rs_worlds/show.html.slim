@@ -1,0 +1,15 @@
+p#notice = notice
+
+p
+  strong Number:
+  = @rs_world.number
+p
+  strong Members only:
+  = @rs_world.members_only
+p
+  strong Account:
+  = @rs_world.account
+
+=> link_to 'Edit', edit_rs_world_path(@rs_world)
+'|
+=< link_to 'Back', rs_worlds_path

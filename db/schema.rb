@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_23_005048) do
+ActiveRecord::Schema.define(version: 2018_12_27_144102) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,10 +36,12 @@ ActiveRecord::Schema.define(version: 2018_12_23_005048) do
     t.bigint "mule_id"
     t.bigint "proxy_id"
     t.boolean "created", default: true
+    t.bigint "rs_world_id"
     t.index ["account_type_id"], name: "index_accounts_on_account_type_id"
     t.index ["computer_id"], name: "index_accounts_on_computer_id"
     t.index ["mule_id"], name: "index_accounts_on_mule_id"
     t.index ["proxy_id"], name: "index_accounts_on_proxy_id"
+    t.index ["rs_world_id"], name: "index_accounts_on_rs_world_id"
     t.index ["schema_id"], name: "index_accounts_on_schema_id"
   end
 
@@ -240,6 +242,13 @@ ActiveRecord::Schema.define(version: 2018_12_23_005048) do
     t.integer "range_requirement", default: 99
   end
 
+  create_table "rs_worlds", force: :cascade do |t|
+    t.integer "number"
+    t.boolean "members_only"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "schemas", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -345,6 +354,7 @@ ActiveRecord::Schema.define(version: 2018_12_23_005048) do
   add_foreign_key "accounts", "account_types"
   add_foreign_key "accounts", "computers"
   add_foreign_key "accounts", "proxies"
+  add_foreign_key "accounts", "rs_worlds"
   add_foreign_key "accounts", "schemas"
   add_foreign_key "instructions", "accounts"
   add_foreign_key "instructions", "instruction_types"

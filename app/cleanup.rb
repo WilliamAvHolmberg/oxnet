@@ -29,8 +29,15 @@ ActiveRecord::Base.establish_connection(db_configuration["development"])
 
 
 ga = GenerateAccount.new
+accounts = Account.where(banned: false, created: true)
+accounts.each do |acc|
+  world = ga.get_random_world
+  acc.update(rs_world: world)
+  acc.update(world: world.number)
+  puts "#{acc.username}:#{world.number}"
+  acc.save!
+end
 
-ga.create_account(Computer.all.sample, Proxy.all.sample)
 
 #accounts.each do |acc|
 #  acc.stats.destroy_all

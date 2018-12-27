@@ -98,6 +98,7 @@ class GenerateAccount
       end
       return worlds
     end
+  public
     def get_random_world
       return get_least_used_worlds.sample
     end

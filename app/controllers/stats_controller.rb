@@ -4,7 +4,7 @@ class StatsController < ApplicationController
   # GET /stats
   # GET /stats.json
   def index
-    @stats = Stat.all
+    @stats = Stat.all.select{|stat| stat.account != nil}
   end
 
   # GET /stats/1

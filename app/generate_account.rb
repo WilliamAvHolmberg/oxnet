@@ -140,7 +140,7 @@ class GenerateAccount
       ins.save
       puts "#{name} created for computer #{computer.name} with schema #{schema.name}"
     end
-  private
+  public
     def create_account(computer, proxy)
       name = generate_name
       email = generate_email(name)
@@ -157,16 +157,19 @@ class GenerateAccount
       new_schema = @generate_schema.generate_schedule(account)
       account.update(schema: new_schema)
       puts "id: #{account.id}:#{name} created for computer #{computer.name} with schema #{schema.name}"
+
+      account.save
       if account.stats != nil
-       account.stats.destroy_all
+        account.stats.destroy_all
       end
       if account.quest_stats != nil
         account.quest_stats.destroy_all
       end
-      account.save!
       account.save
       ins = Instruction.new(:instruction_type_id => InstructionType.select{|ins| ins.name == "CREATE_ACCOUNT"}.first.id, :computer_id => computer.id, :account_id => account.id, :script_id => Script.first.id)
       ins.save
+      Stat.where(account_id: account.id).destroy_all
+      QuestStat.where(account_id: account.id).destroy_all
     end
 
   public

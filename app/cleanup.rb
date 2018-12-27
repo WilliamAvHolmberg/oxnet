@@ -3,7 +3,7 @@ require 'active_record'
 require_relative '../app/models/application_record'
 require 'acts_as_list'
 require 'net/ping'
-require_relative 'generate_schema'
+require_relative 'generate_account'
 
 
 
@@ -24,12 +24,15 @@ end
 
 ActiveRecord::Base.establish_connection(db_configuration["development"])
 
+comp = Computer.find(16)
+ga = GenerateAccount.new
+proxy = ga.get_random_proxy
+ga.create_account(comp, proxy)
 
-accounts = Account.where(banned: false, created:true)
-accounts.each do |acc|
-  acc.stats.destroy_all
-  acc.quest_stats.destroy_all
-end
+#accounts.each do |acc|
+#  acc.stats.destroy_all
+#  acc.quest_stats.destroy_all
+#end
 
 
 #end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_27_144102) do
+ActiveRecord::Schema.define(version: 2018_12_27_174750) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -94,6 +94,13 @@ ActiveRecord::Schema.define(version: 2018_12_27_144102) do
     t.index ["ring_id"], name: "index_gears_on_ring_id"
     t.index ["shield_id"], name: "index_gears_on_shield_id"
     t.index ["weapon_id"], name: "index_gears_on_weapon_id"
+  end
+
+  create_table "hiscores", force: :cascade do |t|
+    t.bigint "skill_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["skill_id"], name: "index_hiscores_on_skill_id"
   end
 
   create_table "instruction_types", force: :cascade do |t|
@@ -356,6 +363,7 @@ ActiveRecord::Schema.define(version: 2018_12_27_144102) do
   add_foreign_key "accounts", "proxies"
   add_foreign_key "accounts", "rs_worlds"
   add_foreign_key "accounts", "schemas"
+  add_foreign_key "hiscores", "skills"
   add_foreign_key "instructions", "accounts"
   add_foreign_key "instructions", "instruction_types"
   add_foreign_key "instructions", "scripts"

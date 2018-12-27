@@ -12,6 +12,10 @@ class SkillsController < ApplicationController
   def show
   end
 
+  def hiscore
+
+  end
+
   # GET /skills/new
   def new
     @skill = Skill.new

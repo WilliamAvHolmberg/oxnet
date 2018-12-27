@@ -1,0 +1,2 @@
+module HiscoresHelper
+end

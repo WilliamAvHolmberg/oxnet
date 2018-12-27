@@ -1,0 +1,12 @@
+= form_for @hiscore do |f|
+  - if @hiscore.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@hiscore.errors.count, "error")} prohibited this hiscore from being saved:"
+      ul
+        - @hiscore.errors.full_messages.each do |message|
+          li = message
+
+  .field
+    = f.label :skill
+    = f.text_field :skill
+  .actions = f.submit

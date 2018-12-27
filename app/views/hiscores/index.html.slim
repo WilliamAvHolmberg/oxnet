@@ -1,0 +1,16 @@
+h1 Listing hiscores
+
+table
+  thead
+    tr
+      th Skill
+
+  tbody
+    - @hiscores.each do |hiscore|
+      tr
+        td
+          a href="hiscores/#{hiscore.id}" = hiscore.skill.name
+
+br
+
+= link_to 'New Hiscore', new_hiscore_path

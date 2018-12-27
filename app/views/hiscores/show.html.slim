@@ -1,0 +1,26 @@
+p#notice = notice
+
+h1 = @hiscore.skill.name
+table
+  thead
+    tr
+      th Username
+      th Level
+
+
+  tbody
+    - @accounts.each do |account|
+      tr
+        td
+          a href="accounts/#{account.id}" = account.username
+        td = account.stats.where(skill: @hiscore.skill).first.level
+
+br
+
+=> link_to 'Edit', edit_hiscore_path(@hiscore)
+'|
+=< link_to 'Back', hiscores_path
+
+=> link_to 'Edit', edit_hiscore_path(@hiscore)
+'|
+=< link_to 'Back', hiscores_path

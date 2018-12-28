@@ -28,15 +28,17 @@ ActiveRecord::Base.establish_connection(db_configuration["development"])
 
 #ga = GenerateAccount.new
 
-#account = Account.where(banned: false, created: true).select{|acc| acc.world == "372"}
+account = Account.where(banned: false, created: true).select{|acc| acc.world == "376"}
 
-#account.each do |acc|
-#  puts acc.username
-#  world = RsWorld.where(number: 397).first
-#  acc.update(rs_world: world)
-#  acc.update(world: world.number)
-#  acc.save
-#end
+account.each do |acc|
+  puts acc.username
+  world = RsWorld.where(number: 397).first
+  if world.number != 376
+    acc.update(rs_world: world)
+    acc.update(world: world.number)
+    acc.save
+  end
+end
 
 #accounts.each do |acc|
 #  acc.stats.destroy_all

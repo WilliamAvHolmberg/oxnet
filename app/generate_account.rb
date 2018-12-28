@@ -178,8 +178,26 @@ class GenerateAccount
     end
   end
 
+  def get_least_used_proxies
+    available_proxies = Proxy.all.select{|proxy| proxy.is_available}
+
+    proxies = Array.new
+    current_lowest = 10000
+    available_proxies.each do |proxy|
+      account_amount = proxy.get_active_accounts.size
+      if account_amount < current_lowest
+        proxies.clear
+        proxies.push(proxy)
+        current_lowest = account_amount
+      elsif account_amount == current_lowest
+        proxies.push(proxy)
+      end
+    end
+    return proxies
+  end
+
   def get_random_proxy
-    return Proxy.all.select{|proxy| proxy.is_available}.sample
+    return get_least_used_proxies.sample
   end
   #todo fix size (13 atm)
   public

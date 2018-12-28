@@ -26,11 +26,22 @@ end
 ActiveRecord::Base.establish_connection(db_configuration["development"])
 
 
-ga = GenerateAccount.new
+def balance_worlds
+  ga = GenerateAccount.new
+  accounts = Account.where(banned: false, created: true)
+  accounts.each do |acc|
+    world = ga.get_random_world
+    puts acc.username
+    acc.update(world: world.number)
+    acc.update(rs_world: world)
+    acc.save
+  end
 
-computer = Computer.find(15)
-proxy = ga.get_random_proxy
-ga.create_account(computer, proxy)
+end
+
+
+balance_worlds
+
 
 
 

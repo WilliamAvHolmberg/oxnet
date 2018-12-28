@@ -15,7 +15,7 @@ table
       tr
         td = rs_world.number
         td = rs_world.members_only
-        td = get_amount_of_players(rs_world)
+        td = rs_world.get_amount_of_players
         td = link_to 'Show', rs_world
         td = link_to 'Edit', edit_rs_world_path(rs_world)
         td = link_to 'Destroy', rs_world, data: { confirm: 'Are you sure?' }, method: :delete

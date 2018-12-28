@@ -3,7 +3,7 @@ class RsWorld < ApplicationRecord
 
 
   def get_amount_of_players
-    return accounts.size
+    return accounts.where(banned:false, created: true).size
   end
 
 end

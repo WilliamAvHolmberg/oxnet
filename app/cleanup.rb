@@ -26,8 +26,11 @@ end
 ActiveRecord::Base.establish_connection(db_configuration["development"])
 
 
-#ga = GenerateAccount.new
+ga = GenerateAccount.new
 
+computer = Computer.find(15)
+proxy = ga.get_random_proxy
+ga.create_account(computer, proxy)
 
 
 

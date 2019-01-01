@@ -108,13 +108,16 @@ class GenerateAccount
       @mail_domains = ["yahoo.com", "gmail.com", "hotmail.com", "live.se", "hotmail.co.uk"]
       return @mail_domains.sample
     end
-  private
+  public
     def generate_name
 
       name = RsItem.order("RANDOM()").limit(1).first
+      name2 = RsItem.order("RANDOM()").limit(1).first
       subbed_name = name.item_name.gsub(/[^a-zA-Z]/, '')
-      sliced_name = subbed_name.slice(0, Random.new.rand(7..9))
-      numbered_name = + sliced_name + Random.new.rand(1..30).to_s
+      subbed_name2 = name2.item_name.gsub(/[^a-zA-Z]/, '')
+      sliced_name = subbed_name.slice(0, Random.new.rand(3..4))
+      sliced_name2 = subbed_name2.slice(0, Random.new.rand(3..4))
+      numbered_name = + sliced_name + sliced_name2 + Random.new.rand(30..60).to_s
 
       if numbered_name != nil
         return numbered_name
@@ -228,7 +231,10 @@ class GenerateAccount
 
 end
 
+
 #computer = Computer.where(name: "Suicide").first
 #generate_account = GenerateAccount.new
+#name = generate_account.generate_name
+#puts name
 #generate_account.create_accounts(1)
 #create_accounts_for_all_computers

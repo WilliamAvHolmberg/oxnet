@@ -39,8 +39,25 @@ def balance_worlds
 
 end
 
+def give_accounts_to_vps
+  batch_1 = Computer.where(name: "William").first
+  accounts = batch_1.accounts.where(banned: false, created: true).select{|acc| (!acc.account_type.name.include?"MULE")}
+  #vps = Computer.where(name: "VPS").first
+  suicide = Computer.where(name: "Suicide").first
+  x = 0
+  accounts.each do |acc|
+  #  puts x
+    puts acc.username
+    acc.update(computer: suicide)
+    acc.save
+   # x += 1
+   # if x > 26
+   #   break
+   # end
+  end
+end
 
-balance_worlds
+give_accounts_to_vps
 
 
 

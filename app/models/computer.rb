@@ -60,9 +60,12 @@ class Computer < ApplicationRecord
     end
     return total_time
   end
-
+  def get_available_accounts
+    accounts = Account.where(computer: self, banned: false, created: true)
+    return accounts
+  end
   def get_connected_accounts
-    accounts = Account.where(computer: self, banned: false, created: true).select{|acc| acc.is_connected}
+    accounts = get_available_accounts.select{|acc| acc.is_connected}
     return accounts
   end
 end

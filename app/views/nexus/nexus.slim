@@ -162,12 +162,14 @@ body
                   table.table.table-hover
                     thead.text-warning
                       th Computer Name
+                      th Accounts available
                       th Accounts connected
                       th Max limit
                     tbody
                       - @connected_computers.each do |comp|
                         tr
                           td = comp.name
+                          td = comp.get_available_accounts.size
                           td = comp.get_connected_accounts.size
                           td = comp.max_slaves
             .col-md-4

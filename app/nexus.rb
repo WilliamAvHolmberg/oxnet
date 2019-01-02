@@ -576,14 +576,14 @@ end
 
 def create_account_thread
   last_check = 0
-  interval = 45
+  interval = 60
   generate_account = GenerateAccount.new
   begin
     loop do
       if Time.now > last_check + interval
-        last_check = Time.now
         puts "lets create accounts"
         generate_account.create_accounts_for_all_computers
+        last_check = Time.now
       else
         puts "next acc check: #{Time.now - (last_check + interval)}"
       end

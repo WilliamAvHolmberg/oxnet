@@ -220,7 +220,7 @@ class GenerateAccount
           proxy = get_random_proxy
           create_account(computer, proxy)
         end
-        next_check = (accounts_to_make + 1) * 60
+        next_check = (accounts_to_make + 1) * 45
         return next_check
       end
     end

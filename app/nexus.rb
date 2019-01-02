@@ -588,6 +588,8 @@ def create_account_thread
         interval = time.to_i
         next_check = last_check + interval
         puts "next_check:#{next_check}"
+      else
+        puts "next acc check: #{Time.now - (last_check + interval)}"
       end
       sleep(2)
     end

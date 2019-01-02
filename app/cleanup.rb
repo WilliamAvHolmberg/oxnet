@@ -57,10 +57,14 @@ def give_accounts_to_vps
   end
 end
 
-give_accounts_to_vps
+
+items = RsItem.where('UPPER(item_name) LIKE ?', "%BAN%")
 
 
-
+items.each do |item|
+  puts item.item_name
+  item.destroy
+end
 
 #accounts.each do |acc|
 #  acc.stats.destroy_all

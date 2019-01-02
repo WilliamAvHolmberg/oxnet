@@ -599,7 +599,7 @@ def main_thread
     if Time.now > last_check + interval
       last_check = Time.now
       puts "lets create accounts"
-      generate_account.create_accounts_for_all_computers
+      #generate_account.create_accounts_for_all_computers
     else
       puts "next check: #{(last_check + interval - Time.now)}"
     end

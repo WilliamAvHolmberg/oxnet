@@ -574,18 +574,38 @@ def script_thread(client, account)
   end
 end
 
+def create_account_thread
+  last_check = 0
+  interval = 0
+  generate_account = GenerateAccount.new
+  begin
+    loop do
+      if Time.now > last_check + interval
+        last_check = Time.now
+        puts "lets create accounts"
+        time = generate_account.create_all_accounts_for_one_computer
+        puts "interval:#{time}"
+        interval = time.to_i
+        next_check = last_check + interval
+        puts "next_check:#{next_check}"
+      end
+      sleep(2)
+    end
+  rescue
+    puts "Main loop ended"
+    create_account_thread
+  end
+end
 
 def main_thread
-  last_check = 0
-  interval = 90
-  generate_account = GenerateAccount.new
+
   begin
   loop do
     accounts = Account.where(banned: false, created: true).select{|acc| acc.is_available && acc.schema != nil &&  acc.shall_do_task && !acc.banned && acc.proxy_is_available? &&  acc.account_type != nil && acc.account_type.name == "SLAVE"}
     if accounts != nil && accounts.length > 0
       accounts.each do |acc|
         if acc.computer_id != nil
-        computers = Computer.all.select{|computer| computer.id == acc.computer_id && computer.is_available_to_nexus}
+        computers = Computer.all.select{|computer| computer.id == acc.computer_id && computer.is_available_to_nexus && computer.can_connect_more_accounts}
         if computers != nil && computers.length > 0
           Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computers.first.id, :account_id => acc.id, :script_id => Script.first.id).save
           Log.new(computer_id: computers.first.id, account_id: acc.id, text: "Instruction created")
@@ -596,13 +616,6 @@ def main_thread
       end
     end
 
-    if Time.now > last_check + interval
-      last_check = Time.now
-      puts "lets create accounts"
-      #generate_account.create_accounts_for_all_computers
-    else
-      puts "next check: #{(last_check + interval - Time.now)}"
-    end
     sleep(2)
   end
   rescue
@@ -630,12 +643,21 @@ require_all("./models/")
 
 Thread::abort_on_exception = true
 added_main_thread = false
+added_account_thread = false
 loop do
   if added_main_thread == false
     Thread.new do
       added_main_thread = true
       puts "new main thread"
       thread =  Thread.new{main_thread}
+      thread.join
+    end
+  end
+  if added_account_thread == false
+    Thread.new do
+      added_account_thread = true
+      puts "new accout thread"
+      thread =  Thread.new{create_account_thread}
       thread.join
     end
   end

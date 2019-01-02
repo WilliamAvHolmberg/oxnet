@@ -204,6 +204,29 @@ class GenerateAccount
   end
   #todo fix size (13 atm)
   public
+  def create_all_accounts_for_one_computer
+    computers = find_available_computers
+    computers.each do |computer|
+      puts computer.name
+      puts computer.can_connect_more_accounts
+      account_threshold = computer.max_slaves
+      puts account_threshold
+      current_amount_of_accounts = get_available_accounts_on_computer(computer).size
+      puts current_amount_of_accounts
+      accounts_to_make = account_threshold - current_amount_of_accounts
+      puts accounts_to_make
+      if accounts_to_make > 0
+        accounts_to_make.times do
+          proxy = get_random_proxy
+          create_account(computer, proxy)
+        end
+        next_check = (accounts_to_make + 1) * 30
+        return next_check
+      end
+    end
+    return 10
+  end
+  public
     def create_accounts_for_all_computers
       should_do = true
       computers = find_available_computers

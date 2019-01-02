@@ -39,6 +39,15 @@ def balance_worlds
 
 end
 
+def update_proxies(old, new)
+  accounts = Account.where(banned: false, created: true, proxy_id: old)
+  new_proxy = Proxy.find(new)
+  accounts.each do |acc|
+    acc.update(proxy: new_proxy)
+    acc.save
+  end
+end
+
 def give_accounts_to_vps
   batch_1 = Computer.where(name: "William").first
   accounts = batch_1.accounts.where(banned: false, created: true).select{|acc| (!acc.account_type.name.include?"MULE")}
@@ -58,14 +67,10 @@ def give_accounts_to_vps
 end
 
 
-items = RsItem.where('UPPER(item_name) LIKE ?', "%BAN%")
 
 
-items.each do |item|
-  puts item.item_name
-  item.destroy
-end
 
+create_account_thread
 #accounts.each do |acc|
 #  acc.stats.destroy_all
 #  acc.quest_stats.destroy_all

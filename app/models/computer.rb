@@ -68,4 +68,8 @@ class Computer < ApplicationRecord
     accounts = get_available_accounts.select{|acc| acc.is_connected}
     return accounts
   end
+
+  def can_connect_more_accounts
+    return max_slaves > get_connected_accounts.size
+  end
 end

@@ -251,7 +251,7 @@ class GenerateAccount
       should_do = true
       computers = find_available_computers
       computers.each do |computer|
-        account_threshold = computer.max_slaves * 2
+        account_threshold = computer.max_slaves * 3
         current_amount_of_accounts = get_available_accounts_on_computer(computer)
         if should_do && current_amount_of_accounts != nil && current_amount_of_accounts.size < account_threshold
           puts current_amount_of_accounts.size

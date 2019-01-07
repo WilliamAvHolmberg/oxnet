@@ -4,7 +4,7 @@ class SchemasController < ApplicationController
   # GET /schemas
   # GET /schemas.json
   def index
-    @schemas = Schema.all
+    @schemas = Schema.where(name: "RSPEER")
   end
 
   # GET /schemas/1

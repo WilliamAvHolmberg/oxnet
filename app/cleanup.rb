@@ -68,13 +68,61 @@ end
 
 
 
-
-
-create_account_thread
+#create_account_thread
 #accounts.each do |acc|
 #  acc.stats.destroy_all
 #  acc.quest_stats.destroy_all
 #end
 
+
+def fix_fucked_worlds
+  worlds_to_change = [6, 7, 13, 15, 19, 20, 23, 24, 31, 32, 38, 39, 40, 47, 48, 55, 56, 57, 74, 78, 109, 110, 111, 118, 119, 120, 121, 122, 123, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146]
+  available_worlds = RsWorld.select{|world| !worlds_to_change.include?(world.number.to_i)}
+  worlds_to_change.each do |world|
+    world += 300
+    rs_world = RsWorld.where(number: world).first
+    if rs_world != nil
+      accounts = Account.where(banned: false, created: true,world: world)
+      puts "#{rs_world}:#{accounts.size}"
+      accounts.each do |acc|
+        new_world = available_worlds.sample
+        acc.update(rs_world: new_world)
+        acc.update(world: new_world.number)
+        acc.save
+        puts acc.username
+      end
+    end
+  end
+end
+
+def change_worlds_if_unavailable
+  worlds_to_change = [6, 7, 13, 15, 19, 20, 23, 24, 31, 32, 38, 39, 40, 47, 48, 55, 56, 57, 74, 78, 109, 110, 111, 118, 119, 120, 121, 122, 123, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146]
+  available_worlds = RsWorld.select{|world| !worlds_to_change.include?(world.number.to_i)}
+
+  worlds_to_change.each do |world|
+    world += 300
+    rs_world = RsWorld.where(number: world).first
+    if rs_world != nil
+      new_world = available_worlds.sample
+      rs_world.update(number: new_world.number)
+      rs_world.save
+    end
+  end
+end
+
+def get_accounts_filter
+  accounts = Account.where(banned: false, created: true).select{|acc| acc.account_type != nil && acc.account_type.name == "SLAVE"}
+
+  wc_accounts = accounts.select{|acc|acc.stats.where(skill: Skill.where(name: "Woodcutting").first).first != nil}.sort_by{|acc| acc.stats.where(skill: Skill.where(name: "Woodcutting").first).first.level}.reverse
+
+  wc_accounts.each do |acc|
+    level = acc.stats.where(skill: Skill.where(name: "Woodcutting").first).first
+    if level != nil
+      puts level.level
+    end
+  end
+end
+
+get_accounts_filter
 
 #end

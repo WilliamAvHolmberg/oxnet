@@ -17,7 +17,7 @@ table
         td = time_interval.name
         td = time_interval.start_time
         td = time_interval.end_time
-        td = time_interval.schema
+        td = time_interval.schema.name
         td = link_to 'Show', time_interval
         td = link_to 'Edit', edit_time_interval_path(time_interval)
         td = link_to 'Destroy', time_interval, data: { confirm: 'Are you sure?' }, method: :delete

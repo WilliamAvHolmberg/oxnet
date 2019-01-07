@@ -8,28 +8,15 @@ table
     th Money per Hour
     th XP per hour
     th Location
-    th Break after level
-    th Break after time
   - Account.where(banned: false, created: true).select {|acc| !acc.is_available}.each do |account|
     - last_log = account.task_logs.last
     tr
       td
         a href="/accounts/#{account.id}" = account.username
-      - if last_log != nil && last_log.size > 0
+      - if last_log != nil
         - @money +=  last_log.money_per_hour.to_i
-        td = last_log.task.name
-        td = last_log.task_logs.last.money_per_hour
-        td = last_log.task_logs.last.xp_per_hour
-        td = last_log.task_logs.last.position
-        td = last_log.task_logs.last.task.break_after
-        td = last_log.ask_logs.last.task.end_time
+        td = "asd"
+        td = last_log.money_per_hour
+        td = last_log.xp_per_hour
+        td = last_log.position
 h2 = "MONEY #{@money}"
-
-h1 Computers online:
-table
-  tr
-    th Name
-  - (Computer.all.select {|acc| acc.is_available_to_nexus}).each do |computer|
-    tr
-      td
-        a href="/computers/#{computer.id}" = "#{computer.name}-----#{Account.where(computer: computer, banned: false, created: true).select{|acc| !acc.is_available}.length}/#{Account.where(computer: computer, banned: false, created: true).select{|acc| acc.proxy_is_available?}.length}"

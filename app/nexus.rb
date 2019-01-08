@@ -601,9 +601,10 @@ def main_thread
     accounts = all_accounts.sort_by{|acc|acc.get_total_level}.reverse
     if accounts != nil && accounts.length > 0
       accounts.each do |acc|
-      if acc.computer != nil && acc.computer.is_available_to_nexus && acc.computer.can_connect_more_accounts
-      Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => acc.computer_id, :account_id => acc.id, :script_id => Script.first.id).save
-          Log.new(computer_id: acc.computer_id, account_id: acc.id, text: "Instruction created")
+      computer = acc.computer
+      if computer != nil && computer.is_available_to_nexus && computer.can_connect_more_accounts
+      Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save
+          Log.new(computer_id: computer.id, account_id: acc.id, text: "Instruction created")
           puts "instruction for #{acc.username} to create new client at #{acc.computer.name}"
           sleep(1)
       end

@@ -584,7 +584,7 @@ def create_account_thread
       else
         puts "next acc check: #{Time.now - (last_check + interval)}"
       end
-      sleep(2)
+      sleep(5.seconds)
     end
   rescue => error
     puts error
@@ -608,17 +608,17 @@ def main_thread
       Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save
           Log.new(computer_id: computer.id, account_id: acc.id, text: "Instruction created")
           puts "instruction for #{acc.username} to create new client at #{acc.computer.name}"
-          sleep(3)
+          sleep(3.seconds)
       end
       end
     end
 
-    sleep(10)
+    sleep(10.seconds)
   end
   rescue => error
     puts error.backtrace
     puts "Main loop ended"
-    #main_thread
+    main_thread
   end
 end
 

@@ -11,10 +11,8 @@ class Schema < ApplicationRecord
     self.time_intervals.all.each do |interval|
       time = Time.now.change(:month => 1, :day => 1, :year => 2000)
       if time > interval.get_start_time && time < interval.get_end_time
-        puts "time is right"
         return true
       end
-      puts interval.get_start_time - time
     end
     return false
   end
@@ -33,11 +31,13 @@ class Schema < ApplicationRecord
     if time_is_right == false
       return nil
     else
+      puts "#{account.username} time is right"
       interval = get_time_interval
       task = tasks.select{|t| t.should_do(account) && t.task_type.name == "QUEST"}.first
       if task != nil
         task.update(:start_time => interval.start_time)
         task.update(:end_time => interval.end_time)
+        puts "#{account.username} : quest task shall start"
         return task
       end
       task = tasks.select{|t| t.should_do(account)}.first
@@ -49,6 +49,7 @@ class Schema < ApplicationRecord
       else
         task.update(:start_time => interval.start_time)
         task.update(:end_time => interval.end_time)
+        puts "#{account.username} : task shall start"
         return task
       end
     end

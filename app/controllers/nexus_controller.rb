@@ -3,7 +3,8 @@ class NexusController < ApplicationController
 
   def show
     @proxies = Proxy.all
-    @connected_computers = Computer.all
+    @connected_computers = Computer.all.select{|comp|comp.is_connected}
+
     @mule_logs = MuleLog.where("DATE(created_at) = ?", Date.today)
     @available_accounts = Account.where(banned: false, created: true)
     @active_accounts = @available_accounts.select{|acc| !acc.is_available}

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_27_174750) do
+ActiveRecord::Schema.define(version: 2019_01_08_182007) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,6 +37,8 @@ ActiveRecord::Schema.define(version: 2018_12_27_174750) do
     t.bigint "proxy_id"
     t.boolean "created", default: true
     t.bigint "rs_world_id"
+    t.datetime "last_seen"
+    t.integer "time_online"
     t.index ["account_type_id"], name: "index_accounts_on_account_type_id"
     t.index ["computer_id"], name: "index_accounts_on_computer_id"
     t.index ["mule_id"], name: "index_accounts_on_mule_id"
@@ -64,6 +66,8 @@ ActiveRecord::Schema.define(version: 2018_12_27_174750) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "max_slaves", default: 10
+    t.datetime "last_seen", default: "2019-01-08 18:20:48"
+    t.integer "time_online", default: 0
     t.index ["name"], name: "index_computers_on_name", unique: true
   end
 

@@ -123,6 +123,26 @@ def get_accounts_filter
 end
 
 
+def play_with_last_seen_account
+  acc = Account.find(7458)
+  puts "Acc: #{acc.username}:#{acc.id}"
+  puts "Last seen:#{acc.last_seen}"
+  puts "Time online:#{acc.time_online}"
+  puts "Time now: #{Time.now}"
+  puts "Time now: #{Time.now}"
+  log = Log.create(computer_id: nil, account_id: acc.id, text: "Test log")
+  log.save
+end
 
-get_accounts_filter
+def play_with_last_seen_computer
+  comp = Computer.find(1)
+  puts "Comp: #{comp.name}:#{comp.id}"
+  puts "Last seen:#{comp.last_seen}"
+  puts "Time online:#{comp.time_online}"
+  puts "Time now: #{Time.now}"
+  log = Log.create(computer_id: comp.id, account_id: nil, text: "Test log")
+  log.save
+end
+
+play_with_last_seen_computer
 #end

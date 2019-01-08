@@ -269,14 +269,7 @@ body
                               button.btn.btn-danger.btn-link.btn-sm rel="tooltip" title="Remove" type="button"
                                 i.material-icons close
                     #settings.tab-pane
-                      = form_tag("/create_accounts", method: "post") do
-                        p = label_tag :Computer
-                        = select_tag 'computer_id', options_for_select(@computers.collect {|u| [u.name, u.id]})
-                        p = label_tag :Proxy
-                        = select_tag 'proxy_id', options_for_select(@proxies.collect {|u| [u.location, u.id]})
-                        p = label_tag :amount_of_accounts
-                        p = number_field_tag :amount_of_accounts
-                        = submit_tag("Create")
+
 
             .col-lg-6.col-md-12
               .card
@@ -286,14 +279,12 @@ body
                 .card-body.table-responsive
                   table.table.table-hover
                     thead.text-warning
-                      th Time
                       th Account Name
                       th Amount of Cash
                       th Mule
                     tbody
                       - @mule_logs.each do |log|
                         tr
-                          td = log.created_at
                           td = log.account.username
                           td = log.item_amount
                           td = log.mule

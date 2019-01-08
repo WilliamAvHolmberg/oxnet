@@ -586,8 +586,9 @@ def create_account_thread
       end
       sleep(2)
     end
-  rescue
-    puts "Main loop ended"
+  rescue => error
+    puts error
+    puts "account threadloop ended"
     create_account_thread
   end
 end
@@ -607,7 +608,7 @@ def main_thread
       Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save
           Log.new(computer_id: computer.id, account_id: acc.id, text: "Instruction created")
           puts "instruction for #{acc.username} to create new client at #{acc.computer.name}"
-          sleep(1)
+          sleep(3)
       end
       end
     end

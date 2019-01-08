@@ -144,5 +144,34 @@ def play_with_last_seen_computer
   log.save
 end
 
-play_with_last_seen_computer
+def main_thread
+
+  begin
+    loop do
+      puts "Main Thread loop"
+      all_accounts = Account.where(banned: false, created: true)
+      puts "below acc"
+      accounts = all_accounts.sort_by{|acc|acc.get_total_level}.reverse
+      if accounts != nil && accounts.length > 0
+        accounts.each do |acc|
+          computer = acc.computer if acc.computer_id != nil
+          if computer != nil && computer.is_available_to_nexus && computer.can_connect_more_accounts
+            Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save
+            Log.new(computer_id: computer.id, account_id: acc.id, text: "Instruction created")
+            puts "instruction for #{acc.username} to create new client at #{acc.computer.name}"
+            sleep(1)
+          end
+        end
+      end
+
+      sleep(10)
+    end
+  rescue => error
+    puts error.backtrace
+    puts "Main loop ended"
+    #main_thread
+  end
+end
+
+main_thread
 #end

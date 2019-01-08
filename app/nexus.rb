@@ -642,7 +642,22 @@ Thread::abort_on_exception = true
 added_main_thread = false
 added_account_thread = false
 loop do
-
+  if added_main_thread == false
+    Thread.new do
+      added_main_thread = true
+      puts "new main thread"
+      thread =  Thread.new{main_thread}
+      thread.join
+    end
+  end
+  if added_account_thread == false
+    Thread.new do
+      added_account_thread = true
+      puts "new accout thread"
+      thread =  Thread.new{create_account_thread}
+      thread.join
+    end
+  end
   begin
     thread = nil
     puts "waiting for con"
@@ -698,22 +713,6 @@ loop do
   rescue Exception => ex
     puts ex
     puts "errooorororo"
-  end
-  if added_main_thread == false
-    Thread.new do
-      added_main_thread = true
-      puts "new main thread"
-      thread =  Thread.new{main_thread}
-      thread.join
-    end
-  end
-  if added_account_thread == false
-    Thread.new do
-      added_account_thread = true
-      puts "new accout thread"
-      thread =  Thread.new{create_account_thread}
-      thread.join
-    end
   end
 end
 

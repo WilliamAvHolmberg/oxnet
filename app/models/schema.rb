@@ -49,7 +49,7 @@ class Schema < ApplicationRecord
       else
         task.update(:start_time => interval.start_time)
         task.update(:end_time => interval.end_time)
-        puts "#{account.username} : task shall start"
+        puts "#{account.username} : task shall start at computer:#{account.computer.name}"
         return task
       end
     end

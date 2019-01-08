@@ -261,15 +261,15 @@ class GenerateAccount
         #puts "lets create acc for #{computer.name}"
       end
     end
-  def brandon_shall(id, thresh, amount)
-    if id != 16
-      return false
+    def brandon_shall(id, thresh, amount)
+      if id != 16
+        return false
+      end
+      if amount < thresh
+        return false
+      end
+      return true
     end
-    if amount < thresh
-      return false
-    end
-    return true
-  end
   #todo fix size (13 atm)
   public
   def create_accounts(number, computer, proxy)

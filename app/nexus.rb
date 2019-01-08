@@ -599,6 +599,7 @@ def main_thread
 
   begin
   loop do
+    puts "Main Thread loop"
     all_accounts = Account.where(banned: false, created: true).select{|acc| acc.is_available && acc.computer != nil && acc.computer.is_available_to_nexus && acc.computer.can_connect_more_accounts && acc.schema != nil &&  acc.shall_do_task && !acc.banned && acc.proxy_is_available? &&  acc.account_type != nil && acc.account_type.name == "SLAVE"}
     accounts = all_accounts.sort_by{|acc|acc.get_total_level}.reverse
     if accounts != nil && accounts.length > 0

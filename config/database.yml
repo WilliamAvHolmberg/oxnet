@@ -88,7 +88,12 @@ test:
 #     url: <%= ENV['DATABASE_URL'] %>
 #
 production:
-  <<: *default
-  database: myapp_production
-  username: myapp
-  password: <%= ENV['MYAPP_DATABASE_PASSWORD'] %>
+  pool: 600
+  timeout: 15000
+  adapter: postgresql
+  encoding: utf8
+  database: test1
+  host: 127.0.0.1
+  username: root
+  password: 'Lifeunixbook123'
+  port: 5432

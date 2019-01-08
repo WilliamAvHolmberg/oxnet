@@ -600,7 +600,7 @@ def main_thread
   begin
   loop do
     all_accounts = Account.where(banned: false, created: true).select{|acc| acc.is_available && acc.schema != nil &&  acc.shall_do_task && !acc.banned && acc.proxy_is_available? &&  acc.account_type != nil && acc.account_type.name == "SLAVE"}
-    accounts = all_accounts.select{|acc|acc.stats.where(skill: Skill.where(name: "Woodcutting").first).first != nil}.sort_by{|acc| acc.stats.where(skill: Skill.where(name: "Woodcutting").first).first.level}.reverse
+    accounts = all_accounts.sort_by{|acc|acc.get_total_level}.reverse
     if accounts != nil && accounts.length > 0
       accounts.each do |acc|
         if acc.computer_id != nil
@@ -611,19 +611,6 @@ def main_thread
           sleep(5)
         else
         end
-        end
-      end
-    elsif all_accounts != nil && all_accounts.length > 0
-      accounts = all_accounts
-      accounts.each do |acc|
-        if acc.computer_id != nil
-          computers = Computer.all.select{|computer| computer.id == acc.computer_id && computer.is_available_to_nexus && computer.can_connect_more_accounts}
-          if computers != nil && computers.length > 0
-            Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computers.first.id, :account_id => acc.id, :script_id => Script.first.id).save
-            Log.new(computer_id: computers.first.id, account_id: acc.id, text: "Instruction created")
-            sleep(5)
-          else
-          end
         end
       end
     end

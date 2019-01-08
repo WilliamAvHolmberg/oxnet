@@ -113,9 +113,8 @@ end
 def get_accounts_filter
   accounts = Account.where(banned: false, created: true).select{|acc| acc.account_type != nil && acc.account_type.name == "SLAVE"}
 
-  wc_accounts = accounts.select{|acc|acc.stats.where(skill: Skill.where(name: "Woodcutting").first).first != nil}.sort_by{|acc| acc.stats.where(skill: Skill.where(name: "Woodcutting").first).first.level}.reverse
-
-  wc_accounts.each do |acc|
+  accounts = accounts.sort_by{|acc|acc.get_total_level}.reverse
+  accounts.each do |acc|
     level = acc.stats.where(skill: Skill.where(name: "Woodcutting").first).first
     if level != nil
       puts level.level
@@ -123,6 +122,7 @@ def get_accounts_filter
   end
 end
 
-get_accounts_filter
 
+
+get_accounts_filter
 #end

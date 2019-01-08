@@ -124,4 +124,16 @@ class Account < ApplicationRecord
     return money_deposited
   end
 
+  def get_total_level
+    total_level = 0
+    if stats != nil && stats.length > 0
+     stats.each do |stat|
+        if stat.level != nil
+          total_level += stat.level
+        end
+      end
+    end
+    return total_level
+  end
+
 end

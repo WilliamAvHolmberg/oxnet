@@ -28,7 +28,7 @@ development:
   adapter: postgresql
   encoding: utf8
   database: test1
-  host: 213.136.78.120
+  host: 127.0.0.1
   username: root
   password: 'Lifeunixbook123'
   port: 5432

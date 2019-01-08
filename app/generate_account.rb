@@ -254,13 +254,19 @@ class GenerateAccount
       end
       account_threshold = computer.max_slaves * 3
       current_amount_of_accounts = get_available_accounts_on_computer(computer)
-      if computer.id == 16 || (current_amount_of_accounts != nil && current_amount_of_accounts.size < account_threshold)
+      if brandon_shall || (current_amount_of_accounts != nil && current_amount_of_accounts.size < account_threshold)
         puts current_amount_of_accounts.size
         proxy = get_random_proxy
         create_account(computer, proxy)
         #puts "lets create acc for #{computer.name}"
       end
     end
+  def brandon_shall(thresh, amount)
+    if amount < thresh
+      return false
+    end
+    return true
+  end
   #todo fix size (13 atm)
   public
   def create_accounts(number, computer, proxy)

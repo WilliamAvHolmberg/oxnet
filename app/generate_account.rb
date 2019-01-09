@@ -113,11 +113,14 @@ class GenerateAccount
 
       name = RsItem.order("RANDOM()").limit(1).first
       name2 = RsItem.order("RANDOM()").limit(1).first
+      name3 = RsItem.order("RANDOM()").limit(1).first
       subbed_name = name.item_name.gsub(/[^a-zA-Z]/, '')
       subbed_name2 = name2.item_name.gsub(/[^a-zA-Z]/, '')
+      subbed_name3 = name3.item_name.gsub(/[^a-zA-Z]/, '')
       sliced_name = subbed_name.slice(0, Random.new.rand(3..4))
       sliced_name2 = subbed_name2.slice(0, Random.new.rand(3..4))
-      numbered_name = + sliced_name + sliced_name2 + Random.new.rand(30..60).to_s
+      sliced_name3 = subbed_name3.slice(0, Random.new.rand(1..2))
+      numbered_name = + sliced_name + sliced_name2 + sliced_name3
 
       if numbered_name != nil
         return numbered_name

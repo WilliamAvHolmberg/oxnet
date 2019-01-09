@@ -593,7 +593,7 @@ def create_account_thread
   end
 end
 
-def computer_is_avalable(acc)
+def computer_is_available(acc)
   return acc.computer_id != nil && acc.computer != nil && acc.computer.is_available_to_nexus && acc.computer.can_connect_more_accounts
 end
 

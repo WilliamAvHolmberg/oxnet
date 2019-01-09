@@ -603,10 +603,12 @@ def main_thread
   begin
   loop do
     puts "Main Thread loop"
-    all_accounts = Account.where(banned: false, created: true).select{|acc| computer_is_available(acc)  && acc.is_available && acc.proxy != nil && acc.proxy.is_available && acc.schema != nil && acc.schema.get_suitable_task(acc) != nil && acc.account_type.name == "SLAVE"}
-    puts "below acc"
-    accounts = all_accounts.sort_by{|acc|acc.get_total_level}.reverse.first(5)
+    accounts = Account.where(banned: false, created: true)
     if accounts != nil && accounts.length > 0
+      accounts = accounts.select{|acc| computer_is_available(acc)  && acc.is_available && acc.proxy != nil && acc.proxy.is_available && acc.schema != nil && acc.schema.get_suitable_task(acc) != nil && acc.account_type.name == "SLAVE"}
+    end
+    if accounts != nil && accounts.length > 0
+      accounts = accounts.sort_by{|acc|acc.get_total_level}.reverse
       accounts.each do |acc|
       computer = acc.computer if acc.computer_id != nil
       if computer != nil && computer.is_available_to_nexus && computer.can_connect_more_accounts

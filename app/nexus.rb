@@ -620,6 +620,7 @@ def main_thread
     sleep(10.seconds)
   end
   rescue => error
+    puts error
     puts error.backtrace
     puts "Main loop ended"
     main_thread

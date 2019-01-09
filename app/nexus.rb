@@ -665,12 +665,8 @@ loop do
     Thread.new server.accept do |client|
 
       puts "new client: #{client}"
-      respond = client.gets
-      if respond == nil
-        respond = "nothing:nothing"
-      else
+
       respond = client.gets.split(":")
-      end
         if respond[0] == "computer"
           #start new thread for computer
           ip = respond[2]

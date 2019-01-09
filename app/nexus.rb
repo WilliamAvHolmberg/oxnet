@@ -589,6 +589,7 @@ def create_account_thread
   rescue => error
     puts error
     puts "account threadloop ended"
+    sleep(10.seconds)
     create_account_thread
   end
 end
@@ -604,7 +605,7 @@ def main_thread
     puts "Main Thread loop"
     all_accounts = Account.where(banned: false, created: true).select{|acc| computer_is_available(acc)  && acc.is_available && acc.proxy != nil && acc.proxy.is_available && acc.schema != nil && acc.schema.get_suitable_task(acc) != nil && acc.account_type.name == "SLAVE"}
     puts "below acc"
-    accounts = all_accounts.sort_by{|acc|acc.get_total_level}.reverse
+    accounts = all_accounts.sort_by{|acc|acc.get_total_level}.reverse.first(5)
     if accounts != nil && accounts.length > 0
       accounts.each do |acc|
       computer = acc.computer if acc.computer_id != nil

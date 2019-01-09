@@ -667,9 +667,10 @@ loop do
       puts "new client: #{client}"
       respond = client.gets
       if respond == nil
-        puts "nil message"
+        respond = "nothing:nothing"
       else
       respond = client.gets.split(":")
+      end
         if respond[0] == "computer"
           #start new thread for computer
           ip = respond[2]
@@ -713,7 +714,6 @@ loop do
      # thread.join
       #thread = nil
       #end
-    end
     end
   rescue Exception => ex
     puts ex

@@ -665,51 +665,55 @@ loop do
     Thread.new server.accept do |client|
 
       puts "new client: #{client}"
-      respond = client.gets.split(":")
-      if respond[0] == "computer"
-        #start new thread for computer
-        ip = respond[2]
-        name = respond[3].chomp!
-        computer = Computer.find_or_create_by(:name => name)
-        computer.update(:ip => ip)
-        puts "New Computer Thread started for: #{computer}}"
-        thread = Thread.fork{computer_thread(client, computer)}
-        client.puts "connected:1"
-      elsif respond[0] == "script"
-        # start new thread for script
-        login = respond[3].chomp
-        if Account.where(:login => login) != nil && Account.where(:login => login).length > 0
-          puts "Login: #{login}"
-          account = Account.where(:login => login).first
-          puts "account found:#{account.login}"
-          if !account.created
-            account.update(:created => true)
-            account.save
-          end
-        else
-          ip = respond[2]
-          proxy = Proxy.find_or_initialize_by(:ip => ip)
-          password = respond[4]
-          username = respond[5]
-          world = respond[6]
-          account = Account.new(:login => login, :password => password, :username => username, :world => @worlds.sample,
-                                :computer => Computer.find_or_create_by(:name => "Suicide"), :account_type => AccountType.where(:name => "SLAVE").first,:mule => Account.where(:login => "ad_da_mig1@hotmail.com").first,
-                                :schema => Schema.find_or_create_by(:name => "Suicide"), :proxy => proxy, :should_mule => true)
-          account.save
-          puts "acount not found but created: #{account.login}"
-        end
-        puts "New Script Thread started for: #{respond[3]}"
-        thread =  Thread.fork{script_thread(client, account)}
-        client.puts "connected:1:#{account.username}"
+      respond = client.gets
+      if respond == nil
+        puts "nil message"
       else
-        puts "hello"
-      end
+      respond = client.gets.split(":")
+        if respond[0] == "computer"
+          #start new thread for computer
+          ip = respond[2]
+          name = respond[3].chomp!
+          computer = Computer.find_or_create_by(:name => name)
+          computer.update(:ip => ip)
+          puts "New Computer Thread started for: #{computer}}"
+          thread = Thread.fork{computer_thread(client, computer)}
+          client.puts "connected:1"
+        elsif respond[0] == "script"
+          # start new thread for script
+          login = respond[3].chomp
+          if Account.where(:login => login) != nil && Account.where(:login => login).length > 0
+            puts "Login: #{login}"
+            account = Account.where(:login => login).first
+            puts "account found:#{account.login}"
+            if !account.created
+              account.update(:created => true)
+              account.save
+            end
+          else
+            ip = respond[2]
+            proxy = Proxy.find_or_initialize_by(:ip => ip)
+            password = respond[4]
+            username = respond[5]
+            world = respond[6]
+            account = Account.new(:login => login, :password => password, :username => username, :world => @worlds.sample,
+                                  :computer => Computer.find_or_create_by(:name => "Suicide"), :account_type => AccountType.where(:name => "SLAVE").first,:mule => Account.where(:login => "ad_da_mig1@hotmail.com").first,
+                                  :schema => Schema.find_or_create_by(:name => "Suicide"), :proxy => proxy, :should_mule => true)
+            account.save
+            puts "acount not found but created: #{account.login}"
+          end
+          puts "New Script Thread started for: #{respond[3]}"
+          thread =  Thread.fork{script_thread(client, account)}
+          client.puts "connected:1:#{account.username}"
+        else
+          puts "hello"
+        end
       puts "joined new thread"
       #if thread != nil
      # thread.join
       #thread = nil
       #end
-
+    end
     end
   rescue Exception => ex
     puts ex

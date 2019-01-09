@@ -251,7 +251,7 @@ class GenerateAccount
       computer = find_available_computers.sample
       if computer != nil
 
-        account_threshold = computer.max_slaves * 5
+        account_threshold = computer.max_slaves +5
         current_amount_of_accounts = get_available_accounts_on_computer(computer)
         if current_amount_of_accounts != nil && current_amount_of_accounts.size < account_threshold
           puts current_amount_of_accounts.size

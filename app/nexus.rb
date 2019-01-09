@@ -623,6 +623,7 @@ def main_thread
     puts error
     puts error.backtrace
     puts "Main loop ended"
+    sleep(10.seconds)
     main_thread
   end
 end

@@ -602,7 +602,7 @@ def main_thread
   begin
   loop do
     puts "Main Thread loop"
-    all_accounts = Account.where(banned: false, created: true).select{|acc| computer_is_available(acc)  && acc.proxy != nil && acc.proxy.is_available && acc.schema != nil && acc.schema.get_suitable_task(acc) != nil && acc.account_type.name == "SLAVE"}
+    all_accounts = Account.where(banned: false, created: true).select{|acc| computer_is_available(acc)  && acc.is_available && acc.proxy != nil && acc.proxy.is_available && acc.schema != nil && acc.schema.get_suitable_task(acc) != nil && acc.account_type.name == "SLAVE"}
     puts "below acc"
     accounts = all_accounts.sort_by{|acc|acc.get_total_level}.reverse
     if accounts != nil && accounts.length > 0

@@ -593,12 +593,16 @@ def create_account_thread
   end
 end
 
+def computer_is_avalable(acc)
+  return acc.computer_id != nil && acc.computer != nil && acc.computer.is_available_to_nexus && acc.computer.can_connect_more_accounts
+end
+
 def main_thread
 
   begin
   loop do
     puts "Main Thread loop"
-    all_accounts = Account.where(banned: false, created: true)
+    all_accounts = Account.where(banned: false, created: true).select{|acc| computer_is_available(acc)  && acc.proxy != nil && acc.proxy.is_available && acc.schema != nil && acc.schema.get_suitable_task(acc) != nil && acc.account_type.name == "SLAVE"}
     puts "below acc"
     accounts = all_accounts.sort_by{|acc|acc.get_total_level}.reverse
     if accounts != nil && accounts.length > 0

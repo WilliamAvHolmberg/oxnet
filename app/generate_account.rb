@@ -244,10 +244,10 @@ class GenerateAccount
             should_do = false
         end
       end
-      if should_do
-        puts "We reached computer threshold. Lets create more accounts"
-        create_backups_for_all_computers
-      end
+      #if should_do
+       # puts "We reached computer threshold. Lets create more accounts"
+       # create_backups_for_all_computers
+      #end
     end
   private
     def create_backups_for_all_computers

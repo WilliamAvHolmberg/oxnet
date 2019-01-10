@@ -604,7 +604,7 @@ def main_thread
     puts "Main Thread loop"
     accounts = Account.where(banned: false, created: true)
     if !accounts.nil? && !accounts.blank?
-      accounts = accounts.select{|acc| computer_is_available(acc)  && acc.is_available && acc.proxy != nil && acc.proxy.is_available && acc.schema != nil && acc.schema.get_suitable_task(acc) != nil && acc.account_type.name == "SLAVE"}
+      accounts = accounts.select{|acc| acc != nil && computer_is_available(acc)  && acc.is_available && acc.proxy != nil && acc.proxy.is_available && acc.schema != nil && acc.schema.get_suitable_task(acc) != nil && acc.account_type.name == "SLAVE"}
     end
     if !accounts.nil? && !accounts.blank?
       accounts = accounts.sort_by{|acc|acc.get_total_level}.reverse

@@ -604,7 +604,7 @@ def main_thread
   loop do
     puts "Main Thread loop"
     accounts = Account.where(banned: false, created: true)
-    if accounts != nil && accounts.length > 0
+    if accounts != nil
       accounts = accounts.select{|acc| computer_is_available(acc)  && acc.is_available && acc.proxy != nil && acc.proxy.is_available && acc.schema != nil && acc.schema.get_suitable_task(acc) != nil && acc.account_type.name == "SLAVE"}
     end
     if accounts != nil && accounts.length > 0

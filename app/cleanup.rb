@@ -96,7 +96,7 @@ def fix_fucked_worlds
 end
 
 def change_worlds_if_unavailable
-  worlds_to_change = [6, 7, 13, 15, 19, 20, 23, 24, 31, 32, 38, 39, 40, 47, 48, 55, 56, 57, 74, 78, 109, 110, 111, 118, 119, 120, 121, 122, 123, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146]
+  worlds_to_change = [71]
   available_worlds = RsWorld.select{|world| !worlds_to_change.include?(world.number.to_i)}
 
   worlds_to_change.each do |world|
@@ -173,5 +173,5 @@ def main_thread
   end
 end
 
-main_thread
+change_worlds_if_unavailable
 #end

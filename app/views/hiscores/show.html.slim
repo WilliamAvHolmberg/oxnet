@@ -6,6 +6,7 @@ table
     tr
       th Username
       th Level
+      th Ingame Time
 
 
   tbody
@@ -14,6 +15,7 @@ table
         td
           a href="accounts/#{account.id}" = account.username
         td = account.stats.where(skill: @hiscore.skill).first.level
+        td = account.get_time_online/60
 
 br
 

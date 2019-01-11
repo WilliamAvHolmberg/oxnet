@@ -189,7 +189,7 @@ body
                     - @mules.each do |mule|
                       tr
                         td = mule.username
-                        td = mule.get_money_deposited
+                        td = mule.get_money_deposited(@mule_logs)
                         td = mule.get_money_withdrawn(@mule_logs)
 
 
@@ -275,16 +275,17 @@ body
               .card
                 .card-header.card-header-warning
                   h4.card-title = "Money made today: #{money_made_today}: PER HOUR --#{money_made_today / (Time.now.hour + 0.1)}"
-                  p.card-category = get_mules
                 .card-body.table-responsive
                   table.table.table-hover
                     thead.text-warning
+                      th Time
                       th Account Name
                       th Amount of Cash
                       th Mule
                     tbody
                       - @mule_logs.each do |log|
                         tr
+                          td = log.created_at
                           td = log.account.username
                           td = log.item_amount
                           td = log.mule

@@ -83,7 +83,7 @@ end
 
 
 def get_mule_withdraw_task_respond(account)
-  mule_withdraw_tasks = MuleWithdrawTask.where(executed: false, created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day, :account => account).select{|task| !task.executed && task.is_relevant  && !task.account!= nil && task.account.id == account.id }
+  mule_withdraw_tasks = MuleWithdrawTask.where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day, :account => account).select{|task| !task.executed && task.is_relevant  && !task.account!= nil && task.account.id == account.id }
   if mule_withdraw_tasks != nil && mule_withdraw_tasks.length > 0
     task = mule_withdraw_tasks[0]
   else

@@ -5,7 +5,7 @@ class NexusController < ApplicationController
     @proxies = Proxy.all
     @connected_computers = Computer.all.select{|comp|comp.is_connected}
 
-    @mule_logs = MuleLog.where("DATE(created_at) = ?", Date.today).sort_by(&:created_at).reverse
+    @mule_logs = MuleLog.where("DATE(created_at) = ?", Date.today)
     @available_accounts = Account.where(banned: false, created: true)
     @active_accounts = @available_accounts.select{|acc| !acc.is_available}
     @mules = @available_accounts.select{|acc| acc.account_type.name == "MULE"}

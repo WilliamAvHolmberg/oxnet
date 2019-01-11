@@ -60,9 +60,6 @@ class Account < ApplicationRecord
 
 
   def get_time_online
-    if time_online.nil?
-      return 0
-    end
     return time_online
   end
 
@@ -95,9 +92,9 @@ class Account < ApplicationRecord
     return money_withdrawn
   end
 
-  def get_money_deposited(mule_logs)
+  def get_money_deposited
     money_deposited = 0
-    mule_logs.select {|log| log.account.username.downcase.include? username.downcase}.each do |log|
+    mule_logs.each do |log|
       money_deposited += log.item_amount
     end
     return money_deposited

@@ -173,5 +173,13 @@ def main_thread
   end
 end
 
-change_worlds_if_unavailable
+def mule_withdraw_tasks
+  mule_withdraw_tasks = MuleWithdrawTask.where(:created_at => (Time.now - 20.minutes..Time.now)).select{|task| !task.executed && task.is_relevant && !task.account!= nil }
+  mule_withdraw_tasks.each do |task|
+    puts Time.now
+    puts task
+    puts Time.now
+  end
+end
+mule_withdraw_tasks
 #end

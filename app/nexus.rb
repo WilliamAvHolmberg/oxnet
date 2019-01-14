@@ -573,7 +573,7 @@ end
 
 def create_account_thread
   last_check = 0
-  interval = 40
+  interval = 60
   generate_account = GenerateAccount.new
   begin
     loop do

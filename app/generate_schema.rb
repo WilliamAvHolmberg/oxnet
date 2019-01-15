@@ -68,14 +68,17 @@ class GenerateSchema
           current_weapon_type = @generate_gear.get_best_weapon_type(account)
           current_armour_type = @generate_gear.get_best_armour_type(account)
           level = account.stats.find_by(skill: task.skill)
-          if level.level.to_i > 15 && (last_gear == nil ||current_weapon_type != last_weapon_type || current_armour_type != last_armour_type)
-            gear = @generate_gear.generate_gear(account)
-            gear.update(name: "#{account}:#{task.name}")
-            puts "generating new gear"
-          else
-            puts "keeping old gear"
-            gear = last_gear
-            gear.update(name: "#{account}:#{task.name}")
+          
+          if level.level.to_i > 15
+            if  (last_gear == nil ||current_weapon_type != last_weapon_type || current_armour_type != last_armour_type)
+              gear = @generate_gear.generate_gear(account)
+              gear.update(name: "#{account}:#{task.name}")
+              puts "generating new gear"
+            else
+              puts "keeping old gear"
+              gear = last_gear
+              gear.update(name: "#{account}:#{task.name}")
+            end
           end
 
 

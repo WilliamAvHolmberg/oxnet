@@ -33,13 +33,13 @@ class Schema < ApplicationRecord
     else
       puts "#{account.username} time is right"
       interval = get_time_interval
-      task = tasks.select{|t| t.should_do(account) && t.task_type.name == "QUEST"}.first
-      if task != nil
-        task.update(:start_time => interval.start_time)
-        task.update(:end_time => interval.end_time)
-        puts "#{account.username} : quest task shall start"
-        return task
-      end
+      #task = tasks.select{|t| t.should_do(account) && t.task_type.name == "QUEST"}.first
+      #if task != nil
+      #  task.update(:start_time => interval.start_time)
+      #  task.update(:end_time => interval.end_time)
+      #  puts "#{account.username} : quest task shall start"
+      #  return task
+      #end
       task = tasks.select{|t| t.should_do(account)}.first
       if task == nil
         puts "nil: for #{account.username}"

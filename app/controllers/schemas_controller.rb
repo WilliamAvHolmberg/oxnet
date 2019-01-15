@@ -4,7 +4,7 @@ class SchemasController < ApplicationController
   # GET /schemas
   # GET /schemas.json
   def index
-    @schemas = Schema.where(name: "RSPEER")
+    @schemas = Schema.where(default: false)
   end
 
   # GET /schemas/1
@@ -104,7 +104,7 @@ class SchemasController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def schema_params
-      params.require(:schema).permit(:name, :task_id)
+      params.require(:schema).permit(:name, :task_id, :default)
     end
 
 

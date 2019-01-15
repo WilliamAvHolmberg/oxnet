@@ -181,5 +181,18 @@ def mule_withdraw_tasks
     puts Time.now
   end
 end
-mule_withdraw_tasks
+
+def transfer_accounts
+  new_computer = Computer.all.select{|comp| comp.name == "William"}.first
+  computers = Computer.all
+  computers.each do |comp|
+    accounts = comp.accounts.where(banned: false, created: true).select{|acc|acc.account_type.name != "MULE"}
+    accounts.each do |acc|
+      acc.update(computer: new_computer)
+      acc.save
+    end
+  end
+end
+
+transfer_accounts
 #end

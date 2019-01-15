@@ -23,7 +23,7 @@ class TasksController < ApplicationController
     @items = RsItem.all
     @break_conditions = BreakCondition.all
     @time_intervalls = TimeInterval.all
-    @schemas = Schema.all
+    @schemas = Schema.where(default: false)
     3.times do
       @task.requirements.build
     end

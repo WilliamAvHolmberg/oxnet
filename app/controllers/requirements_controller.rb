@@ -15,6 +15,8 @@ class RequirementsController < ApplicationController
   # GET /requirements/new
   def new
     @requirement = Requirement.new
+    @tasks = Array.new
+    Schema.where(default: false).each{|schema| @tasks.append(*schema.tasks)}
   end
 
   # GET /requirements/1/edit
@@ -25,7 +27,6 @@ class RequirementsController < ApplicationController
   # POST /requirements.json
   def create
     @requirement = Requirement.new(requirement_params)
-
     respond_to do |format|
       if @requirement.save
         format.html { redirect_to @requirement, notice: 'Requirement was successfully created.' }

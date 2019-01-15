@@ -147,7 +147,7 @@ class GenerateAccount
       email = generate_email(name)
       world = get_random_world
       password = "ugot00wned2"
-      schema = Schema.where(name: "RSPEER").first #generate schema in the future
+      schema = Schema.where(default: false).sample #generate schema in the future
       mule = Account.where(username: "SirJolefon").first #not needed. random
       #proxy = find_available_proxy
       account = Account.new(:login => email, :password => password, :username => name, :world => world.number,

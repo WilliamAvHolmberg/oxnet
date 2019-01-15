@@ -10,5 +10,5 @@
   .field
     = f.label :level
     = f.number_field :level
-  = collection_select(:requirement, :task_id, Task.where(schema: Schema.where(name: "RSPEER").first), :id, :name)
+  = collection_select(:requirement, :task_id, @tasks, :id, :name)
   .actions = f.submit

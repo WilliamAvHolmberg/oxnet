@@ -194,5 +194,35 @@ def transfer_accounts
   end
 end
 
-transfer_accounts
+def add_eco_systems
+  eco_system = EcoSystem.find(1)
+  proxies = Proxy.all
+  puts "start proxy"
+  proxies.each do |proxy|
+    proxy.update(eco_system: eco_system)
+    proxy.save
+  end
+
+  puts "start comp"
+  computers = Computer.all
+  computers.each do |comp|
+    comp.update(eco_system: eco_system)
+    comp.save
+  end
+
+  puts "start acc"
+  accounts = Account.where(banned: false, created: true)
+  accounts.each do |acc|
+    acc.update(eco_system: eco_system)
+    acc.save
+  end
+end
+def test_generate_account
+  ga = GenerateAccount.new
+  suicide = Computer.find(16)
+  proxy = ga.get_random_proxy(suicide.eco_system)
+  ga.create_account(suicide, proxy)
+end
 #end
+#
+test_generate_account

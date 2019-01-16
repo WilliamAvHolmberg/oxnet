@@ -1,0 +1,12 @@
+= form_for @eco_system do |f|
+  - if @eco_system.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@eco_system.errors.count, "error")} prohibited this eco_system from being saved:"
+      ul
+        - @eco_system.errors.full_messages.each do |message|
+          li = message
+
+  .field
+    = f.label :name
+    = f.text_field :name
+  .actions = f.submit

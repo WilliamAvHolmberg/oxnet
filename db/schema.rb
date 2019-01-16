@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_14_143026) do
+ActiveRecord::Schema.define(version: 2019_01_16_150355) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,8 +39,10 @@ ActiveRecord::Schema.define(version: 2019_01_14_143026) do
     t.bigint "rs_world_id"
     t.datetime "last_seen"
     t.integer "time_online"
+    t.bigint "eco_system_id"
     t.index ["account_type_id"], name: "index_accounts_on_account_type_id"
     t.index ["computer_id"], name: "index_accounts_on_computer_id"
+    t.index ["eco_system_id"], name: "index_accounts_on_eco_system_id"
     t.index ["mule_id"], name: "index_accounts_on_mule_id"
     t.index ["proxy_id"], name: "index_accounts_on_proxy_id"
     t.index ["rs_world_id"], name: "index_accounts_on_rs_world_id"
@@ -68,7 +70,15 @@ ActiveRecord::Schema.define(version: 2019_01_14_143026) do
     t.integer "max_slaves", default: 10
     t.datetime "last_seen", default: "2019-01-08 18:20:48"
     t.integer "time_online", default: 0
+    t.bigint "eco_system_id"
+    t.index ["eco_system_id"], name: "index_computers_on_eco_system_id"
     t.index ["name"], name: "index_computers_on_name", unique: true
+  end
+
+  create_table "eco_systems", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "gears", force: :cascade do |t|
@@ -198,7 +208,10 @@ ActiveRecord::Schema.define(version: 2019_01_14_143026) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "port"
+    t.bigint "eco_system_id"
+    t.datetime "last_used"
     t.index ["account_id"], name: "index_proxies_on_account_id"
+    t.index ["eco_system_id"], name: "index_proxies_on_eco_system_id"
   end
 
   create_table "quest_stats", force: :cascade do |t|
@@ -365,9 +378,11 @@ ActiveRecord::Schema.define(version: 2019_01_14_143026) do
 
   add_foreign_key "accounts", "account_types"
   add_foreign_key "accounts", "computers"
+  add_foreign_key "accounts", "eco_systems"
   add_foreign_key "accounts", "proxies"
   add_foreign_key "accounts", "rs_worlds"
   add_foreign_key "accounts", "schemas"
+  add_foreign_key "computers", "eco_systems"
   add_foreign_key "hiscores", "skills"
   add_foreign_key "instructions", "accounts"
   add_foreign_key "instructions", "instruction_types"
@@ -377,6 +392,7 @@ ActiveRecord::Schema.define(version: 2019_01_14_143026) do
   add_foreign_key "mule_withdraw_tasks", "accounts"
   add_foreign_key "mule_withdraw_tasks", "areas"
   add_foreign_key "mule_withdraw_tasks", "task_types"
+  add_foreign_key "proxies", "eco_systems"
   add_foreign_key "quest_stats", "accounts"
   add_foreign_key "quest_stats", "quests"
   add_foreign_key "requirements", "skills"

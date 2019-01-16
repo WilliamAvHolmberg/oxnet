@@ -2,6 +2,7 @@ class Computer < ApplicationRecord
   validates_uniqueness_of :name
   has_many :logs
   has_many :accounts
+  belongs_to :eco_system
 
 
 

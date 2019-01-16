@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :eco_systems
   resources :hiscores
   resources :rs_worlds
   resources :mule_logs

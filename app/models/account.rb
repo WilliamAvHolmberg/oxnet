@@ -13,6 +13,7 @@ class Account < ApplicationRecord
   belongs_to :mule, :class_name => "Account", foreign_key: "mule_id", optional: true
   belongs_to :proxy
   belongs_to :rs_world
+  belongs_to :eco_system
 
 
   validates_uniqueness_of :login

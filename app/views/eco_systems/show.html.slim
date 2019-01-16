@@ -1,0 +1,15 @@
+p#notice = notice
+
+p
+  strong Accounts:
+  = @eco_system.accounts
+p
+  strong Computers:
+  = @eco_system.computers
+p
+  strong Proxies:
+  = @eco_system.proxies
+
+=> link_to 'Edit', edit_eco_system_path(@eco_system)
+'|
+=< link_to 'Back', eco_systems_path

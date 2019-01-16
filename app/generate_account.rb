@@ -143,6 +143,10 @@ class GenerateAccount
 
   public
     def create_account(computer, proxy)
+      if proxy == nil
+        puts "No proxy found for this ecosystem"
+        return
+      end
       name = generate_name
       email = generate_email(name)
       world = get_random_world
@@ -167,6 +171,9 @@ class GenerateAccount
         account.quest_stats.destroy_all
       end
       account.save
+      #TODO set proxy time
+     # proxy.last_used = Time.now
+      #proxy.save!
       ins = Instruction.new(:instruction_type_id => InstructionType.select{|ins| ins.name == "CREATE_ACCOUNT"}.first.id, :computer_id => computer.id, :account_id => account.id, :script_id => Script.first.id)
       ins.save
       Stat.where(account_id: account.id).destroy_all
@@ -184,8 +191,8 @@ class GenerateAccount
     end
   end
 
-  def get_least_used_proxies
-    available_proxies = Proxy.all.select{|proxy| proxy.is_available}
+  def get_least_used_proxies(eco_system)
+    available_proxies = Proxy.where(eco_system: eco_system).select{|proxy| proxy.is_available}
 
     proxies = Array.new
     current_lowest = 10000
@@ -202,8 +209,8 @@ class GenerateAccount
     return proxies
   end
 
-  def get_random_proxy
-    return get_least_used_proxies.sample
+  def get_random_proxy(eco_system)
+    return get_least_used_proxies(eco_system).sample
   end
   #todo fix size (13 atm)
   public
@@ -220,7 +227,7 @@ class GenerateAccount
       puts accounts_to_make
       if accounts_to_make > 0
         accounts_to_make.times do
-          proxy = get_random_proxy
+          proxy = get_random_proxy(computer.eco_system)
           create_account(computer, proxy)
         end
         next_check = (accounts_to_make + 1) * 45
@@ -238,7 +245,7 @@ class GenerateAccount
         current_amount_of_accounts = get_available_accounts_on_computer(computer)
         if should_do && current_amount_of_accounts != nil && current_amount_of_accounts.size < account_threshold
           puts current_amount_of_accounts.size
-          proxy = get_random_proxy
+          proxy = get_random_proxy(computer.eco_system)
           create_account(computer, proxy)
             #puts "lets create acc for #{computer.name}"
             should_do = false

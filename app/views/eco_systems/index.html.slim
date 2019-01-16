@@ -1,0 +1,27 @@
+h1 Listing eco_systems
+
+table
+  thead
+    tr
+      th Name
+      th Accounts
+      th Computers
+      th Proxies
+      th
+      th
+      th
+
+  tbody
+    - @eco_systems.each do |eco_system|
+      tr
+        td = eco_system.name
+        td = eco_system.accounts.size
+        td = eco_system.computers.size
+        td = eco_system.proxies.size
+        td = link_to 'Show', eco_system
+        td = link_to 'Edit', edit_eco_system_path(eco_system)
+        td = link_to 'Destroy', eco_system, data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+
+= link_to 'New Eco system', new_eco_system_path

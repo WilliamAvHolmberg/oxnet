@@ -15,4 +15,7 @@
   .field
     = f.label :name
     = f.text_field :name
+  .field
+    = f.label :eco_system
+    = collection_select(:computer, :eco_system_id, EcoSystem.all, :id, :name)
   .actions = f.submit

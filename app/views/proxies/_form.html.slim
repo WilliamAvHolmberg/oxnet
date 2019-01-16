@@ -17,4 +17,7 @@
   p = form.text_field :username
   p = form.label      :password
   p = form.text_field :password
+  .field
+    = form.label :eco_system
+    = collection_select(:proxy, :eco_system_id, EcoSystem.all, :id, :name)
   p = form.submit

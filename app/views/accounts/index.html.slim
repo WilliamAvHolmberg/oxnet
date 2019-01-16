@@ -2,6 +2,7 @@ h1 Accounts
 table
   tr
     th ID
+    th EcoSystem
     th Login
     th Password
     th World
@@ -18,6 +19,7 @@ table
   - @available_accounts.each do |account|
     tr
       th = account.id
+      th = account.eco_system.name
       th
         a href="/accounts/#{account.id}" = account.login
       th = account.password

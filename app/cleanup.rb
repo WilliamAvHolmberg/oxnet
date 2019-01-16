@@ -223,6 +223,17 @@ def test_generate_account
   proxy = ga.get_random_proxy(suicide.eco_system)
   ga.create_account(suicide, proxy)
 end
+
+def transfer_accounts
+  old_eco = EcoSystem.find(1)
+  new_eco = EcoSystem.find(2)
+  proxy = Proxy.find(145)
+  accounts = Account.where(banned: false, created: true, eco_system: old_eco, proxy: proxy)
+  accounts.each do |acc|
+    acc.update(eco_system: new_eco)
+    acc.save
+  end
+end
 #end
 #
-test_generate_account
+transfer_accounts

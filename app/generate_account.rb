@@ -154,7 +154,7 @@ class GenerateAccount
       schema = Schema.where(default: false).sample #generate schema in the future
       mule = Account.where(username: "SirJolefon").first #not needed. random
       #proxy = find_available_proxy
-      account = Account.new(:login => email, :password => password, :username => name, :world => world.number,
+      account = Account.new(:eco_system => computer.eco_system, :login => email, :password => password, :username => name, :world => world.number,
                             :computer => computer, :account_type => AccountType.where(:name => "SLAVE").first,:mule => mule,
                             :schema => schema, :proxy => proxy, :should_mule => true, :created => false, :rs_world => world)
 

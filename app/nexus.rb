@@ -356,6 +356,15 @@ def get_woodcutting_task_respond(task, account)
     level_goal = task.break_after
     puts task_duration
   end
+  if task.inventory != nil then inventory = task.inventory.get_parsed_message else inventory ="none" end
+  log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
+  log.save
+  puts "sending resp"
+  res = "task_respond:1:#{task_type}:#{task.id}:#{bank_area}:#{action_area}:#{axeID}:#{axe_name}:#{tree_name}:#{break_condition}:#{task_duration}:#{level_goal}:#{get_gear(task)}"
+  return res
+end
+
+def get_gear(task)
   if task.gear.head != nil then head = task.gear.head.formated_name else head = "none" end
   if task.gear.cape != nil then cape = task.gear.cape.formated_name else cape = "none" end
   if task.gear.neck != nil then neck = task.gear.neck.formated_name else neck = "none" end
@@ -368,12 +377,7 @@ def get_woodcutting_task_respond(task, account)
   if task.gear.ring != nil then ring = task.gear.ring.formated_name else ring = "none" end
   if task.gear.ammunition != nil then ammunition = task.gear.ammunition.formated_name else ammunition = "none" end
   if task.gear.ammunition_amount != nil then ammunition_amount= task.gear.ammunition_amount else "none" end
-  if task.inventory != nil then inventory = task.inventory.get_parsed_message else inventory ="none" end
-  log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
-  log.save
-  puts "sending resp"
-  res = "task_respond:1:#{task_type}:#{task.id}:#{bank_area}:#{action_area}:#{axeID}:#{axe_name}:#{tree_name}:#{break_condition}:#{task_duration}:#{level_goal}:#{head}:#{cape}:#{neck}:#{weapon}:#{chest}:#{shield}:#{legs}:#{hands}:#{feet}:#{ring}:#{ammunition}:#{ammunition_amount}"
-  return res
+  return "#{head}:#{cape}:#{neck}:#{weapon}:#{chest}:#{shield}:#{legs}:#{hands}:#{feet}:#{ring}:#{ammunition}:#{ammunition_amount}"
 end
 
 

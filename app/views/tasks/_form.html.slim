@@ -35,6 +35,12 @@
         = collection_select(:task, :schema_id, @schemas, :id, :name)
       - else
         = "Please create a area before creating the task"
-
+  #requirements
+    = f.fields_for :requirements do |req_form|
+      = req_form.collection_select(:skill_id, Skill.all, :id, :name)
+      .field
+        = req_form.label :level
+        = req_form.number_field :level
+        = req_form.check_box '_destroy'
 
   .actions = f.submit

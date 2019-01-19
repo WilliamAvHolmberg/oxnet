@@ -19,7 +19,7 @@ table
   - @available_accounts.each do |account|
     tr
       th = account.id
-      th = account.eco_system.name
+      th = account.eco_system.name if account.eco_system != nil
       th
         a href="/accounts/#{account.id}" = account.login
       th = account.password

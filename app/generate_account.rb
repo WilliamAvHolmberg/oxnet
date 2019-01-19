@@ -83,7 +83,7 @@ class GenerateAccount
     end
   private
     def get_least_used_worlds
-      rs_worlds = RsWorld.all
+      rs_worlds = RsWorld.where(members: false)
       worlds = Array.new
       current_lowest = 10000
       rs_worlds.each do |world|
@@ -235,6 +235,22 @@ class GenerateAccount
       end
     end
     return 10
+  end
+  public
+  def create_accounts_for_computer(computer)
+    should_do = true
+    account_threshold = computer.max_slaves
+    current_amount_of_accounts = get_available_accounts_on_computer(computer)
+    if should_do && current_amount_of_accounts != nil && current_amount_of_accounts.size < account_threshold
+      puts current_amount_of_accounts.size
+      proxy = get_random_proxy(computer.eco_system)
+      create_account(computer, proxy)
+      #puts "lets create acc for #{computer.name}"
+    end
+    #if should_do
+    # puts "We reached computer threshold. Lets create more accounts"
+    # create_backups_for_all_computers
+    #end
   end
   public
     def create_accounts_for_all_computers

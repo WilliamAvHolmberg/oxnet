@@ -52,4 +52,10 @@
   - @available_proxies = Proxy.all
   p = form.label :proxy
   = collection_select(nil, :proxy_id, @available_proxies, :id, :location)
+  .field
+    = form.label :eco_system
+    = collection_select(:account, :eco_system_id, EcoSystem.all, :id, :name)
+  .field
+    = form.label :world
+    = collection_select(:account, :rs_world_id, RsWorld.all, :id, :number)
   p = form.submit

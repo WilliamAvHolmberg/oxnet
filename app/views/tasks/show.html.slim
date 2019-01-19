@@ -38,8 +38,8 @@ h1 Reqs
 - @task.requirements.each do |req|
   p = req.skill.name
   p = req.level
-  = link_to 'Destroy', req, data: { confirm: 'Are you sure?' }, method: :delete
 
 => link_to 'Edit', edit_task_path(@task)
 '|
 =< link_to 'Back', tasks_path
+

@@ -5,7 +5,7 @@ class TasksController < ApplicationController
   # GET /tasks.json
 
   def index
-    @tasks = Task.search(params[:search])
+    @tasks = Task.where(schema: Schema.where(name: "RSPEER").first)
   end
 
   # GET /tasks/1
@@ -24,9 +24,7 @@ class TasksController < ApplicationController
     @break_conditions = BreakCondition.all
     @time_intervalls = TimeInterval.all
     @schemas = Schema.where(default: false)
-    3.times do
-      @task.requirements.build
-    end
+    3.times {@task.requirements.build}
   end
 
   # GET /tasks/1/edit
@@ -43,7 +41,6 @@ class TasksController < ApplicationController
   # POST /tasks.json
   def create
     @task = Task.new(task_params)
-
     respond_to do |format|
       if @task.save
         format.html { redirect_to @task, notice: 'Task was successfully created.' }
@@ -104,6 +101,7 @@ class TasksController < ApplicationController
     def task_params
       params.require(:task).permit(:name, :bank_area_id, :action_area_id, :task_type_id, :axe_id, :treeName,
                                    :break_condition_id, :break_after, :start_time, :end_time, :schema_id, :monster_name,
-                                   :gear_id, :food_id, :inventory_id, :loot_threshold, :skill_id, :quest_id, :ores, :search)
+                                   :gear_id, :food_id, :inventory_id, :loot_threshold, :skill_id, :quest_id, :ores, :search,
+                                   :requirements_attributes => [:level, :skill_id, :task])
     end
 end

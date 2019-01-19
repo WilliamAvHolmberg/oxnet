@@ -21,6 +21,8 @@ class RequirementsController < ApplicationController
 
   # GET /requirements/1/edit
   def edit
+    @tasks = Array.new
+    Schema.where(default: false).each{|schema| @tasks.append(*schema.tasks)}
   end
 
   # POST /requirements

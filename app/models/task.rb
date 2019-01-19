@@ -13,7 +13,7 @@ class Task < ApplicationRecord
   has_many :task_logs, dependent: :destroy
   has_many :requirements, dependent: :destroy
 
-  accepts_nested_attributes_for :requirements
+  accepts_nested_attributes_for :requirements, allow_destroy: true
 
   acts_as_list :scope => :schema
 

@@ -85,6 +85,6 @@ class AccountsController < ApplicationController
 
   private
   def account_params
-    params.require(:account).permit(:login, :password, :proxy_id, :schema_id, :world, :account_type_id, :username, :banned, :should_mule, :computer_id, :mule_id, :created)
+    params.require(:account).permit(:rs_world_id, :eco_system_id, :login, :password, :proxy_id, :schema_id, :world, :account_type_id, :username, :banned, :should_mule, :computer_id, :mule_id, :created)
   end
 end

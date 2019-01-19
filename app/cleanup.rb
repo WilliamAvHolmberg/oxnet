@@ -228,12 +228,32 @@ def transfer_accounts
   old_eco = EcoSystem.find(1)
   new_eco = EcoSystem.find(2)
   proxy = Proxy.find(145)
-  accounts = Account.where(banned: false, created: true, eco_system: old_eco, proxy: proxy)
+  accounts = Account.where(banned: false, created: true, eco_system: new_eco, proxy: proxy)
   accounts.each do |acc|
-    acc.update(eco_system: new_eco)
+    acc.update(eco_system: old_eco)
     acc.save
   end
 end
+
+def transfer_schemas
+  accounts = Account.where(banned: false, created: true).where(created_at: Time.now.beginning_of_day..Time.now.end_of_day)
+  new_schema = Schema.where(name: "RSPEER").first
+
+  accounts.each do |acc|
+    acc.update(schema: new_schema)
+    acc.save
+  end
+end
+
+def get_hampus
+  time = Time.parse("17/1/2019 0:00:00")
+  computer = Computer.where(name: "BATCH1").first
+  accounts = Account.where(created: true, computer: computer, created_at: time - 2.days..Time.now.end_of_day)
+  money_made = 0
+  accounts.each do |acc|
+    money_made += acc.get_money_deposited(acc.mule_logs)
+  end
+  puts money_made
+end
 #end
-#
-transfer_accounts
+get_hampus

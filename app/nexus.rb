@@ -415,6 +415,7 @@ def computer_thread(client, computer)
   end
   rescue
     puts "Computer Thread for: #{client} has been closed"
+    client.close
   end
 end
 
@@ -572,6 +573,7 @@ def script_thread(client, account)
   end
   rescue
     puts "Script Thread for: #{client} has been closed"
+    client.close
   end
 end
 

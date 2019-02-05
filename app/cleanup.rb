@@ -245,6 +245,29 @@ def transfer_schemas
   end
 end
 
+def get_suicide
+  time = Time.parse("28/1/2019 0:00:00")
+  computer = Computer.where(name: "Suicide").first
+  accounts = Account.where(created: true, computer: computer, created_at: time..Time.now.end_of_day)
+  money_made = 0
+  accounts.each do |acc|
+    money_made += acc.get_money_deposited(acc.mule_logs)
+  end
+  puts money_made
+end
+def get_brandon
+  time = Time.parse("17/1/2019 0:00:00")
+  computer = Computer.where(name: "Brandon").first
+  accounts = Account.where(created: true, computer: computer, created_at: time..Time.now.end_of_day)
+  money_made = 0
+  accounts.each do |acc|
+    money_made += acc.get_money_deposited(acc.mule_logs)
+  end
+  puts money_made
+end
+
+
+
 def get_hampus
   time = Time.parse("17/1/2019 0:00:00")
   computer = Computer.where(name: "BATCH1").first
@@ -255,5 +278,49 @@ def get_hampus
   end
   puts money_made
 end
-#end
-get_hampus
+def get_money_made(accounts)
+  money_made = 0
+  accounts.each do |acc|
+    money_made += acc.get_money_deposited(acc.mule_logs)
+  end
+  return money_made
+end
+def clear_suicide
+  accounts = Account.where(banned: false, created: true, computer: 14).select{|acc| !acc.shall_do_task}
+  accounts.each do |acc|
+    puts acc.username
+    puts acc.last_seen
+    acc.destroy
+  end
+end
+def get_daily(name)
+  time = DateTime.parse("1/1/2019 0:00:00")
+  computer = Computer.where(name: name).first
+  puts DateTime.now - time
+  amount_of_loops = (DateTime.now.end_of_day - time).days
+  puts amount_of_loops
+  money_made = 0
+  amount_of_loops.times do
+    accounts = Account.where(created: true, computer: computer, created_at: time..time+1.days)
+    money_made_day = get_money_made(accounts)
+    puts "Money made #{time}: #{money_made_day}"
+    money_made += money_made_day
+    time = time + 1.days
+  end
+  puts "total money made: #{money_made}"
+  average = money_made/ amount_of_loops
+  acc_average = average/40
+  puts "average: #{average}, acc average: #{acc_average}"
+end
+
+def get_cool
+  accounts = Account.where(banned: true, created: true)
+  money_made =0
+  accounts.each do |acc|
+    money = acc.get_money_deposited
+    puts "#{acc.username}:#{money}"
+    money_made += money;
+  end
+  puts money_made
+end
+get_daily("ACCOUNT")

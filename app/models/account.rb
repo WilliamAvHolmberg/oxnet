@@ -93,6 +93,15 @@ class Account < ApplicationRecord
     return money_withdrawn
   end
 
+
+  def get_total_money_deposited
+    money_deposited = 0
+    mule_logs.select {|log| log.account.username.downcase.include? username.downcase}.each do |log|
+      money_deposited += log.item_amount
+    end
+    return money_deposited
+  end
+
   def get_money_deposited(mule_logs)
     money_deposited = 0
     mule_logs.select {|log| log.account.username.downcase.include? username.downcase}.each do |log|
@@ -100,6 +109,8 @@ class Account < ApplicationRecord
     end
     return money_deposited
   end
+
+
 
   def get_total_level
     total_level = 0

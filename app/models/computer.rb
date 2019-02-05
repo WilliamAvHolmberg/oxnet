@@ -49,4 +49,6 @@ class Computer < ApplicationRecord
   def can_connect_more_accounts
     return max_slaves > get_connected_accounts.size
   end
+
+
 end

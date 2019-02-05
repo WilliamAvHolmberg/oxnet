@@ -8,6 +8,7 @@ table
       th Level
       th Created
       th Time Online
+      th Computer
 
 
   tbody
@@ -18,6 +19,7 @@ table
         td = account.stats.where(skill: @hiscore.skill).first.level
         td = account.created_at
         td = account.get_time_online
+        td = account.computer.name
 
 br
 

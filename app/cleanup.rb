@@ -294,10 +294,9 @@ def clear_suicide
   end
 end
 def get_daily(name)
-  time = DateTime.parse("1/1/2019 0:00:00")
+  time = DateTime.parse("1/2/2019 0:00:00")
   computer = Computer.where(name: name).first
-  puts DateTime.now - time
-  amount_of_loops = (DateTime.now.end_of_day - time).days
+  amount_of_loops = (DateTime.tomorrow - time).to_i
   puts amount_of_loops
   money_made = 0
   amount_of_loops.times do
@@ -309,7 +308,7 @@ def get_daily(name)
   end
   puts "total money made: #{money_made}"
   average = money_made/ amount_of_loops
-  acc_average = average/40
+  acc_average = average/computer.max_slaves
   puts "average: #{average}, acc average: #{acc_average}"
 end
 
@@ -319,8 +318,14 @@ def get_cool
   accounts.each do |acc|
     money = acc.get_money_deposited
     puts "#{acc.username}:#{money}"
-    money_made += money;
+    money_made += money
   end
   puts money_made
 end
-get_daily("ACCOUNT")
+
+def find_acc
+  account = Account.where(username: "RunRestV")
+  puts account.first.id
+end
+#get_daily("Brandon")
+find_acc

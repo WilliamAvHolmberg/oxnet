@@ -327,5 +327,29 @@ def find_acc
   account = Account.where(username: "RunRestV")
   puts account.first.id
 end
+
+def computer_is_available(acc)
+  return acc.computer_id != nil && acc.computer != nil && acc.computer.is_available_to_nexus && acc.computer.can_connect_more_accounts
+end
+
+
+def test
+  accounts = Account.where(banned: false, created: true)
+  if !accounts.nil? && !accounts.blank?
+    accounts = accounts.select{|acc| acc != nil && computer_is_available(acc)  && acc.is_available && acc.proxy != nil && acc.proxy.is_available && acc.schema != nil && acc.schema.get_suitable_task(acc) != nil && acc.account_type.name == "SLAVE"}
+  end
+  if !accounts.nil? && !accounts.blank?
+    accounts = accounts.sort_by{|acc|acc.get_total_level}.reverse
+    accounts.each do |acc|
+      computer = acc.computer if acc.computer_id != nil
+      if computer != nil && computer.is_available_to_nexus && computer.can_connect_more_accounts
+        #Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save
+        #Log.new(computer_id: computer.id, account_id: acc.id, text: "Instruction created")
+        puts "instruction for #{acc.username} to create new client at #{acc.computer.name}"
+      end
+    end
+  end
+end
 #get_daily("Brandon")
-find_acc
+#find_acc
+test

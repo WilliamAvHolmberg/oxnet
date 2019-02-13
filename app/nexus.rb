@@ -579,7 +579,7 @@ end
 
 def create_account_thread
   last_check = 0
-  interval = 60
+  interval = 90
   generate_account = GenerateAccount.new
   begin
     loop do
@@ -620,7 +620,6 @@ def main_thread
       Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save
           Log.new(computer_id: computer.id, account_id: acc.id, text: "Instruction created")
           puts "instruction for #{acc.username} to create new client at #{acc.computer.name}"
-          sleep(3.seconds)
       end
       end
     end

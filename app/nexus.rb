@@ -390,6 +390,7 @@ def get_gear(task)
     feet = "none"
     ring = "none"
     ammunition = "none"
+    ammunition_amount = "none"
   end
   return "#{head}:#{cape}:#{neck}:#{weapon}:#{chest}:#{shield}:#{legs}:#{hands}:#{feet}:#{ring}:#{ammunition}:#{ammunition_amount}"
 end

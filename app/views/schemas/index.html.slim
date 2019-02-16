@@ -4,6 +4,7 @@ table
   thead
     tr
       th Name
+      th Default
       th
       th
       th
@@ -12,6 +13,7 @@ table
     - @schemas.each do |schema|
       tr
         td = schema.name
+        td = schema.default
         td = link_to 'Show', schema
         td = link_to 'Edit', edit_schema_path(schema)
         td = link_to 'Copy', copy_schema_path(schema)

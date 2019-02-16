@@ -25,11 +25,11 @@ $(document).ready ->
   $("#task_task_type_id").on "change", ->
     console.log("hi")
     console.log($('#task_task_type_id option:selected').val())
-    if $('#task_task_type_id option:selected').val() == "1"
+    if $('#task_task_type_id option:selected').val() == "3"
       $('#wc_task').show()
     else
       $('#wc_task').hide()
-    if $('#task_task_type_id option:selected').val() == "3"
+    if $('#task_task_type_id option:selected').val() == "4"
       $('#combat_task').show()
     else
       $('#combat_task').hide()

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_16_131745) do
+ActiveRecord::Schema.define(version: 2019_02_16_173636) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(version: 2019_02_16_131745) do
     t.datetime "last_seen"
     t.integer "time_online"
     t.bigint "eco_system_id"
+    t.integer "money_made"
     t.index ["account_type_id"], name: "index_accounts_on_account_type_id"
     t.index ["computer_id"], name: "index_accounts_on_computer_id"
     t.index ["eco_system_id"], name: "index_accounts_on_eco_system_id"

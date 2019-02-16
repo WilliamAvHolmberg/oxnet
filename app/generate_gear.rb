@@ -27,13 +27,7 @@ class GenerateGear
 
 
   def get_slot(slot)
-    if slot == "body"
-      return "chest"
-    end
 
-    if slot == "ammo"
-      return "ammunition"
-    end
     return slot
   end
 
@@ -47,7 +41,7 @@ class GenerateGear
       if slot == "weapon"
         item = get_best_weapon(account)
       elsif slot == "neck"
-        item = RsItem.find(8982) #amulet of str
+        item = RsItem.find(1712) #amulet of str
       else
         item = get_best_armour(account,slot)
       end
@@ -103,17 +97,6 @@ class GenerateGear
 
 
 
-  private
-  def get_slot(slot)
-    if slot == "body"
-      return "chest"
-    end
-
-    if slot == "ammo"
-      return "ammunition"
-    end
-    return slot
-  end
 
 
 

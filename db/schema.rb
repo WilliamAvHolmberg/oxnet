@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_16_150355) do
+ActiveRecord::Schema.define(version: 2019_02_16_131745) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -264,6 +264,8 @@ ActiveRecord::Schema.define(version: 2019_01_16_150355) do
     t.integer "attack_requirement", default: 99
     t.integer "strength_requirement", default: 99
     t.integer "range_requirement", default: 99
+    t.boolean "noted"
+    t.integer "magic_requirement", default: 99
   end
 
   create_table "rs_worlds", force: :cascade do |t|

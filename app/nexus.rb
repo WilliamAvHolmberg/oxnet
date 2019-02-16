@@ -429,7 +429,7 @@ def updateAccountLevels(string, account)
     level = intern_parse[1]
     puts name
     puts level
-    account_level = Stat.find_or_initialize_by(account_id: account.id, skill: Skill.find_by(name: name))
+    account_level = Stat.find_or_initialize_by(account_id: account.id, skill: Skill.find_or_initialize_by(name: name))
     account_level.update(level: level)
     account_level.save
   end
@@ -448,7 +448,7 @@ def updateAccountQuests(string, account)
     puts name == nil
     if completed != nil && name != nil
       puts "in here"
-    account_quest = QuestStat.find_or_initialize_by(account_id: account.id, quest: Quest.find_by(name: name))
+    account_quest = QuestStat.find_or_initialize_by(account_id: account.id, quest: Quest.find_or_initialize_by(name: name))
       if completed.include? "true"
         account_quest.update(:completed => true)
       else

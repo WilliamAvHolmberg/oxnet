@@ -5,7 +5,7 @@ class TasksController < ApplicationController
   # GET /tasks.json
 
   def index
-    @tasks = Task.where(schema: Schema.where(name: "RSPEER").first)
+    @tasks = Task.all
   end
 
   # GET /tasks/1

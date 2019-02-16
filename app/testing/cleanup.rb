@@ -352,4 +352,4 @@ def test
 end
 #get_daily("Brandon")
 #find_acc
-test
+Account.find(24).update(world: 469)

@@ -655,9 +655,9 @@ def main_thread
   end
 end
 
-if !ActiveRecord::Base.connected? || !ActiveRecord::Base.connection.active?
-  ActiveRecord::Base.establish_connection(db_configuration["development"])
-end
+#if !ActiveRecord::Base.connected? || !ActiveRecord::Base.connection.active?
+#  ActiveRecord::Base.establish_connection(db_configuration["development"])
+#end
 
 
 

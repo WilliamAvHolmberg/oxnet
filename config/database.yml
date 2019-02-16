@@ -32,7 +32,7 @@ development:
   host: 193.108.117.105
   username: wavh
   password: 'Lifeunixbook123'
-  port: 6432
+  port: 5432
 
 
   # The specified database role being used to connect to postgres.

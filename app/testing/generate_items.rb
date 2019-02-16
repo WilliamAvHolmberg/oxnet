@@ -67,30 +67,32 @@ def set_requirements(item, doc)
     item.update(magic_requirement: 1)
 
     reqs = doc.parsed_response['equipment']["skill_reqs"]
-    reqs.each do |req|
-      skill = req['skill']
-      level = req['level']
-      if skill == "attack"
-        item.update(attack_requirement: level)
-      end
-      if skill == "strength"
-        item.update(strength_requirement: level)
-      end
-      if skill == "defence"
-        item.update(defence_requirement: level)
-      end
-      if skill == "ranged"
-        item.update(range_requirement: level)
-      end
-      if skill == "magic"
-        item.update(magic_requirement: level)
+    if reqs != nil
+      reqs.each do |req|
+        skill = req['skill']
+        level = req['level']
+        if skill == "attack"
+          item.update(attack_requirement: level)
+        end
+        if skill == "strength"
+          item.update(strength_requirement: level)
+        end
+        if skill == "defence"
+          item.update(defence_requirement: level)
+        end
+        if skill == "ranged"
+          item.update(range_requirement: level)
+        end
+        if skill == "magic"
+          item.update(magic_requirement: level)
+        end
       end
     end
     item.save
   end
 
 end
-def test_item(id)
+def add_item(id)
   doc = HTTParty.get("https://www.osrsbox.com/osrsbox-db/items-json/#{id}.json")
 
 
@@ -114,8 +116,11 @@ def test_item(id)
 
 end
 
+def add_items(min,max)
+  (min..max).each do |i|
+    puts i
+    add_item(i)
+  end
+end
 
-
-
-
-test_item(4151)
+add_items(0,14000)

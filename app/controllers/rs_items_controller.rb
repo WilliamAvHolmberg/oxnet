@@ -4,7 +4,7 @@ class RsItemsController < ApplicationController
   # GET /rs_items
   # GET /rs_items.json
   def index
-    @rs_items = RsItem.search(params[:search])
+    @rs_items = RsItem.all
   end
 
   # GET /rs_items/1

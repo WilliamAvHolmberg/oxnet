@@ -1,53 +1,83 @@
 require 'socket'
 require 'active_record'
-require_relative '../app/models/ication_record'
-require 'net/ping'
+require 'HTTParty'
+require 'open-uri'
+require 'nokogiri'
 require 'acts_as_list'
-require_relative 'generate_account'
-
-@hello = 0
-def db_configuration
-  db_configuration_file = File.join(File.expand_path('..', __FILE__), '..', 'config', 'database.yml')
-  YAML.load(File.read(db_configuration_file))
-end
+require_relative '../models/application_record'
+require 'json'
 
 
 
-ActiveRecord::Base.establish_connection(db_configuration["development"])
 
 
 
-server = TCPServer.new 43594 #Server bind to port 43594
-#controllerThread = Thread.new(controller_thread)
+
 def require_all(_dir)
   Dir[File.expand_path(File.join(File.dirname(File.absolute_path(__FILE__)), _dir)) + "/**/*.rb"].each do |file|
     require file
   end
 end
 
-require_all("./models/")
+require_all("../models/")
 
-@worlds = [397,398,399,425,426,430,431,433,434,435,437,438,439,440,451,452,453,454,455,456,457,458,459,469,470,471,472,473,474,475]
-
-Thread::abort_on_exception = true
-added_main_thread = false
-last_check = 0
-interval = 10.minute
-generate_account = GenerateAccount.new
-loop do
-  if Time.now > last_check +  interval
-    last_check = Time.now
-    puts "hello"
-    generate_account.create_accounts_for_all_computers
-  else
-
-    puts "no hello"
-    puts "next check: #{(last_check + interval - Time.now)}"
-  end
-  sleep(1)
+@hello = 0
+def db_configuration
+  db_configuration_file = File.join(File.expand_path('../../../config/database.yml', __FILE__))
+  YAML.load(File.read(db_configuration_file))
 end
 
+ActiveRecord::Base.establish_connection(db_configuration["development"])
+
+
+def add_worlds
+url = 'http://oldschool.runescape.com/slu'
+html = open(url)
+doc = Nokogiri::HTML(html)
+servers = doc.css('.server-list')
+worlds = []
+(0..400).each do |i|
+  tr = bla = servers.css('tr')[i]
+  if tr != nil
+    td = tr.css('td')
+    test = td[0]
+    if test != nil
+      world = td[0].text.gsub("Old", " ").chomp.gsub("School", " ").to_i + 300
+      members = td[3].text
+      if members == "Members"
+        members = true
+      else
+        members = false
+      end
+      req = td[4].text
+
+      if req.include? " total"
+        req = true
+      else
+        req = false
+      end
+
+      if !req && world != 0
+        puts "world: #{world} members: #{members} req: #{req}"
+        RsWorld.create(number: world, members_only: members).save!
+      end
+    end
+  end
+end
+end
+
+def remove_worlds
+  RsWorld.destroy_all
+end
+
+add_worlds
+
+#world = entries.css('table')[0].css('tr')[1].css('td')[0].text.gsub("\Old School ", ' ').to_i
+#end
+#json = JSON.pretty_generate(bridges)
+#File.open("data.json", 'w') { |file| file.write(json) }
 
 
 
 
+#test_item(4151)

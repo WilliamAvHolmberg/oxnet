@@ -450,7 +450,7 @@ def updateAccountQuests(string, account)
     puts name == nil
 
     if completed != nil && name != nil
-      puts "in here" 
+      puts "in here"
       quest = Quest.find_or_initialize_by(name: name)
       quest.save
       account_quest = QuestStat.find_or_initialize_by(account_id: account.id, quest: quest)

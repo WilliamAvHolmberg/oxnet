@@ -365,18 +365,32 @@ def get_woodcutting_task_respond(task, account)
 end
 
 def get_gear(task)
-  if task.gear.head != nil then head = task.gear.head.formated_name else head = "none" end
-  if task.gear.cape != nil then cape = task.gear.cape.formated_name else cape = "none" end
-  if task.gear.neck != nil then neck = task.gear.neck.formated_name else neck = "none" end
-  if task.gear.weapon != nil then weapon = task.gear.weapon.formated_name else weapon = "none" end
-  if task.gear.chest != nil then chest = task.gear.chest.formated_name else chest = "none" end
-  if task.gear.shield != nil then shield = task.gear.shield.formated_name else shield = "none" end
-  if task.gear.legs != nil then legs = task.gear.legs.formated_name else legs = "none" end
-  if task.gear.hands != nil then hands = task.gear.hands.formated_name else hands = "none" end
-  if task.gear.feet != nil then feet = task.gear.feet.formated_name else feet = "none" end
-  if task.gear.ring != nil then ring = task.gear.ring.formated_name else ring = "none" end
-  if task.gear.ammunition != nil then ammunition = task.gear.ammunition.formated_name else ammunition = "none" end
-  if task.gear.ammunition_amount != nil then ammunition_amount= task.gear.ammunition_amount else "none" end
+  if task.gear != nil
+    if task.gear.head != nil then head = task.gear.head.formated_name else head = "none" end
+    if task.gear.cape != nil then cape = task.gear.cape.formated_name else cape = "none" end
+    if task.gear.neck != nil then neck = task.gear.neck.formated_name else neck = "none" end
+    if task.gear.weapon != nil then weapon = task.gear.weapon.formated_name else weapon = "none" end
+    if task.gear.chest != nil then chest = task.gear.chest.formated_name else chest = "none" end
+    if task.gear.shield != nil then shield = task.gear.shield.formated_name else shield = "none" end
+    if task.gear.legs != nil then legs = task.gear.legs.formated_name else legs = "none" end
+    if task.gear.hands != nil then hands = task.gear.hands.formated_name else hands = "none" end
+    if task.gear.feet != nil then feet = task.gear.feet.formated_name else feet = "none" end
+    if task.gear.ring != nil then ring = task.gear.ring.formated_name else ring = "none" end
+    if task.gear.ammunition != nil then ammunition = task.gear.ammunition.formated_name else ammunition = "none" end
+    if task.gear.ammunition_amount != nil then ammunition_amount= task.gear.ammunition_amount else ammunition_amount="none" end
+  else
+    head = "none"
+    cape = "none"
+    neck = "none"
+    weapon = "none"
+    chest = "none"
+    shield = "none"
+    legs = "none"
+    hands = "none"
+    feet = "none"
+    ring = "none"
+    ammunition = "none"
+  end
   return "#{head}:#{cape}:#{neck}:#{weapon}:#{chest}:#{shield}:#{legs}:#{hands}:#{feet}:#{ring}:#{ammunition}:#{ammunition_amount}"
 end
 

@@ -655,9 +655,7 @@ def main_thread
   end
 end
 
-#if !ActiveRecord::Base.connected? || !ActiveRecord::Base.connection.active?
-#  ActiveRecord::Base.establish_connection(db_configuration["development"])
-#end
+
 
 
 
@@ -672,13 +670,13 @@ end
 
 require_all("./models/")
 
-@worlds = [397,398,399,425,426,430,431,433,434,435,437,438,439,440,451,452,453,454,455,456,457,458,459,469,470,471,472,473,474,475]
 
 Thread::abort_on_exception = true
 added_main_thread = false
 added_account_thread = false
 loop do
   if added_main_thread == false
+    ActiveRecord::Base.establish_connection(db_configuration["development"])
     Thread.new do
       added_main_thread = true
       puts "new main thread"

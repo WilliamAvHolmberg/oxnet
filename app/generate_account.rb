@@ -83,7 +83,7 @@ class GenerateAccount
     end
   private
     def get_least_used_worlds
-      rs_worlds = RsWorld.all
+      rs_worlds = RsWorld.where(members_only:false)
       worlds = Array.new
       current_lowest = 10000
       rs_worlds.each do |world|

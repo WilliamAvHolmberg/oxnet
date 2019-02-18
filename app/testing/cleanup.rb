@@ -352,4 +352,4 @@ def test
 end
 #get_daily("Brandon")
 #find_acc
-Account.find(24).update(world: 469)
+Hiscore.create(skill: Skill.where(name: "Woodcutting").first).save

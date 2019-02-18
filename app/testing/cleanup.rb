@@ -294,7 +294,7 @@ def clear_suicide
   end
 end
 def get_daily(name)
-  time = DateTime.parse("1/2/2019 0:00:00")
+  time = DateTime.parse("15/2/2019 0:00:00")
   computer = Computer.where(name: name).first
   amount_of_loops = (DateTime.tomorrow - time).to_i
   puts amount_of_loops
@@ -350,6 +350,6 @@ def test
     end
   end
 end
-#get_daily("Brandon")
+get_daily("BATCH1")
 #find_acc
-Hiscore.create(skill: Skill.where(name: "Woodcutting").first).save
+#Hiscore.create(skill: Skill.where(name: "Woodcutting").first).save

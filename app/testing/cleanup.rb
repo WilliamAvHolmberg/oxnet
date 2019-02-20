@@ -378,12 +378,13 @@ end
 #
 #
 #
-accounts = Account.where(computer: Computer.where(name:"Suicide").first, banned: false)
-new = Computer.where(name: "William").first
-accounts.each do |acc|
-  acc.update(computer:new )
-  acc.save
-end
+accounts = Account.where( banned: false)
+
+real_str = RsItem.where(item_id: 1725).first
+puts real_str.id
+
+
+
 
 #puts acc.get_total_money_deposited
 #et_daily("BATCH1")

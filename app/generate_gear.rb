@@ -59,9 +59,7 @@ class GenerateGear
         item = get_best_weapon(account)
       elsif slot == "neck"
         amulets = [
-            8982,#Amulet of strength
-            8984,#Amulet of magic
-            8949,#Gold amulet
+            1712
           ]
         item = RsItem.find(amulets.sample) #amulet of str
       else

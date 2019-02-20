@@ -14,6 +14,28 @@ class ProxiesController < ApplicationController
     @proxy = Proxy.find(params[:id])
   end
 
+  def json
+    @proxy = Proxy.find(params[:id])
+    host = @proxy.ip
+    port = @proxy.port
+    username = @proxy.username
+    password = @proxy.password
+    if port.blank?
+      port = 0
+    end
+    render json: "{
+    'state':1,
+    'proxySettings': [{
+      'type':'socks',
+      'host':'#{host}',
+      'port':'#{port}',
+      'username':'#{username}',
+      'password':'#{password}',
+      'proxyDNS':false
+      }
+    }"
+  end
+
 
 
   def create

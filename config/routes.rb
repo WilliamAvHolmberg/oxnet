@@ -58,6 +58,10 @@ Rails.application.routes.draw do
       get 'json'
     end
   end
-  resources :proxies
+  resources :proxies do
+    member do
+      get 'json'
+    end
+  end
   resources :logs
 end

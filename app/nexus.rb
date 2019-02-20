@@ -55,7 +55,7 @@ def computer_get_respond(instruction_queue)
         account = ins.account
         puts "we got the account"
         #res =  "account_request:1:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + world.chomp + ":NEX"
-        res =  "account_request:1:" + "http://#{serverAddress}:3000/accounts/#{account.id}/json"
+        res =  "account_request:1:" + "http://oxnetserver.ddns.net:3000/accounts/#{account.id}/json"
         puts "we got the address"
         if ins.computer != nil
           log = Log.new(computer_id: ins.computer_id, account_id: ins.account.id, text: "Account:#{ins.account.login} Handed out to: #{ins.computer.name}")

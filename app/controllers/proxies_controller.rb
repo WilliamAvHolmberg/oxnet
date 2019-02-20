@@ -32,7 +32,7 @@ class ProxiesController < ApplicationController
       'username':'#{username}',
       'password':'#{password}',
       'proxyDNS':false
-      }
+      }]
     }"
   end
 

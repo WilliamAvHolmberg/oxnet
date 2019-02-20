@@ -10,8 +10,25 @@ class GenerateGear
 
 
   def initialize
-    ActiveRecord::Base.establish_connection(db_configuration["development"])
+    while !connection_established?
+      puts "Connecting..."
+      ActiveRecord::Base.establish_connection(db_configuration["development"])
+      sleep 2
+    end
     require_all("./models/")
+  end
+
+  def connection_established?
+    begin
+      # use with_connection so the connection doesn't stay pinned to the thread.
+      ActiveRecord::Base.connection_pool.with_connection {
+        ActiveRecord::Base.connection.active?
+      }
+    rescue SystemExit, Interrupt
+      raise
+    rescue Exception
+      false
+    end
   end
 
   def require_all(_dir)
@@ -34,14 +51,19 @@ class GenerateGear
 
   def generate_gear(account)
     slots = ["weapon", "legs","neck","body","feet","head","hands","ring","cape","shield"]
-
+    sleep(0.01.seconds) #helped heaps with database issues
     gear = Gear.find_or_create_by(name: "#{account.username}")
     slots.each do |slot|
 
       if slot == "weapon"
         item = get_best_weapon(account)
       elsif slot == "neck"
-        item = RsItem.find(1712) #amulet of str
+        amulets = [
+            8982,#Amulet of strength
+            8984,#Amulet of magic
+            8949,#Gold amulet
+          ]
+        item = RsItem.find(amulets.sample) #amulet of str
       else
         item = get_best_armour(account,slot)
       end

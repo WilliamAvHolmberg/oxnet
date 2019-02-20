@@ -25,7 +25,6 @@ class AreasController < ApplicationController
   # POST /areas.json
   def create
     @area = Area.new(area_params)
-
     respond_to do |format|
       if @area.save
         format.html { redirect_to @area, notice: 'Area was successfully created.' }

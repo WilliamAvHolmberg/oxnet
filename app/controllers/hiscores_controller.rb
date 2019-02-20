@@ -1,3 +1,5 @@
+require_relative '../functions.rb'
+
 class HiscoresController < ApplicationController
   before_action :set_hiscore, only: [:show, :edit, :update, :destroy]
 

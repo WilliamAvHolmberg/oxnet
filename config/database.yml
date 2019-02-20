@@ -23,7 +23,6 @@ default: &default
   timeout: 15000
 
 development:
-
   pool: 1000
   timeout: 15000
   adapter: postgresql

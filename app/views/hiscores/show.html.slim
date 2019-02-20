@@ -1,32 +1,33 @@
 p#notice = notice
 
-h1 = @hiscore.skill.name
-table
-  thead
-    tr
-      th Username
-      th Level
-      th Created
-      th Time Online
-      th Computer
+.content
+  .container-fluid
+    .card
+      .card-header.card-header-primary
+        h4.card-title
+          i.fa.fa-trophy
+          = " " + @hiscore.skill.name + " Hiscores!"
+      .card-body.table-responsive
+        table.table.table-hover
+          thead.text-warning
+            th Username
+            th Level
+            th Created
+            th Time Online
+            th Computer
+          tbody
+            - @accounts.each do |account|
+              tr
+                td
+                  span class=(!account.is_available ? "online" : "offline")
+                  a href="../accounts/#{account.id}" = account.username
+                td = account.stats.where(skill: @hiscore.skill).first.level
+                td = formatted_duration(Time.now.utc - account.created_at) + " ago"
+                td = formatted_duration(account.get_time_online)
+                td = account.computer.name
 
+      => link_to 'Edit', edit_hiscore_path(@hiscore)
+      '|
+      =< link_to 'Back', hiscores_path
 
-  tbody
-    - @accounts.each do |account|
-      tr
-        td
-          a href="accounts/#{account.id}" = account.username
-        td = account.stats.where(skill: @hiscore.skill).first.level
-        td = account.created_at
-        td = account.get_time_online
-        td = account.computer.name
-
-br
-
-=> link_to 'Edit', edit_hiscore_path(@hiscore)
-'|
-=< link_to 'Back', hiscores_path
-
-=> link_to 'Edit', edit_hiscore_path(@hiscore)
-'|
-=< link_to 'Back', hiscores_path
+      br

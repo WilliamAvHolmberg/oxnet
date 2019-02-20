@@ -1,35 +1,43 @@
-h1 Accounts
-table
-  tr
-    th ID
-    th EcoSystem
-    th Login
-    th Password
-    th World
-    th Proxy
-    th Money Invested
-    th Account Type
-    th Computer
-    th Mule
-    th Banned?
-    th Created?
-    th Time Per Day
-    th
-
-  - @available_accounts.each do |account|
-    tr
-      th = account.id
-      th = account.eco_system.name if account.eco_system != nil
-      th
-        a href="/accounts/#{account.id}" = account.login
-      th = account.password
-      th = account.world
-      th = account.proxy.location
-      th Todo
-      th = account.account_type.name if account.account_type != nil
-      th = account.computer.name if account.computer != nil
-      th = account.mule.username if account.mule != nil
-      th = account.banned
-      th = account.created
-      th = account.schema.total_time_per_day if account.schema != nil
-      td = link_to 'Destroy', account, data: {confirm: 'Are you sure?'}, method: :delete
+.content
+  .container-fluid
+    .card
+      .card-header.card-header-primary
+        h4.card-title = "Accounts (#{@available_accounts.length})"
+      .card-body.table-responsive
+        table.table.table-hover
+          thead.text-warning
+            th ID
+            th EcoSystem
+            th Login
+            th Password
+            th World
+            th Proxy
+            th Money Invested
+            th Account Type
+            th Computer
+            th Mule
+            th Banned?
+            th Created?
+            th Time Per Day
+            th
+            th
+          tbody
+            - @available_accounts.each do |account|
+              tr
+                td = account.id
+                td = account.eco_system.name if account.eco_system != nil
+                td
+                  span class=(!account.is_available ? "online" : "offline")
+                  a href="/accounts/#{account.id}" = account.login
+                td = account.password
+                td = account.world
+                td = account.proxy.location
+                td Todo
+                td = account.account_type.name if account.account_type != nil
+                td = account.computer.name if account.computer != nil
+                td = account.mule.username if account.mule != nil
+                td = account.banned
+                td = account.created
+                td = account.schema.total_time_per_day if account.schema != nil
+                td = link_to 'Ban', account, data: {confirm: 'Are you sure?'}, method: :ban
+                td = link_to 'Destroy', account, data: {confirm: 'Are you sure?'}, method: :delete

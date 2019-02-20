@@ -1,5 +1,4 @@
-p
-  = @proxy.ip
-= link_to 'Edit', edit_proxy_path(@proxy)
-= link_to 'Back', proxies_path
-
+h3 = @proxy.ip.blank? ? "[BLANK]" : @proxy.ip
+.input-group
+  = link_to 'Edit', edit_proxy_path(@proxy)
+  = link_to 'Back', proxies_path

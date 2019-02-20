@@ -9,17 +9,18 @@ class Schema < ApplicationRecord
 
   def time_is_right
     self.time_intervals.all.each do |interval|
-      time = Time.now.change(:month => 1, :day => 1, :year => 2000)
+      time = Time.now.getutc().change(:month => 1, :day => 1, :year => 2000)
       if time > interval.get_start_time && time < interval.get_end_time
         return true
       end
+      puts "#{time} not within #{interval.get_start_time} and #{interval.get_end_time}"
     end
     return false
   end
 
   def get_time_interval
     self.time_intervals.all.each do |interval|
-      time = Time.now.change(:month => 1, :day => 1, :year => 2000)
+      time = Time.now.getutc().change(:month => 1, :day => 1, :year => 2000)
       if time > interval.get_start_time && time < interval.get_end_time
         return interval
       end
@@ -31,7 +32,7 @@ class Schema < ApplicationRecord
     if time_is_right == false
       return nil
     else
-      puts "#{account.username} time is right"
+      puts "#{account.username} time is right (#{tasks.count} tasks)"
       interval = get_time_interval
       task = tasks.select{|t| t.should_do(account) && t.task_type.name == "QUEST"}.first
       if task != nil
@@ -42,7 +43,7 @@ class Schema < ApplicationRecord
       end
       task = tasks.select{|t| t.should_do(account)}.first
       if task == nil
-        puts "nil: for #{account.username}"
+        puts "No doable tasks for #{account.username}"
         return nil
       elsif task.task_type.name == "QUEST"
         return task
@@ -61,6 +62,7 @@ class Schema < ApplicationRecord
     #if old_tasks != nil && old_tasks.length > 0
     #  return old_tasks
     #end
+    #puts "Number of tasks:" + tasks.length.to_s.to_s
 
     old_tasks = tasks.select{|t| t.should_do(account)}
     if old_tasks != nil && old_tasks.length > 0

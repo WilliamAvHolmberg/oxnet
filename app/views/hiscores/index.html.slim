@@ -1,15 +1,9 @@
 h1 Listing hiscores
 
-table
-  thead
-    tr
-      th Skill
 
-  tbody
-    - @hiscores.each do |hiscore|
-      tr
-        td
-          a href="hiscores/#{hiscore.id}" = hiscore.skill.name
+.row
+  - @hiscores.each do |hiscore|
+    a class="col-3 m-2 btn btn-info button" href="/hiscores/#{hiscore.id}" = hiscore.skill.name
 
 br
 

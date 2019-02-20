@@ -24,17 +24,17 @@ table
     - @gears.each do |gear|
       tr
         td = gear.name
-        td = gear.head
-        td = gear.cape
-        td = gear.neck
-        td = gear.ammunition
-        td = gear.weapon
-        td = gear.chest
-        td = gear.shield
-        td = gear.legs
-        td = gear.hands
-        td = gear.feet
-        td = gear.ring
+        td = gear.head.try(:item_name)
+        td = gear.cape.try(:item_name)
+        td = gear.neck.try(:item_name)
+        td = gear.ammunition.try(:item_name)
+        td = gear.weapon.try(:item_name)
+        td = gear.chest.try(:item_name)
+        td = gear.shield.try(:item_name)
+        td = gear.legs.try(:item_name)
+        td = gear.hands.try(:item_name)
+        td = gear.feet.try(:item_name)
+        td = gear.ring.try(:item_name)
         td = gear.ammunition_amount
         td = link_to 'Show', gear
         td = link_to 'Edit', edit_gear_path(gear)

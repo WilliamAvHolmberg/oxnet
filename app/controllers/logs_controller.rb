@@ -1,6 +1,13 @@
 class LogsController < ApplicationController
   def index
-    @logs = Log.all
+
+    if params[:account_id].present?
+      @logs = Log.where(account_id: params[:account_id])
+      account = Account.find(params[:account_id])
+      @subtitle = "Account: " + (account.username.present? ? account.username : "UNKNOWN")
+    else
+      @logs = Log.where(created_at: 1.hours.ago..1.days.from_now)
+    end
   end
   def show
     @log = Log.find(params[:id])

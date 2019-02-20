@@ -1,331 +1,252 @@
-body
-  .wrapper
-    .sidebar data-background-color="white" data-color="purple" data-image="../assets/img/sidebar-1.jpg" 
-      /!
-        | Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
-        | Tip 2: you can also add an image using data-image tag
-      .logo
-        a.simple-text.logo-normal href="http://www.creative-tim.com"
-          | Creative Tim
-      .sidebar-wrapper
-        ul.nav
-          li.nav-item.active
-            a.nav-link href="../examples/dashboard.html"
-              i.material-icons dashboard
-              p Dashboard
-          li.nav-item
-            a.nav-link href="../examples/user.html"
-              i.material-icons person
-              p User Profile
-          li.nav-item
-            a.nav-link href="../examples/table.html"
-              i.material-icons content_paste
-              p Table List
-          li.nav-item
-            a.nav-link href="../examples/typography.html"
-              i.material-icons library_books
-              p Typography
-          li.nav-item
-            a.nav-link href="../examples/icons.html"
-              i.material-icons bubble_chart
-              p Icons
-          li.nav-item
-            a.nav-link href="../examples/maps.html"
-              i.material-icons location_ons
-              p Maps
-          li.nav-item
-            a.nav-link href="../examples/notifications.html"
-              i.material-icons notifications
-              p Notifications
-          li.nav-item.active-pro
-            a.nav-link href="../examples/upgrade.html"
-              i.material-icons unarchive
-              p Upgrade to PRO
-    .main-panel
-      /! Navbar
-      nav.navbar.navbar-expand-lg.navbar-transparent.navbar-absolute.fixed-top
-        .container-fluid
-          .navbar-wrapper
-            a.navbar-brand href="#pablo"  Material Dashboard
-          button.navbar-toggler aria-controls="navigation-index" aria-expanded="false" aria-label=("Toggle navigation") data-target="#navigation" data-toggle="collapse" type="button"
-            span.sr-only Toggle navigation
-            span.navbar-toggler-icon.icon-bar
-            span.navbar-toggler-icon.icon-bar
-            span.navbar-toggler-icon.icon-bar
-          #navigation.collapse.navbar-collapse.justify-content-end
-            form.navbar-form
-              .input-group.no-border
-                input.form-control placeholder="Search..." type="text" value="" /
-                button.btn.btn-white.btn-round.btn-just-icon type="submit"
-                  i.material-icons search
-                  .ripple-container
-            ul.navbar-nav
-              li.nav-item
-                a.nav-link href="#pablo"
-                  i.material-icons dashboard
-                  p
-                    span.d-lg-none.d-md-block Stats
-              li.nav-item.dropdown
-                a#navbarDropdownMenuLink.nav-link aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" href="http://example.com"
-                  i.material-icons notifications
-                  span.notification 5
-                  p
-                    span.d-lg-none.d-md-block Some Actions
-                .dropdown-menu.dropdown-menu-right aria-labelledby="navbarDropdownMenuLink"
-                  a.dropdown-item href="#"  Mike John responded to your email
-                  a.dropdown-item href="#"  You have 5 new tasks
-                  a.dropdown-item href="#"  You're now friend with Andrew
-                  a.dropdown-item href="#"  Another Notification
-                  a.dropdown-item href="#"  Another One
-              li.nav-item
-                a.nav-link href="#pablo"
-                  i.material-icons person
-                  p
-                    span.d-lg-none.d-md-block Account
-      /! End Navbar
-      .content
-        .container-fluid
-          .row
-            .col-lg-3.col-md-6.col-sm-6
-              .card.card-stats
-                .card-header.card-header-warning.card-header-icon
-                  .card-icon
-                    i.material-icons content_copy
-                  p.card-category Available slaves
-                  h3.card-title = @slaves.size
-                .card-footer
-                  .stats
-                    i.material-icons.text-danger warning
-                    a href="#pablo"  Get More Space...
-            .col-lg-3.col-md-6.col-sm-6
-              .card.card-stats
-                .card-header.card-header-success.card-header-icon
-                  .card-icon
-                    i.material-icons store
-                  p.card-category Mules
-                  h3.card-title = @mules.size
-                .card-footer
-                  .stats
-                    i.material-icons date_range
-                    | Last 24 Hours
-            .col-lg-3.col-md-6.col-sm-6
-              .card.card-stats
-                .card-header.card-header-danger.card-header-icon
-                  .card-icon
-                    i.material-icons info_outline
-                  p.card-category Fixed Issues
-                  h3.card-title 75
-                .card-footer
-                  .stats
-                    i.material-icons local_offer
-                    | Tracked from Github
-            .col-lg-3.col-md-6.col-sm-6
-              .card.card-stats
-                .card-header.card-header-info.card-header-icon
-                  .card-icon
-                    i.fa.fa-twitter
-                  p.card-category Accounts online
-                  h3.card-title = @active_accounts.size
-                .card-footer
-                  .stats
-                    i.material-icons update
-                    | Just Updated
-          .row
-            .col-md-4
-              .card.card-chart
-                .card-header.card-header-success
-                  #dailySalesChart.ct-chart
-                .card-body
-                  h4.card-title Latest task logs
-                  table.table.table-hover
-                    thead.text-warning
-                      th Seconds ago
-                      th Account
-                      th Task
-                      th Experience
-                      th Money
-                    tbody
-                      - @latest_task_logs.each do |log|
-                        tr
-                          td = Time.now - log.created_at
-                          td = log.account.username
-                          td = log.task.name
-                          td = log.xp_per_hour
-                          td = log.money_per_hour
+.sidebar data-background-color="white" data-color="purple" data-image="../assets/img/sidebar-1.jpg"
+  /!
+    | Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
+    | Tip 2: you can also add an image using data-image tag
+  .logo
+    a.simple-text.logo-normal href="#top"
+      | Oxnet + Nexus
+  .sidebar-wrapper
+    ul.nav
+      li.nav-item.active
+        a.nav-link href=nexus_path
+          i.material-icons dashboard
+          p Dashboard
+      li.nav-item
+        a.nav-link href=accounts_path
+          i.material-icons person
+          p Accounts
+      li.nav-item
+        a.nav-link href=hiscores_path
+          i.material-icons poll
+          p Hiscores
+      li.nav-item
+        a.nav-link href=schemas_path
+          i.material-icons library_books
+          p Schemas
+      li.nav-item
+        a.nav-link href=hiscore_path(1)
+          i.material-icons bubble_chart
+          p Woodcutting Scores
+      li.nav-item
+        a.nav-link href=computers_path
+          i.material-icons computer
+          p Computers
+      li.nav-item
+        a.nav-link href="../examples/notifications.html"
+          i.material-icons notifications
+          p Notifications
+      li.nav-item.active-pro
+        a.nav-link href="../examples/upgrade.html"
+          i.material-icons unarchive
+          p This System Rocks
+.main-panel
+  /! Navbar
+  nav.navbar.navbar-expand-lg.navbar-transparent.navbar-absolute.fixed-top
+    .container-fluid
+      / .navbar-wrapper
+      /   a.navbar-brand href="#pablo"  Oxnet + Nexus
+      button.navbar-toggler aria-controls="navigation-index" aria-expanded="false" aria-label=("Toggle navigation") data-target="#navigation" data-toggle="collapse" type="button"
+        span.sr-only Toggle navigation
+        span.navbar-toggler-icon.icon-bar
+        span.navbar-toggler-icon.icon-bar
+        span.navbar-toggler-icon.icon-bar
+  /! End Navbar
+  .content class="mt-0"
+    .container-fluid
+      .row
+        .col-lg-3.col-md-6.col-sm-6
+          .card.card-stats
+            .card-header.card-header-warning.card-header-icon
+              .card-icon
+                i.fa.fa-group
+              p.card-category Available slaves
+              h3.card-title = @slaves.size
+            .card-footer
+              .stats
+                p = "Sweet"
+        .col-lg-3.col-md-6.col-sm-6
+          .card.card-stats
+            .card-header.card-header-success.card-header-icon
+              .card-icon
+                i.fa.fa-money
+              p.card-category Mules
+              h3.card-title = @mules.size
+            .card-footer
+              .stats
+                i.material-icons date_range
+                | Last 24 Hours
+        / .col-lg-3.col-md-6.col-sm-6
+        /   .card.card-stats
+        /     .card-header.card-header-danger.card-header-icon
+        /       .card-icon
+        /         i.material-icons info_outline
+        /       p.card-category Fixed Issues
+        /       h3.card-title 75
+        /     .card-footer
+        /       .stats
+        /         i.material-icons local_offer
+        /         | Tracked from Github
+        .col-lg-3.col-md-6.col-sm-6
+          .card.card-stats
+            .card-header.card-header-info.card-header-icon
+              .card-icon
+                i.fa.fa-gears
+              p.card-category Accounts online
+              h3.card-title = @active_accounts.size
+            .card-footer
+              .stats
+                i.material-icons update
+                | Just Updated
+      .row
+        .col-md-4
+          .card.card-chart
+            .card-header.card-header-success
+              h4.card-title Latest task logs
+            .card-body
+              table.table.table-hover
+                thead.text-warning
+                  th Seconds ago
+                  th Account
+                  th Task
+                  /! th Experience
+                  /! th Money
+                tbody
+                  - @latest_task_logs.each do |log|
+                    tr
+                      td = (Time.now.utc - log.created_at).round(3)
+                      td = log.account.username
+                      td = log.task.name
+                      /! td = log.xp_per_hour
+                      /! td = log.money_per_hour
 
-            .col-md-4
-              .card.card-chart
-                .card-header.card-header-warning
-                  #websiteViewsChart.ct-chart
-                .card-body
-                  h4.card-title = "Computers connected:#{@connected_computers.size} "
-                  table.table.table-hover
-                    thead.text-warning
-                      th Computer Name
-                      th Accounts available
-                      th Accounts connected
-                      th Max limit
-                    tbody
-                      - @connected_computers.each do |comp|
-                        tr
-                          td = comp.name
-                          td = comp.get_available_accounts.size
-                          td = comp.get_connected_accounts.size
-                          td = comp.max_slaves
-            .col-md-4
-              .card.card-chart
-                .card-header.card-header-danger
-                  #completedTasksChart.ct-chart
-                .card-body
-                  h4.card-title Money
-                    p.card-category = "Nothing yet"
-                table.table.table-hover
-                  thead.text-warning
-                    th Mule
-                    th Money deposited
-                    th Money withdrawn
-                  tbody
+        .col-md-4
+          .card.card-chart
+            .card-header.card-header-primary
+              h4.card-title = "Computers connected:#{@connected_computers.size} "
+            .card-body.table-responsive
+              table.table.table-hover
+                thead.text-warning
+                  th Computer Name
+                  th Accounts available
+                  th Accounts connected
+                  th Max limit
+                tbody
+                  - @connected_computers.each do |comp|
+                    tr
+                      td = comp.name
+                      td = comp.get_available_accounts.size
+                      td = comp.get_connected_accounts.size
+                      td = comp.max_slaves
+        .col-md-4
+          .card.card-chart
+            .card-header.card-header-danger
+              h4.card-title Mule Activity
+            .card-body.table-responsive
+              table.table.table-hover
+                thead.text-warning
+                  th Mule
+                  th Money deposited
+                  th Money withdrawn
+                tbody
 
-                    - @mules.each do |mule|
-                      tr
-                        td = mule.username
-                        td = mule.get_money_deposited(@mule_logs)
-                        td = mule.get_money_withdrawn(@mule_logs)
+                  - @mules.each do |mule|
+                    - @offlineMule = mule if mule.is_available
+                    tr
+                      td = mule.username
+                      td = mule.get_money_deposited(@mule_logs)
+                      td = mule.get_money_withdrawn(@mule_logs)
 
 
-
-          .row
-            .col-lg-6.col-md-12
-              .card
-                .card-header.card-header-tabs.card-header-primary
-                  .nav-tabs-navigation
-                    .nav-tabs-wrapper
-                      span.nav-tabs-title Tasks:
-                      ul.nav.nav-tabs data-tabs="tabs"
-                        li.nav-item
-                          a.nav-link.active data-toggle="tab" href="#profile"
-                            i.material-icons bug_report
-                            | Bugs
-                            .ripple-container
-                        li.nav-item
-                          a.nav-link data-toggle="tab" href="#messages"
-                            i.material-icons code
-                            | Website
-                            .ripple-container
-                        li.nav-item
-                          a.nav-link data-toggle="tab" href="#settings"
-                            i.material-icons cloud
-                            | Create bots
-                            .ripple-container
-                .card-body
-                  .tab-content
-                    #profile.tab-pane.active
-                      table.table
-                        tbody
-                          tr
-                            td
-                              .form-check
-                                label.form-check-label
-                                  input.form-check-input checked="checked" type="checkbox" value="" /
-                                  span.form-check-sign
-                                    span.check
-                            td Sign contract for "What are conference organizers afraid of?"
-                            td.td-actions.text-right
-                              button.btn.btn-primary.btn-link.btn-sm rel="tooltip" title=("Edit Task") type="button"
-                                i.material-icons edit
-                              button.btn.btn-danger.btn-link.btn-sm rel="tooltip" title="Remove" type="button"
-                                i.material-icons close
-
-
-
-                    #messages.tab-pane
-                      table.table
-                        tbody
-                          tr
-                            td
-                              .form-check
-                                label.form-check-label
-                                  input.form-check-input checked="checked" type="checkbox" value="" /
-                                  span.form-check-sign
-                                    span.check
-                            td
-                              | Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit
-                            td.td-actions.text-right
-                              button.btn.btn-primary.btn-link.btn-sm rel="tooltip" title=("Edit Task") type="button"
-                                i.material-icons edit
-                              button.btn.btn-danger.btn-link.btn-sm rel="tooltip" title="Remove" type="button"
-                                i.material-icons close
-                          tr
-                            td
-                              .form-check
-                                label.form-check-label
-                                  input.form-check-input type="checkbox" value="" /
-                                  span.form-check-sign
-                                    span.check
-                            td Sign contract for "What are conference organizers afraid of?"
-                            td.td-actions.text-right
-                              button.btn.btn-primary.btn-link.btn-sm rel="tooltip" title=("Edit Task") type="button"
-                                i.material-icons edit
-                              button.btn.btn-danger.btn-link.btn-sm rel="tooltip" title="Remove" type="button"
-                                i.material-icons close
-                    #settings.tab-pane
+      .row
+        .col-lg-6.col-md-12
+          .card
+            .card-header.card-header-tabs.card-header-primary
+              .nav-tabs-navigation
+                .nav-tabs-wrapper
+                  span.nav-tabs-title Tasks:
+                  ul.nav.nav-tabs data-tabs="tabs"
+                    li.nav-item
+                      a.nav-link.active href=accounts_path
+                        i.material-icons account_circle
+                        | Accounts
+                        .ripple-container
+                    li.nav-item
+                      a.nav-link href=hiscores_path
+                        i.material-icons poll
+                        | Hiscores
+                        .ripple-container
+                    - if @offlineMule != nil
+                      li.nav-item
+                        a.nav-link href="/accounts/#{@offlineMule.id}?launch=true"
+                          i.material-icons cloud
+                          | Launch Mule
+                          .ripple-container
+            .card-body.table-responsive
+              h3 = "Recently Banned"
+              table.table.table-hover
+                thead.text-warning
+                  th Time
+                  th Account Name
+                  th Time Alive
+                  th Highest Skill
+                tbody
+                  - @banned_logs.each do |log|
+                    - skill = log.account.stats.order("level DESC, skill_id ASC").limit(2).select{|s|s.skill.name != "Hitpoints"}.first
+                    tr
+                      td title="#{log.created_at.localtime}" = "#{formatted_duration(Time.now.utc - log.created_at)} ago"
+                      td
+                        a href=account_path(log.account) = log.account.username
+                      td = "#{formatted_duration(log.created_at - log.account.created_at)}"
+                      - if skill != nil && skill.skill_id != nil
+                        td = "#{skill.skill.name}: #{skill.level}"
+                      - else
+                        td = "?"
 
 
-            .col-lg-6.col-md-12
-              .card
-                .card-header.card-header-warning
-                  h4.card-title = "Money made today: #{money_made_today}: PER HOUR --#{money_made_today / (Time.now.hour + 0.1)}"
-                .card-body.table-responsive
-                  table.table.table-hover
-                    thead.text-warning
-                      th Time
-                      th Account Name
-                      th Amount of Cash
-                      th Mule
-                    tbody
-                      - @mule_logs.each do |log|
-                        tr
-                          td = log.created_at
-                          td = log.account.username
-                          td = log.item_amount
-                          td = log.mule
-      footer.footer
-        .container-fluid
-          nav.pull-left
-            ul
-              li
-                a href="https://www.creative-tim.com"
-                  | Creative Tim
-              li
-                a href="http://presentation.creative-tim.com"
-                  | About Us
-              li
-                a href="http://blog.creative-tim.com"
-                  | Blog
-              li
-                a href="https://www.creative-tim.com/license"
-                  | Licenses
-          .copyright.pull-right
-            | ©
-            javascript:
-                |
-                document.write(new Date().getFullYear())
-            | , made with love by
-            a href="https://www.creativelol-tim.com" target="_blank"  Creative Tim
-            | for a better web.
+        .col-lg-6.col-md-12
+          .card
+            .card-header.card-header-primary
+              h4.card-title = "GP Today: #{number_with_delimiter(money_made_today, :delimiter => ",", :separator => ".")}"
+              h4.card-title = "Per Hour: #{number_with_delimiter((money_made_today / (Time.now.hour + 0.1)).round(0), :delimiter => ",", :separator => ".")}"
+              h4.card-title = "Recent Avg: #{number_with_delimiter(money_last_2_hours / 2, :delimiter => ",", :separator => ".")}"
+            .card-body.table-responsive
+              table.table.table-hover
+                thead.text-warning
+                  th Time
+                  th Account Name
+                  th Amount of Cash
+                  th Mule
+                tbody
+                  - @mule_logs.each do |log|
+                    tr
+                      td title="#{log.created_at.localtime}" = "#{formatted_duration(Time.now.utc - log.created_at)} ago"
+                      td
+                        a href=account_path(log.account) = log.account.username
+                      - if log.account.account_type.name.include?"MULE"
+                        td style="color:red;" = "-#{log.item_amount}"
+                      - else
+                        td style="color:green" = "+#{log.item_amount}"
+                      td = log.mule
+  footer.footer
+    .container-fluid
+      nav.pull-left
+        ul
+          li
+            a href="#"
+              | Oxnet + Nexus
 javascript:
-    |
-    $(document).ready(function () {
-        /!/i
-        nit
-        wizard
-        / !/ demo.initMaterialWizard();
-        /!/
-        Javascript
-        method
-        's body can be found in assets/js/demos.js
-        | demo.initDashboardPageCharts();
-    |
-        demo.initCharts();
-    |
-    });
+  |
+  $(document).ready(function () {
+      /!/i
+      nit
+      wizard
+      / !/ demo.initMaterialWizard();
+      /!/
+      Javascript
+      method
+      's body can be found in assets/js/demos.js
+      | demo.initDashboardPageCharts();
+  |
+      demo.initCharts();
+  |
+  });

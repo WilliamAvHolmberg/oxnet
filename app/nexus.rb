@@ -24,7 +24,7 @@ def getServerAddress
     @serverAddress = File.read("server.txt");
     @serverAddress = @serverAddress.split("\\r?\\n").first
   end
-  return @serverAddress;
+  return @serverAddress.strip
 end
 
 def computer_get_respond(instruction_queue)

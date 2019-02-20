@@ -4,7 +4,7 @@ class MuleLog < ApplicationRecord
 
 
   def custom_init
-    if account != nil
+    if self.new_record? && account != nil
       update_account
     end
   end

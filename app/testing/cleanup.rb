@@ -281,7 +281,7 @@ end
 def get_money_made(accounts)
   money_made = 0
   accounts.each do |acc|
-    money_made += acc.get_money_deposited(acc.mule_logs)
+    money_made += acc.money_made
   end
   return money_made
 end
@@ -350,6 +350,35 @@ def test
     end
   end
 end
-get_daily("BATCH1")
+
+
+def get_made
+  time = DateTime.parse("15/2/2019 0:00:00")
+  amount_of_loops = (DateTime.tomorrow - time).to_i
+  puts amount_of_loops
+  money_made = 0
+  amount_of_loops.times do
+    accounts = Account.where(created: true, created_at: time..time+1.days)
+    accounts.each do |acc|
+      puts "#{acc.money_made}:#{acc.get_total_money_deposited}"
+    end
+    time = time + 1.days
+  end
+  #puts "total money made: #{money_made}"
+  #average = money_made/ amount_of_loops
+  #acc_average = average/accounts.size
+  #puts "average: #{average}, acc average: #{acc_average}"
+end
+#get_made
+#
+
+#account = Account.create(username: "hellotest")
+#log = MuleLog.create(account: account, item_amount: 30000, mule: "Test")
+#puts account.money_made
+#
+acc = Account.find(1639)
+puts acc.money_made
+#puts acc.get_total_money_deposited
+#et_daily("BATCH1")
 #find_acc
 #Hiscore.create(skill: Skill.where(name: "Woodcutting").first).save

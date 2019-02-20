@@ -112,6 +112,8 @@ class Account < ApplicationRecord
 
 
 
+
+
   def get_total_level
     total_level = 0
     if stats != nil && stats.length > 0

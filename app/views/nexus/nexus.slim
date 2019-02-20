@@ -201,6 +201,26 @@
                         td = "#{skill.skill.name}: #{skill.level}"
                       - else
                         td = "?"
+            .card-body.table-responsive
+              h3 = "Recently Created"
+              table.table.table-hover
+                thead.text-warning
+                  th Time
+                  th Account Name
+
+                  th Highest Skill
+                tbody
+                  - @new_accounts.each do |account|
+                    - skill = account.stats.order("level DESC, skill_id ASC").limit(2).select {|s| s.skill.name != "Hitpoints"}.first
+                    tr
+                      td title="#{account.created_at.localtime}" = "#{formatted_duration(Time.now.utc - account.created_at)} ago"
+                      td
+                        a href=account_path(account) = account.username
+
+                      - if skill != nil && skill.skill_id != nil
+                        td = "#{skill.skill.name}: #{skill.level}"
+                      - else
+                        td = "?"
 
 
         .col-lg-6.col-md-12

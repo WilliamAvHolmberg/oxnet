@@ -12,6 +12,8 @@ class NexusController < ApplicationController
     @mules = @available_accounts.select{|acc| acc.account_type.name == "MULE"}
     @slaves = @available_accounts.select{|acc| acc.account_type.name == "SLAVE"}
     @latest_task_logs = TaskLog.limit(5).order('id desc')
+    @new_accounts = Account.where("created_at > NOW() - INTERVAL '? hours' AND created", 1).order("created_at DESC").limit(10)
+
 
 
     render 'nexus'

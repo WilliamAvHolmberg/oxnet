@@ -378,7 +378,12 @@ end
 #
 #
 #
-MuleLog.where(mule: "Test").first.destroy
+accounts = Account.where(computer: Computer.where(name:"Suicide").first, banned: false)
+new = Computer.where(name: "William").first
+accounts.each do |acc|
+  acc.update(computer:new )
+  acc.save
+end
 
 #puts acc.get_total_money_deposited
 #et_daily("BATCH1")

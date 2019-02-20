@@ -376,8 +376,10 @@ end
 #log = MuleLog.create(account: account, item_amount: 30000, mule: "Test")
 #puts account.money_made
 #
-acc = Account.find(1639)
-puts acc.money_made
+#
+#
+MuleLog.where(mule: "Test").first.destroy
+
 #puts acc.get_total_money_deposited
 #et_daily("BATCH1")
 #find_acc

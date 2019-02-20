@@ -1,4 +1,6 @@
 h1 Logs
+- if @subtitle.present?
+  h2 = @subtitle
 table
   tr
     th ID
@@ -7,12 +9,12 @@ table
     th Linked Account
   - @logs.each do |log|
     tr
-      th
+      td
         a href="/logs/#{log.id}" = log.id
-      th = log.text
-      th = log.created_at
+      td = log.text
+      td = log.created_at
       - if log.account_id != nil
-        th = log.account_id
+        td = log.account_id
       - else
-        th = "None"
+        td = "None"
 = link_to 'New', new_log_path

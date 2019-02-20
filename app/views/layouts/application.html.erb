@@ -1,18 +1,116 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Myapp</title>
+    <title>Nexus Server</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
     <%= stylesheet_link_tag "https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" %>
-
   </head>
 
   <body>
+    <style>
+      a:hover{
+        background-color: transparent;
+      }
+    </style>
     <%= render 'layouts/header' %>
     <%= yield %>
   </body>
 </html>
+<script type="application/javascript">
+  $(function() {
+      if ($('table, .card').length == 0) {
+          $('body').wrapInner('<div class="card p-4 m-4"/>');
+          $('body').wrapInner('<div class="col-md-5 col-xs-12"/>');
+          $('body').wrapInner('<div class="row" />');
+      }
+      $('.card a').each(function() {
+          if(!$(this).hasClass('btn') || $(this).hasClass('btn-sm')) {
+              $(this).removeClass('btn-sm')
+              $(this).addClass('btn btn-default button');
+          }
+      });
+      $('table a[data-method], td a').each(function() {
+          $(this).removeClass('btn')
+          $(this).removeClass('btn-default')
+          $(this).removeClass('btn-default')
+          $(this).addClass('btn-sm btn-light button');
+
+      });
+      $('a[data-method="delete"]').each(function() {
+          $(this).removeClass('btn-default')
+          $(this).addClass('btn-danger');
+      });
+      $('table').each(function() {
+          $(this).addClass('table');
+      });
+      $('input').each(function() {
+          $(this).addClass('form-control');
+      });
+      $('input[type="submit"]').each(function() {
+          $(this).addClass('btn btn-success');
+      });
+      $('body>a').each(function() {
+          if(!$(this).hasClass('button') && !$(this).hasClass('btn') && !$(this).hasClass('btn-sm')) {
+              $(this).addClass('btn btn-default button');
+          }
+      });
+      $('input[value="Search"], input[name="search"]').each(function() {
+          $(this).css('maxWidth', '220px')
+          $(this).addClass('col-6');
+          $(this).addClass('mt-0');
+      });
+      $('.btn').each(function() {
+          if($(this).html() == "Back")
+              $(this).html('<i class="material-icons " style="font-size: 24px">chevron_left</i> Back');
+      });
+      $('table').each(function() {
+          $(this).addClass('table table-striped table-responsive-sm');
+      });
+  });
+</script>
+<style>
+  input, select, button {
+    font-size:initial;
+  }
+  @media screen and (min-width: 800px) {
+    .btn, btn-sm {
+      max-width: 220px;
+    }
+  }
+  .btn-danger, .btn-danger:visited{
+    color:white;
+  }
+  .online {
+    height: 12px;
+    width: 12px;
+    background-color: #00a914;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .offline {
+    height: 12px;
+    width: 12px;
+    background-color: #bb0011;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .btn-online, .btn-online:hover {
+    border-left: 7px solid #0baf00;
+  }
+  .btn-offline, .btn-offline:hover {
+    border-left: 7px solid #bb0011;
+  }
+  .nav-link *{
+    cursor: pointer;
+  }
+  .btn .material-icons{
+    font-size: 24px;
+  }
+</style>
+
+

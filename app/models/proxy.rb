@@ -1,9 +1,10 @@
+require_relative '../functions'
 class Proxy < ApplicationRecord
   has_many :accounts
   belongs_to :eco_system
+
   def is_available
-    respond = Net::Ping::TCP.new(ip, port).ping
-    return respond != nil && respond != false && respond > 0
+    return Pinger.ProxyAvailable(ip, port);
   end
 
   def get_active_accounts

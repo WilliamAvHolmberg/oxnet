@@ -2,7 +2,7 @@ h1 Items
 = form_tag rs_items_path, :method => 'get' do
 
   .form-group
-    p
+    .input-group
       = text_field_tag :search, params[:search]
       = submit_tag "Search", :name => nil
 - if @rs_items != nil
@@ -15,13 +15,13 @@ h1 Items
         th Stackable
         th EquipmentSlot
         th WeaponType
+        th Actions
         th Tradeable
         th itemprice
         th attack req
         th str req
         th defence req
         th range req
-        th mage req
         th
         th
 
@@ -35,13 +35,13 @@ h1 Items
           td = rs_item.stackable if rs_item.stackable != nil
           td = rs_item.equipment_slot if rs_item.equipment_slot != nil
           td = rs_item.weapon_type if rs_item.weapon_type != nil
+          td = rs_item.interface_options if rs_item.interface_options != nil
           td = rs_item.tradeable if rs_item.tradeable != nil
           td = rs_item.exchange if rs_item.exchange != nil
           td = rs_item.attack_requirement if rs_item.attack_requirement != nil
           td = rs_item.strength_requirement if rs_item.strength_requirement != nil
           td = rs_item.defence_requirement if rs_item.defence_requirement != nil
           td = rs_item.range_requirement if rs_item.range_requirement != nil
-          td = rs_item.magic_requirement if rs_item.magic_requirement != nil
           td = link_to 'Show', rs_item
           td = link_to 'Edit', edit_rs_item_path(rs_item)
           td = link_to 'Destroy', rs_item, data: { confirm: 'Are you sure?' }, method: :delete

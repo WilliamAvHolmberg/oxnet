@@ -6,6 +6,7 @@ require 'json'
 require 'net/ping'
 require_relative 'generate_gear'
 require_relative 'generate_schema'
+require_relative 'functions'
 
 
 class GenerateAccount
@@ -30,10 +31,24 @@ class GenerateAccount
     end
 
   def initialize
-    ActiveRecord::Base.establish_connection(db_configuration["development"])
+    while !connection_established?
+      puts "Connecting..."
+      ActiveRecord::Base.establish_connection(db_configuration["development"])
+      sleep 2
+    end
     require_all("./models/")
     @generate_gear = GenerateGear.new
     @generate_schema = GenerateSchema.new
+  end
+  def connection_established?
+    begin
+      # use with_connection so the connection doesn't stay pinned to the thread.
+      ActiveRecord::Base.connection_pool.with_connection {
+        ActiveRecord::Base.connection.active?
+      }
+    rescue Exception
+      false
+    end
   end
 
   def require_all(_dir)
@@ -78,12 +93,12 @@ class GenerateAccount
   private
     def get_available_accounts_on_computer(computer)
       accounts = Account.where(computer_id: computer.id, banned:false, created:true)
-      puts "Computer:#{computer.name}:#{accounts.length}"
+      puts "Computer:#{computer.name}:#{accounts.length} accounts"
       return accounts
     end
   private
     def get_least_used_worlds
-      rs_worlds = RsWorld.where(members_only:false)
+      rs_worlds = RsWorld.where(members_only: false)
       worlds = Array.new
       current_lowest = 10000
       rs_worlds.each do |world|
@@ -111,9 +126,9 @@ class GenerateAccount
   public
     def generate_name
 
-      name = RsItem.order("RANDOM()").limit(1).first
-      name2 = RsItem.order("RANDOM()").limit(1).first
-      name3 = RsItem.order("RANDOM()").limit(1).first
+      name = RsItem.order(Arel.sql('random()')).limit(1).first #RANODOM() was deprecated
+      name2 = RsItem.order(Arel.sql('random()')).limit(1).first
+      name3 = RsItem.order(Arel.sql('random()')).limit(1).first
       subbed_name = name.item_name.gsub(/[^a-zA-Z]/, '')
       subbed_name2 = name2.item_name.gsub(/[^a-zA-Z]/, '')
       subbed_name3 = name3.item_name.gsub(/[^a-zA-Z]/, '')
@@ -150,6 +165,9 @@ class GenerateAccount
       name = generate_name
       email = generate_email(name)
       world = get_random_world
+      return create_account2(computer, proxy, name, email, world)
+    end
+    def create_account2(computer, proxy, name, email, world)
       password = "ugot00wned2"
       schema = Schema.where(default: false).sample #generate schema in the future
       mule = Account.where(username: "RunRestV").first #not needed. random

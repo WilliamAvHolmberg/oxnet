@@ -33,7 +33,7 @@ class Account < ApplicationRecord
     if proxy == nil || proxy.ip.length < 5
       return true
     end
-    return Net::Ping::TCP.new(proxy.ip, proxy.port).ping
+    return Net::Ping::TCP.new(proxy.ip, proxy.port).ping.round(2)
   end
 
   def time_since_last_log
@@ -51,10 +51,10 @@ class Account < ApplicationRecord
 
   def is_available
     #if difference is larger than 6 minutes  we can assume that the account is not logged in
-    if account_type.name == "MULE"
+    if account_type.name.include?("MULE")
       return true
     else
-    return time_since_last_log > 3
+      return time_since_last_log > 3
     end
   end
 
@@ -93,7 +93,6 @@ class Account < ApplicationRecord
     return money_withdrawn
   end
 
-
   def get_total_money_deposited
     money_deposited = 0
     mule_logs.select {|log| log.account.username.downcase.include? username.downcase}.each do |log|
@@ -110,10 +109,6 @@ class Account < ApplicationRecord
     return money_deposited
   end
 
-
-
-
-
   def get_total_level
     total_level = 0
     if stats != nil && stats.length > 0
@@ -122,6 +117,9 @@ class Account < ApplicationRecord
           total_level += stat.level
         end
       end
+    end
+    if account_type != nil && account_type.name.include?("MULE") #MULE
+      total_level += 100;
     end
     return total_level
   end

@@ -10,9 +10,23 @@ require_relative 'generate_gear'
 class GenerateSchema
 
   def initialize
-    ActiveRecord::Base.establish_connection(db_configuration["development"])
+    while !connection_established?
+      puts "Connecting..."
+      ActiveRecord::Base.establish_connection(db_configuration["development"])
+      sleep 1
+    end
     require_all("./models/")
     @generate_gear = GenerateGear.new
+  end
+  def connection_established?
+    begin
+      # use with_connection so the connection doesn't stay pinned to the thread.
+      ActiveRecord::Base.connection_pool.with_connection {
+        ActiveRecord::Base.connection.active?
+      }
+    rescue Exception
+      false
+    end
   end
 
   def require_all(_dir)
@@ -29,31 +43,39 @@ class GenerateSchema
     YAML.load(File.read(db_configuration_file))
   end
 
-
-    def generate_schedule(account)
-
-      puts account.username
-      account.quest_stats.destroy_all
+    def wipeStats(account)
       account.stats.destroy_all
-      quests = Quest.all
-      quests.each do |quest|
-        quest_stat = QuestStat.find_or_create_by(quest: quest, account: account)
-        quest_stat.update(completed: false)
-      end
-
-
       Skill.all.each do |level|
         Stat.create(:skill => level, :level => 1, :account => account)
         #puts level
       end
+    end
+  def wipeQuests(account)
+    account.quest_stats.destroy_all
+    quests = Quest.all
+    quests.each do |quest|
+      quest_stat = QuestStat.find_or_create_by(quest: quest, account: account)
+      quest_stat.update(completed: false)
+    end
+  end
 
+    def generate_schedule(account)
+      sleep(0.01.seconds)
+      puts "Generating Schedule for: " + account.username
+      wipeQuests(account)
+      wipeStats(account)
 
-      new_schema = Schema.create
-      new_schema.update(name: "#{account.username}'s Schema'")
+      new_schema = Schema.find_by_name("#{account.username}'s Schema'")
+      if new_schema == nil
+        new_schema = Schema.create
+        new_schema.update(name: "#{account.username}'s Schema'")
+      end
       last_gear = nil
       last_weapon_type = 0
       last_armour_type = 0
+      puts "#{account.schema.tasks.length} Available Tasks"
       while account.schema.get_available_tasks(account) != nil && account.schema.get_available_tasks(account).length > 0
+        sleep(0.01)
         task = account.schema.get_available_tasks(account).sample
         if task == nil
           puts "No task available"
@@ -72,8 +94,12 @@ class GenerateSchema
           if level.level.to_i > 15
             if  (last_gear == nil ||current_weapon_type != last_weapon_type || current_armour_type != last_armour_type)
               gear = @generate_gear.generate_gear(account)
-              gear.update(name: "#{account}:#{task.name}")
-              puts "generating new gear"
+              if gear != nil
+                gear.update(name: "#{account}:#{task.name}")
+                puts "generating new gear"
+              else
+                puts "Gear came back nil"
+              end
             else
               puts "keeping old gear"
               gear = last_gear
@@ -95,16 +121,17 @@ class GenerateSchema
         end
 
         ##fix order of tasks
-        new_task.move_to_bottom
-          last_gear = gear
-          last_weapon_type = current_weapon_type
-          last_armour_type = current_armour_type
-
+        if new_task != nil
+          new_task.move_to_bottom
+            last_gear = gear
+            last_weapon_type = current_weapon_type
+            last_armour_type = current_armour_type
+        end
       end
 
 
-      account.stats.destroy_all
-      account.quest_stats.destroy_all
+      wipeStats(account)
+      wipeQuests(account)
       account.save!
       account.schema.time_intervals.each do |time_interval|
         new_time = time_interval.dup

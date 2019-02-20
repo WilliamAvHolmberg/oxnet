@@ -1,4 +1,4 @@
-h1 proxies
+h1 Proxies
 table
   tr
     th index
@@ -11,14 +11,17 @@ table
     th Linked Account
   - @proxies.each do |proxy|
     tr
-      th = proxy.id
-      th
-        a href="/proxies/#{proxy.id}" = proxy.ip
-      th = proxy.port
-      th = proxy.location
-      th = proxy.username
-      th = proxy.password
-      th = proxy.created_at
-      th = proxy.accounts.where(banned: false, created: true).length
+      td = proxy.id
+      td
+        - if proxy.ip.blank?
+          a href="/proxies/#{proxy.id}" = "[EMPTY]"
+        - else
+          a href="/proxies/#{proxy.id}" = proxy.ip
+      td = proxy.port
+      td = proxy.location
+      td = proxy.username
+      td = proxy.password
+      td = proxy.created_at
+      td = proxy.accounts.where(banned: false, created: true).length
       td = link_to 'Destroy', proxy, method: :delete
 = link_to 'New', new_proxy_path

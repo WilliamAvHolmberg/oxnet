@@ -1,48 +1,93 @@
-h3
-  = "account:#{@account.login}"
-table
-  tr
-    th ID
-    th Login
-    th Password
-    th Proxy (available?)
-    th World
-    th Time Since logged in (Minutes)
-    th Money Invested
-    th Average money per hour
-    th Created At
-    th @account Type
-    th Time per day
-    th Should mule?
-    th Computer
-    th Mule
-    th Banned?
-    th
-  tr
-    th = @account.id
-    th
-      a href="/accounts/#{@account.id}" = @account.login
-    th = @account.password
-    - if @account.proxy != nil
-      th
-        a href="/proxies/#{@account.proxy.id}/" = "#{@account.proxy.ip} :::: #{@account.proxy_is_available?}"
-    - else
-      th = "None"
-    th = @account.world
-    th = @account.time_since_last_log
-    th = @account.get_time_online
-    th Todo
-    th = @account.get_average_money
-    th = @account.created_at
-    th = @account.account_type.name if @account.account_type != nil
-    th = @account.schema.total_time_per_day if @account.schema != nil
-    th = @account.should_mule
-    th = @account.computer.name if @account.computer != nil
-    th = @account.mule.username if @account.mule != nil
-    th = @account.banned
+.content
+  .container-fluid
+    .card
+      .card-header.card-header-primary
+        h4.card-title
+          = "Account: #{@account.login}"
+      .card-body.table-responsive
+        table.table.table-hover
+          thead.text-warning
+            th ID
+            th Login
+            th Password
+            th Proxy (available?)
+            th World
+            th Time Since logged in (Minutes)
+            th Money Invested
+            th Average money per hour
+            th Created At
+            th @account Type
+            th Time per day
+            th Should mule?
+            th Computer
+            th Mule
+            th Banned?
+            th
+          tbody
+            tr
+              td = @account.id
+              td
+                a href="/accounts/#{@account.id}" = @account.login
+              td = @account.password
+              - if @account.proxy != nil
+                td
+                  a href="/proxies/#{@account.proxy.id}/" = "#{@account.proxy.ip} :: #{@account.proxy_is_available?}sec"
+              - else
+                td = "None"
+              td = @account.world
+              td = @account.time_since_last_log
+              td = @account.get_time_online
+              td Todo
+              td = @account.get_average_money
+              td = @account.created_at
+              td = @account.account_type.name if @account.account_type != nil
+              td = @account.schema.total_time_per_day if @account.schema != nil
+              td = @account.should_mule
+              td = @account.computer.name if @account.computer != nil
+              td = @account.mule.username if @account.mule != nil
+              td = @account.banned
+
+      .input-group
+        = link_to 'Edit', edit_account_path(@account)
+        = link_to 'Edit Schema', schema_path(@account.schema)
+        = link_to 'Back', accounts_path
+        = link_to "View Logs", "/logs?account_id=#{@account.id}", class: 'btn btn-info button'
+        - if @isOnline
+          = link_to "Online", "#", class: 'btn btn-success button'
+        - elsif @readyToLaunch
+          = link_to "#{@launchTitle}", "/accounts/#{@account.id}?launch=true", class: 'btn btn-primary button'
 
 
-= link_to 'Edit', edit_account_path(@account)
-= link_to 'Back', accounts_path
+      h2 Tasks
+      #tasks
+      - if @tasks != nil
+        table
+          thead
+            tr
+              th Name
+              th Bank area
+              th Action area
+              th Task type
+              th Break at
+              th Requires
+              th
+              th
+              th
 
+          tbody
+            - @tasks.each do |task|
+              tr
+                td = task.name
+                td = task.bank_area.name if task.bank_area != nil
+                td = task.action_area.name if task.action_area != nil
+                td = task.task_type.name if task.task_type != nil
+                td = "#{task.break_after} #{task.break_condition.name}"
+                td
+                  - task.requirements.each do |req|
+                    p = "#{req.level} #{req.skill.name}"
+                td = link_to 'Show', task
+                td = link_to 'Edit', edit_task_path(task)
+                td = link_to 'Copy', copy_task_path(task)
+                td = link_to 'Destroy', task, data: {confirm: 'Are you sure?'}, method: :delete
 
+        br

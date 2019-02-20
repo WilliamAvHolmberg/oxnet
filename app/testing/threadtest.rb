@@ -102,8 +102,11 @@ loop do
       end
 
     end
+  rescue SystemExit, Interrupt
+    raise
   rescue Exception => ex
     puts ex
+    puts ex.backtrace
     puts "errooorororo"
   end
 end

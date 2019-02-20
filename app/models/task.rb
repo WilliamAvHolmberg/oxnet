@@ -44,17 +44,21 @@ class Task < ApplicationRecord
     return can_undertake(account) && !is_completed(account)
   end
   def can_undertake(account)
+    #puts "#{id} has #{requirements.length} requirements"
     if requirements.length == 0
       return true
     end
-
     requirements.each do |req|
       account_level = account.stats.find_by(skill: req.skill)
       if account_level == nil
         return true
       end
       account_level = account_level.level.to_i
+      if(account_level <= 1)
+        account_level = 1;
+      end
       if account_level < req.level.to_i
+        #puts "Too low level #{account_level} < #{req.level}"
         return false
       end
     end
@@ -66,13 +70,17 @@ class Task < ApplicationRecord
       if account.quest_stats.find_by(quest: quest) == nil
         return false
       elsif account.quest_stats.find_by(quest: quest).completed
+        #puts "#{account.username} already done quest #{quest.id}"
         return true
       end
     else
       if account.stats.find_by(skill: skill) == nil
+        puts "#{account.username} is missing skill #{skill.id}"
         return false
       end
-      if break_after.to_i <= account.stats.find_by(skill: skill).level.to_i
+      level = account.stats.find_by(skill: skill).level.to_i
+      if break_after.to_i <= level
+        #puts "#{account.username} is above level #{break_after.to_i} with #{level}"
         return true
       end
     end

@@ -5,7 +5,7 @@ class TasksController < ApplicationController
   # GET /tasks.json
 
   def index
-    @tasks = Task.all
+    @tasks = Task.where(schema: Schema.where(default: false).first)
   end
 
   # GET /tasks/1
@@ -23,7 +23,11 @@ class TasksController < ApplicationController
     @items = RsItem.all
     @break_conditions = BreakCondition.all
     @time_intervalls = TimeInterval.all
-    @schemas = Schema.where(default: false)
+    if params[:schema_id].present?
+      @schemas = Schema.where(id: params[:schema_id])
+    else
+      @schemas = Schema.where(default: false)
+    end
     3.times {@task.requirements.build}
   end
 

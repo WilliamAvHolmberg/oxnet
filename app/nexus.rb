@@ -5,7 +5,6 @@ require 'net/ping'
 require 'acts_as_list'
 require_relative 'generate_account'
 
-
 @hello = 0
 def db_configuration
   db_configuration_file = File.join(File.expand_path('..', __FILE__), '..', 'config', 'database.yml')
@@ -14,6 +13,18 @@ end
 
 def find_suitable_account
   return Account.where(banned: false, created: true).select{|a| a.is_available}.first
+end
+
+@serverAddress = nil
+def getServerAddress
+  if !File.exist?("server.text")
+    File.open("server.txt", 'w') { |file| file.write("oxnetserver.ddns.net\r\n1:William") }
+  end
+  if(@serverAddress == nil || @serverAddress.length)
+    @serverAddress = File.read("server.txt");
+    @serverAddress = @serverAddress.split("\\r?\\n").first
+  end
+  return @serverAddress;
 end
 
 def computer_get_respond(instruction_queue)
@@ -25,36 +36,34 @@ def computer_get_respond(instruction_queue)
     puts "ACC: #{ins.account}"
 
     if ins.account != nil
-
-
-    if ins.instruction_type.name == "CREATE_ACCOUNT"
-      account = ins.account
-      log = Log.new(account_id: ins.account.id, text: "Account:#{ins.account.login} Handed out for the first time to: #{ins.computer.name}")
-      log.save
-      res =  "create_account:#{account.username}:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + account.world.chomp + ":NEX" + ":http://oxnetserver.ddns.net:3000/accounts/#{account.id}/json"
-      ins.update(:completed => true)
-      ins.save
-      return res
-    elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account_id == nil
-      ins.update(:completed => true)
-      puts "wrong"
-    return "account_request:0"
-    elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account_id != nil
-      ins.update(:completed => true)
-      ins.save
-      account = ins.account
-      puts "we got the account"
-      #res =  "account_request:1:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + world.chomp + ":NEX"
-      res =  "account_request:1:" + "http://oxnetserver.ddns.net:3000/accounts/#{account.id}/json"
-      puts "we got the address"
-      if ins.computer != nil
-        log = Log.new(computer_id: ins.computer_id, account_id: ins.account.id, text: "Account:#{ins.account.login} Handed out to: #{ins.computer.name}")
-      else
-        log = Log.new(account_id: ins.account.id, text: "Account:#{ins.account.login} Handed out to: #{ins.computer.name}")
+      if ins.instruction_type.name == "CREATE_ACCOUNT"
+        account = ins.account
+        log = Log.new(account_id: ins.account.id, text: "Account:#{ins.account.login} Handed out for the first time to: #{ins.computer.name}")
+        log.save
+        res =  "create_account:#{account.username}:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + account.world.chomp + ":NEX" + ":http://#{getServerAddress()}:3000/accounts/#{account.id}/json"
+        ins.update(:completed => true)
+        ins.save
+        return res
+      elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account_id == nil
+        ins.update(:completed => true)
+        puts "wrong"
+      return "account_request:0"
+      elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account_id != nil
+        ins.update(:completed => true)
+        ins.save
+        account = ins.account
+        puts "we got the account"
+        #res =  "account_request:1:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + world.chomp + ":NEX"
+        res =  "account_request:1:" + "http://#{getServerAddress()}:3000/accounts/#{account.id}/json"
+        puts "we got the address"
+        if ins.computer != nil
+          log = Log.new(computer_id: ins.computer_id, account_id: ins.account.id, text: "Account:#{ins.account.login} Handed out to: #{ins.computer.name}")
+        else
+          log = Log.new(account_id: ins.account.id, text: "Account:#{ins.account.login} Handed out to: #{ins.computer.name}")
+        end
+        log.save
+        return res
       end
-      log.save
-      return res
-    end
     end
     puts "handed out"
     return "logged:f"
@@ -96,11 +105,19 @@ def get_mule_withdraw_task_respond(account)
   item_amount = task.item_amount
   world = task.world
   slave_name = task.slave_name
+  slave = Account.where(username: slave_name).first;
 
+  position = ""
+  if slave != nil
+    lastLog = TaskLog.where(account_id: slave.id).where.not(position: nil).last()
+    if lastLog != nil && lastLog.position != nil
+      position = lastLog.position #find the last position of the player and report that
+    end
+  end
 
   log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
   log.save
-  res = "task_respond:1:#{task_type.name}:#{slave_name}:#{world.chomp}:#{item_id.chomp}:#{item_amount.chomp}"
+  res = "task_respond:1:#{task_type.name}:#{slave_name}:#{world.chomp}:#{item_id.chomp}:#{item_amount.chomp}:#{position.chomp}"
   task.update(:executed => true)
   task.save
   puts res
@@ -126,6 +143,9 @@ def get_task_respond(task, account)
   when "COMBAT"
     puts "combat res"
     return get_combat_task_respond(task,account)
+  when "TANNER"
+    puts " res tanner respond"
+    return get_tanning_task_respond(task,account)
   when "QUEST"
     puts "quest ress"
     return get_quest_task_respond(task, account)
@@ -133,7 +153,7 @@ def get_task_respond(task, account)
 end
 
 def get_quest_task_respond(task, account)
-  puts "get agility respond"
+  puts "get quest task respond"
   task_type = task.task_type.name
 
 
@@ -150,7 +170,7 @@ def account_get_direct_respond(message, account)
   else
 
     puts "Task request"
-    if account.account_type != nil && account.account_type.name == "MULE"
+    if account.account_type != nil && account.account_type.name.include?("MULE")
       puts "mule"
       return get_mule_withdraw_task_respond(account)
     else if message == "task_request"
@@ -194,7 +214,6 @@ def update_woodcutting_task(task, account)
   task.save
   puts "updated task"
 end
-
 
 def get_agility_task_respond(task, account)
   puts "get agility respond"
@@ -363,6 +382,33 @@ def get_woodcutting_task_respond(task, account)
   res = "task_respond:1:#{task_type}:#{task.id}:#{bank_area}:#{action_area}:#{axeID}:#{axe_name}:#{tree_name}:#{break_condition}:#{task_duration}:#{level_goal}:#{get_gear(task)}"
   return res
 end
+def get_tanning_task_respond(task, account)
+  task_type = task.task_type.name
+  #update_woodcutting_task(task, account)
+
+  break_condition = task.break_condition.name
+  if break_condition == "TIME"
+    task_duration = ((task.get_end_time - Time.now.change(:month => 1, :day => 1, :year => 2000))/60).round
+    level_goal = "99"
+  elsif break_condition == "LEVEL" && task.break_after != nil
+    task_duration = "999999"
+    level_goal = task.break_after
+  elsif break_condition == "TIME_OR_LEVEL"
+    task_duration = ((task.get_end_time - Time.now.change(:month => 1, :day => 1, :year => 2000))/60).round
+    level_goal = task.break_after
+    puts task_duration
+  end
+  if task.inventory != nil then inventory = task.inventory.get_parsed_message else inventory ="none" end
+  log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
+  log.save
+
+  hideID = 1739
+  withdrawQty = 2400 / 4
+
+  puts "sending resp"
+  res = "task_respond:1:#{task_type}:#{task.id}:#{break_condition}:#{task_duration}:#{level_goal}:#{hideID}:#{withdrawQty}"
+  return res
+end
 
 def get_gear(task)
   if task.gear != nil
@@ -418,6 +464,7 @@ def computer_thread(client, computer)
     elsif respond[0] == "log"
       #get new instructions
       instruction_queue = Instruction.where(completed: false).select{|ins| ins.computer_id == computer.id && !ins.completed && ins.is_relevant}
+      instruction_queue = instruction_queue.sort_by{|ins|ins.instruction_type} #prioritise launching clients over creating accounts
       #puts "Log from: #{computer.name}:::log:#{respond}"
       log = Log.new(computer_id: computer.id, text: respond)
       log.save
@@ -480,7 +527,17 @@ def updateAccountQuests(string, account)
 end
 
 def get_mule_respond(respond, account)
-  mule = Account.where(eco_system: account.eco_system, banned: false, created: true).select{|acc| acc.computer.is_connected && acc.is_available && acc.account_type.name == "MULE" && (acc.proxy_is_available? || acc.proxy.ip.length < 5)}
+
+  account_type = "MULE"
+  item_id = respond[1]
+  if item_id != "995"
+    account_type = "ITEM_MULE"
+  end
+
+  mule = Account.where(eco_system: account.eco_system, banned: false, created: true).select{|acc| acc.is_available && acc.account_type.name == account_type}
+  if (account_type == "ITEM_MULE" && mule == nil || mule.length == 0)
+    mule = Account.where(eco_system: account.eco_system, banned: false, created: true).select{|acc| acc.is_available && acc.account_type.name == "MULE"}
+  end
   #if mule != nil && !mule.banned && (mule.proxy_is_available? || mule.proxy.ip.length < 5)
   if mule != nil && mule.length > 0
     mule = mule.sample
@@ -561,6 +618,7 @@ def script_thread(client, account)
     if respond == nil
       client.puts "ok"
     else
+      #puts "Script sent: #{respond}"
       respond = respond.split(":")
       if respond[0] == "log"
         #get new instructions
@@ -581,16 +639,23 @@ def script_thread(client, account)
         updateAccountQuests(respond[3], account)
         client.puts account_get_direct_respond(respond[0], account)
       elsif respond[0] == "banned"
+        puts "#{account.username} was banned!"
         account.update(:banned => true)
         log = Log.new(computer_id: nil, account_id: account.id, text: respond)
+        log.save
         client.puts("DISCONNECT:1")
       elsif respond[0] == "mule_request"
         client.puts get_mule_respond(respond, account)
       else
         client.puts "ok"
       end
-      end
+    end
   end
+  rescue Exception => ex
+    puts ex
+    puts ex.backtrace
+    puts "Script Thread for: #{client} has been closed"
+    client.close
   rescue
     puts "Script Thread for: #{client} has been closed"
     client.close
@@ -602,6 +667,11 @@ def create_account_thread
   interval = 90
   generate_account = GenerateAccount.new
   begin
+    while !connection_established?
+      puts "Connecting..."
+      ActiveRecord::Base.establish_connection(db_configuration["development"])
+      sleep 2
+    end
     loop do
       if Time.now > last_check + interval
         puts "lets create accounts"
@@ -614,50 +684,92 @@ def create_account_thread
     end
   rescue => error
     puts error
-    puts "account threadloop ended"
+    puts "account threadloop crashed"
+    ActiveRecord::Base.clear_active_connections!
     sleep(10.seconds)
     create_account_thread
+  ensure
+    ActiveRecord::Base.clear_active_connections!
   end
 end
 
 def computer_is_available(acc)
   return acc.computer_id != nil && acc.computer != nil && acc.computer.is_available_to_nexus && acc.computer.can_connect_more_accounts
 end
-
-def main_thread
+def connection_established?
   begin
-  loop do
-    puts "Main Thread loop"
-    accounts = Account.where(banned: false, created: true)
-    if !accounts.nil? && !accounts.blank?
-      accounts = accounts.select{|acc| acc != nil && computer_is_available(acc)  && acc.is_available && acc.proxy != nil && acc.proxy.is_available && acc.schema != nil && acc.schema.get_suitable_task(acc) != nil && acc.account_type.name == "SLAVE"}
-    end
-    if !accounts.nil? && !accounts.blank?
-      accounts = accounts.sort_by{|acc|acc.get_total_level}.reverse
-      accounts.each do |acc|
-      computer = acc.computer if acc.computer_id != nil
-      if computer != nil && computer.is_available_to_nexus && computer.can_connect_more_accounts
-      Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save
-          Log.new(computer_id: computer.id, account_id: acc.id, text: "Instruction created")
-          puts "instruction for #{acc.username} to create new client at #{acc.computer.name}"
-      end
-      end
-    end
-
-    sleep(10.seconds)
-  end
-  rescue => error
-    puts error
-    puts error.backtrace
-    puts "Main loop ended"
-    sleep(10.seconds)
-    main_thread
+    # use with_connection so the connection doesn't stay pinned to the thread.
+    ActiveRecord::Base.connection_pool.with_connection {
+      ActiveRecord::Base.connection.active?
+    }
+  rescue Exception
+    false
   end
 end
 
+def main_thread
+  begin
+    loop do
+      while !connection_established?
+        puts "Connecting..."
+        ActiveRecord::Base.establish_connection(db_configuration["development"])
+        sleep 2
+      end
+      time = Time.now.change(:month => 1, :day => 1, :year => 2000)
+      puts "Main Thread loop nexus #{time}"
+      accounts = Account.where(banned: false, created: true)
+      if !accounts.nil? && !accounts.blank?
+        accounts = accounts.select{|acc| acc != nil && acc.account_type.name == "SLAVE" && isAccReadToLaunch(acc)} #Shuffled for performance
+      end
+      if !accounts.nil? && !accounts.blank?
+        accounts = accounts.sort_by{|acc|acc.get_total_level}.reverse
+        accounts.each do |acc|
+          computer = acc.computer if acc.computer_id != nil
+          if computer != nil && computer.is_available_to_nexus && computer.can_connect_more_accounts
+            Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save
+            Log.new(computer_id: computer.id, account_id: acc.id, text: "Instruction created")
+            puts "instruction for #{acc.username} to create new client at #{acc.computer.name}"
+            sleep(3.seconds)
+          end
+        end
+      else
+        puts "No accounts to launch"
+      end
 
+      sleep(10.seconds)
+    end
+  rescue => error
+    puts error
+    puts error.backtrace
+    puts "Main loop crashed"
+    ActiveRecord::Base.clear_active_connections!
+    sleep(10.seconds)
+    main_thread
+  ensure
+    ActiveRecord::Base.clear_active_connections!
+  end
+end
 
+def isAccReadToLaunch(acc)
+  return if acc.nil?
+  return if !computer_is_available(acc)
+  return if !acc.is_available
+  return if acc.proxy == nil || !acc.proxy.is_available
+  if acc.schema == nil
+    puts "No schema for #{acc.username}"
+    return false
+  end
+  if acc.schema.get_suitable_task(acc) == nil
+    return false
+  end
+  return true
+end
 
+while !connection_established?
+  puts "Connecting..."
+  ActiveRecord::Base.establish_connection(db_configuration["development"])
+  sleep 2
+end
 
 
 server = TCPServer.new 43594 #Server bind to port 43594
@@ -676,11 +788,13 @@ added_main_thread = false
 added_account_thread = false
 loop do
   if added_main_thread == false
-    ActiveRecord::Base.establish_connection(db_configuration["development"])
     Thread.new do
       added_main_thread = true
       puts "new main thread"
       thread =  Thread.new{main_thread}
+      ActiveSupport::Dependencies.interlock.permit_concurrent_loads do
+        thread.join # outer thread waits here, but has no lock
+      end
       thread.join
     end
   end
@@ -689,6 +803,9 @@ loop do
       added_account_thread = true
       puts "new accout thread"
       thread =  Thread.new{create_account_thread}
+      ActiveSupport::Dependencies.interlock.permit_concurrent_loads do
+        thread.join # outer thread waits here, but has no lock
+      end
       thread.join
     end
   end
@@ -698,8 +815,9 @@ loop do
     Thread.new server.accept do |client|
 
       puts "new client: #{client}"
-
-      respond = client.gets.split(":")
+      response = client.gets;
+      next if response.nil?
+      respond = response.split(":")
         if respond[0] == "computer"
           #start new thread for computer
           ip = respond[2]
@@ -730,7 +848,7 @@ loop do
                                   :computer => Computer.find_or_create_by(:name => "Suicide"), :account_type => AccountType.where(:name => "SLAVE").first,:mule => Account.where(:login => "ad_da_mig1@hotmail.com").first,
                                   :schema => Schema.find_or_create_by(:name => "Suicide"), :proxy => proxy, :should_mule => true)
             account.save
-            puts "acount not found but created: #{account.login}"
+            puts "Account not found but created: #{account.login}"
           end
           puts "New Script Thread started for: #{respond[3]}"
           thread =  Thread.fork{script_thread(client, account)}
@@ -744,8 +862,11 @@ loop do
       #thread = nil
       #end
     end
+  rescue SystemExit, Interrupt
+    return
   rescue Exception => ex
     puts ex
+    puts ex.backtrace
     puts "errooorororo"
   end
 end

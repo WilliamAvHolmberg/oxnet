@@ -51,7 +51,7 @@
         = "Please create an account typebefore associating to account"
   - @available_proxies = Proxy.all
   p = form.label :proxy
-  = collection_select(nil, :proxy_id, @available_proxies, :id, :location)
+  = collection_select(:account, :proxy_id, @available_proxies, :id, :location)
   .field
     = form.label :eco_system
     = collection_select(:account, :eco_system_id, EcoSystem.all, :id, :name)

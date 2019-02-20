@@ -1,11 +1,34 @@
 class AccountsController < ApplicationController
 
   def index
-    @available_accounts = Account.where(banned: false, created: true)
+    @available_accounts = Account.where(banned: false, created: true).sort_by{|acc|acc.get_total_level}.reverse
 
   end
   def show
     @account = Account.find(params[:id])
+    @tasks = @account.schema.tasks if !@account.schema.nil?
+
+    @isOnline = !@account.is_available
+    @launchTitle = ""
+    if @isOnline
+
+    elsif params[:launched].present?
+      @launchTitle = "LAUNCHED!"
+    else
+      computer = @account.computer if @account.computer_id != nil
+      @readyToLaunch = false
+      if computer != nil && computer.is_available_to_nexus && computer.can_connect_more_accounts
+        @readyToLaunch = true
+        @launchTitle = "LAUNCH"
+        if params[:launch].present?
+          @launchTitle = "LAUNCHED!"
+          Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computer.id, :account_id => @account.id, :script_id => Script.first.id).save
+          Log.new(computer_id: computer.id, account_id: @account.id, text: "Instruction created")
+          redirect_to @account
+        end
+      end
+    end
+
   end
 
   def new
@@ -18,7 +41,10 @@ class AccountsController < ApplicationController
 
   def json
     @account = Account.find(params[:id])
-
+    port = @account.proxy.port
+    if port.blank?
+      port = 0
+    end
     render json: "{
   'Clients': [{
     'UseProxy': true,
@@ -36,7 +62,7 @@ class AccountsController < ApplicationController
     'ProxyUser': '#{@account.proxy.username}',
     'IsRepoScript': false,
     'World': #{@account.world},
-    'ProxyPort': #{@account.proxy.port},
+    'ProxyPort': #{port},
     'RsUsername': '#{@account.login}',
     'ProxyPass': '#{@account.proxy.password}'
   }],
@@ -51,8 +77,6 @@ class AccountsController < ApplicationController
     @computers = Computer.all
     @mules = Account.all.select {|acc| acc.account_type != nil && acc.account_type.name == "MULE"}
   end
-
-
 
   def create
     @account = Account.new(account_params)

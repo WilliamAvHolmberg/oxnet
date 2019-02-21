@@ -22,7 +22,7 @@ def getServerAddress
   end
   if(@serverAddress == nil || @serverAddress.length)
     @serverAddress = File.read("server.txt");
-    @serverAddress = @serverAddress.split("\\r?\\n").first
+    @serverAddress = @serverAddress.split("\\s*\\r?\\n\\s*").first
   end
   return @serverAddress.strip
 end
@@ -35,13 +35,13 @@ def computer_get_respond(instruction_queue)
 
     puts "ACC: #{ins.account}"
     serverAddress = getServerAddress
+    
     if ins.account != nil
       if ins.instruction_type.name == "CREATE_ACCOUNT"
         account = ins.account
         log = Log.new(account_id: ins.account.id, text: "Account:#{ins.account.login} Handed out for the first time to: #{ins.computer.name}")
         log.save
-
-        res =  "create_account:#{account.username}:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + account.world.chomp + ":NEX" + ":http://oxnetserver.ddns.net:3000/accounts/#{account.id}/json"
+        res =  "create_account:#{account.username}:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + account.world.chomp + ":NEX" + ":http://#{server_address}:3000/accounts/#{account.id}/json"
         ins.update(:completed => true)
         ins.save
         return res
@@ -55,7 +55,7 @@ def computer_get_respond(instruction_queue)
         account = ins.account
         puts "we got the account"
         #res =  "account_request:1:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + world.chomp + ":NEX"
-        res =  "account_request:1:" + "http://oxnetserver.ddns.net:3000/accounts/#{account.id}/json"
+        res =  "account_request:1:" + "http://#{server_address}:3000/accounts/#{account.id}/json"
         puts "we got the address"
         if ins.computer != nil
           log = Log.new(computer_id: ins.computer_id, account_id: ins.account.id, text: "Account:#{ins.account.login} Handed out to: #{ins.computer.name}")

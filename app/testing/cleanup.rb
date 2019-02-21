@@ -22,9 +22,23 @@ def db_configuration
   db_configuration_file = File.join(File.expand_path('../../../config/database.yml', __FILE__))
   YAML.load(File.read(db_configuration_file))
 end
+def connection_established?
+  begin
+    # use with_connection so the connection doesn't stay pinned to the thread.
+    ActiveRecord::Base.connection_pool.with_connection {
+      ActiveRecord::Base.connection.active?
+    }
+  rescue Exception
+    false
+  end
+end
 
-ActiveRecord::Base.establish_connection(db_configuration["development"])
-
+while !connection_established?
+  puts "Connecting..."
+  ActiveRecord::Base.establish_connection(db_configuration["development"])
+  sleep 1.5.seconds
+end
+require_all("./models/")
 
 def balance_worlds
   ga = GenerateAccount.new
@@ -144,9 +158,39 @@ def play_with_last_seen_computer
   log.save
 end
 
-def main_thread
+@generate_schema = GenerateSchema.new
 
+def fillInEmptySchemas
+  accounts = Account.where(banned: false, created: true)
+  accounts = accounts.sort_by{|acc|acc.get_total_level}.reverse
+  puts "fillInEmptySchemas"
+  #if accounts != nil && accounts.length > 0
+    accounts.each do |account|
+      if account.schema == nil || account.schema.tasks.length == 0 || account.stats.find_by(skill: 1) == nil
+        puts "Checking for #{account.username}"
+
+        schema = Schema.where(default: false).sample
+        account.update(schema: schema)
+        account.schema = schema;
+
+        puts "Assigned Schema Template:#{schema.id}"
+        schema = @generate_schema.generate_schedule(account)
+        account.update(schema: schema)
+        account.schema = schema;
+        account.save
+
+      end
+    end
+  #end
+end
+
+def main_thread
   begin
+    while !connection_established?
+      puts "Connecting..."
+      ActiveRecord::Base.establish_connection(db_configuration["development"])
+      sleep 1.5.seconds
+    end
     loop do
       puts "Main Thread loop"
       all_accounts = Account.where(banned: false, created: true)
@@ -159,7 +203,7 @@ def main_thread
             Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save
             Log.new(computer_id: computer.id, account_id: acc.id, text: "Instruction created")
             puts "instruction for #{acc.username} to create new client at #{acc.computer.name}"
-            sleep(1)
+            sleep 1.seconds
           end
         end
       end
@@ -170,11 +214,13 @@ def main_thread
     puts error.backtrace
     puts "Main loop ended"
     #main_thread
+  ensure
+    ActiveRecord::Base.clear_active_connections!
   end
 end
 
 def mule_withdraw_tasks
-  mule_withdraw_tasks = MuleWithdrawTask.where(:created_at => (Time.now - 20.minutes..Time.now)).select{|task| !task.executed && task.is_relevant && !task.account!= nil }
+  mule_withdraw_tasks = MuleWithdrawTask.where(:created_at => (Time.now.utc - 20.minutes.Time.now.utc)).select{|task| !task.executed && task.is_relevant && !task.account!= nil }
   mule_withdraw_tasks.each do |task|
     puts Time.now
     puts task
@@ -383,7 +429,7 @@ accounts = Account.where( banned: false)
 real_str = RsItem.where(item_id: 1725).first
 puts real_str.id
 
-
+#fillInEmptySchemas()
 
 
 #puts acc.get_total_money_deposited

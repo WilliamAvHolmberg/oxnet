@@ -6,7 +6,7 @@ p#notice = notice
       .card-header.card-header-primary
         h4.card-title
           i.fa.fa-trophy
-          = " " + @hiscore.skill.name + " Hiscores!"
+          = " " + @hiscore.skill.name + " Hiscores! (#{@accounts.length})"
       .card-body.table-responsive
         table.table.table-hover
           thead.text-warning

@@ -126,7 +126,6 @@ class GenerateAccount
     end
   private
     def generate_email(name)
-      name = name.gsub!(' ', '') #remove any spaces from username
       return name + "@" + get_random_domain
     end
   private

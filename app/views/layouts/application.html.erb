@@ -48,7 +48,7 @@
       $('table').each(function() {
           $(this).addClass('table');
       });
-      $('input').each(function() {
+      $('input[type="text"], input[type="select"], input[type="submit"]').each(function() {
           $(this).addClass('form-control');
       });
       $('input[type="submit"]').each(function() {
@@ -71,6 +71,9 @@
       $('table').each(function() {
           $(this).addClass('table table-striped table-responsive-sm');
       });
+  });
+  jQuery(document).ready(function() {
+      jQuery("time.timeago").timeago();
   });
 </script>
 <style>

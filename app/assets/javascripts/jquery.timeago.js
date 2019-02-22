@@ -86,11 +86,11 @@
         return this.settings.strings.inPast;
       }
 
-      var seconds = Math.round(Math.abs(distanceMillis) / 1000);
-      var minutes = Math.round(seconds / 60);
-      var hours = Math.round(minutes / 60);
-      var days = Math.round(hours / 24);
-      var years = Math.round(days / 365);
+      var seconds = Math.floor(Math.abs(distanceMillis) / 1000);
+      var minutes = Math.floor(seconds / 60);
+      var hours = Math.floor(minutes / 60);
+      var days = Math.floor(hours / 24);
+      var years = Math.floor(days / 365);
 
       // function substitute(stringOrFunction, number) {
       //   var string = $.isFunction(stringOrFunction) ? stringOrFunction(number, distanceMillis) : stringOrFunction;
@@ -99,9 +99,9 @@
       // }
 
       var words = "";
-      if(days > 1) words = "{0}days {1}hrs".format(days, hours - (days * 24));
-      else if(hours > 1) words =  "{0}hrs {1}mins".format(hours, minutes - (hours * 60));
-      else if(minutes > 1) words =  "{0}mins".format(minutes);
+      if(days > 0) words = "{0}days {1}hrs".format(days, hours - (days * 24));
+      else if(hours > 0) words =  "{0}hrs {1}mins".format(hours, minutes - (hours * 60));
+      else if(minutes > 0) words =  "{0}mins".format(minutes);
       else words =  "{0}secs".format(seconds);
       words += " ago";
 

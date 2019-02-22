@@ -7,7 +7,7 @@ table
       th Name
       th Connected?
       th Time Online
-      th
+      th Money Made (USD)
 
   tbody
     - @computers.each do |computer|
@@ -16,6 +16,7 @@ table
         td = computer.name
         td = computer.is_connected
         td = computer.get_time_online
+        td = money_made(computer)
         td = link_to 'Show', computer
         td = link_to 'Edit', edit_computer_path(computer)
         td = link_to 'Destroy', computer, data: { confirm: 'Are you sure?' }, method: :delete
@@ -23,3 +24,18 @@ table
 br
 
 = link_to 'New Computer', new_computer_path
+
+
+table
+  thead
+    tr
+      th Name
+    - @days.each do |day|
+      th = day
+
+  tbody
+    - @computers.each do |computer|
+      tr
+        td = computer.name
+        - @days.each do |day|
+          th = money_made_day(computer, day)

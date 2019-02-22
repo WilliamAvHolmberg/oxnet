@@ -17,7 +17,7 @@
         = "Please create a task type before creating the task"
   #agility_task style="display: none"
     = render partial: 'agility_form', locals: {items: @items, f: f}
-  #wc_task style="display: none"
+  #wc_task
     = render partial: 'woodcutting_form', locals:{items: @items, f: f}
   #combat_task style="display: none"
     = render partial: 'combat_form', locals: {items: @items, f: f}
@@ -36,13 +36,15 @@
       - else
         = "Please create a area before creating the task"
   #requirements
-    = h3 = "Requirements"
+    hr
+    h3 = "Requirements"
     = f.fields_for :requirements do |req_form|
+      hr
       = req_form.collection_select(:skill_id, Skill.all, :id, :name)
       .field
         = req_form.label :level
         = req_form.number_field :level
         = req_form.check_box '_destroy'
-        = "Don't create"
+        label = "Don't create/Delete"
 
   .actions = f.submit

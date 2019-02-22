@@ -5,7 +5,7 @@ class TasksController < ApplicationController
   # GET /tasks.json
 
   def index
-    @tasks = Task.where(schema: Schema.where(default: false).first)
+    @tasks = Task.where(schema: Schema.where(default: false))
   end
 
   # GET /tasks/1
@@ -39,6 +39,10 @@ class TasksController < ApplicationController
     @items = RsItem.all
     @break_conditions = BreakCondition.all
     @schemas = Schema.all
+    #if we accidentally delete them all, lets create one
+    if @task.requirements == nil || @task.requirements.size == 0
+      1.times {@task.requirements.build}
+    end
   end
 
   # POST /tasks
@@ -106,6 +110,6 @@ class TasksController < ApplicationController
       params.require(:task).permit(:name, :bank_area_id, :action_area_id, :task_type_id, :axe_id, :treeName,
                                    :break_condition_id, :break_after, :start_time, :end_time, :schema_id, :monster_name,
                                    :gear_id, :food_id, :inventory_id, :loot_threshold, :skill_id, :quest_id, :ores, :search,
-                                   :requirements_attributes => [:level, :skill_id, :task])
+                                   :requirements_attributes => [:id, :level, :skill_id, :task])
     end
 end

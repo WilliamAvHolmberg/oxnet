@@ -9,6 +9,7 @@ h1 Listing tasks
     table
       thead
         tr
+          th Schema
           th Name
           th Bank area
           th Action area
@@ -21,6 +22,7 @@ h1 Listing tasks
       tbody
         - @tasks.each do |task|
           tr
+            td = task.schema.name
             td = task.name
             td = task.bank_area.name if task.bank_area != nil
             td = task.action_area.name if task.action_area != nil

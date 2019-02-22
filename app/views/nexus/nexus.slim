@@ -189,6 +189,9 @@
                   th Account Name
                   th Time Alive
                   th Highest Skill
+                  th Money Made
+                  td Created
+                  td Computer
                 tbody
                   - @banned_logs.each do |log|
                     - skill = log.account.stats.order("level DESC, skill_id ASC").limit(2).select{|s|s.skill.name != "Hitpoints"}.first
@@ -201,6 +204,9 @@
                         td = "#{skill.skill.name}: #{skill.level}"
                       - else
                         td = "?"
+                      td = log.account.money_made
+                      td = log.account.created_at
+                      td = log.account.computer.name
             .card-body.table-responsive
               h3 = "Recently Created"
               table.table.table-hover

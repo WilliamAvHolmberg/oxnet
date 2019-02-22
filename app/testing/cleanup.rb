@@ -378,11 +378,13 @@ end
 #
 #
 #
-accounts = Account.where( banned: false)
-
-real_str = RsItem.where(item_id: 1725).first
-puts real_str.id
-
+accounts = Account.all
+accounts.each do|acc|
+  if acc.money_made != nil && acc.money_made > 1000000
+    acc.update(money_made: acc.get_total_money_deposited)
+    acc.save
+  end
+end
 
 
 

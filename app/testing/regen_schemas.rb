@@ -86,13 +86,20 @@ accounts.each do |account|
     account.schema.tasks.all.each do |task|
       if deleteTasks =~ task.name
         puts "Deleted task '#{task.name}' for #{account.username}"
-        TaskLog.find
+        task.task_logs.destroy_all
+        task.requirements.destroy_all
         task.destroy
       end
     end
   end
-  if emptyOnly && account.schema != nil && account.schema.tasks.length > 0
-    next
+  if emptyOnly && account.schema != nil
+    nonQuests = 0
+    account.schema.tasks.each do |task|
+      if !task.task_type.name.include? "QUEST"
+        nonQuests = nonQuests + 1
+      end
+    end
+    next if nonQuests > 0
   end
 
   puts "Checking for #{account.username}"

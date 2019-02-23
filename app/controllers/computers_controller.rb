@@ -1,3 +1,5 @@
+require_relative '../functions'
+
 class ComputersController < ApplicationController
   before_action :set_computer, only: [:show, :edit, :update, :destroy]
 
@@ -5,7 +7,7 @@ class ComputersController < ApplicationController
   # GET /computers.json
   def index
     @computers = Computer.all
-    start_day = DateTime.now - 7.days
+    start_day = DateTime.now.beginning_of_day - 7.days
     @days = []
     i = 0
     7.times do

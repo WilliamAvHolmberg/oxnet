@@ -11,8 +11,6 @@ module ComputersHelper
     return money_made/1000000 * 0.7
   end
 
-
-
   def money_made_day(computer, day)
     mule_logs =  MuleLog.where(created_at: day..day+1.days)
     mule_logs = mule_logs.select{|log| log.account.computer_id == computer.id}
@@ -22,4 +20,5 @@ module ComputersHelper
     end
     return money_made
   end
+
 end

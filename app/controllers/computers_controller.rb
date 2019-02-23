@@ -5,6 +5,13 @@ class ComputersController < ApplicationController
   # GET /computers.json
   def index
     @computers = Computer.all
+    start_day = DateTime.now - 7.days
+    @days = []
+    i = 0
+    7.times do
+      @days << start_day + i.days
+      i+= 1
+    end
   end
 
   # GET /computers/1
@@ -16,6 +23,8 @@ class ComputersController < ApplicationController
   def new
     @computer = Computer.new
   end
+
+
 
   # GET /computers/1/edit
   def edit

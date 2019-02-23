@@ -1,7 +1,11 @@
 Rails.application.routes.draw do
 
   resources :eco_systems
-  resources :hiscores
+  resources :hiscores do
+    member do
+      get 'show_all'
+    end
+  end
   resources :rs_worlds
   resources :mule_logs
   resources :quest_stats

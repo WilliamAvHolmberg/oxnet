@@ -17,12 +17,9 @@ end
 
 @serverAddress = nil
 def getServerAddress
-  if !File.exist?("server.text")
-    File.open("server.txt", 'w') { |file| file.write("oxnetserver.ddns.net\r\n1:William") }
-  end
   if(@serverAddress == nil || @serverAddress.length)
-    @serverAddress = File.read("server.txt");
-    @serverAddress = @serverAddress.split("\\r?\\n").first
+    @serverAddress = File.readlines("server.txt").first
+    @serverAddress = @serverAddress.strip
   end
   return @serverAddress.strip
 end
@@ -35,13 +32,13 @@ def computer_get_respond(instruction_queue)
 
     puts "ACC: #{ins.account}"
     serverAddress = getServerAddress
+    
     if ins.account != nil
       if ins.instruction_type.name == "CREATE_ACCOUNT"
         account = ins.account
         log = Log.new(account_id: ins.account.id, text: "Account:#{ins.account.login} Handed out for the first time to: #{ins.computer.name}")
         log.save
-
-        res =  "create_account:#{account.username}:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + account.world.chomp + ":NEX" + ":http://oxnetserver.ddns.net:3000/accounts/#{account.id}/json"
+        res =  "create_account:#{account.username}:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + account.world.chomp + ":NEX" + ":http://#{serverAddress}:3000/accounts/#{account.id}/json"
         ins.update(:completed => true)
         ins.save
         return res
@@ -55,7 +52,7 @@ def computer_get_respond(instruction_queue)
         account = ins.account
         puts "we got the account"
         #res =  "account_request:1:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + world.chomp + ":NEX"
-        res =  "account_request:1:" + "http://oxnetserver.ddns.net:3000/accounts/#{account.id}/json"
+        res =  "account_request:1:" + "http://#{serverAddress}:3000/accounts/#{account.id}/json"
         puts "we got the address"
         if ins.computer != nil
           log = Log.new(computer_id: ins.computer_id, account_id: ins.account.id, text: "Account:#{ins.account.login} Handed out to: #{ins.computer.name}")
@@ -147,6 +144,9 @@ def get_task_respond(task, account)
   when "TANNER"
     puts " res tanner respond"
     return get_tanning_task_respond(task,account)
+  when "FISHING"
+    puts " res fishing respond"
+    return get_fishing_task_respond(task,account)
   when "QUEST"
     puts "quest ress"
     return get_quest_task_respond(task, account)
@@ -410,6 +410,35 @@ def get_tanning_task_respond(task, account)
   res = "task_respond:1:#{task_type}:#{task.id}:#{break_condition}:#{task_duration}:#{level_goal}:#{hideID}:#{withdrawQty}"
   return res
 end
+def get_fishing_task_respond(task, account)
+  task_type = task.task_type.name
+  update_woodcutting_task(task, account)
+  if task.bank_area != nil
+    bank_area = task.bank_area.coordinates
+  else
+    bank_area = "none"
+  end
+  action_area = task.action_area.coordinates
+  fish_name = task.food.item_name
+  break_condition = task.break_condition.name
+  if break_condition == "TIME"
+    task_duration = ((task.get_end_time - Time.now.change(:month => 1, :day => 1, :year => 2000))/60).round
+    level_goal = "99"
+  elsif break_condition == "LEVEL" && task.break_after != nil
+    task_duration = "999999"
+    level_goal = task.break_after
+  elsif break_condition == "TIME_OR_LEVEL"
+    task_duration = ((task.get_end_time - Time.now.change(:month => 1, :day => 1, :year => 2000))/60).round
+    level_goal = task.break_after
+    puts task_duration
+  end
+  if task.inventory != nil then inventory = task.inventory.get_parsed_message else inventory ="none" end
+  log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
+  log.save
+  puts "sending resp"
+  res = "task_respond:1:#{task_type}:#{task.id}:#{bank_area}:#{action_area}:#{fish_name}:#{break_condition}:#{task_duration}:#{level_goal}:#{get_gear(task)}"
+  return res
+end
 
 def get_gear(task)
   if task.gear != nil
@@ -476,6 +505,11 @@ def computer_thread(client, computer)
     end
     #puts respond
   end
+  rescue Exception => ex
+    puts ex
+    puts ex.backtrace
+    puts "Computer Thread for: #{client} has been closed"
+    client.close
   rescue
     puts "Computer Thread for: #{client} has been closed"
     client.close
@@ -685,6 +719,7 @@ def create_account_thread
     end
   rescue => error
     puts error
+    puts error.backtrace
     puts "account threadloop crashed"
     ActiveRecord::Base.clear_active_connections!
     sleep(10.seconds)

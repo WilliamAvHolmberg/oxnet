@@ -24,16 +24,16 @@ class ProxiesController < ApplicationController
       port = 0
     end
     render json: "{
-    'state':1,
-    'proxySettings': [{
-      'type':'socks',
-      'host':'#{host}',
-      'port':'#{port}',
-      'username':'#{username}',
-      'password':'#{password}',
-      'proxyDNS':false
-      }]
-    }"
+  \"state\":1,
+  \"proxySettings\": {
+    \"type\":\"socks\",
+    \"host\":\"#{host}\",
+    \"port\":\"#{port}\",
+    \"username\":\"#{username}\",
+    \"password\":\"#{password}\",
+    \"proxyDNS\":false
+  }
+}"
   end
 
 

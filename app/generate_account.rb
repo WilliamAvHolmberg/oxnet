@@ -10,25 +10,6 @@ require_relative 'functions'
 
 
 class GenerateAccount
-  public
-    def create_account
-      name = generate_name
-      email = generate_email(name)
-      world = get_random_world
-      password = "ugot00wned2"
-      schema = Schema.where(name: "RSPEER").first #generate schema in the future
-      mule = Account.where(username: "SirJolefon").first #not needed. random
-      computer = Computer.all.sample
-      proxy = Proxy.find(140)
-      account = Account.new(:login => email, :password => password, :username => name, :world => world,
-                            :computer => computer, :account_type => AccountType.where(:name => "SLAVE").first,:mule => mule,
-                            :schema => schema, :proxy => proxy, :should_mule => true, :created => false)
-
-      account.save
-      ins = Instruction.new(:instruction_type_id => InstructionType.select{|ins| ins.name == "CREATE_ACCOUNT"}.first.id, :computer_id => computer.id, :account_id => account.id, :script_id => Script.first.id)
-      ins.save
-      puts "#{name} created for computer #{computer.name} with schema #{schema.name}"
-    end
 
   def initialize
     while !connection_established?

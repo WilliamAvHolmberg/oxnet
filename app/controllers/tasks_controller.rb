@@ -5,7 +5,7 @@ class TasksController < ApplicationController
   # GET /tasks.json
 
   def index
-    @tasks = Task.where(schema: Schema.where(default: false).first)
+    @tasks = Task.where(schema: Schema.where(default: false))
   end
 
   # GET /tasks/1
@@ -39,6 +39,10 @@ class TasksController < ApplicationController
     @items = RsItem.all
     @break_conditions = BreakCondition.all
     @schemas = Schema.all
+    #if we accidentally delete them all, lets create one
+    if @task.requirements == nil || @task.requirements.size == 0
+      1.times {@task.requirements.build}
+    end
   end
 
   # POST /tasks

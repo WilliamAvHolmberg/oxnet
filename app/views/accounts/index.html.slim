@@ -2,7 +2,9 @@
   .container-fluid
     .card
       .card-header.card-header-primary
-        h4.card-title = "Accounts (#{@available_accounts.length})"
+        h4.card-title
+          i.fa.fa-users
+          = " Accounts (#{@available_accounts.length})"
       .card-body.table-responsive
         table.table.table-hover
           thead.text-warning

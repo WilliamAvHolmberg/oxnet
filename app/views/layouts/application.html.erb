@@ -48,8 +48,13 @@
       $('table').each(function() {
           $(this).addClass('table');
       });
-      $('input').each(function() {
+      $('input[type="text"], input[type="select"], input[type="submit"], input[type="number"], textarea, select').each(function() {
           $(this).addClass('form-control');
+      });
+      $('input[type="select"], select').each(function() {
+          $(this).attr('size', 1);
+          $(this).css('background-image', 'none');
+          $(this).wrap('<label class="wrap"/>')
       });
       $('input[type="submit"]').each(function() {
           $(this).addClass('btn btn-success');
@@ -71,6 +76,9 @@
       $('table').each(function() {
           $(this).addClass('table table-striped table-responsive-sm');
       });
+  });
+  jQuery(document).ready(function() {
+      jQuery("time.timeago").timeago();
   });
 </script>
 <style>
@@ -110,6 +118,27 @@
   }
   .btn .material-icons{
     font-size: 24px;
+  }
+
+  label.wrap {
+    position: relative;
+    display: block;
+  }
+
+  select.dropdown{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+  label.wrap:after {
+    content:"\f078";
+    font-family: FontAwesome;
+    color: #666;
+    position: absolute;
+    right: 5px;
+    top:25%;
+    z-index: 1;
+    pointer-events: none;
   }
 </style>
 

@@ -4,7 +4,7 @@ class TimeIntervalsController < ApplicationController
   # GET /time_intervals
   # GET /time_intervals.json
   def index
-    @time_intervals = TimeInterval.where(schema: Schema.where(name: "RSPEER").first)
+    @time_intervals = TimeInterval.where(schema: Schema.where(default: false))
   end
 
   # GET /time_intervals/1

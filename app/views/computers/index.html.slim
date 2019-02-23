@@ -14,9 +14,11 @@ table
       tr
         td = computer.ip
         td = computer.name
-        td = computer.is_connected
-        td = computer.get_time_online
-        td = money_made(computer)
+        td
+          span class=(computer.is_connected ? "online" : "offline")
+          span = (computer.is_connected ? " Online" : " Offline")
+        td = formatted_duration(computer.get_time_online)
+        td = "$#{'%.2f' % money_made(computer)}"
         td = link_to 'Show', computer
         td = link_to 'Edit', edit_computer_path(computer)
         td = link_to 'Destroy', computer, data: { confirm: 'Are you sure?' }, method: :delete
@@ -30,12 +32,12 @@ table
   thead
     tr
       th Name
-    - @days.each do |day|
-      th = day
+      - @days.each do |day|
+        th = day
 
   tbody
     - @computers.each do |computer|
       tr
         td = computer.name
         - @days.each do |day|
-          th = money_made_day(computer, day)
+          td = formatted_gp(money_made_day(computer, day))

@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   resources :requirements
   resources :skills
   get 'nexus', action: :show, controller: 'nexus'
+  get 'charts', action: :show, controller: 'charts'
   post 'create_accounts', action: :create_accounts, controller: 'nexus'
   resources :quests
   resources :lives

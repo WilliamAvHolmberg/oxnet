@@ -1,3 +1,5 @@
+
+
 def formatted_duration(total_seconds)
   dhms = [60, 60, 24].reduce([total_seconds]) { |m,o| m.unshift(m.shift.divmod(o)).flatten }
 
@@ -6,6 +8,18 @@ def formatted_duration(total_seconds)
   return "%dmins" % dhms[2..3] unless dhms[2].zero?
   "%dsecs" % dhms[3]
 end
+
+def formatted_gp(gp)
+  if(gp > 1000000)
+    return (gp / 1000000.0).round(1).to_s + "M gp"
+  elsif(gp > 1000)
+    return (gp / 1000.0).round(1).to_s + "K gp"
+  else
+    return gp.to_s + "gp"
+  end
+end
+
+
 
 module Pinger
   @pingHistory = {""=> false}

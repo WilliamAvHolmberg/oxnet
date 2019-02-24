@@ -1,3 +1,5 @@
+require_relative '../functions'
+
 module ComputersHelper
 
   def money_made(computer)
@@ -12,6 +14,7 @@ module ComputersHelper
   end
 
   def money_made_day(computer, day)
+    day = day.new_offset(0)
     mule_logs =  MuleLog.where(created_at: day..day+1.days)
     mule_logs = mule_logs.select{|log| log.account.computer_id == computer.id}
     money_made = 0

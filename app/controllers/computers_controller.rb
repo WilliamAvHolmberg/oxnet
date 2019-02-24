@@ -9,7 +9,7 @@ class ComputersController < ApplicationController
     @computers = Computer.all
     start_day = DateTime.now.beginning_of_day - 7.days
     @days = []
-    i = 0
+    i = 1
     7.times do
       @days << start_day + i.days
       i+= 1

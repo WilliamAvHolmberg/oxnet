@@ -1,0 +1,13 @@
+
+div
+  h2 Daily Stats
+  = @profit_chart
+div
+  h2 Number of bans by hour
+  = @ban_time_chart
+div
+  h2 Profit of each Schema per hour of operation
+  = @schema_profitability_chart
+    //pre = JSON.pretty_generate(@all_schema_data)
+    //used to stop the .card element creation
+table

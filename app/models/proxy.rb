@@ -11,7 +11,7 @@ class Proxy < ApplicationRecord
     if !has_cooldown
       self.update_attributes(cooldown: 0)
     end
-    return Pinger.ProxyAvailable(ip, port) && has_cooldown
+    return Pinger.ProxyAvailable(ip, port) && !has_cooldown
   end
 
   def get_active_accounts

@@ -7,7 +7,7 @@ class Proxy < ApplicationRecord
     end_time = DateTime.now
     start_time = last_used
     elapsed_time = (end_time.to_f - start_time.to_f).to_i
-    return Pinger.ProxyAvailable(ip, port) && elapsed_time > 60;
+    return Pinger.ProxyAvailable(ip, port) && elapsed_time > 120
   end
 
   def get_active_accounts

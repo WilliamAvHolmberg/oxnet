@@ -9,6 +9,8 @@ table
     th Password
     th Created At
     th Linked Account
+    th last used
+    th time since last used
   - @proxies.each do |proxy|
     tr
       td = proxy.id
@@ -23,5 +25,7 @@ table
       td = proxy.password
       td = proxy.created_at
       td = proxy.accounts.where(banned: false, created: true).length
+      td = proxy.last_used
+      td = DateTime.now.to_f - proxy.last_used.to_f
       td = link_to 'Destroy', proxy, method: :delete
 = link_to 'New', new_proxy_path

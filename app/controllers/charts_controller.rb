@@ -9,21 +9,26 @@ require 'bigdecimal'
 
 class ChartsController < ApplicationController
 
-  @sizeX = '10000'
-  @sizeY = '200'
-
   def show
 
-    calc_profit_chart()
-    calc_ban_time_chart()
-    calc_schema_profitability_chart()
+    @timezone_offset = Time.zone_offset(Time.now.getlocal.zone) / 3600
+    @tz_interval = (@timezone_offset >= 0 ? "+" : "-") + " interval '#{@timezone_offset} hour'"
+
+    # render plain: @timezone_offset
+    # return
+
+    @chart_options = { style: 'max-width:900px; min-height: 400px', responsive: false, maintainAspectRatio: false, }
+
+    @profit_chart = calc_profit_chart()
+    @hourly_profit_chart = calc_hourly_profit_chart()
+    @ban_time_chart = calc_ban_time_chart()
+    @schema_profitability_chart = calc_schema_profitability_chart()
 
     render 'charts'
   end
 
   def calc_profit_chart
-    timezone_offset = Time.zone.formatted_offset
-    interval = "#{timezone_offset[0]} time '#{timezone_offset[1..-1]}'"
+    interval = @tz_interval
     start_date = 60.days.ago
     @recent_profits_rows = MuleLog.where('created_at IS NOT NULL')
                                .where('created_at > ?', start_date.beginning_of_day)
@@ -31,14 +36,14 @@ class ChartsController < ApplicationController
                                .select("date(created_at #{interval}) as date, SUM(item_amount) AS money_made")
                                .order("date").all
     @accounts_created_rows = Account.where('created_at IS NOT NULL')
-                                 .where('created=true')
+                                 .where('time_online > 120')
                                  .where('created_at > ?', start_date.beginning_of_day)
                                  .group("DATE(created_at #{interval})", config.time_zone)
                                  .select("date(created_at #{interval}) as date, COUNT(*) AS count")
                                  .order("date").all
     @accounts_banned_rows = Account.where('last_seen IS NOT NULL')
                                 .where('last_seen > ?', start_date.beginning_of_day)
-                                .where('created=true AND banned=true')
+                                .where('time_online > 120 AND banned=true')
                                 .group("DATE(last_seen #{interval})", config.time_zone)
                                 .select("date(last_seen #{interval}) as date, COUNT(*) AS count")
                                 .order("date").all
@@ -82,13 +87,45 @@ class ChartsController < ApplicationController
             }
         ]
     }
-    options = { width: @sizeX, height: @sizeY }
 
-    @profit_chart = ChartHelpers.chart('line', data, options);
+    return ChartHelpers.chart('line', data, @chart_options);
+  end
+  def calc_hourly_profit_chart
+    interval = @tz_interval
+    start_date = 7.days.ago
+    @recent_profits_rows = MuleLog.where('created_at IS NOT NULL')
+                               .where('created_at > ?', start_date.beginning_of_day)
+                               .select("date_trunc('hour', (created_at #{interval})) as hour, SUM(item_amount) AS money_made")
+                               .group("hour")
+                               .order("hour").all
+
+    @dates = []
+    @recent_profits = Array.new
+    @accounts_created = []
+    @accounts_banned = []
+    @recent_profits_rows.each do |pr|
+      date = "#{pr.hour}".sub! ":00:00 UTC", ""
+      @dates << date
+      @recent_profits << pr.money_made.to_i
+    end
+
+    data = {
+        labels: @dates,
+        datasets: [
+            {
+                label: "GP made",
+                backgroundColor: "rgba(255, 199, 58,0.01)",
+                borderColor: "rgba(255, 199, 58,1)",
+                data: @recent_profits
+            },
+        ]
+    }
+
+    return ChartHelpers.chart('line', data, @chart_options);
   end
   def calc_ban_time_chart
-    timezone_offset = Time.zone.formatted_offset
-    interval = "#{timezone_offset[0]} time '#{timezone_offset[1..-1]}'"
+
+    interval = @tz_interval
     start_date = 60.days.ago
     @ban_time_rows = Account.where('last_seen IS NOT NULL')
                      .where('last_seen > ?', start_date.beginning_of_day)
@@ -98,17 +135,19 @@ class ChartsController < ApplicationController
                      .order("hour").all
 
     @bans_by_hour = Array.new(24, 0)
-    @hours_of_the_day = [24]
+    hours_of_the_day = [24]
     24.times do |i|
-      @hours_of_the_day[i] = "#{i}H"
+      hours_of_the_day[i] = "#{i}H"
     end
     @ban_time_rows.each do |row|
       hour = row.hour.round
+      hour -= 24 if hour >= 24
+      hour += 24 if hour < 0
       @bans_by_hour[hour] = row.count
     end
 
     data = {
-        labels: @hours_of_the_day,
+        labels: hours_of_the_day,
         datasets: [
             {
                 label: "Total Bans",
@@ -118,9 +157,8 @@ class ChartsController < ApplicationController
             },
         ]
     }
-    options = { width: @sizeX, height: @sizeY }
 
-    @ban_time_chart = ChartHelpers.chart('line', data, options);
+    return ChartHelpers.chart('line', data, @chart_options);
   end
   def calc_schema_profitability_chart
 
@@ -140,6 +178,8 @@ class ChartsController < ApplicationController
       next if account.schema == nil
       next if account.account_type.name.include? "MULE"
       bannedAt = ((account.last_seen - account.created_at) / 3_600).floor
+      hours_online = (account.time_online / 3_600).floor
+      next if bannedAt - hours_online > 1
       schema_id = 0 #account.schema.original_id
       schema_data = all_schema_data[schema_id]
       if schema_data == nil
@@ -174,15 +214,19 @@ class ChartsController < ApplicationController
       }
     end
 
+    labels = Array.new(24)
+    labels.size.times do |i|
+      labels[i] = "#{i}H"
+    end
+
     @all_schema_data = all_schema_data[0].getRaw
 
     data = {
-        labels: @hours_of_the_day,
+        labels: labels,
         datasets: datasets
     }
-    options = { width: @sizeX, height: @sizeY }
 
-    @schema_profitability_chart = ChartHelpers.chart('line', data, options);
+    return ChartHelpers.chart('line', data, @chart_options);
   end
 end
 class SchemaProfit
@@ -194,7 +238,7 @@ class SchemaProfit
     return @dataPairs
   end
   def initialize(name)
-    @dataPairs = Array.new(32, nil )
+    @dataPairs = Array.new(24, nil )
     @name = name
   end
   public def addProfitForHour(hour, profit)
@@ -205,7 +249,7 @@ class SchemaProfit
     @dataPairs[hour][:profit] += profit
   end
   public def getHourlyData
-    newData = Array.new(32, 0)
+    newData = Array.new(24, 0)
     @dataPairs.each_with_index do |val, index|
       val = { :samples => 0, :profit => 0} if val.nil?
       samples = val[:samples]
@@ -225,10 +269,9 @@ module ChartHelpers
     @chart_id ||= -1
     element_id = opts.delete(:id)     || "chart-#{@chart_id += 1}"
     css_class  = opts.delete(:class)  || 'chart'
-    width      = opts.delete(:width)  || '100'
-    height     = opts.delete(:height) || '40'
+    css_style      = opts.delete(:style)  || 'max-height: 300px'
 
-    canvas = content_tag :canvas, '', id: element_id, class: css_class, width: width, height: height
+    canvas = content_tag :canvas, '', id: element_id, class: css_class, style:css_style
 
     script = javascript_tag() do
       <<-END.squish.html_safe

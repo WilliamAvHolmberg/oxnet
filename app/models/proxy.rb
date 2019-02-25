@@ -15,6 +15,14 @@ class Proxy < ApplicationRecord
     return Pinger.ProxyAvailable(ip, port) && !has_cooldown
   end
 
+  def cooldown
+    num = DateTime.now.to_f + self[:cooldown] - DateTime.now
+    if num < 0
+      self.update_attributes(cooldown: 0)
+      num = 0
+    end
+    return num
+  end
   def get_active_accounts
     return accounts.where(banned: false, created: true)
   end

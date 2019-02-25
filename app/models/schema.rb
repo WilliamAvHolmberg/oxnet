@@ -16,13 +16,10 @@ class Schema < ApplicationRecord
           .order('max_slaves ASC, num_slaves ASC')
     end
     def next_to_use
-      result = primary_schemas
-                   .select("schemas.*,
-(SELECT COUNT(*) FROM schemas as schB WHERE schB.disabled=false AND schB.original_id=schemas.id) as num_slaves")
-                   .where('num_slaves < max_slaves')
-                   .order('max_slaves ASC, num_slaves ASC')
+      result = ordered_by_use.where('num_slaves < max_slaves')
       result = ordered_by_use.last if result == nil
-      return result
+      #return result
+      return Schema.where(default: false)
     end
   end
 

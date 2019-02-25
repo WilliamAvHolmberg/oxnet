@@ -16,8 +16,8 @@ class Schema < ApplicationRecord
           .order('max_slaves ASC, num_slaves ASC')
     end
     def next_to_use
-      result = ordered_by_use.where('num_slaves < max_slaves')
-      result = ordered_by_use.last if result == nil
+      #result = ordered_by_use.where('num_slaves < max_slaves')
+      #result = ordered_by_use.last if result == nil
       #return result
       return Schema.where(default: false)
     end

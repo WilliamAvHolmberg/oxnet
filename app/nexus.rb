@@ -495,6 +495,7 @@ def computer_thread(client, computer)
       end
     elsif respond[0] == "ip_cooldown"
       ip = respond[1].chomp!
+      puts "HELLO IP IS #{ip}"
       cooldown = respond[2].to_i
       proxy = Proxy.where(ip: ip).first
       if proxy != nil

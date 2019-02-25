@@ -4,6 +4,11 @@ class Proxy < ApplicationRecord
   belongs_to :eco_system
 
   def is_available
+
+    return Pinger.ProxyAvailable(ip, port)
+  end
+
+  def has_cooldown
     end_time = DateTime.now
     start_time = last_used
     elapsed_time = (end_time.to_f - start_time.to_f).to_i
@@ -12,9 +17,8 @@ class Proxy < ApplicationRecord
     if !has_cooldown
       self.update_attributes(cooldown: 0)
     end
-    return Pinger.ProxyAvailable(ip, port) && !has_cooldown
+    return has_cooldown
   end
-
   def cooldown
     num = (last_used.to_f + self[:cooldown] - DateTime.now.to_f).to_i
     if num < 0

@@ -699,7 +699,7 @@ end
 
 def create_account_thread
   last_check = 0
-  interval = 90
+  interval = 10
   generate_account = GenerateAccount.new
   begin
     while !connection_established?

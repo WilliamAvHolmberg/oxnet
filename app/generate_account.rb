@@ -253,15 +253,18 @@ class GenerateAccount
   end
   public
     def create_accounts_for_all_computers
+
       should_do = true
       computers = find_available_computers
       computers.each do |computer|
         account_threshold = computer.max_slaves
         current_amount_of_accounts = get_available_accounts_on_computer(computer)
-        if should_do && current_amount_of_accounts != nil && current_amount_of_accounts.size < account_threshold
+        proxy = get_random_proxy(computer.eco_system)
+        if proxy != nil && should_do && current_amount_of_accounts != nil && current_amount_of_accounts.size < account_threshold
           puts current_amount_of_accounts.size
           proxy = get_random_proxy(computer.eco_system)
           create_account(computer, proxy)
+          proxy.update(last_used: DateTime.now)
             #puts "lets create acc for #{computer.name}"
             should_do = false
         end

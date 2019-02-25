@@ -68,6 +68,9 @@ class GenerateAccount
       accounts.each do |acc|
         puts acc.username
         acc.update(banned: true)
+        if acc.schema.default = true #remember default is inverted...
+          acc.schema.update(disabled: true)
+        end
       end
     end
 
@@ -138,6 +141,7 @@ class GenerateAccount
 
 
   public
+
     def create_account(computer, proxy)
       if proxy == nil
         puts "No proxy found for this ecosystem"
@@ -150,7 +154,7 @@ class GenerateAccount
     end
     def create_account2(computer, proxy, name, email, world)
       password = "ugot00wned2"
-      schema = Schema.where(default: false).sample #generate schema in the future
+      schema = Schema.next_to_use
       mule = Account.where(username: "RunRestV").first #not needed. random
       #proxy = find_available_proxy
       account = Account.new(:eco_system => computer.eco_system, :login => email, :password => password, :username => name, :world => world.number,

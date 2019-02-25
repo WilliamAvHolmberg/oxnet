@@ -9,6 +9,10 @@
   .field
     = f.label :name
     = f.text_field :name
+  .field
     = f.label :default
     = f.check_box :default
+  .field
+    = f.label :max_slaves
+    = f.number_field :max_slaves
   .actions = f.submit

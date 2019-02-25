@@ -4,7 +4,23 @@ class Schema < ApplicationRecord
   has_many :time_intervals, dependent: :destroy
 
 
-
+  class << self
+    def primary_schemas
+      return Schema.where(default: false)
+    end
+    def ordered_by_use
+      return primary_schemas
+          .select("schemas.*,
+(SELECT COUNT(*) FROM schemas as schB WHERE schB.disabled=false AND schB.original_id=schemas.id) as num_slaves,
+(SELECT COUNT(*) FROM schemas as schB WHERE schB.disabled=true AND schB.original_id=schemas.id) as dead_slaves")
+          .order('max_slaves ASC, num_slaves ASC')
+    end
+    def next_to_use
+      result = ordered_by_use.where('num_slaves < max_slaves')
+      result = ordered_by_use.last if result == nil
+      return result
+    end
+  end
 
 
   def time_is_right

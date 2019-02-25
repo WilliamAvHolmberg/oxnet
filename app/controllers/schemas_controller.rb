@@ -4,7 +4,14 @@ class SchemasController < ApplicationController
   # GET /schemas
   # GET /schemas.json
   def index
-    @schemas = Schema.where(default: false)
+    # @schemas = Schema.where(default: false)
+
+    ####CLEANUP FUNCTION - SUPER QUICK###
+    orphans = Schema.where(disabled: false).where([ "id NOT IN (?)", Account.where(banned: false, created: true).pluck("schema_id")])
+    orphans.update_all(disabled: true)
+
+    @schemas = Schema.ordered_by_use
+
   end
 
   # GET /schemas/1

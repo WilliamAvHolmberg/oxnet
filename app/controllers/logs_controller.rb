@@ -2,11 +2,11 @@ class LogsController < ApplicationController
   def index
 
     if params[:account_id].present?
-      @logs = Log.where(account_id: params[:account_id])
+      @logs = Log.where(account_id: params[:account_id]).where("text != '[\"log\", \"0\\r\\n\"]'")
       account = Account.find(params[:account_id])
       @subtitle = "Account: " + (account.username.present? ? account.username : "UNKNOWN")
     else
-      @logs = Log.where(created_at: 1.hours.ago..1.days.from_now)
+      @logs = Log.where(created_at: 1.hours.ago..1.days.from_now).where("text != '[\"log\", \"0\\r\\n\"]'")
     end
   end
   def show

@@ -192,6 +192,7 @@
                   th Money Made
                   th Created
                   th Computer
+                  th IP
                 tbody
                   - @banned_logs.each do |log|
                     - skill = log.account.stats.order("level DESC, skill_id ASC").limit(2).select{|s|s.skill.name != "Hitpoints"}.first
@@ -208,6 +209,7 @@
                       td = log.account.money_made
                       td = log.account.created_at.localtime
                       td = log.account.computer.name
+                      td = log.account.proxy.location
             .card-body.table-responsive
               h3 = "Recently Created"
               table.table.table-hover

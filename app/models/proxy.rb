@@ -4,7 +4,10 @@ class Proxy < ApplicationRecord
   belongs_to :eco_system
 
   def is_available
-    return Pinger.ProxyAvailable(ip, port);
+    end_time = DateTime.now
+    start_time = ast_used
+    elapsed_time = (end_time.to_f - start_time.to_f).to_i
+    return Pinger.ProxyAvailable(ip, port) && elapsed_time > 60;
   end
 
   def get_active_accounts

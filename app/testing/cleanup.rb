@@ -425,14 +425,12 @@ end
 #
 #
 
-accounts = Account.all
-accounts.each do|acc|
-  if acc.money_made != nil && acc.money_made > 1000000
-    acc.update(money_made: acc.get_total_money_deposited)
-    acc.save
-  end
-end
 
+proxy = Proxy.find(1)
+end_time = DateTime.now
+start_time = proxy.last_used
+puts ((end_time.to_f - start_time.to_f)).to_i
+proxy.save
 
 #puts acc.get_total_money_deposited
 #et_daily("BATCH1")

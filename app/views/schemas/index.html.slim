@@ -4,6 +4,9 @@ table
   thead
     tr
       th Name
+      th Max Slaves
+      th Active Copies
+      th Dead Copies
       th
       th
       th
@@ -12,6 +15,9 @@ table
     - @schemas.each do |schema|
       tr
         td = schema.name
+        td = schema.max_slaves
+        td = schema.num_slaves
+        td = schema.dead_slaves
         td = link_to 'Show', schema
         td = link_to 'Edit', edit_schema_path(schema)
         td = link_to 'Copy', copy_schema_path(schema)

@@ -492,7 +492,7 @@ def computer_thread(client, computer)
         log.save
       end
     elsif respond[0] == "ip_cooldown"
-      ip = respond[1]
+      ip = respond[1].chomp!
       cooldown = respond[2].to_i
       proxy = Proxy.where(ip: ip).first
       if proxy != nil

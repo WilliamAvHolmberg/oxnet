@@ -7,7 +7,8 @@ class Proxy < ApplicationRecord
     end_time = DateTime.now
     start_time = last_used
     elapsed_time = (end_time.to_f - start_time.to_f).to_i
-    has_cooldown = elapsed_time < cooldown
+    default_cooldown = 60
+    has_cooldown = elapsed_time < cooldown + default_cooldown
     if !has_cooldown
       self.update_attributes(cooldown: 0)
     end

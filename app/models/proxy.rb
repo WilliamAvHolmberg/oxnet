@@ -5,7 +5,7 @@ class Proxy < ApplicationRecord
 
   def is_available
     end_time = DateTime.now
-    start_time = ast_used
+    start_time = last_used
     elapsed_time = (end_time.to_f - start_time.to_f).to_i
     return Pinger.ProxyAvailable(ip, port) && elapsed_time > 60;
   end

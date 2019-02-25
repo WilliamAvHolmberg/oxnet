@@ -497,9 +497,9 @@ def computer_thread(client, computer)
       proxy = Proxy.where(ip: ip).first
       if proxy != nil
         puts "PROXY IS NOT NULL AND WE SET TIMEOUT TO : #{cooldown}"
-        #current_cooldown = proxy.cooldown
-        #proxy.update(cooldown: cooldown + current_cooldown)
-        #proxy.save
+        current_cooldown = proxy.cooldown
+        proxy.update(cooldown: cooldown + current_cooldown)
+        proxy.save
       end
     elsif respond[0] == "log"
       #get new instructions

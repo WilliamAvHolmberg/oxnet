@@ -501,6 +501,7 @@ def computer_thread(client, computer)
         proxy.update(cooldown: cooldown + current_cooldown)
         proxy.save
       end
+      client.puts "hello"
     elsif respond[0] == "log"
       #get new instructions
       instruction_queue = Instruction.where(completed: false).select{|ins| ins.computer_id == computer.id && !ins.completed && ins.is_relevant}

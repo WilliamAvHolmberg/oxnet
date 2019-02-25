@@ -501,6 +501,7 @@ def computer_thread(client, computer)
       if proxy != nil
         puts "PROXY IS NOT NULL AND WE SET TIMEOUT TO : #{cooldown}"
         current_cooldown = proxy.cooldown
+        proxy.update(last_used: DateTime.now)
         proxy.update(cooldown: cooldown)
         proxy.save
       end

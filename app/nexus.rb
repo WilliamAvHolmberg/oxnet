@@ -480,6 +480,8 @@ def computer_thread(client, computer)
   while(!client.closed?)
     respond = client.gets.split(":")
     #puts respond.length
+    puts "comp mess"
+    puts respond
     if respond[0] == "account_request"
       account = find_suitable_account
       if account == nil

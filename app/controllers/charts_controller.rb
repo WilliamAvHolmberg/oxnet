@@ -11,6 +11,16 @@ class ChartsController < ApplicationController
 
   def show
 
+    @chartColors = {
+        red: 'rgb(255, 99, 132)',
+        orange: 'rgb(255, 159, 64)',
+        yellow: 'rgb(255, 205, 86)',
+        green: 'rgb(75, 192, 192)',
+        blue: 'rgb(54, 162, 235)',
+        purple: 'rgb(153, 102, 255)',
+        grey: 'rgb(201, 203, 207)'
+    }
+
     @timezone_offset = Time.zone_offset(Time.now.getlocal.zone) / 3600
     @tz_interval = (@timezone_offset >= 0 ? "+" : "-") + " interval '#{@timezone_offset} hour'"
 
@@ -23,6 +33,7 @@ class ChartsController < ApplicationController
     @hourly_profit_chart = calc_hourly_profit_chart()
     @ban_time_chart = calc_ban_time_chart()
     @schema_profitability_chart = calc_schema_profitability_chart()
+    @account_creation_rates = calc_account_creation_rates()
 
     render 'charts'
   end
@@ -103,8 +114,16 @@ class ChartsController < ApplicationController
     @recent_profits = Array.new
     @accounts_created = []
     @accounts_banned = []
+    last_date = @recent_profits_rows.first.hour
     @recent_profits_rows.each do |pr|
-      date = "#{pr.hour}".sub! ":00:00 UTC", ""
+      while pr.hour - last_date > 60.minutes
+        last_date = last_date + 60.minutes
+        date = ("#{last_date}".sub!(":00:00 UTC", ""))
+        @dates << date
+        @recent_profits << 0
+      end
+      last_date = pr.hour
+      date = "#{pr.hour}".sub!(":00:00 UTC", "")
       @dates << date
       @recent_profits << pr.money_made.to_i
     end
@@ -118,10 +137,16 @@ class ChartsController < ApplicationController
                 borderColor: "rgba(255, 199, 58,1)",
                 data: @recent_profits
             },
-        ]
+        ],
     }
+    options = { scales: {
+        xAxes: [{
+            ticks: {
+                min: 0
+            }}]}}
+    options = options.merge(@chart_options)
 
-    return ChartHelpers.chart('line', data, @chart_options);
+    return ChartHelpers.chart('line', data, options);
   end
   def calc_ban_time_chart
 
@@ -164,7 +189,7 @@ class ChartsController < ApplicationController
 
     # interval = "#{timezone_offset[0]} time '#{timezone_offset[1..-1]}'"
     start_date = 5.days.ago
-    @accounts = Account.where('last_seen IS NOT NULL')
+    accounts = Account.where('last_seen IS NOT NULL')
                           .where('last_seen > ?', start_date.beginning_of_day)
                          .where('last_seen > created_at')
                          .where('created=true AND banned=true')
@@ -174,12 +199,12 @@ class ChartsController < ApplicationController
                     .includes(:mule_logs)
 
     all_schema_data = Array.new
-    @accounts.each do |account|
+    accounts.each do |account|
       next if account.schema == nil
       next if account.account_type.name.include? "MULE"
       bannedAt = ((account.last_seen - account.created_at) / 3_600).floor
       hours_online = (account.time_online / 3_600).floor
-      next if bannedAt - hours_online > 1
+      next if bannedAt - hours_online > 2
       schema_id = 0 #account.schema.original_id
       schema_data = all_schema_data[schema_id]
       if schema_data == nil
@@ -219,7 +244,7 @@ class ChartsController < ApplicationController
       labels[i] = "#{i}H"
     end
 
-    @all_schema_data = all_schema_data[0].getRaw
+    # all_schema_data = all_schema_data[0].getRaw
 
     data = {
         labels: labels,
@@ -258,6 +283,92 @@ class SchemaProfit
     end
     return newData
   end
+end
+
+
+def calc_account_creation_rates
+  interval = @tz_interval
+  start_date = 60.days.ago
+  accounts_created_rows = Account.where('created_at IS NOT NULL')
+                               .where('time_online > 120')
+                               .where('created_at > ?', start_date.beginning_of_day)
+                               .group("proxy_id,DATE(created_at #{interval})", config.time_zone)
+                               .select("proxy_id, date(created_at #{interval}) as date, COUNT(*) AS count")
+                               .order("date").all
+  accounts_not_created_rows = Account.where('created_at IS NOT NULL')
+                              .where('created = false')
+                              .where('created_at > ?', start_date.beginning_of_day)
+                              .group("proxy_id, DATE(created_at #{interval})", config.time_zone)
+                              .select("proxy_id, date(created_at #{interval}) as date, COUNT(*) AS count")
+                              .order("date").all
+
+  all_proxies = Proxy.all
+  dates = []
+  accounts_created = {}
+  accounts_not_created = {}
+  accounts_created_rows.each do |row|
+    date = row.date
+    dates << date if(dates.length == 0 || date > dates.last)
+    proxy = all_proxies.select{|r| r.id == row.proxy_id }.first
+    proxy_name = proxy.location.to_s
+    proxy_name = "UNKNOWN" if proxy_name == nil
+
+    accounts_created[proxy_name] = [] if accounts_created[proxy_name].nil?
+    accounts_not_created[proxy_name] = [] if accounts_not_created[proxy_name].nil?
+
+    row2 = accounts_not_created_rows.select { |row2| row2.date == date && row2.proxy_id == row.proxy_id}.first
+
+    accounts_created[proxy_name] << (row.nil? ? 0 : row.count)
+    accounts_not_created[proxy_name] << (row2.nil? ? 0 : row2.count)
+  end
+  @accounts_created_rows = accounts_created
+
+  data = {
+      labels: dates,
+      datasets: [
+      ]
+  }
+  accounts_created.each do |proxy_name, array|
+    data[:datasets] << {
+        label: "#{proxy_name} Created",
+        backgroundColor: "rgba(37, 209, 54,0.01)",
+        borderColor: "rgba(37, 209, 54,1)",
+        data: accounts_created[proxy_name]
+    }
+    data[:datasets] << {
+        label: "#{proxy_name} Failed",
+        backgroundColor: "rgba(216, 32, 32,0.01)",
+        borderColor: "rgba(216, 32, 32,1)",
+        data: accounts_not_created[proxy_name]
+    }
+  end
+
+
+  data2 = {
+      labels: [],
+      datasets: [
+      ]
+  }
+  i = 0
+  accounts_created.each do |proxy_name, array|
+    data2[:datasets] << {
+        label: "#{proxy_name} Created",
+        backgroundColor: @chartColors[@chartColors.keys[i % @chartColors.length]],
+        borderWidth: 3,
+        borderColor: "rgba(37, 209, 54, 1)",
+        data: [ accounts_created[proxy_name].inject(0, :+) ]
+    }
+    data2[:datasets] << {
+        label: "#{proxy_name} Failed",
+        backgroundColor: @chartColors[@chartColors.keys[i % @chartColors.length]],
+        borderWidth: 3,
+        borderColor: "rgba(216, 32, 32, 1)",
+        data: [ accounts_not_created[proxy_name].inject(0, :+) ]
+    }
+    i+=1
+  end
+
+  return ChartHelpers.chart('line', data, @chart_options) + ChartHelpers.chart('bar', data2, @chart_options)
 end
 
 module ChartHelpers

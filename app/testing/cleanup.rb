@@ -398,16 +398,20 @@ def test
 end
 
 
-def get_made
-  time = DateTime.parse("15/2/2019 0:00:00")
+def get_withdrawn
+  time = DateTime.parse("20/2/2019 0:00:00")
   amount_of_loops = (DateTime.tomorrow - time).to_i
   puts amount_of_loops
   money_made = 0
   amount_of_loops.times do
-    accounts = Account.where(created: true, created_at: time..time+1.days)
+    accounts = Account.where(account_type: AccountType.find(2), created: true)
     accounts.each do |acc|
-      puts "#{acc.money_made}:#{acc.get_total_money_deposited}"
+      withdrawn = acc.get_total_money_withdrawn
+      puts "#{acc.money_withdrawn}:#{withdrawn}"
+      acc.update(money_withdrawn: withdrawn)
+      acc.save
     end
+
     time = time + 1.days
   end
   #puts "total money made: #{money_made}"
@@ -415,24 +419,24 @@ def get_made
   #acc_average = average/accounts.size
   #puts "average: #{average}, acc average: #{acc_average}"
 end
-#get_made
-#
 
-#account = Account.create(username: "hellotest")
-#log = MuleLog.create(account: account, item_amount: 30000, mule: "Test")
-#puts account.money_made
-#
-#
-#
-
-
-proxy = Proxy.find(1)
-end_time = DateTime.now
-start_time = proxy.last_used
-puts ((end_time.to_f - start_time.to_f)).to_i
-proxy.save
-
-#puts acc.get_total_money_deposited
-#et_daily("BATCH1")
-#find_acc
-#Hiscore.create(skill: Skill.where(name: "Woodcutting").first).save
+def account_created_info
+  time = DateTime.parse("20/2/2019 0:00:00")
+  amount_of_loops = (DateTime.tomorrow - time).to_i
+  puts amount_of_loops
+  amount_of_loops.times do
+    puts "DAY:#{time}"
+    accounts = Account.where(created_at: time..time+1.day)
+    total_amount = accounts.size
+    not_created = accounts.where(created: false)
+    created = accounts.where(created: true)
+    proxies = Proxy.all
+    proxies.each do |proxy|
+      accounts = not_created.where(proxy: proxy)
+      puts "Proxy name: #{proxy.location}...failed #{accounts.size}"
+    end
+    puts "Created: #{created.size}....not created#{not_created.size}"
+    time = time + 1.days
+  end
+end
+account_created_info

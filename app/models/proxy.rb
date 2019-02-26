@@ -19,7 +19,7 @@ class Proxy < ApplicationRecord
     return has_cooldown
   end
   def cooldown
-    num = (last_used.to_f + self[:cooldown] - DateTime.now.to_f).to_i
+    num = (last_used.to_f + self[:cooldown] + custom_cooldown - DateTime.now.to_f).to_i
     if num < 0
       self.update_attributes(cooldown: 0)
       num = 0

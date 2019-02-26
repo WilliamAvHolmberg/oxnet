@@ -3,16 +3,6 @@ class AccountsController < ApplicationController
   def index
     @available_accounts = Account.where(banned: false, created: true).sort_by{|acc|acc.get_total_level}.reverse
   end
-  def mules
-    @mules = Account.where(account_type_id: 2)
-    start_day = DateTime.now.beginning_of_day - 7.days
-    @days = []
-    i = 1
-    7.times do
-      @days << start_day + i.days
-      i+= 1
-    end
-  end
   def show
     @account = Account.find(params[:id])
     @tasks = @account.schema.tasks if !@account.schema.nil?

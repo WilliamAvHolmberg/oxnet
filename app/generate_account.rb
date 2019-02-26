@@ -155,7 +155,7 @@ class GenerateAccount
     def create_account2(computer, proxy, name, email, world)
       password = "ugot00wned2"
       schema = Schema.next_to_use
-      mule = Account.where(username: "RunRestV").first #not needed. random
+      mule = Account.where(username: "PetDhaL").first #not needed. random
       #proxy = find_available_proxy
       account = Account.new(:eco_system => computer.eco_system, :login => email, :password => password, :username => name, :world => world.number,
                             :computer => computer, :account_type => AccountType.where(:name => "SLAVE").first,:mule => mule,
@@ -195,7 +195,7 @@ class GenerateAccount
   end
 
   def get_least_used_proxies(eco_system)
-    available_proxies = Proxy.where(eco_system: eco_system).select{|proxy| proxy.is_available}
+    available_proxies = Proxy.where(eco_system: eco_system).select{|proxy| proxy.is_available && !proxy.has_cooldown}
 
     proxies = Array.new
     current_lowest = 10000

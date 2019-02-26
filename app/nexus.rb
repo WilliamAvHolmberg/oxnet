@@ -480,6 +480,8 @@ def computer_thread(client, computer)
   while(!client.closed?)
     respond = client.gets.split(":")
     #puts respond.length
+    puts "comp mess"
+    puts respond
     if respond[0] == "account_request"
       account = find_suitable_account
       if account == nil
@@ -491,6 +493,19 @@ def computer_thread(client, computer)
         log = Log.new(computer_id: computer.id, account_id: account.id, text: "Account:#{account.login} Handed out to: #{computer.name}")
         log.save
       end
+    elsif respond[0] == "ip_cooldown"
+      ip = respond[1]
+      puts "HELLO IP IS #{ip}"
+      cooldown = respond[2].to_i
+      proxy = Proxy.where(ip: ip).first
+      if proxy != nil
+        puts "PROXY IS NOT NULL AND WE SET TIMEOUT TO : #{cooldown}"
+        current_cooldown = proxy.cooldown
+        proxy.update(last_used: DateTime.now)
+        proxy.update(cooldown: cooldown + current_cooldown)
+        proxy.save
+      end
+      client.puts "hello"
     elsif respond[0] == "log"
       #get new instructions
       instruction_queue = Instruction.where(completed: false).select{|ins| ins.computer_id == computer.id && !ins.completed && ins.is_relevant}

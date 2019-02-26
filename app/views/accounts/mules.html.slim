@@ -1,0 +1,15 @@
+h1 Listing Mules
+
+table
+  thead
+    tr
+      th Name
+      - @days.each do |day|
+        th = day
+
+  tbody
+    - @mules.each do |mule|
+      tr
+        td = mule.username
+        - @days.each do |day|
+          td = formatted_gp(money_made_day(mule, day))

@@ -59,9 +59,13 @@ Rails.application.routes.draw do
   resources :computers
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   resources :accounts do
+    collection do
+      get 'mules', to: 'accounts#mules'
+    end
     member do
       get 'json'
     end
+
   end
   resources :proxies do
     member do

@@ -701,6 +701,9 @@ def script_thread(client, account)
       end
     end
   end
+  rescue IOError
+    puts "Script Thread for: #{client} has been closed"
+    client.close
   rescue Exception => ex
     puts ex
     puts ex.backtrace
@@ -913,7 +916,7 @@ loop do
       #thread = nil
       #end
     end
-  rescue SystemExit, Interrupt
+  rescue SystemExit, Interrupt, LocalJumpError
     return
   rescue Exception => ex
     puts ex

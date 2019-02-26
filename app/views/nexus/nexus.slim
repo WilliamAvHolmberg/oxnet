@@ -153,8 +153,8 @@
                     - @offlineMule = mule if mule.is_available
                     tr
                       td = mule.username
-                      td = mule.get_money_deposited(@mule_logs)
-                      td = mule.get_money_withdrawn(@mule_logs)
+                      td style="color:red" = ActiveSupport::NumberHelper.number_to_delimited(mule.get_money_deposited(@mule_logs))
+                      td style="color:green" = ActiveSupport::NumberHelper.number_to_delimited(mule.get_money_withdrawn(@mule_logs))
 
 
       .row

@@ -1,4 +1,4 @@
-
+/ pre = JSON.pretty_generate(@accounts_created_rows.as_json)
 div style="max-width:900px"
   .table-responsive
     h2 Daily Stats
@@ -12,6 +12,9 @@ div style="max-width:900px"
   .table-responsive
     h2 Profit of each Schema per hour of operation
     = @schema_profitability_chart
+  .table-responsive
+    h2 Account creation success rates
+    = @account_creation_rates
       //pre = JSON.pretty_generate(@all_schema_data)
       //used to stop the .card element creation
 table

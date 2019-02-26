@@ -13,13 +13,17 @@ class Schema < ApplicationRecord
           .select("schemas.*,
 (SELECT COUNT(*) FROM schemas as schB WHERE schB.disabled=false AND schB.original_id=schemas.id) as num_slaves,
 (SELECT COUNT(*) FROM schemas as schB WHERE schB.disabled=true AND schB.original_id=schemas.id) as dead_slaves")
-          .order('max_slaves ASC, num_slaves ASC')
+          .order('max_slaves ASC,num_slaves ASC')
     end
     def next_to_use
-      #result = ordered_by_use.where('num_slaves < max_slaves')
-      #result = ordered_by_use.last if result == nil
-      #return result
-      return Schema.where(default: false).first
+      results = primary_schemas
+                   .select("schemas.*,
+(SELECT COUNT(*) FROM schemas as schB WHERE schB.disabled=false AND schB.original_id=schemas.id) as num_slaves")
+                    .sort_by{|row| (row.max_slaves - row.num_slaves) }
+      results.each do |result|
+        return result if (result.num_slaves < result.max_slaves)
+      end
+      return results.last
     end
   end
 

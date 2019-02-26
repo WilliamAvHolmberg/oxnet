@@ -9,9 +9,11 @@ table
     th Password
     th Created At
     th Linked Account
-    th last used
-    th time since last used
-    th cooldown
+    th Lastest Use
+    th Time Since Last Use
+    th Custom Cooldown
+    th Current Cooldown
+
   - @proxies.each do |proxy|
     tr
       td = proxy.id
@@ -29,5 +31,6 @@ table
       td = proxy.last_used
       td = DateTime.now.to_f - proxy.last_used.to_f
       td = proxy.cooldown
+      td = proxy.custom_cooldown
       td = link_to 'Destroy', proxy, method: :delete
 = link_to 'New', new_proxy_path

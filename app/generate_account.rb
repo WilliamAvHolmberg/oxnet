@@ -141,7 +141,10 @@ class GenerateAccount
 
 
   public
-
+    def get_number_of_mules
+      account_type = AccountType.where(:name => "MULE")
+      return Account.where(account_type: account_type, banned: false).where("created=true OR created_at > NOW()- INTERVAL '2 HOURS'").count
+    end
     def create_account(computer, proxy)
       if proxy == nil
         puts "No proxy found for this ecosystem"
@@ -156,9 +159,13 @@ class GenerateAccount
       password = "ugot00wned2"
       schema = Schema.next_to_use
       mule = Account.where(username: "PetDhaL").first #not needed. random
+      account_type = "SLAVE"
+      if get_number_of_mules < 2
+        account_type = "MULE"
+      end
       #proxy = find_available_proxy
       account = Account.new(:eco_system => computer.eco_system, :login => email, :password => password, :username => name, :world => world.number,
-                            :computer => computer, :account_type => AccountType.where(:name => "SLAVE").first,:mule => mule,
+                            :computer => computer, :account_type => AccountType.where(:name => account_type).first,:mule => mule,
                             :schema => schema, :proxy => proxy, :should_mule => true, :created => false, :rs_world => world)
 
       account.save

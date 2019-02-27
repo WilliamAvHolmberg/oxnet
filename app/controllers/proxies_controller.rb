@@ -57,6 +57,9 @@ class ProxiesController < ApplicationController
   end
 
   def destroy
+    replacement = Proxy.all.sample
+    Account.where('banned=false AND created=true').where(proxy_id: params[:id]).update_all(proxy_id: replacement.id)
+    Account.where(proxy_id: params[:id]).update_all(proxy_id: nil)
     @proxy = Proxy.find(params[:id])
     @proxy.destroy
 

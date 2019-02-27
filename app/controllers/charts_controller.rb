@@ -189,14 +189,13 @@ class ChartsController < ApplicationController
 
     # interval = "#{timezone_offset[0]} time '#{timezone_offset[1..-1]}'"
     start_date = 5.days.ago
-    accounts = Account.where('last_seen IS NOT NULL')
+    accounts = Account.includes(:mule_logs).where('last_seen IS NOT NULL')
                           .where('last_seen > ?', start_date.beginning_of_day)
-                         .where('last_seen > created_at')
+                         .where('last_seen > created_at AND time_online > 7200')
                          .where('created=true AND banned=true')
                          .order('id DESC')
                          .limit(100)
-                    .all
-                    .includes(:mule_logs)
+                          .all
 
     all_schema_data = Array.new
     accounts.each do |account|
@@ -290,7 +289,7 @@ def calc_account_creation_rates
   interval = @tz_interval
   start_date = 60.days.ago
   accounts_created_rows = Account.where('created_at IS NOT NULL')
-                               .where('time_online > 120')
+                               .where('time_online > 0')
                                .where('created_at > ?', start_date.beginning_of_day)
                                .group("proxy_id,DATE(created_at #{interval})", config.time_zone)
                                .select("proxy_id, date(created_at #{interval}) as date, COUNT(*) AS count")
@@ -310,8 +309,9 @@ def calc_account_creation_rates
     date = row.date
     dates << date if(dates.length == 0 || date > dates.last)
     proxy = all_proxies.select{|r| r.id == row.proxy_id }.first
-    proxy_name = proxy.location.to_s
-    proxy_name = "UNKNOWN" if proxy_name == nil
+    proxy_name = nil
+    proxy_name = proxy.location.to_s if proxy != nil
+    proxy_name = "[DELETED]" if proxy_name == nil
 
     accounts_created[proxy_name] = [] if accounts_created[proxy_name].nil?
     accounts_not_created[proxy_name] = [] if accounts_not_created[proxy_name].nil?

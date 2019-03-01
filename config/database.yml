@@ -29,10 +29,12 @@ development:
   encoding: utf8
   database: nex
   #host: 193.108.117.105 ##REAL OXNET
-  host: oxnetdebug.ddns.net #DEBUG
-  username: wavh
-  password: 'Lifeunixbook123'
+  #username: wavh
+  #password: 'Lifeunixbook123'
  # port: 6432 REAL OXNET
+  host: oxnetdebug.ddns.net #DEBUG
+  username: root
+  password: Lifeunixbook123
   port: 5432
 
 

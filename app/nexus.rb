@@ -818,7 +818,7 @@ def launch_accounts
   end
 end
 
-def launch_accounts
+def unlock_accounts
   accounts = Account.where(banned: false, created: true, locked: true)
   if !accounts.nil? && !accounts.blank?
     accounts = accounts.select{|acc| acc != nil && acc.account_type.name == "SLAVE" && isAccReadToLaunch(acc)} #Shuffled for performance
@@ -836,7 +836,7 @@ def launch_accounts
       end
     end
   else
-    puts "No accounts to launch"
+    puts "No accounts to unlock"
   end
 end
 

@@ -7,6 +7,7 @@ require 'net/ping'
 require_relative 'generate_gear'
 require_relative 'generate_schema'
 require_relative 'functions'
+require 'nokogiri'
 
 
 class GenerateAccount

@@ -439,4 +439,9 @@ def account_created_info
     time = time + 1.days
   end
 end
-account_created_info
+
+TaskType.find(3).update(name: "WOODCUTTING")
+TaskType.find(4).update(name: "COMBAT")
+TaskType.find(5).update(name: "AGILITY")
+TaskType.create(id: 6, name: "QUEST")
+TaskType.find(7).update(name: "MINING")

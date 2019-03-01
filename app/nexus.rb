@@ -17,11 +17,12 @@ end
 
 @serverAddress = nil
 def getServerAddress
-  if(@serverAddress == nil || @serverAddress.length)
-    @serverAddress = File.readlines("server.txt").first
-    @serverAddress = @serverAddress.strip
-  end
-  return @serverAddress.strip
+  #if(@serverAddress == nil || @serverAddress.length)
+  ##  @serverAddress = File.readlines("server.txt").first
+  # @serverAddress = @serverAddress.strip
+  #end
+  #return @serverAddress.strip
+  return "oxnetdebug.ddns.net"
 end
 
 def computer_get_respond(instruction_queue)

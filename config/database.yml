@@ -27,7 +27,7 @@ development:
   timeout: 15000
   adapter: postgresql
   encoding: utf8
-  database: nex
+  database: debug_env
   #host: 193.108.117.105 ##REAL OXNET
   #username: wavh
   #password: 'Lifeunixbook123'

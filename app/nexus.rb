@@ -828,7 +828,7 @@ end
 
 @last_unlock = 0
 def unlock_accounts
-  if time - @last_unlock > 600
+  if Time.now - @last_unlock > 600
   accounts = Account.where(banned: false, created: true, locked: true)
   if !accounts.nil? && !accounts.blank?
     accounts = accounts.select{|acc| acc != nil && acc.account_type.name == "SLAVE" && isAccReadToLaunch(acc)} #Shuffled for performance

@@ -3,12 +3,11 @@ require 'active_record'
 require 'httparty'
 require 'nokogiri'
 require 'acts_as_list'
-require_relative '../models/application_record'
 require 'json'
 require 'open-uri'
 require_relative 'generate_items'
 require_relative 'generate_worlds'
-require_relative 'generate_slots'
+#require_relative 'generate_slots'
 
 
 
@@ -40,8 +39,8 @@ InstructionType.create(name: "MULE_WITHDRAW").save
 InstructionType.create(name: "CREATE_ACCOUNT").save
 
 #gen items
-GenerateItems.new
+#GenerateItems.new
 #gen worlds
-GenerateWorlds.new
+#GenerateWorlds.new
 #gen slots
-GenerateSlots.new
+#GenerateSlots.new

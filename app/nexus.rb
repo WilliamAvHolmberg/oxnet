@@ -42,10 +42,19 @@ def computer_get_respond(instruction_queue)
         ins.update(:completed => true)
         ins.save
         return res
+        elsif ins.instruction_type.name == "UNLOCK_ACCOUNT"
+        account = ins.account
+        log = Log.new(account_id: ins.account.id, text: "Account:#{ins.account.login} is gonna be unlocked: #{ins.computer.name}")
+        log.save
+        res =  "unlock_account:#{account.username}:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + account.world.chomp + ":NEX" + ":http://#{serverAddress}:3000/accounts/#{account.id}/json"
+        ins.update(:completed => true)
+        ins.save
+        return res
       elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account_id == nil
         ins.update(:completed => true)
         puts "wrong"
       return "account_request:0"
+
       elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account_id != nil
         ins.update(:completed => true)
         ins.save
@@ -506,6 +515,17 @@ def computer_thread(client, computer)
         proxy.save
       end
       client.puts "hello"
+    elsif respond[0] == "update_password"
+      email = respond[1]
+      new_password = respond[2]
+      puts "HELLO NAME IS #{email}"
+      account = Proxy.where(login: email).first
+      if account != nil
+        puts "Account is not null"
+        account.update(password: password)
+        account.save
+      end
+      client.puts "hello"
     elsif respond[0] == "log"
       #get new instructions
       instruction_queue = Instruction.where(completed: false).select{|ins| ins.computer_id == computer.id && !ins.completed && ins.is_relevant}
@@ -774,6 +794,52 @@ def connection_established?
   end
 end
 
+
+
+
+def launch_accounts
+  accounts = Account.where(banned: false, created: true, locked: false)
+  if !accounts.nil? && !accounts.blank?
+    accounts = accounts.select{|acc| acc != nil && acc.account_type.name == "SLAVE" && isAccReadToLaunch(acc)} #Shuffled for performance
+  end
+  if !accounts.nil? && !accounts.blank?
+    accounts = accounts.sort_by{|acc|acc.get_total_level}.reverse
+    accounts.each do |acc|
+      computer = acc.computer if acc.computer_id != nil
+      if computer != nil && computer.is_available_to_nexus && computer.can_connect_more_accounts
+        Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save
+        Log.new(computer_id: computer.id, account_id: acc.id, text: "Instruction created")
+        puts "instruction for #{acc.username} to create new client at #{acc.computer.name}"
+        sleep(3.seconds)
+      end
+    end
+  else
+    puts "No accounts to launch"
+  end
+end
+
+def launch_accounts
+  accounts = Account.where(banned: false, created: true, locked: true)
+  if !accounts.nil? && !accounts.blank?
+    accounts = accounts.select{|acc| acc != nil && acc.account_type.name == "SLAVE" && isAccReadToLaunch(acc)} #Shuffled for performance
+  end
+  if !accounts.nil? && !accounts.blank?
+    accounts = accounts.sort_by{|acc|acc.get_total_level}.reverse
+    accounts.each do |acc|
+      computer = acc.computer if acc.computer_id != nil
+      if computer != nil && computer.is_available_to_nexus && computer.can_connect_more_accounts
+        ##instructionType to - UNLOCK ACCOUNT
+        Instruction.new(:instruction_type_id => InstructionType.find(4), :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save
+        Log.new(computer_id: computer.id, account_id: acc.id, text: "Instruction created")
+        puts "instruction for #{acc.username} to create new client at #{acc.computer.name}"
+        sleep(3.seconds)
+      end
+    end
+  else
+    puts "No accounts to launch"
+  end
+end
+
 def main_thread
   begin
     loop do
@@ -784,24 +850,10 @@ def main_thread
       end
       time = Time.now.change(:month => 1, :day => 1, :year => 2000)
       puts "Main Thread loop nexus #{time}"
-      accounts = Account.where(banned: false, created: true)
-      if !accounts.nil? && !accounts.blank?
-        accounts = accounts.select{|acc| acc != nil && acc.account_type.name == "SLAVE" && isAccReadToLaunch(acc)} #Shuffled for performance
-      end
-      if !accounts.nil? && !accounts.blank?
-        accounts = accounts.sort_by{|acc|acc.get_total_level}.reverse
-        accounts.each do |acc|
-          computer = acc.computer if acc.computer_id != nil
-          if computer != nil && computer.is_available_to_nexus && computer.can_connect_more_accounts
-            Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save
-            Log.new(computer_id: computer.id, account_id: acc.id, text: "Instruction created")
-            puts "instruction for #{acc.username} to create new client at #{acc.computer.name}"
-            sleep(3.seconds)
-          end
-        end
-      else
-        puts "No accounts to launch"
-      end
+      launch_accounts
+      unlock_accounts
+
+
 
       sleep(10.seconds)
     end

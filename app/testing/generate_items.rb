@@ -123,4 +123,6 @@ def add_items(min,max)
   end
 end
 
-add_items(0,14000)
+def generate_items
+  add_items(0,14000)
+end

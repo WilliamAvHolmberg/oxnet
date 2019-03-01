@@ -70,7 +70,6 @@ def remove_worlds
   RsWorld.destroy_all
 end
 
-add_worlds
 
 #world = entries.css('table')[0].css('tr')[1].css('td')[0].text.gsub("\Old School ", ' ').to_i
 #end

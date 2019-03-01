@@ -28,10 +28,12 @@ development:
   adapter: postgresql
   encoding: utf8
   database: nex
-  host: 193.108.117.105
+  #host: 193.108.117.105 ##REAL OXNET
+  host: oxnetdebug.ddns.net #DEBUG
   username: wavh
   password: 'Lifeunixbook123'
-  port: 6432
+ # port: 6432 REAL OXNET
+  port: 5432
 
 
   # The specified database role being used to connect to postgres.

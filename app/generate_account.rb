@@ -145,7 +145,7 @@ class GenerateAccount
     end
   private
     def find_available_proxy
-      return Proxy.where(auto_assign: true).select{|proxy| proxy.is_available}.sample
+      return Proxy.where(auto_assign: true).select{|proxy| proxy.is_available && !proxy.has_cooldown}.sample
     end
 
   public

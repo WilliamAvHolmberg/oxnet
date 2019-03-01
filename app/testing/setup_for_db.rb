@@ -41,6 +41,6 @@ InstructionType.create(name: "CREATE_ACCOUNT").save
 #gen items
 #GenerateItems.new
 #gen worlds
-#GenerateWorlds.new
+GenerateWorlds.new
 #gen slots
 #GenerateSlots.new

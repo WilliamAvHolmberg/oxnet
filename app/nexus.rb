@@ -90,7 +90,7 @@ end
 
 
 def get_mule_withdraw_task_respond(account)
-  mule_withdraw_tasks = MuleWithdrawTask.where(:account => account,:created_at => (Time.now - 20.minutes..Time.now)).select{|task| !task.executed && task.is_relevant && !task.account!= nil && task.account.id == account.id }
+  mule_withdraw_tasks = MuleWithdrawTask.where(:account => account,:created_at => (Time.now.utc - 20.minutes..Time.now.utc)).select{|task| !task.executed && task.is_relevant && !task.account!= nil && task.account.id == account.id }
   if mule_withdraw_tasks != nil && mule_withdraw_tasks.length > 0
     task = mule_withdraw_tasks[0]
   else
@@ -583,10 +583,13 @@ def get_mule_respond(respond, account)
   if item_id != "995"
     account_type = "ITEM_MULE"
   end
+  if account.account_type.name == "MULE"
+    account_type = "MASTER_MULE"
+  end
 
-  mule = Account.where(eco_system: account.eco_system, banned: false, created: true).select{|acc| acc.is_available && acc.account_type.name == account_type}
-  if (account_type == "ITEM_MULE" && mule == nil || mule.length == 0)
-    mule = Account.where(eco_system: account.eco_system, banned: false, created: true).select{|acc| acc.is_available && acc.account_type.name == "MULE"}
+  mule = Account.where(eco_system: account.eco_system, banned: false, created: true).select{|acc| acc.id != account.id && acc.is_available && acc.account_type.name == account_type}
+  if (account_type != "MULE" && mule == nil || mule.length == 0)
+    mule = Account.where(eco_system: account.eco_system, banned: false, created: true).select{|acc| acc.id != account.id && acc.is_available && acc.account_type.name == "MULE"}
   end
   #if mule != nil && !mule.banned && (mule.proxy_is_available? || mule.proxy.ip.length < 5)
   if mule != nil && mule.length > 0
@@ -639,6 +642,14 @@ def get_mule_respond(respond, account)
     puts "we found no mule"
   end
   return "MULE_BUSY"
+end
+
+def get_account_info_respond(respond, account)
+  schema_name = (account.schema == nil ? "" : account.schema.name)
+  computer_name = (account.computer == nil ? "" : account.computer.name)
+  account_type = (account.account_type == nil ? "" : account.account_type.name)
+  created_at = account.created_at.httpdate.gsub!(":", ".") # RFC 1123 compliant date format
+  return "account_info:#{account.id}:#{account_type}:#{schema_name}:#{computer_name}:#{created_at}"
 end
 
 def task_log(account, parsed_respond)
@@ -696,6 +707,8 @@ def script_thread(client, account)
         client.puts("DISCONNECT:1")
       elsif respond[0] == "mule_request"
         client.puts get_mule_respond(respond, account)
+      elsif respond[0] == "account_info"
+        client.puts get_account_info_respond(respond, account)
       else
         client.puts "ok"
       end

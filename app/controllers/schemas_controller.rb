@@ -111,7 +111,7 @@ class SchemasController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def schema_params
-      params.require(:schema).permit(:name, :task_id, :default)
+      params.require(:schema).permit(:name, :task_id, :default, :max_slaves)
     end
 
 

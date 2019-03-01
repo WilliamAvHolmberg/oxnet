@@ -57,6 +57,9 @@ class ProxiesController < ApplicationController
   end
 
   def destroy
+    replacement = Proxy.all.sample
+    Account.where('banned=false AND created=true').where(proxy_id: params[:id]).update_all(proxy_id: replacement.id)
+    Account.where(proxy_id: params[:id]).update_all(proxy_id: nil)
     @proxy = Proxy.find(params[:id])
     @proxy.destroy
 
@@ -65,6 +68,6 @@ class ProxiesController < ApplicationController
 
   private
   def proxy_params
-    params.require(:proxy).permit(:location, :ip, :username, :password, :account_id, :port, :eco_system_id, :custom_cooldown)
+    params.require(:proxy).permit(:location, :ip, :username, :password, :account_id, :port, :eco_system_id, :custom_cooldown, :auto_assign)
   end
 end

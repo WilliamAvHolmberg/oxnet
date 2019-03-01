@@ -516,7 +516,7 @@ def computer_thread(client, computer)
         proxy.save
       end
       client.puts "hello"
-    elsif respond[0] == "update_password"
+    elsif respond[0] == "unlocked_account"
       email = respond[1]
       new_password = respond[2]
       puts "HELLO NAME IS #{email}"
@@ -524,6 +524,7 @@ def computer_thread(client, computer)
       if account != nil
         puts "Account is not null"
         account.update(password: password)
+        account.update(locked: false)
         account.save
       end
       client.puts "hello"
@@ -726,6 +727,12 @@ def script_thread(client, account)
         log = Log.new(computer_id: nil, account_id: account.id, text: respond)
         log.save
         client.puts("DISCONNECT:1")
+      elsif respond[0] == "locked"
+        puts "#{account.username} was locked!"
+        account.update(:locked => true)
+        log = Log.new(computer_id: nil, account_id: account.id, text: respond)
+        log.save
+        client.puts("DISCONNECT:1")
       elsif respond[0] == "mule_request"
         client.puts get_mule_respond(respond, account)
       elsif respond[0] == "account_info"
@@ -819,7 +826,9 @@ def launch_accounts
   end
 end
 
+@last_unlock = 0
 def unlock_accounts
+  if time - @last_unlock > 600
   accounts = Account.where(banned: false, created: true, locked: true)
   if !accounts.nil? && !accounts.blank?
     accounts = accounts.select{|acc| acc != nil && acc.account_type.name == "SLAVE" && isAccReadToLaunch(acc)} #Shuffled for performance
@@ -836,8 +845,12 @@ def unlock_accounts
         sleep(3.seconds)
       end
     end
+    @last_unlock = Time.now
   else
     puts "No accounts to unlock"
+  end
+  else
+    puts "lets not unlock yet"
   end
 end
 

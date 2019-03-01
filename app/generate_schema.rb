@@ -68,7 +68,7 @@ class GenerateSchema
       new_schema = Schema.find_by_name("#{account.username}'s Schema'")
       if new_schema == nil
         new_schema = Schema.create
-        new_schema.update(name: "#{account.username}'s Schema'")
+        new_schema.update(name: "#{account.username}'s Schema'", original_id: account.schema.id)
       end
       last_gear = nil
       last_weapon_type = 0

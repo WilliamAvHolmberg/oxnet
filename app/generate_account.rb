@@ -48,13 +48,14 @@ class GenerateAccount
 
 
   private
-    def find_available_proxy
-      proxies = Proxy.all.select{|proxy| proxy.is_available}
-      proxies.each do |proxy|
-        puts "name:#{proxy.location}"
-      end
-      return proxies.sample
-    end
+    # THIS FUNCTION WAS NOT BEING USED! Reduce confusion
+    # def find_available_proxy
+    #   proxies = Proxy.where(auto_assign: true).select{|proxy| proxy.is_available}
+    #   proxies.each do |proxy|
+    #     puts "name:#{proxy.location}"
+    #   end
+    #   return proxies.sample
+    # end
   private
     def find_available_computers
       #check so max accounts is not reached
@@ -104,7 +105,17 @@ class GenerateAccount
 
   private
     def get_random_domain
-      @mail_domains = ["yahoo.com", "gmail.com", "hotmail.com", "live.se", "hotmail.co.uk"]
+      if @lastGotMailDomains == nil || Time.now > @lastGotMailDomains + 900
+        @mail_domains = []
+        @lastGotMailDomains = Time.now
+        doc = Nokogiri::HTML(open("https://temp-mail.org/en/option/change/"))
+        doc.css('#domain option').each do |option|
+          @mail_domains << option.attr('value')
+        end
+      end
+      if @mail_domains.nil? || @mail_domains.length == 0
+        @mail_domains = ["@yahoo.com", "@gmail.com", "@outlook.com", "@hotmail.com", "@live.se", "@hotmail.co.uk"]
+      end
       return @mail_domains.sample
     end
   public
@@ -129,11 +140,11 @@ class GenerateAccount
     end
   private
     def generate_email(name)
-      return name + "@" + get_random_domain
+      return name + get_random_domain
     end
   private
     def find_available_proxy
-      return Proxy.select{|proxy| proxy.is_available}.sample
+      return Proxy.where(auto_assign: true).select{|proxy| proxy.is_available}.sample
     end
 
   public
@@ -141,7 +152,10 @@ class GenerateAccount
 
 
   public
-
+    def get_number_of_mules
+      account_type = AccountType.where(:name => "MULE")
+      return Account.where(account_type: account_type, banned: false).where("created=true OR created_at > NOW()- INTERVAL '2 HOURS'").count
+    end
     def create_account(computer, proxy)
       if proxy == nil
         puts "No proxy found for this ecosystem"
@@ -156,9 +170,13 @@ class GenerateAccount
       password = "ugot00wned2"
       schema = Schema.next_to_use
       mule = Account.where(username: "PetDhaL").first #not needed. random
-      #proxy = find_available_proxy
+      account_type = "SLAVE"
+      if get_number_of_mules < 1
+        account_type = "MULE"
+      end
+      proxy = find_available_proxy
       account = Account.new(:eco_system => computer.eco_system, :login => email, :password => password, :username => name, :world => world.number,
-                            :computer => computer, :account_type => AccountType.where(:name => "SLAVE").first,:mule => mule,
+                            :computer => computer, :account_type => AccountType.where(:name => account_type).first,:mule => mule,
                             :schema => schema, :proxy => proxy, :should_mule => true, :created => false, :rs_world => world)
 
       account.save

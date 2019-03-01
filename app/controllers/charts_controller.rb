@@ -313,8 +313,8 @@ def calc_account_creation_rates
     proxy_name = proxy.location.to_s if proxy != nil
     proxy_name = "[DELETED]" if proxy_name == nil
 
-    accounts_created[proxy_name] = [] if accounts_created[proxy_name].nil?
-    accounts_not_created[proxy_name] = [] if accounts_not_created[proxy_name].nil?
+    accounts_created[proxy_name] = Array.new(dates.length - 1, 0) if accounts_created[proxy_name].nil?
+    accounts_not_created[proxy_name] = Array.new(dates.length - 1, 0) if accounts_not_created[proxy_name].nil?
 
     row2 = accounts_not_created_rows.select { |row2| row2.date == date && row2.proxy_id == row.proxy_id}.first
 

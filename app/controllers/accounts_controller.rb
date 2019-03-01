@@ -71,7 +71,8 @@ class AccountsController < ApplicationController
 
   def edit
     @account = Account.find(params[:id])
-    @schemas = Schema.all
+    @schemas = Schema.where(default: false).or(Schema.where(id: @account.schema_id))
+
     @account_types = AccountType.all
     @computers = Computer.all
     @mules = Account.all.select {|acc| acc.account_type != nil && acc.account_type.name == "MULE"}
@@ -97,6 +98,13 @@ class AccountsController < ApplicationController
     else
       render 'edit'
     end
+  end
+
+  def ban
+    @account = Account.find(params[:id])
+    @account.update(banned: true)
+
+    redirect_to accounts_path
   end
 
   def destroy

@@ -963,7 +963,7 @@ loop do
             password = respond[4]
             username = respond[5]
             world = respond[6]
-            account = Account.new(:login => login, :password => password, :username => username, :world => RsWorld.order("RAND()").first,
+            account = Account.new(:login => login, :password => password, :username => username, :world => RsWorld.first,
                                   :computer => Computer.find_or_create_by(:name => "Suicide"), :account_type => AccountType.where(:name => "SLAVE").first,:mule => Account.where(:login => "ad_da_mig1@hotmail.com").first,
                                   :schema => Schema.find_or_create_by(:name => "Suicide"), :proxy => proxy, :should_mule => true)
             account.save

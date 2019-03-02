@@ -530,7 +530,7 @@ def computer_thread(client, computer)
       client.puts "hello"
     elsif respond[0] == "log"
       #get new instructions
-      instruction_queue = Instruction.where(completed: false).select{|ins| ins.computer_id == computer.id && !ins.completed && ins.is_relevant}
+      instruction_queue = Instruction.where(completed: false).select{|ins| ins.computer_id == computer.id && !ins.completed && ins.is_relevant && ins.instruction_type != nil}
       instruction_queue = instruction_queue.sort_by{|ins|ins.instruction_type} #prioritise launching clients over creating accounts
       #puts "Log from: #{computer.name}:::log:#{respond}"
       log = Log.new(computer_id: computer.id, text: respond)
@@ -839,7 +839,7 @@ def unlock_accounts
       computer = acc.computer if acc.computer_id != nil
       if computer != nil && computer.is_available_to_nexus && computer.can_connect_more_accounts
         ##instructionType to - UNLOCK ACCOUNT
-        Instruction.new(:instruction_type_id => InstructionType.find(4), :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save
+        Instruction.new(:instruction_type_id => InstructionType.find(4).id, :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save
         Log.new(computer_id: computer.id, account_id: acc.id, text: "Instruction created")
         puts "instruction for #{acc.username} to create new client at #{acc.computer.name}"
         sleep(3.seconds)

@@ -852,7 +852,7 @@ def unlock_accounts
         next
       end
       computer = acc.computer if acc.computer_id != nil
-      if computer != nil && computer.is_available_to_nexus && computer.can_connect_more_accounts && acc.proxy.is_ready_for_unlock
+      if computer != nil && computer.is_available_to_nexus && acc.proxy.is_ready_for_unlock
         ##instructionType to - UNLOCK ACCOUNT
         proxy = acc.proxy
         proxy.update(unlock_cooldown: DateTime.now + 7.minutes)

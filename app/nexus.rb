@@ -529,7 +529,7 @@ def computer_thread(client, computer)
       client.puts "hello"
     elsif respond[0] == "log"
       #get new instructions
-      instruction_queue = Instruction.where(completed: false).select{|ins| ins.computer_id == computer.id && !ins.completed && ins.is_relevant}
+      instruction_queue = Instruction.where(completed: false).select{|ins| ins.computer_id == computer.id && !ins.completed && ins.is_relevant && ins.instruction_type != nil}
       instruction_queue = instruction_queue.sort_by{|ins|ins.instruction_type} #prioritise launching clients over creating accounts
       #puts "Log from: #{computer.name}:::log:#{respond}"
       log = Log.new(computer_id: computer.id, text: respond)
@@ -828,7 +828,7 @@ end
 
 @last_unlock = 0
 def unlock_accounts
-  if Time.now - @last_unlock > 600
+  if Time.now - @last_unlock > 300
   accounts = Account.where(banned: false, created: true, locked: true)
   if !accounts.nil? && !accounts.blank?
     accounts = accounts.select{|acc| acc != nil && acc.account_type.name == "SLAVE" && isAccReadToLaunch(acc)} #Shuffled for performance
@@ -855,7 +855,7 @@ def unlock_accounts
     puts "No accounts to unlock"
   end
   else
-    puts "lets not unlock yet"
+    puts "lets not unlock yet. Wait #{Time.now.to_i - @last_unlock} seconds"
   end
 end
 

@@ -531,7 +531,7 @@ def computer_thread(client, computer)
       email = respond[1]
       new_password = respond[2]
       puts "HELLO NAME IS #{email}"
-      account = Proxy.where(login: email).first
+      account = Account.where(login: email).first
       if account != nil
         puts "Account is not null"
         account.update(password: password)
@@ -855,7 +855,7 @@ def unlock_accounts
       if computer != nil && computer.is_available_to_nexus && computer.can_connect_more_accounts && acc.proxy.is_ready_for_unlock
         ##instructionType to - UNLOCK ACCOUNT
         proxy = acc.proxy
-        proxy.update(unlock_cooldown: DateTime.now + 5.minutes)
+        proxy.update(unlock_cooldown: DateTime.now + 7.minutes)
         proxy.save
 
         unlock_instruction = getInstructionType("UNLOCK_ACCOUNT")

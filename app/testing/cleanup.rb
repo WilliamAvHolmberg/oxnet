@@ -440,8 +440,22 @@ def account_created_info
   end
 end
 
+def update_cooldown
+
 proxies = Proxy.all
 proxies.each do |proxy|
   proxy.update(unlock_cooldown: DateTime.now - 3.hours)
   proxy.save
 end
+end
+
+def update_proxy
+accounts = Account.where(account_type: AccountType.where(name: "SLAVE").first)
+proxy = Proxy.find(7)
+accounts.each do |acc|
+  acc.update(proxy: proxy)
+end
+end
+
+#update_proxy
+update_cooldown

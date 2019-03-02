@@ -534,7 +534,7 @@ def computer_thread(client, computer)
       account = Account.where(login: email).first
       if account != nil
         puts "Account is not null"
-        account.update(password: password)
+        account.update(password: new_password)
         account.update(locked: false)
         account.save
       end

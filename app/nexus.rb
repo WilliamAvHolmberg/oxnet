@@ -855,7 +855,7 @@ def unlock_accounts
     puts "No accounts to unlock"
   end
   else
-    puts "lets not unlock yet. Wait #{Time.now.to_i - @last_unlock} seconds"
+    puts "lets not unlock yet. Wait #{Time.now - @last_unlock} seconds"
   end
 end
 

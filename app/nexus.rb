@@ -865,7 +865,7 @@ def getInstructionType(instruction_name)
     InstructionType.create(name: instruction_name).save
     return InstructionType.where(name: instruction_name)
   end
-  return instruction_type
+  return instruction_type.first
 end
 
 def main_thread

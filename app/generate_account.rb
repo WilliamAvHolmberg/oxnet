@@ -104,6 +104,22 @@ class GenerateAccount
       return get_least_used_worlds.sample
     end
 
+
+  private
+  def get_domains
+    if @lastGotMailDomains == nil || Time.now > @lastGotMailDomains + 900
+      @mail_domains = []
+      @lastGotMailDomains = Time.now
+      doc = Nokogiri::HTML(open("https://temp-mail.org/en/option/change/"))
+      doc.css('#domain option').each do |option|
+        @mail_domains << option.attr('value')
+      end
+    end
+    if @mail_domains.nil? || @mail_domains.length == 0
+      @mail_domains = ["@yahoo.com", "@gmail.com", "@outlook.com", "@hotmail.com", "@live.se", "@hotmail.co.uk"]
+    end
+    return @mail_domains
+  end
   private
     def get_random_domain
       if @lastGotMailDomains == nil || Time.now > @lastGotMailDomains + 900
@@ -124,7 +140,7 @@ class GenerateAccount
     def canUnlockEmail(email)
       return false if email =~ /@(yahoo.com|gmail|outlook|live|hotmail)/
       domain = "@" + email.split("@").last
-      return @mail_domains.include? domain
+      return get_domains.include? domain
     end
 
     def generate_name

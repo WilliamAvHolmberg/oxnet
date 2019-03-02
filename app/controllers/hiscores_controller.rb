@@ -16,8 +16,8 @@ class HiscoresController < ApplicationController
   end
 
   def show_all
-    @hiscore = Hiscore.find(params[:id])
-    @accounts = Account.where(created: true).select{|acc| acc.stats != nil && acc.stats.where(skill: @hiscore.skill).first != nil }.sort_by{|acc| acc.stats.where(skill: @hiscore.skill).first.level}.reverse
+    @hiscore = Hiscore.includes(:skill).find(params[:id])
+    @accounts = Account.includes(:computer, :stats).where(created: true).select{|acc| acc.stats != nil && acc.stats.where(skill: @hiscore.skill).first != nil }.sort_by{|acc| acc.stats.where(skill: @hiscore.skill).first.level}.reverse
   end
 
   # GET /hiscores/new

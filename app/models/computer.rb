@@ -38,7 +38,7 @@ class Computer < ApplicationRecord
     return time_online
   end
   def get_available_accounts
-    accounts = Account.where(computer: self, banned: false, created: true)
+    accounts = Account.where(computer: self, banned: false, locked:false, created: true)
     return accounts
   end
   def get_connected_accounts

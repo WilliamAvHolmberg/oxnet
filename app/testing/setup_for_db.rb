@@ -37,6 +37,7 @@ BreakCondition.create(name: "TIME_OR_LEVEL").save
 InstructionType.create(name: "NEW_CLIENT").save
 InstructionType.create(name: "MULE_WITHDRAW").save
 InstructionType.create(name: "CREATE_ACCOUNT").save
+InstructionType.create(name: "UNLOCK_ACCOUNT").save
 
 #gen items
 #GenerateItems.new

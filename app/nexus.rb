@@ -557,11 +557,12 @@ def updateAccountLevels(string, account)
   array = string.split(';')
   array.each do |parsed|
     intern_parse = parsed.split(',')
-    puts parsed
+    # puts parsed
     name = intern_parse[0]
     level = intern_parse[1]
-    puts name
-    puts level
+    # puts name
+    # puts level
+
     skill = Skill.find_or_initialize_by(name: name)
     skill.save
     account_level = Stat.find_or_initialize_by(account_id: account.id, skill: skill)
@@ -758,7 +759,7 @@ end
 def create_account_thread
   last_check = 0
   interval = 5
-  generate_account = GenerateAccount.new
+  @generate_account = GenerateAccount.new
   begin
     while !connection_established?
       puts "Connecting..."
@@ -768,7 +769,7 @@ def create_account_thread
     loop do
       if Time.now > last_check + interval
         puts "lets create accounts"
-        generate_account.create_accounts_for_all_computers
+        @generate_account.create_accounts_for_all_computers
         last_check = Time.now
       else
         puts "next acc check: #{Time.now - (last_check + interval)}"
@@ -835,10 +836,15 @@ def unlock_accounts
   if !accounts.nil? && !accounts.blank?
     accounts = accounts.sort_by{|acc|acc.get_total_level}.reverse
     accounts.each do |acc|
+      if !@generate_account.canUnlockEmail(acc.email)
+        acc.update(banned: true)
+        next
+      end
       computer = acc.computer if acc.computer_id != nil
       if computer != nil && computer.is_available_to_nexus && computer.can_connect_more_accounts
         ##instructionType to - UNLOCK ACCOUNT
-        Instruction.new(:instruction_type_id => InstructionType.find(4), :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save
+        unlock_instruction = getInstructionType("UNLOCK_ACCOUNT")
+        Instruction.new(:instruction_type_id => unlock_instruction.id, :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save
         Log.new(computer_id: computer.id, account_id: acc.id, text: "Instruction created")
         puts "instruction for #{acc.username} to create new client at #{acc.computer.name}"
         sleep(3.seconds)
@@ -851,6 +857,15 @@ def unlock_accounts
   else
     puts "lets not unlock yet"
   end
+end
+
+def getInstructionType(instruction_name)
+  instruction_type = InstructionType.where(name: instruction_name)
+  if instruction_type == nil
+    InstructionType.create(name: instruction_name).save
+    return InstructionType.where(name: instruction_name)
+  end
+  return instruction_type
 end
 
 def main_thread

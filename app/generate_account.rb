@@ -120,6 +120,13 @@ class GenerateAccount
       return @mail_domains.sample
     end
   public
+
+    def canUnlockEmail(email)
+      return false if email =~ /@(yahoo.com|gmail|outlook|live|hotmail)/
+      domain = "@" + email.split("@").last
+      return @mail_domains.include? domain
+    end
+
     def generate_name
 
       name = RsItem.order(Arel.sql('random()')).limit(1).first #RANODOM() was deprecated

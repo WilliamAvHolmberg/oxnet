@@ -1,270 +1,216 @@
-.sidebar data-background-color="white" data-color="purple" data-image="../assets/img/sidebar-1.jpg"
-  /!
-    | Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
-    | Tip 2: you can also add an image using data-image tag
-  .logo
-    a.simple-text.logo-normal href="#top"
-      | Oxnet + Nexus
-  .sidebar-wrapper
-    ul.nav
-      li.nav-item.active
-        a.nav-link href=nexus_path
-          i.material-icons dashboard
-          p Dashboard
-      li.nav-item
-        a.nav-link href=accounts_path
-          i.material-icons person
-          p Accounts
-      li.nav-item
-        a.nav-link href=hiscores_path
-          i.material-icons poll
-          p Hiscores
-      li.nav-item
-        a.nav-link href=schemas_path
-          i.material-icons library_books
-          p Schemas
-      li.nav-item
-        a.nav-link href=hiscore_path(1)
-          i.material-icons bubble_chart
-          p Woodcutting Scores
-      li.nav-item
-        a.nav-link href=computers_path
-          i.material-icons computer
-          p Computers
-      li.nav-item
-        a.nav-link href=charts_path
-          i.material-icons show_chart
-          p Charts
-      li.nav-item.active-pro
-        a.nav-link href="../examples/upgrade.html"
-          i.material-icons unarchive
-          p This System Rocks
-.main-panel
-  /! Navbar
-  nav.navbar.navbar-expand-lg.navbar-transparent.navbar-absolute.fixed-top
-    .container-fluid
-      / .navbar-wrapper
-      /   a.navbar-brand href="#pablo"  Oxnet + Nexus
-      button.navbar-toggler aria-controls="navigation-index" aria-expanded="false" aria-label=("Toggle navigation") data-target="#navigation" data-toggle="collapse" type="button"
-        span.sr-only Toggle navigation
-        span.navbar-toggler-icon.icon-bar
-        span.navbar-toggler-icon.icon-bar
-        span.navbar-toggler-icon.icon-bar
-  /! End Navbar
-  .content class="mt-0"
-    .container-fluid
-      .row
-        .col-lg-3.col-md-6.col-sm-6
-          .card.card-stats
-            .card-header.card-header-warning.card-header-icon
-              .card-icon
-                i.fa.fa-group
-              p.card-category Available slaves
-              h3.card-title = @slaves.size
-            .card-footer
-              .stats
-                p = "Sweet"
-        .col-lg-3.col-md-6.col-sm-6
-          .card.card-stats
-            .card-header.card-header-success.card-header-icon
-              .card-icon
-                i.fa.fa-money
-              p.card-category Mules
-              h3.card-title = @mules.size
-            .card-footer
-              .stats
-                i.material-icons date_range
-                | Last 24 Hours
-        / .col-lg-3.col-md-6.col-sm-6
-        /   .card.card-stats
-        /     .card-header.card-header-danger.card-header-icon
-        /       .card-icon
-        /         i.material-icons info_outline
-        /       p.card-category Fixed Issues
-        /       h3.card-title 75
-        /     .card-footer
-        /       .stats
-        /         i.material-icons local_offer
-        /         | Tracked from Github
-        .col-lg-3.col-md-6.col-sm-6
-          .card.card-stats
-            .card-header.card-header-info.card-header-icon
-              .card-icon
-                i.fa.fa-gears
-              p.card-category Accounts online
-              h3.card-title = @active_accounts.size
-            .card-footer
-              .stats
-                i.material-icons update
-                | Just Updated
-      .row
-        .col-md-4
-          .card.card-chart
-            .card-header.card-header-success
-              h4.card-title Latest task logs
-            .card-body
-              table.table.table-hover
-                thead.text-warning
-                  th Seconds ago
-                  th Account
-                  th Task
-                  /! th Experience
-                  /! th Money
-                tbody
-                  - @latest_task_logs.each do |log|
-                    tr
-                      td = (Time.now.utc - log.created_at).round(3)
-                      td = log.account.username
-                      td = log.task.name
-                      /! td = log.xp_per_hour
-                      /! td = log.money_per_hour
+.container-fluid
+  .row
+    .col-lg-3.col-md-6.col-sm-6
+      .card.card-stats
+        .card-header.card-header-warning.card-header-icon
+          .card-icon
+            i.fa.fa-group
+          p.card-category Available slaves
+          h3.card-title = @slaves.size
+        .card-footer
+          .stats
+            p = "Sweet"
+    .col-lg-3.col-md-6.col-sm-6
+      .card.card-stats
+        .card-header.card-header-success.card-header-icon
+          .card-icon
+            i.fa.fa-money
+          p.card-category Mules
+          h3.card-title = @mules.size
+        .card-footer
+          .stats
+            i.material-icons date_range
+            | Last 24 Hours
+    / .col-lg-3.col-md-6.col-sm-6
+    /   .card.card-stats
+    /     .card-header.card-header-danger.card-header-icon
+    /       .card-icon
+    /         i.material-icons info_outline
+    /       p.card-category Fixed Issues
+    /       h3.card-title 75
+    /     .card-footer
+    /       .stats
+    /         i.material-icons local_offer
+    /         | Tracked from Github
+    .col-lg-3.col-md-6.col-sm-6
+      .card.card-stats
+        .card-header.card-header-info.card-header-icon
+          .card-icon
+            i.fa.fa-gears
+          p.card-category Accounts online
+          h3.card-title = @active_accounts.size
+        .card-footer
+          .stats
+            i.material-icons update
+            | Just Updated
+  .row
+    .col-md-4
+      .card.card-chart
+        .card-header.card-header-success
+          h4.card-title Latest task logs
+        .card-body
+          table.table.table-hover
+            thead.text-warning
+              th Seconds ago
+              th Account
+              th Task
+              /! th Experience
+              /! th Money
+            tbody
+              - @latest_task_logs.each do |log|
+                tr
+                  td = (Time.now.utc - log.created_at).round(3)
+                  td = log.account.username
+                  td = log.task.name
+                  /! td = log.xp_per_hour
+                  /! td = log.money_per_hour
 
-        .col-md-4
-          .card.card-chart
-            .card-header.card-header-primary
-              h4.card-title = "Computers connected:#{@connected_computers.size} "
-            .card-body.table-responsive
-              table.table.table-hover
-                thead.text-warning
-                  th Computer Name
-                  th Accounts available
-                  th Accounts connected
-                  th Max limit
-                tbody
-                  - @connected_computers.each do |comp|
-                    tr
-                      td = comp.name
-                      td = comp.get_available_accounts.size
-                      td = comp.get_connected_accounts.size
-                      td = comp.max_slaves
-        .col-md-4
-          .card.card-chart
-            .card-header.card-header-danger
-              h4.card-title Mule Activity
-            .card-body.table-responsive
-              table.table.table-hover
-                thead.text-warning
-                  th Mule
-                  th Money deposited
-                  th Money withdrawn
-                tbody
+    .col-md-4
+      .card.card-chart
+        .card-header.card-header-primary
+          h4.card-title = "Computers connected:#{@connected_computers.size} "
+        .card-body.table-responsive
+          table.table.table-hover
+            thead.text-warning
+              th Computer Name
+              th Accounts available
+              th Accounts connected
+              th Max limit
+            tbody
+              - @connected_computers.each do |comp|
+                tr
+                  td = comp.name
+                  td = comp.get_available_accounts.size
+                  td = comp.get_connected_accounts.size
+                  td = comp.max_slaves
+    .col-md-4
+      .card.card-chart
+        .card-header.card-header-danger
+          h4.card-title Mule Activity
+        .card-body.table-responsive
+          table.table.table-hover
+            thead.text-warning
+              th Mule
+              th Money deposited
+              th Money withdrawn
+            tbody
 
-                  - @mules.each do |mule|
-                    - @offlineMule = mule if mule.is_available
-                    tr
-                      td = mule.username
-                      td style="color:red" = ActiveSupport::NumberHelper.number_to_delimited(mule.get_money_deposited(@mule_logs))
-                      td style="color:green" = ActiveSupport::NumberHelper.number_to_delimited(mule.get_money_withdrawn(@mule_logs))
+              - @mules.each do |mule|
+                - @offlineMule = mule if mule.is_available
+                tr
+                  td = mule.username
+                  td style="color:red" = ActiveSupport::NumberHelper.number_to_delimited(mule.get_money_deposited(@mule_logs))
+                  td style="color:green" = ActiveSupport::NumberHelper.number_to_delimited(mule.get_money_withdrawn(@mule_logs))
 
 
-      .row
-        .col-lg-6.col-md-12
-          .card
-            .card-header.card-header-tabs.card-header-primary
-              .nav-tabs-navigation
-                .nav-tabs-wrapper
-                  span.nav-tabs-title Tasks:
-                  ul.nav.nav-tabs data-tabs="tabs"
-                    li.nav-item
-                      a.nav-link.active href=accounts_path
-                        i.material-icons account_circle
-                        | Accounts
-                        .ripple-container
-                    li.nav-item
-                      a.nav-link href=hiscores_path
-                        i.material-icons poll
-                        | Hiscores
-                        .ripple-container
-                    - if @offlineMule != nil
-                      li.nav-item
-                        a.nav-link href="/accounts/#{@offlineMule.id}?launch=true"
-                          i.material-icons cloud
-                          | Launch Mule
-                          .ripple-container
-            .card-body.table-responsive
-              h3 = "Recently Banned"
-              table.table.table-hover
-                thead.text-warning
-                  th Time
-                  th Account Name
-                  th Time Alive
-                  th Highest Skill
-                  th Money Made
-                  th Created
-                  th Computer
-                  th IP
-                tbody
-                  - @banned_logs.each do |log|
-                    - skill = log.account.stats.order("level DESC, skill_id ASC").limit(2).select{|s|s.skill.name != "Hitpoints"}.first
-                    tr
-                      td
-                        time class="timeago" datetime="#{log.created_at.localtime}" = "#{formatted_duration(Time.now.utc - log.created_at)} ago"
-                      td
-                        a href=account_path(log.account) = log.account.username
-                      td = "#{formatted_duration(log.created_at - log.account.created_at)}"
-                      - if skill != nil && skill.skill_id != nil
-                        td = "#{skill.skill.name}: #{skill.level}"
-                      - else
-                        td = "?"
-                      td = log.account.money_made
-                      td = log.account.created_at.localtime
-                      td = log.account.computer.name
-                      td = log.account.proxy.location
-            .card-body.table-responsive
-              h3 = "Recently Created"
-              table.table.table-hover
-                thead.text-warning
-                  th Time
-                  th Account Name
+  .row
+    .col-lg-6.col-md-12
+      .card
+        .card-header.card-header-tabs.card-header-primary
+          .nav-tabs-navigation
+            .nav-tabs-wrapper
+              span.nav-tabs-title Tasks:
+              ul.nav.nav-tabs data-tabs="tabs"
+                li.nav-item
+                  a.nav-link.active href=accounts_path
+                    i.material-icons account_circle
+                    | Accounts
+                    .ripple-container
+                li.nav-item
+                  a.nav-link href=hiscores_path
+                    i.material-icons poll
+                    | Hiscores
+                    .ripple-container
+                - if @offlineMule != nil
+                  li.nav-item
+                    a.nav-link href="/accounts/#{@offlineMule.id}?launch=true"
+                      i.material-icons cloud
+                      | Launch Mule
+                      .ripple-container
+        .card-body.table-responsive
+          h3 = "Recently Banned"
+          table.table.table-hover
+            thead.text-warning
+              th Time
+              th Account Name
+              th Time Alive
+              th Highest Skill
+              th Money Made
+              th Created
+              th Computer
+              th IP
+            tbody
+              - @banned_logs.each do |log|
+                - skill = log.account.stats.order("level DESC, skill_id ASC").limit(2).select{|s|s.skill.name != "Hitpoints"}.first
+                tr
+                  td
+                    time class="timeago" datetime="#{log.created_at.localtime}" = "#{formatted_duration(Time.now.utc - log.created_at)} ago"
+                  td
+                    a href=account_path(log.account) = log.account.username
+                  td = "#{formatted_duration(log.created_at - log.account.created_at)}"
+                  - if skill != nil && skill.skill_id != nil
+                    td = "#{skill.skill.name}: #{skill.level}"
+                  - else
+                    td = "?"
+                  td = log.account.money_made
+                  td = log.account.created_at.localtime
+                  td = log.account.computer.name
+                  td = log.account.proxy.location
+        .card-body.table-responsive
+          h3 = "Recently Created"
+          table.table.table-hover
+            thead.text-warning
+              th Time
+              th Account Name
 
-                  th Highest Skill
-                tbody
-                  - @new_accounts.each do |account|
-                    - skill = account.stats.order("level DESC, skill_id ASC").limit(2).select {|s| s.skill.name != "Hitpoints"}.first
-                    tr
-                      td
-                        time class="timeago" datetime="#{account.created_at.localtime}" = "#{formatted_duration(Time.now.utc - account.created_at)} ago"
-                      td
-                        a href=account_path(account) = account.username
+              th Highest Skill
+            tbody
+              - @new_accounts.each do |account|
+                - skill = account.stats.order("level DESC, skill_id ASC").limit(2).select {|s| s.skill.name != "Hitpoints"}.first
+                tr
+                  td
+                    time class="timeago" datetime="#{account.created_at.localtime}" = "#{formatted_duration(Time.now.utc - account.created_at)} ago"
+                  td
+                    a href=account_path(account) = account.username
 
-                      - if skill != nil && skill.skill_id != nil
-                        td = "#{skill.skill.name}: #{skill.level}"
-                      - else
-                        td = "?"
+                  - if skill != nil && skill.skill_id != nil
+                    td = "#{skill.skill.name}: #{skill.level}"
+                  - else
+                    td = "?"
 
 
-        .col-lg-6.col-md-12
-          .card
-            .card-header.card-header-primary
-              h4.card-title = "GP Today: #{number_with_delimiter(money_made_today, :delimiter => ",", :separator => ".")}"
-              h4.card-title = "Per Hour: #{number_with_delimiter((money_made_today / (Time.now.hour + 0.1)).round(0), :delimiter => ",", :separator => ".")}"
-              h4.card-title = "Recent Avg: #{number_with_delimiter(money_last_2_hours / 2, :delimiter => ",", :separator => ".")}"
-            .card-body.table-responsive
-              table.table.table-hover
-                thead.text-warning
-                  th Time
-                  th Account Name
-                  th Amount of Cash
-                  th Mule
-                tbody
-                  - @mule_logs.each do |log|
-                    tr
-                      td
-                        time class="timeago" datetime="#{log.created_at.localtime}" = "#{formatted_duration(Time.now.utc - log.created_at)} ago"
-                      td
-                        a href=account_path(log.account) = log.account.username
-                      - if log.account.account_type.name.include?"MULE"
-                        td style="color:red;" = "-#{log.item_amount}"
-                      - else
-                        td style="color:green" = "+#{log.item_amount}"
-                      td = log.mule
-  footer.footer
-    .container-fluid
-      nav.pull-left
-        ul
-          li
-            a href="#"
-              | Oxnet + Nexus
+    .col-lg-6.col-md-12
+      .card
+        .card-header.card-header-primary
+          h4.card-title = "GP Today: #{number_with_delimiter(money_made_today, :delimiter => ",", :separator => ".")}"
+          h4.card-title = "Per Hour: #{number_with_delimiter((money_made_today / (Time.now.hour + 0.1)).round(0), :delimiter => ",", :separator => ".")}"
+          h4.card-title = "Recent Avg: #{number_with_delimiter(money_last_2_hours / 2, :delimiter => ",", :separator => ".")}"
+        .card-body.table-responsive
+          table.table.table-hover
+            thead.text-warning
+              th Time
+              th Account Name
+              th Amount of Cash
+              th Mule
+            tbody
+              - @mule_logs.each do |log|
+                tr
+                  td
+                    time class="timeago" datetime="#{log.created_at.localtime}" = "#{formatted_duration(Time.now.utc - log.created_at)} ago"
+                  td
+                    a href=account_path(log.account) = log.account.username
+                  - if log.account.account_type.name.include?"MULE"
+                    td style="color:red;" = "-#{log.item_amount}"
+                  - else
+                    td style="color:green" = "+#{log.item_amount}"
+                  td = log.mule
+footer.footer
+  .container-fluid
+    nav.pull-left
+      ul
+        li
+          a href="#"
+            | Oxnet + Nexus
 javascript:
   $(document).ready(function () {
       /!/i

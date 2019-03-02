@@ -1,7 +1,7 @@
 class AccountsController < ApplicationController
 
   def index
-    @available_accounts = Account.where(banned: false, created: true).sort_by{|acc|acc.get_total_level}.reverse
+    @available_accounts = Account.includes(:mule, :proxy, :schema, :account_type, :eco_system, :stats).where(banned: false, created: true).sort_by{|acc|acc.get_total_level}.reverse
   end
   def show
     @account = Account.find(params[:id])

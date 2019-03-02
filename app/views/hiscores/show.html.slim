@@ -23,7 +23,7 @@ p#notice = notice
               tr
                 td
                   span class=(!account.is_available ? "online" : "offline")
-                  a href="../accounts/#{account.id}" = account.username
+                  a href=account_path(account) = account.username
                 td = account.stats.where(skill: @hiscore.skill).first.level
                 td = formatted_duration(Time.now.utc - account.created_at) + " ago"
                 td = formatted_duration(account.get_time_online)

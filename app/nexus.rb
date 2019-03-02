@@ -523,7 +523,7 @@ def computer_thread(client, computer)
       if proxy != nil
         puts "PROXY IS NOT NULL AND WE SET TIMEOUT TO : #{cooldown}"
         current_cooldown = proxy.cooldown
-        proxy.update(unlock_cooldown: DateTime.now + 1000)
+        proxy.update(unlock_cooldown: DateTime.now + 20.minutes)
         proxy.save
       end
       client.puts "hello"
@@ -852,10 +852,10 @@ def unlock_accounts
         next
       end
       computer = acc.computer if acc.computer_id != nil
-      if computer != nil && computer.is_available_to_nexus && computer.can_connect_more_accounts
+      if computer != nil && computer.is_available_to_nexus && computer.can_connect_more_accounts && acc.proxy.is_ready_for_unlock
         ##instructionType to - UNLOCK ACCOUNT
         proxy = acc.proxy
-        proxy.update(unlock_cooldown: DateTime.now + 300)
+        proxy.update(unlock_cooldown: DateTime.now + 5.minutes)
         proxy.save
 
         unlock_instruction = getInstructionType("UNLOCK_ACCOUNT")

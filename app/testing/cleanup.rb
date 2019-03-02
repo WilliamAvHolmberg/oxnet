@@ -440,8 +440,8 @@ def account_created_info
   end
 end
 
-TaskType.find(3).update(name: "WOODCUTTING")
-TaskType.find(4).update(name: "COMBAT")
-TaskType.find(5).update(name: "AGILITY")
-TaskType.create(id: 6, name: "QUEST")
-TaskType.find(7).update(name: "MINING")
+proxies = Proxy.all
+proxies.each do |proxy|
+  proxy.update(unlock_cooldown: DateTime.now - 3.hours)
+  proxy.save
+end

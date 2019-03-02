@@ -31,7 +31,7 @@ table
       td = proxy.created_at.localtime
       td = proxy.accounts.where(banned: false, created: true).length
       td = proxy.auto_assign
-      td = proxy.last_used.localtime
+      td = proxy.last_used.localtime if proxy.last_used != nil
       td = formatted_duration(DateTime.now.to_f - proxy.last_used.to_f)
       td = proxy.cooldown
       td = proxy.custom_cooldown

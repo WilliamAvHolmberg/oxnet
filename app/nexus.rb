@@ -43,7 +43,7 @@ def computer_get_respond(instruction_queue)
         ins.update(:completed => true)
         ins.save
         return res
-        elsif ins.instruction_type.name == "UNLOCK_ACCOUNT"
+      elsif ins.instruction_type.name == "UNLOCK_ACCOUNT"
         account = ins.account
         log = Log.new(account_id: ins.account.id, text: "Account:#{ins.account.login} is gonna be unlocked: #{ins.computer.name}")
         log.save
@@ -54,8 +54,7 @@ def computer_get_respond(instruction_queue)
       elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account_id == nil
         ins.update(:completed => true)
         puts "wrong"
-      return "account_request:0"
-
+      	return "account_request:0"
       elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account_id != nil
         ins.update(:completed => true)
         ins.save

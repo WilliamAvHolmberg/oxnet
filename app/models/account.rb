@@ -33,7 +33,9 @@ class Account < ApplicationRecord
     if proxy == nil || proxy.ip.length < 5
       return true
     end
-    return Net::Ping::TCP.new(proxy.ip, proxy.port).ping.round(2)
+    ping = Net::Ping::TCP.new(proxy.ip, proxy.port).ping
+    ping.round(2) if !ping.nil?
+    return ping
   end
 
   def time_since_last_log

@@ -20,7 +20,7 @@ class Proxy < ApplicationRecord
   end
 
   def is_ready_for_unlock
-    return Time.now > unlock_cooldown
+    return DateTime.now > unlock_cooldown
   end
   def cooldown
     num = (last_used.to_f + self[:cooldown] + custom_cooldown - DateTime.now.to_f).to_i

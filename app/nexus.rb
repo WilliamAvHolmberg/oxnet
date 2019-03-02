@@ -855,7 +855,7 @@ def unlock_accounts
       if computer != nil && computer.is_available_to_nexus && computer.can_connect_more_accounts
         ##instructionType to - UNLOCK ACCOUNT
         proxy = acc.proxy
-        proxy.update(unlock_cooldown: Time.now + 300)
+        proxy.update(unlock_cooldown: DateTime.now + 300)
         proxy.save
 
         unlock_instruction = getInstructionType("UNLOCK_ACCOUNT")

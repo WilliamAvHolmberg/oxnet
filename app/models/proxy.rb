@@ -18,6 +18,10 @@ class Proxy < ApplicationRecord
     end
     return has_cooldown
   end
+
+  def is_ready_for_unlock
+    return Time.now > unlock_cooldown
+  end
   def cooldown
     num = (last_used.to_f + self[:cooldown] + custom_cooldown - DateTime.now.to_f).to_i
     if num < 0

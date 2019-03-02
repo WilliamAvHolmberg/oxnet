@@ -515,6 +515,18 @@ def computer_thread(client, computer)
         proxy.save
       end
       client.puts "hello"
+    elsif respond[0] == "unlock_cooldown"
+      ip = respond[1]
+      puts "HELLO IP IS #{ip}"
+      cooldown = respond[2].to_i
+      proxy = Proxy.where(ip: ip).first
+      if proxy != nil
+        puts "PROXY IS NOT NULL AND WE SET TIMEOUT TO : #{cooldown}"
+        current_cooldown = proxy.cooldown
+        proxy.update(unlock_cooldown: DateTime.now + 1000)
+        proxy.save
+      end
+      client.puts "hello"
     elsif respond[0] == "unlocked_account"
       email = respond[1]
       new_password = respond[2]
@@ -828,10 +840,9 @@ end
 
 @last_unlock = 0
 def unlock_accounts
-  if Time.now - @last_unlock > 300
   accounts = Account.where(banned: false, created: true, locked: true)
   if !accounts.nil? && !accounts.blank?
-    accounts = accounts.select{|acc| acc != nil && acc.account_type.name == "SLAVE" && isAccReadToLaunch(acc)} #Shuffled for performance
+    accounts = accounts.select{|acc| acc != nil && acc.proxy.is_ready_for_unlock && acc.account_type.name == "SLAVE" && isAccReadToLaunch(acc)} #Shuffled for performance
   end
   if !accounts.nil? && !accounts.blank?
     accounts = accounts.sort_by{|acc|acc.get_total_level}.reverse
@@ -843,6 +854,10 @@ def unlock_accounts
       computer = acc.computer if acc.computer_id != nil
       if computer != nil && computer.is_available_to_nexus && computer.can_connect_more_accounts
         ##instructionType to - UNLOCK ACCOUNT
+        proxy = acc.proxy
+        proxy.update(unlock_cooldown: Time.now + 300)
+        proxy.save
+
         unlock_instruction = getInstructionType("UNLOCK_ACCOUNT")
         Instruction.new(:instruction_type_id => unlock_instruction.id, :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save
         Log.new(computer_id: computer.id, account_id: acc.id, text: "Instruction created")
@@ -853,9 +868,6 @@ def unlock_accounts
     @last_unlock = Time.now
   else
     puts "No accounts to unlock"
-  end
-  else
-    puts "lets not unlock yet. Wait #{Time.now - @last_unlock} seconds"
   end
 end
 
@@ -981,6 +993,7 @@ loop do
             puts "Login: #{login}"
             account = Account.where(:login => login).first
             puts "account found:#{account.login}"
+            account.update(:locked => false)
             if !account.created
               account.update(:created => true)
               account.save

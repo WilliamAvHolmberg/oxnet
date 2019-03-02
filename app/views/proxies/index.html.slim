@@ -14,6 +14,7 @@ table
     th Time Since Last Use
     th Current Cooldown
     th Custom Cooldown
+    th Ready for proxy unlock:
 
   - @proxies.each do |proxy|
     tr
@@ -34,5 +35,6 @@ table
       td = formatted_duration(DateTime.now.to_f - proxy.last_used.to_f)
       td = proxy.cooldown
       td = proxy.custom_cooldown
+      td = proxy.unlock_cooldown
       td = link_to 'Destroy', proxy, method: :delete
 = link_to 'New', new_proxy_path

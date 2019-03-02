@@ -21,6 +21,8 @@
   p = form.check_box :should_mule
   p = form.label :created
   p = form.check_box :created
+  p = form.label :locked
+  p = form.check_box :locked
   #computer
     .field
       - if @computers != nil && @computers.length > 0

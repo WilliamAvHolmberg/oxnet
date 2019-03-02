@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Nexus Server</title>
+    <title>Nexus <%= request.fullpath %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -18,15 +18,20 @@
       }
     </style>
     <%= render 'layouts/header' %>
-    <%= yield %>
+    <div class="main-panel">
+      <%= render 'layouts/navbar' %>
+      <div class="content mt-0">
+          <%= yield %>
+      </div>
+    </div>
   </body>
 </html>
 <script type="application/javascript">
   $(function() {
       if ($('table, .card').length == 0) {
-          $('body').wrapInner('<div class="card p-4 m-4"/>');
-          $('body').wrapInner('<div class="col-md-5 col-xs-12"/>');
-          $('body').wrapInner('<div class="row" />');
+          $('.content').wrapInner('<div class="card p-4 m-4"/>');
+          $('.content').wrapInner('<div class="col-md-5 col-xs-12"/>');
+          $('.content').wrapInner('<div class="row" />');
       }
       $('.card a').each(function() {
           if(!$(this).hasClass('btn') || $(this).hasClass('btn-sm')) {
@@ -59,7 +64,7 @@
       $('input[type="submit"]').each(function() {
           $(this).addClass('btn btn-success');
       });
-      $('body>a').each(function() {
+      $('.content>a').each(function() {
           if(!$(this).hasClass('button') && !$(this).hasClass('btn') && !$(this).hasClass('btn-sm')) {
               $(this).addClass('btn btn-default button');
           }

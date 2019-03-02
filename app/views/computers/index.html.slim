@@ -37,7 +37,8 @@ table
 
   tbody
     - @computers.each do |computer|
+      - data = money_made_days(computer, @days.length)
       tr
         td = computer.name
         - @days.each do |day|
-          td = formatted_gp(money_made_day(computer, day))
+          td = formatted_gp(data[day.strftime("%a, %d %b %Y")] || 0)

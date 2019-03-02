@@ -43,5 +43,5 @@
                 td = account.locked
                 td = account.created
                 td = account.schema.total_time_per_day if account.schema != nil
-                td = link_to 'Ban', account, data: {confirm: 'Are you sure?'}, method: :ban
+                td = link_to 'Ban', account_path(account), data: {confirm: 'Are you sure?'}, method: :ban
                 td = link_to 'Destroy', account, data: {confirm: 'Are you sure?'}, method: :delete

@@ -24,4 +24,25 @@ module ComputersHelper
     return money_made
   end
 
+  def money_made_days(computer, days_ago)
+    @timezone_offset = Time.zone_offset(Time.now.getlocal.zone) / 3600
+    @tz_interval = (@timezone_offset >= 0 ? "+" : "-") + " interval '#{@timezone_offset} hour'"
+
+    interval = @tz_interval
+    start_date = days_ago.days.ago
+    mule_logs = MuleLog.where("account_id IN (SELECT id FROM accounts WHERE account_type_id IN (SELECT id from account_types WHERE name='MULE') AND computer_id='#{computer.id}')")
+                              .where('created_at IS NOT NULL')
+                              .where('created_at > ?', start_date.beginning_of_day)
+                              .group("DATE(created_at #{interval})", config.time_zone)
+                              .select("date(created_at #{interval}) as date, SUM(item_amount) AS money_made")
+                              .order("date").all
+
+    result = {}
+    mule_logs.each do |log|
+      result[log.date.strftime("%a, %d %b %Y")] = log.money_made
+    end
+
+    return result
+  end
+
 end

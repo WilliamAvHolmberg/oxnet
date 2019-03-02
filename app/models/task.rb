@@ -75,7 +75,7 @@ class Task < ApplicationRecord
       end
     else
       if account.stats.find_by(skill: skill) == nil
-        puts "#{account.username} is missing skill #{skill.id}"
+        # puts "#{account.username} is missing skill #{skill.id}"
         return false
       end
       level = account.stats.find_by(skill: skill).level.to_i

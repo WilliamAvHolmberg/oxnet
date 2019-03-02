@@ -7,11 +7,11 @@ class NexusController < ApplicationController
     @mule_logs = MuleLog.includes(:account).where("created_at > NOW() - INTERVAL '? hours ? minutes'", Time.now.hour, Time.now.min).sort_by(&:created_at).reverse
     @mule_logs_last_2_hours = MuleLog.includes(:account).where("created_at > NOW() - INTERVAL '? hours'", 2).sort_by(&:created_at).reverse
     @banned_logs = Log.includes(:account).where("created_at > NOW() - INTERVAL '? hours' AND text LIKE '%banned%'", 20).order("created_at DESC").limit(10)
-    @available_accounts = Account.includes(:account_type).where(banned: false, created: true)
+    @available_accounts = Account.includes(:account_type).where(banned: false, locked:false, created: true).all
     @active_accounts = @available_accounts.select{|acc| !acc.is_available}
     @mules = @available_accounts.select{|acc| acc.account_type.name.include? "MULE"}
     @slaves = @available_accounts.select{|acc| acc.account_type.name == "SLAVE"}
-    @latest_task_logs = TaskLog.limit(5).order('id desc')
+    @latest_task_logs = TaskLog.includes(:task, :account).limit(5).order('id desc')
     @new_accounts = Account.includes(:stats).where("created_at > NOW() - INTERVAL '? hours' AND created", 1).order("created_at DESC").limit(10)
 
 

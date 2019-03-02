@@ -836,7 +836,7 @@ def unlock_accounts
   if !accounts.nil? && !accounts.blank?
     accounts = accounts.sort_by{|acc|acc.get_total_level}.reverse
     accounts.each do |acc|
-      if !@generate_account.canUnlockEmail(acc.email)
+      if !@generate_account.canUnlockEmail(acc.login)
         acc.update(banned: true)
         next
       end

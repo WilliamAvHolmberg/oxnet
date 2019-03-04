@@ -14,7 +14,7 @@ table
   tbody
     - @instructions.each do |instruction|
       tr
-        td = instruction.instruction_type.name
+        td = if instruction.instruction_type != nil then instruction.instruction_type.name else "null"
         td = if instruction.computer != nil then instruction.computer.name else "none"
         td = if instruction.account != nil then instruction.account.login else "none"
         td = instruction.completed

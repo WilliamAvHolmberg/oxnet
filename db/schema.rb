@@ -216,7 +216,7 @@ ActiveRecord::Schema.define(version: 2019_03_02_185101) do
     t.integer "cooldown", default: 0
     t.integer "custom_cooldown", default: 120
     t.boolean "auto_assign", default: true
-    t.datetime "unlock_cooldown", default: "2019-03-02 18:59:09"
+    t.datetime "unlock_cooldown", default: "2019-03-03 08:36:26"
     t.index ["account_id"], name: "index_proxies_on_account_id"
     t.index ["eco_system_id"], name: "index_proxies_on_eco_system_id"
   end

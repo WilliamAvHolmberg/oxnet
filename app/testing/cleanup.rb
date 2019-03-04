@@ -458,5 +458,5 @@ end
 end
 
 #update_proxy
-#update_cooldown
-Hiscore.create(skill: Skill.where(name: "Woodcutting").first).save
+update_cooldown
+#Hiscore.create(skill: Skill.where(name: "Woodcutting").first).save

@@ -231,3 +231,194 @@ ActiveRecord::Schema.define(version: 2019_03_02_185101) do
     t.index ["quest_id"], name: "index_quest_stats_on_quest_id"
   end
 
+  create_table "quests", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "requirements", force: :cascade do |t|
+    t.bigint "skill_id"
+    t.integer "level"
+    t.bigint "task_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["skill_id"], name: "index_requirements_on_skill_id"
+    t.index ["task_id"], name: "index_requirements_on_task_id"
+  end
+
+  create_table "rooms", force: :cascade do |t|
+    t.string "name"
+    t.integer "number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["number"], name: "index_rooms_on_number", unique: true
+  end
+
+  create_table "rs_items", force: :cascade do |t|
+    t.integer "item_id"
+    t.string "item_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "members"
+    t.boolean "stackable"
+    t.string "equipment_slot"
+    t.string "weapon_type"
+    t.string "interface_options"
+    t.boolean "tradeable"
+    t.string "exchange"
+    t.integer "defence_requirement", default: 99
+    t.integer "attack_requirement", default: 99
+    t.integer "strength_requirement", default: 99
+    t.integer "range_requirement", default: 99
+    t.boolean "noted"
+    t.integer "magic_requirement", default: 99
+  end
+
+  create_table "rs_worlds", force: :cascade do |t|
+    t.integer "number"
+    t.boolean "members_only"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "schemas", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "name"
+    t.boolean "default", default: true
+    t.integer "max_slaves", default: 10000, null: false
+    t.bigint "original_id"
+    t.boolean "disabled", default: false, null: false
+  end
+
+  create_table "scripts", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "skills", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "stats", force: :cascade do |t|
+    t.bigint "skill_id"
+    t.integer "level"
+    t.bigint "account_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_stats_on_account_id"
+    t.index ["skill_id"], name: "index_stats_on_skill_id"
+  end
+
+  create_table "task_logs", force: :cascade do |t|
+    t.string "money_per_hour"
+    t.string "xp_per_hour"
+    t.bigint "account_id"
+    t.bigint "task_id"
+    t.text "respond"
+    t.string "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_task_logs_on_account_id"
+    t.index ["task_id"], name: "index_task_logs_on_task_id"
+  end
+
+  create_table "task_types", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "tasks", force: :cascade do |t|
+    t.string "name"
+    t.bigint "bank_area_id"
+    t.bigint "action_area_id"
+    t.bigint "task_type_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "axe_id"
+    t.string "treeName"
+    t.bigint "break_condition_id"
+    t.integer "break_after"
+    t.time "start_time"
+    t.time "end_time"
+    t.bigint "schema_id"
+    t.string "monster_name"
+    t.bigint "gear_id"
+    t.bigint "food_id"
+    t.bigint "inventory_id"
+    t.integer "loot_threshold"
+    t.integer "position"
+    t.bigint "quest_id"
+    t.bigint "skill_id"
+    t.string "ores"
+    t.index ["action_area_id"], name: "index_tasks_on_action_area_id"
+    t.index ["axe_id"], name: "index_tasks_on_axe_id"
+    t.index ["bank_area_id"], name: "index_tasks_on_bank_area_id"
+    t.index ["break_condition_id"], name: "index_tasks_on_break_condition_id"
+    t.index ["food_id"], name: "index_tasks_on_food_id"
+    t.index ["gear_id"], name: "index_tasks_on_gear_id"
+    t.index ["inventory_id"], name: "index_tasks_on_inventory_id"
+    t.index ["quest_id"], name: "index_tasks_on_quest_id"
+    t.index ["schema_id"], name: "index_tasks_on_schema_id"
+    t.index ["skill_id"], name: "index_tasks_on_skill_id"
+    t.index ["task_type_id"], name: "index_tasks_on_task_type_id"
+  end
+
+  create_table "time_intervals", force: :cascade do |t|
+    t.string "name"
+    t.time "start_time"
+    t.time "end_time"
+    t.bigint "schema_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["schema_id"], name: "index_time_intervals_on_schema_id"
+  end
+
+  create_table "woodcutting_tasks", force: :cascade do |t|
+    t.string "treeName"
+    t.bigint "axe_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["axe_id"], name: "index_woodcutting_tasks_on_axe_id"
+  end
+
+  add_foreign_key "accounts", "account_types"
+  add_foreign_key "accounts", "computers"
+  add_foreign_key "accounts", "eco_systems"
+  add_foreign_key "accounts", "proxies"
+  add_foreign_key "accounts", "rs_worlds"
+  add_foreign_key "accounts", "schemas"
+  add_foreign_key "computers", "eco_systems"
+  add_foreign_key "hiscores", "skills"
+  add_foreign_key "instructions", "accounts"
+  add_foreign_key "instructions", "instruction_types"
+  add_foreign_key "instructions", "scripts"
+  add_foreign_key "inventory_items", "inventories"
+  add_foreign_key "mule_logs", "accounts"
+  add_foreign_key "mule_withdraw_tasks", "accounts"
+  add_foreign_key "mule_withdraw_tasks", "areas"
+  add_foreign_key "mule_withdraw_tasks", "task_types"
+  add_foreign_key "proxies", "eco_systems"
+  add_foreign_key "quest_stats", "accounts"
+  add_foreign_key "quest_stats", "quests"
+  add_foreign_key "requirements", "skills"
+  add_foreign_key "requirements", "tasks"
+  add_foreign_key "stats", "accounts"
+  add_foreign_key "stats", "skills"
+  add_foreign_key "task_logs", "accounts"
+  add_foreign_key "task_logs", "tasks"
+  add_foreign_key "tasks", "break_conditions"
+  add_foreign_key "tasks", "gears"
+  add_foreign_key "tasks", "inventories"
+  add_foreign_key "tasks", "quests"
+  add_foreign_key "tasks", "schemas"
+  add_foreign_key "tasks", "skills"
+  add_foreign_key "tasks", "task_types"
+  add_foreign_key "time_intervals", "schemas"
+end

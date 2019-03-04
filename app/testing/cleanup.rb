@@ -450,13 +450,14 @@ end
 end
 
 def update_proxy
-accounts = Account.where(account_type: AccountType.where(name: "SLAVE").first)
-proxy = Proxy.find(7)
+accounts = Account.where(banned: false, created: true, proxy: nil)
+proxy = Proxy.find(1)
 accounts.each do |acc|
   acc.update(proxy: proxy)
+  acc.save
 end
 end
 
-#update_proxy
-update_cooldown
+update_proxy
+#update_cooldown
 #Hiscore.create(skill: Skill.where(name: "Woodcutting").first).save

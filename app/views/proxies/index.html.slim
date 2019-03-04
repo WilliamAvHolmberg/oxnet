@@ -35,6 +35,6 @@ table
       td = formatted_duration(DateTime.now.to_f - proxy.last_used.to_f)
       td = proxy.cooldown
       td = proxy.custom_cooldown
-      td = proxy.unlock_cooldown
+      td = proxy.unlock_cooldown.to_i - DateTime.now.to_i
       td = link_to 'Destroy', proxy, method: :delete
 = link_to 'New', new_proxy_path

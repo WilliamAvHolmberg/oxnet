@@ -45,8 +45,12 @@ class Computer < ApplicationRecord
     accounts = get_available_accounts.select{|acc| acc.is_connected}
     return accounts
   end
+  def get_connected_accounts_count
+    min_ago = Time.now.utc - 1.minutes
+    return Account.where(computer: self, banned: false, locked:false, created: true, last_seen: min_ago..Time.now.utc).count
+  end
 
   def can_connect_more_accounts
-    return max_slaves > get_connected_accounts.size
+    return max_slaves > get_connected_accounts_count
   end
 end

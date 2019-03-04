@@ -104,38 +104,62 @@ class ChartsController < ApplicationController
   def calc_hourly_profit_chart
     interval = @tz_interval
     start_date = 7.days.ago
-    @recent_profits_rows = MuleLog.where('created_at IS NOT NULL')
+    recent_profits_rows = MuleLog.where('created_at IS NOT NULL')
                                .where('created_at > ?', start_date.beginning_of_day)
+                               .where("account_id IN (SELECT id FROM accounts WHERE account_type_id IN (SELECT id from account_types WHERE name='MULE'))")
+                               .select("date_trunc('hour', (created_at #{interval})) as hour, SUM(item_amount) AS money_made")
+                               .group("hour")
+                               .order("hour").all
+    recent_expense_rows = MuleLog.where('created_at IS NOT NULL')
+                               .where('created_at > ?', start_date.beginning_of_day)
+                               .where("account_id NOT IN (SELECT id FROM accounts WHERE account_type_id IN (SELECT id from account_types WHERE name='MULE'))")
                                .select("date_trunc('hour', (created_at #{interval})) as hour, SUM(item_amount) AS money_made")
                                .group("hour")
                                .order("hour").all
 
-    @dates = []
-    @recent_profits = Array.new
-    @accounts_created = []
-    @accounts_banned = []
-    last_date = @recent_profits_rows.first.hour
-    @recent_profits_rows.each do |pr|
+    dates = []
+    recent_profits = Array.new
+    recent_expenses = Array.new
+    earliest_date = recent_profits_rows.first.hour
+    earliest_date = recent_expense_rows.first.hour if recent_expense_rows.first != nil && recent_expense_rows.first.hour < earliest_date
+    last_date = earliest_date;
+    recent_profits_rows.each do |pr|
       while pr.hour - last_date > 60.minutes
         last_date = last_date + 60.minutes
         date = ("#{last_date}".sub!(":00:00 UTC", ""))
-        @dates << date
-        @recent_profits << 0
+        dates << date
+        recent_profits << 0
       end
       last_date = pr.hour
       date = "#{pr.hour}".sub!(":00:00 UTC", "")
-      @dates << date
-      @recent_profits << pr.money_made.to_i
+      dates << date
+      recent_profits << pr.money_made.to_i
+    end
+    last_date = earliest_date
+    recent_expense_rows.each do |pr|
+      while pr.hour - last_date > 60.minutes
+        last_date = last_date + 60.minutes
+        recent_expenses << 0
+      end
+      last_date = pr.hour
+      date = "#{pr.hour}".sub!(":00:00 UTC", "")
+      recent_expenses << pr.money_made.to_i
     end
 
     data = {
-        labels: @dates,
+        labels: dates,
         datasets: [
             {
                 label: "GP made",
-                backgroundColor: "rgba(255, 199, 58,0.01)",
-                borderColor: "rgba(255, 199, 58,1)",
-                data: @recent_profits
+                backgroundColor: "rgba(255, 187, 0,0.01)",
+                borderColor: "rgba(255, 187, 0,1)",
+                data: recent_profits
+            },
+            {
+              label: "Expenses",
+              backgroundColor: "rgba(255, 0, 0,0.01)",
+              borderColor: "rgba(255, 0, 0,1)",
+              data: recent_expenses
             },
         ],
     }
@@ -176,8 +200,8 @@ class ChartsController < ApplicationController
         datasets: [
             {
                 label: "Total Bans",
-                backgroundColor: "rgba(255, 199, 58,0.01)",
-                borderColor: "rgba(255, 199, 58,1)",
+                backgroundColor: "rgba(0, 0, 0,0.01)",
+                borderColor: "rgba(0, 0, 0,1)",
                 data: @bans_by_hour
             },
         ]

@@ -21,12 +21,23 @@ class Account < ApplicationRecord
 
 
   def proxy
-    proxy = Proxy.all.select{|proxy| proxy.accounts.include? self}.first
-    if proxy == nil
-      return Proxy.find_or_initialize_by(ip: " ", port: " ", username: " ", password: " ", location: "none")
-    else
-      return proxy
+    proxy_id = read_attribute(:proxy_id)
+    if @last_proxy_id != proxy_id
+      @proxy = nil
+      @last_proxy_id = proxy_id
     end
+    if @proxy == nil
+      @proxy = Proxy.where(id: proxy_id).first if proxy_id != nil
+      if @proxy == nil
+        @proxy = Proxy.all.select{|proxy| proxy.accounts.include? self}.first
+        if @proxy == nil
+          return Proxy.find_or_initialize_by(ip: " ", port: " ", username: " ", password: " ", location: "none")
+        else
+          return @proxy
+        end
+      end
+    end
+    return @proxy
   end
 
   def proxy_is_available?()

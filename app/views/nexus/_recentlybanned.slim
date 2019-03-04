@@ -1,0 +1,15 @@
+- skill = log.account.stats.order("level DESC, skill_id ASC").limit(2).select{|s|s.skill.name != "Hitpoints"}.first
+tr
+  td
+    time class="timeago" datetime="#{log.created_at.localtime}" = "#{formatted_duration(Time.now.utc - log.created_at)} ago"
+  td
+    a href=account_path(log.account) = log.account.username
+  td = "#{formatted_duration(log.created_at - log.account.created_at)}"
+  - if skill != nil && skill.skill_id != nil
+    td = "#{skill.skill.name}: #{skill.level}"
+  - else
+    td = "?"
+  td = log.account.money_made
+  td = log.account.created_at.localtime
+  td = log.account.computer.name
+  td = log.account.proxy.location

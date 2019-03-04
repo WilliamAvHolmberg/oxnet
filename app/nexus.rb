@@ -77,7 +77,7 @@ def computer_get_respond(instruction_queue)
   end
 end
 
-def account_get_instruction_respond(instruction_queue)
+def account_get_instruction_respond(instruction_queue, account)
   if instruction_queue.empty?
     return "logged:fine"
   else
@@ -86,14 +86,13 @@ def account_get_instruction_respond(instruction_queue)
     if ins.instruction_type.name == "DISCONNECT"
       puts "dis"
       res =  "DISCONNECT:1:"
-      log = Log.new(computer_id: ins.computer_id, account_id: ins.account.id, text: "Account:#{ins.account.login} shall disconnect")
+      log = Log.new(computer_id: ins.computer_id, account_id: account.id, text: "Account:#{account.login} shall disconnect", completed: true)
       log.save
-      ins.update(:completed => true)
       return res
     else
       return "logged:fine"
     end
-    return "logged:f"
+    return "logged:fine"
   end
 end
 
@@ -567,6 +566,7 @@ end
 def updateAccountLevels(string, account)
   string.slice! "skills;"
   array = string.split(';')
+  account_stats = Stat.where(account_id: account.id)
   array.each do |parsed|
     intern_parse = parsed.split(',')
     # puts parsed
@@ -575,12 +575,27 @@ def updateAccountLevels(string, account)
     # puts name
     # puts level
 
-    skill = Skill.find_or_initialize_by(name: name)
-    skill.save
-    account_level = Stat.find_or_initialize_by(account_id: account.id, skill: skill)
-    account_level.update(level: level)
-    account_level.save
+    skill = getSkillByName(name)
+    account_level = account_stats.select { |s| s.id == skill.id}.first
+    if account_level == nil
+      account_level = Stat.find_or_initialize_by(account_id: account.id, skill: skill)
+      account_level.update(level: level)
+      account_level.save
+    else
+      account_level.update(level: level)
+    end
   end
+end
+
+def getSkillByName (skill_name)
+  @skill_cache = {} if @skill_cache == nil
+  if @skill_cache[skill_name] != nil
+    return @skill_cache[skill_name]
+  end
+  skill = Skill.find_or_initialize_by(name: skill_name)
+  skill.save
+  @skill_cache[skill_name] = skill
+  return skill
 end
 
 def updateAccountQuests(string, account)
@@ -597,17 +612,24 @@ def updateAccountQuests(string, account)
 
     if completed != nil && name != nil
       puts "in here"
-      quest = Quest.find_or_initialize_by(name: name)
-      quest.save
+      quest = getQuestByName(name)
+      completed = (completed.include? "true")
       account_quest = QuestStat.find_or_initialize_by(account_id: account.id, quest: quest)
-      if completed.include? "true"
-        account_quest.update(:completed => true)
-      else
-        account_quest.update(:completed => false)
-      end
-    account_quest.save
+      account_quest.update(completed: completed)
+      account_quest.save
     end
-    end
+  end
+end
+
+def getQuestByName (quest_name)
+  @quest_cache = {} if @quest_cache == nil
+  if @quest_cache[quest_name] != nil
+    return @quest_cache[quest_name]
+  end
+  quest = Quest.find_or_initialize_by(name: quest_name)
+  quest.save
+  @quest_cache[quest_name] = quest
+  return quest
 end
 
 def get_mule_respond(respond, account)
@@ -621,13 +643,13 @@ def get_mule_respond(respond, account)
     account_type = "MASTER_MULE"
   end
 
-  mule = Account.where(eco_system: account.eco_system, banned: false, created: true).select{|acc| acc.id != account.id && acc.is_available && acc.account_type.name == account_type}
-  if (account_type != "MULE" && mule == nil || mule.length == 0)
-    mule = Account.where(eco_system: account.eco_system, banned: false, created: true).select{|acc| acc.id != account.id && acc.is_available && acc.account_type.name == "MULE"}
+  mules = Account.includes(:account_type).where(eco_system: account.eco_system, banned: false, created: true).select{|acc| acc.account_type.name == account_type && acc.id != account.id && acc.is_available}
+  if (account_type != "MULE" && mules == nil || mules.length == 0)
+    mules = Account.includes(:account_type).where(eco_system: account.eco_system, banned: false, created: true).select{|acc| acc.account_type.name == "MULE" && acc.id != account.id && acc.is_available}
   end
   #if mule != nil && !mule.banned && (mule.proxy_is_available? || mule.proxy.ip.length < 5)
-  if mule != nil && mule.length > 0
-    mule = mule.sample
+  if mules != nil && mules.length > 0
+    mule = mules.sample
     puts "we found mule"
     #create new isntruction for mulec
     computer = mule.computer
@@ -708,7 +730,6 @@ end
 def script_thread(client, account)
   begin
   while(!client.closed?)
-    instruction_queue = []
     respond = client.gets
     if respond == nil
       client.puts "ok"
@@ -717,10 +738,10 @@ def script_thread(client, account)
       respond = respond.split(":")
       if respond[0] == "log"
         #get new instructions
-        instruction_queue = Instruction.where(completed: false).select{|ins|ins.is_relevant && ins.account_id == account.id && ins.completed == false}
+        instruction_queue = Instruction.where(completed: false, account_id: account.id).select{|ins|ins.is_relevant}
         log = Log.new(computer_id: nil, account_id: account.id, text: respond)
         log.save
-        client.puts account_get_instruction_respond(instruction_queue)
+        client.puts account_get_instruction_respond(instruction_queue, account)
       elsif respond[0] == "task_log"
         task_log(account, respond)
         client.puts "ok"
@@ -772,31 +793,32 @@ def create_account_thread
   last_check = 0
   interval = 5
   @generate_account = GenerateAccount.new
-  begin
-    while !connection_established?
-      puts "Connecting..."
-      ActiveRecord::Base.establish_connection(db_configuration["development"])
-      sleep 2
-    end
-    loop do
-      if Time.now > last_check + interval
-        puts "lets create accounts"
-        @generate_account.create_accounts_for_all_computers
-        last_check = Time.now
-      else
-        puts "next acc check: #{Time.now - (last_check + interval)}"
+  loop do
+    begin
+      while !connection_established?
+        puts "Connecting..."
+        ActiveRecord::Base.establish_connection(db_configuration["development"])
+        sleep 2
       end
-      sleep(5.seconds)
+      loop do
+        if Time.now > last_check + interval
+          puts "lets create accounts"
+          @generate_account.create_accounts_for_all_computers
+          last_check = Time.now
+        else
+          puts "next acc check: #{Time.now - (last_check + interval)}"
+        end
+        sleep(5.seconds)
+      end
+    rescue => error
+      puts error
+      puts error.backtrace
+      puts "account threadloop crashed"
+      ActiveRecord::Base.clear_active_connections!
+      sleep(10.seconds)
+    ensure
+      ActiveRecord::Base.clear_active_connections!
     end
-  rescue => error
-    puts error
-    puts error.backtrace
-    puts "account threadloop crashed"
-    ActiveRecord::Base.clear_active_connections!
-    sleep(10.seconds)
-    create_account_thread
-  ensure
-    ActiveRecord::Base.clear_active_connections!
   end
 end
 
@@ -818,20 +840,20 @@ end
 
 
 def launch_accounts
-  accounts = Account.where(banned: false, created: true, locked: false)
+  accounts = Account.includes(:account_type, :computer, :schema).where(banned: false, created: true, locked: false)
   if !accounts.nil? && !accounts.blank?
-    accounts = accounts.select{|acc| acc != nil && acc.account_type.name == "SLAVE" && isAccReadToLaunch(acc)} #Shuffled for performance
+    accounts = accounts.select{|acc| acc != nil && acc.account_type.name == "SLAVE"}
   end
   if !accounts.nil? && !accounts.blank?
     accounts = accounts.sort_by{|acc|acc.get_total_level}.reverse
     accounts.each do |acc|
       computer = acc.computer if acc.computer_id != nil
-      if computer != nil && computer.is_available_to_nexus && computer.can_connect_more_accounts
-        Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save
-        Log.new(computer_id: computer.id, account_id: acc.id, text: "Instruction created")
-        puts "instruction for #{acc.username} to create new client at #{acc.computer.name}"
-        sleep(3.seconds)
-      end
+      next if computer == nil || !computer.is_available_to_nexus || !computer.can_connect_more_accounts
+      next if !isAccReadToLaunch(acc)
+      Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save
+      Log.new(computer_id: computer.id, account_id: acc.id, text: "Instruction created")
+      puts "instruction for #{acc.username} to create new client at #{acc.computer.name}"
+      sleep(3.seconds)
     end
   else
     puts "No accounts to launch"
@@ -840,14 +862,14 @@ end
 
 @last_unlock = 0
 def unlock_accounts
-  accounts = Account.where(banned: false, created: true, locked: true)
+  accounts = Account.includes(:account_type, :computer, :schema).where(banned: false, created: true, locked: true)
   if !accounts.nil? && !accounts.blank?
     accounts = accounts.select{|acc| acc != nil && acc.proxy.is_ready_for_unlock && acc.account_type.name == "SLAVE" && isAccReadToLaunch(acc)} #Shuffled for performance
   end
   if !accounts.nil? && !accounts.blank?
     accounts = accounts.sort_by{|acc|acc.get_total_level}.reverse
     accounts.each do |acc|
-      if !@generate_account.canUnlockEmail(acc.login)
+      if !@generate_account.canUnlockEmail(acc.login) || (Time.now.utc - acc.last_seen) > 6.hours
         acc.update(banned: true)
         next
       end
@@ -856,7 +878,6 @@ def unlock_accounts
         ##instructionType to - UNLOCK ACCOUNT
         proxy = acc.proxy
         proxy.update(unlock_cooldown: DateTime.now + 7.minutes)
-        proxy.save
 
         unlock_instruction = getInstructionType("UNLOCK_ACCOUNT")
         Instruction.new(:instruction_type_id => unlock_instruction.id, :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save
@@ -881,31 +902,27 @@ def getInstructionType(instruction_name)
 end
 
 def main_thread
-  begin
-    loop do
-      while !connection_established?
-        puts "Connecting..."
-        ActiveRecord::Base.establish_connection(db_configuration["development"])
-        sleep 2
+  loop do
+    begin
+      loop do
+        while !connection_established?
+          puts "Connecting..."
+          ActiveRecord::Base.establish_connection(db_configuration["development"])
+          sleep 2
+        end
+        time = Time.now.change(:month => 1, :day => 1, :year => 2000)
+        puts "Main Thread loop nexus #{time}"
+        launch_accounts
+        unlock_accounts
+
+        sleep(10.seconds)
       end
-      time = Time.now.change(:month => 1, :day => 1, :year => 2000)
-      puts "Main Thread loop nexus #{time}"
-      launch_accounts
-      unlock_accounts
-
-
-
+    rescue => error
+      puts error
+      puts error.backtrace
+      puts "Main loop crashed"
       sleep(10.seconds)
     end
-  rescue => error
-    puts error
-    puts error.backtrace
-    puts "Main loop crashed"
-    ActiveRecord::Base.clear_active_connections!
-    sleep(10.seconds)
-    main_thread
-  ensure
-    ActiveRecord::Base.clear_active_connections!
   end
 end
 
@@ -946,6 +963,12 @@ Thread::abort_on_exception = true
 added_main_thread = false
 added_account_thread = false
 loop do
+  while !connection_established?
+    puts "Connecting..."
+    ActiveRecord::Base.establish_connection(db_configuration["development"])
+    sleep 2
+  end
+
   if added_main_thread == false
     Thread.new do
       added_main_thread = true
@@ -989,9 +1012,9 @@ loop do
         elsif respond[0] == "script"
           # start new thread for script
           login = respond[3].chomp
-          if Account.where(:login => login) != nil && Account.where(:login => login).length > 0
+          account = Account.includes(:schema, :computer, :account_type).where(:login => login).limit(1).first
+          if account != nil
             puts "Login: #{login}"
-            account = Account.where(:login => login).first
             puts "account found:#{account.login}"
             account.update(:locked => false)
             if !account.created

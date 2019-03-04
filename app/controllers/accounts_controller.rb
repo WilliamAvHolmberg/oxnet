@@ -2,6 +2,13 @@ class AccountsController < ApplicationController
 
   def index
     @available_accounts = Account.includes(:mule, :proxy, :schema, :account_type, :eco_system, :stats).where(banned: false, created: true).sort_by{|acc|acc.get_total_level}.reverse
+
+    @available_accounts.each do |acc|
+      if acc.password.include? "\n"
+        acc.update(password: acc.password.strip)
+      end
+    end
+
   end
   def show
     @account = Account.find(params[:id])
@@ -39,7 +46,7 @@ class AccountsController < ApplicationController
   end
 
   def json
-    @account = Account.find(params[:id])
+    @account = Account.includes(:proxy).find(params[:id])
     port = @account.proxy.port
     if port.blank?
       port = 0

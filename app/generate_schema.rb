@@ -60,7 +60,7 @@ class GenerateSchema
   end
 
     def generate_schedule(account)
-      sleep(0.01.seconds)
+      # sleep(0.01.in_milliseconds)
       puts "Generating Schedule for: " + account.username
       wipeQuests(account)
       wipeStats(account)

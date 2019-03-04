@@ -51,7 +51,7 @@ class GenerateGear
 
   def generate_gear(account)
     slots = ["weapon", "legs","neck","chest","feet","head","hands","ring","cape","shield"]
-    sleep(0.01.seconds) #helped heaps with database issues
+    # sleep(0.01.seconds) #helped heaps with database issues
     gear = Gear.find_or_create_by(name: "#{account.username}")
     slots.each do |slot|
 

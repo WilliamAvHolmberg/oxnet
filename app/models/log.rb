@@ -35,7 +35,7 @@ class Log < ApplicationRecord
         if account.time_online == nil then time_online = 0 else time_online = account.time_online end
         account.update(time_online:(Time.now - last_seen + time_online))
       end
-      account.update(last_seen: Time.now)
+      account.update(last_seen: Time.now.utc)
       account.save
   end
 end

@@ -29,5 +29,21 @@ class NexusController < ApplicationController
     render plain: "nice"
   end
 
+  def load_new_bans
+    return if params[:since] == nil
+    since = params[:since]
+    begin
+      Date.parse(since)
+    rescue ArgumentError
+      return
+    end
+    @banned_logs = Log.includes(:account).where("created_at > '?' AND text LIKE '%banned%'", since).order("created_at DESC").limit(10)
+
+    respond_to do |format|
+      format.html{redirect_to root_url}
+      format.js
+    end
+  end
+
 
 end

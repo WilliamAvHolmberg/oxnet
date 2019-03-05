@@ -213,7 +213,7 @@ class ChartsController < ApplicationController
 
     # interval = "#{timezone_offset[0]} time '#{timezone_offset[1..-1]}'"
     start_date = 5.days.ago
-    accounts = Account.includes(:mule_logs).where('last_seen IS NOT NULL')
+    accounts = Account.includes(:mule_logs, :schema, :account_type).where('last_seen IS NOT NULL')
                           .where('last_seen > ?', start_date.beginning_of_day)
                          .where('last_seen > created_at AND time_online > 7200')
                          .where('created=true AND banned=true')

@@ -1,4 +1,5 @@
-/ pre = JSON.pretty_generate(@accounts_created_rows.as_json)
+-if @debug != nil
+  pre = JSON.pretty_generate(@debug.as_json)
 div style="max-width:900px"
   .table-responsive
     h2 Daily Stats

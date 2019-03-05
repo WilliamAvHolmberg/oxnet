@@ -61,6 +61,7 @@ Rails.application.routes.draw do
   resources :accounts do
     member do
       get 'json'
+      get 'ban'
     end
 
   end

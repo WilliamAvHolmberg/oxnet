@@ -111,4 +111,12 @@ class Schema < ApplicationRecord
     end
     return time
   end
+
+  def get_hours_per_day
+    time = 0
+    self.time_intervals.all.each do |task|
+      time += task.get_task_duration
+    end
+    return time/60
+  end
 end

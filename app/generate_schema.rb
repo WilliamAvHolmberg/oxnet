@@ -133,10 +133,15 @@ class GenerateSchema
       wipeStats(account)
       wipeQuests(account)
       account.save!
-      account.schema.time_intervals.each do |time_interval|
-        new_time = time_interval.dup
-        new_time.update(schema: new_schema)
-        new_time.save
+      ##set custom time intervals
+      if account.schema.get_hours_per_day > 20
+        account.schema.time_intervals.each do |time_interval|
+          new_time = time_interval.dup
+          new_time.update(schema: new_schema)
+          new_time.save
+        end
+      else
+        TimeInterval.create(start_time: Time.now, end_time: Time.now + 5.hours + rand(1..3).hours, schema: new_schema).save
       end
       return new_schema
     end

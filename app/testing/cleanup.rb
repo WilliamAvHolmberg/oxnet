@@ -449,7 +449,19 @@ proxies.each do |proxy|
 end
 end
 
+def delete_accounts
+  computer = Computer.where(name: "William").first
+  new_computer = Computer.where(name: "Brandon").first
+  accounts = Account.where(computer: computer, banned: false, created: true)
+  accounts.each do |acc|
+    puts acc.username
+    acc.update(computer: new_computer)
+    acc.save
+  end
+end
+
 def update_proxy
+  computer = Computer.where(name: "Suicide")
 accounts = Account.where(banned: false, created: true, proxy: nil)
 proxy = Proxy.find(1)
 accounts.each do |acc|
@@ -458,6 +470,7 @@ accounts.each do |acc|
 end
 end
 
-update_proxy
+delete_accounts
+#update_proxy
 #update_cooldown
 #Hiscore.create(skill: Skill.where(name: "Woodcutting").first).save

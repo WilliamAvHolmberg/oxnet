@@ -52,9 +52,9 @@ class AccountsController < ApplicationController
       port = 0
     end
     render json: "{
-  'Clients': [{
     'UseProxy': true,
     'ScriptArgs': '',
+    'RsUsername': '#{@account.login}',
     'RsPassword': '#{@account.password}',
     'Config': {
       'EngineTickDelay': 0,
@@ -69,10 +69,7 @@ class AccountsController < ApplicationController
     'IsRepoScript': false,
     'World': #{@account.world},
     'ProxyPort': #{port},
-    'RsUsername': '#{@account.login}',
     'ProxyPass': '#{@account.proxy.password}'
-  }],
-  'AutoUpdateClient': true
 }"
   end
 

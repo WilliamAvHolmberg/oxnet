@@ -195,8 +195,15 @@ class GenerateAccount
       schema = Schema.next_to_use
       mule = Account.where(username: "PetDhaL").first #not needed. random
       account_type = "SLAVE"
-      if get_number_of_mules < 1
+      if get_number_of_mules < (computer.max_slaves / 30).round
         account_type = "MULE"
+        other_mule = Account.where(account_type: AccountType.where(:name => "MULE")).first
+        if other_mule != nil
+          proxy = other_mule.proxy
+        else
+          mule_proxy = Proxy.where(auto_assign: false).select{|proxy| proxy.is_available }.sample
+          proxy = mule_proxy if mule_proxy != nil
+        end
       end
       if(proxy == nil)
         return nil

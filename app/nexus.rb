@@ -177,7 +177,6 @@ def account_get_direct_respond(message, account)
   if message == nil
     return "logged:fine"
   else
-
     puts "Task request"
     if account.account_type != nil && account.account_type.name.include?("MULE")
       puts "mule"
@@ -199,9 +198,9 @@ def account_get_direct_respond(message, account)
     else
       return "logged:fine"
     end
-    return "logged:f"
+      return "logged:f"
     end
-    end
+  end
 end
 
 def update_woodcutting_task(task, account)
@@ -971,35 +970,47 @@ loop do
 
   if added_main_thread == false
     Thread.new do
-      added_main_thread = true
-      puts "new main thread"
-      thread =  Thread.new{main_thread}
-      ActiveSupport::Dependencies.interlock.permit_concurrent_loads do
-        thread.join # outer thread waits here, but has no lock
+      begin
+        added_main_thread = true
+        puts "new main thread"
+        thread =  Thread.new{main_thread}
+        ActiveSupport::Dependencies.interlock.permit_concurrent_loads do
+          thread.join # outer thread waits here, but has no lock
+        end
+        thread.join
+      rescue Exception => ex
+        puts ex
+        puts ex.backtrace
+        puts "ERROR [NEW MAIN THREAD]"
       end
-      thread.join
     end
   end
   if added_account_thread == false
     Thread.new do
-      added_account_thread = true
-      puts "new accout thread"
-      thread =  Thread.new{create_account_thread}
-      ActiveSupport::Dependencies.interlock.permit_concurrent_loads do
-        thread.join # outer thread waits here, but has no lock
+      begin
+        added_account_thread = true
+        puts "new accout thread"
+        thread =  Thread.new{create_account_thread}
+        ActiveSupport::Dependencies.interlock.permit_concurrent_loads do
+          thread.join # outer thread waits here, but has no lock
+        end
+        thread.join
+      rescue Exception => ex
+        puts ex
+        puts ex.backtrace
+        puts "ERROR [NEW ACCOUNT THREAD]"
       end
-      thread.join
     end
   end
   begin
     thread = nil
     puts "waiting for con"
     Thread.new server.accept do |client|
-
-      puts "new client: #{client}"
-      response = client.gets;
-      next if response.nil?
-      respond = response.split(":")
+      begin
+        puts "new client: #{client}"
+        response = client.gets;
+        next if response.nil?
+        respond = response.split(":")
         if respond[0] == "computer"
           #start new thread for computer
           ip = respond[2]
@@ -1039,11 +1050,12 @@ loop do
         else
           puts "hello"
         end
-      puts "joined new thread"
-      #if thread != nil
-     # thread.join
-      #thread = nil
-      #end
+        puts "joined new thread"
+      rescue Exception => ex
+        puts ex
+        puts ex.backtrace
+        puts "ERROR [NEW CLIENT THREAD]"
+      end
     end
   rescue SystemExit, Interrupt, LocalJumpError
     return

@@ -9,6 +9,28 @@ require 'bigdecimal'
 
 class ChartsController < ApplicationController
 
+  def get_master_mule_account_type
+    return AccountType.where(:name => "MASTER_MULE").first
+  end
+  def get_master_mules
+    account_type = get_master_mule_account_type
+    return Account.where(account_type_id: account_type.id, banned: false)
+  end
+  def is_master_mule_log (log)
+    # if @master_mules == nil
+    #   @master_mules = get_master_mules
+    #   if @master_mules.size > 0
+    #     @master_mules_account_type_id = @master_mules.first.account_type_id
+    #   end
+    # end
+    # if @master_mules.size > 0
+    #   return true if log.account.account_type_id == @master_mules_account_type_id
+    #   return true if @master_mules.any? {|mm| mm.username == log.mule }
+    # end
+    return false
+  end
+
+
   def show
 
     @chartColors = {
@@ -26,6 +48,9 @@ class ChartsController < ApplicationController
 
     # render plain: @timezone_offset
     # return
+    @master_mules = get_master_mules.to_a
+    @master_mule_ids = @master_mules.pluck(:id)
+    @master_mule_names = @master_mules.pluck(:username)
 
     @chart_options = { style: 'max-width:900px; min-height: 400px', responsive: false, maintainAspectRatio: false, }
 
@@ -41,7 +66,12 @@ class ChartsController < ApplicationController
   def calc_profit_chart
     interval = @tz_interval
     start_date = 60.days.ago
+
+
+
     @recent_profits_rows = MuleLog.where('created_at IS NOT NULL')
+                               .where.not(account_id: @master_mule_ids)
+                               .where.not(mule: @master_mule_names)
                                .where('created_at > ?', start_date.beginning_of_day)
                                .group("DATE(created_at #{interval})", config.time_zone)
                                .select("date(created_at #{interval}) as date, SUM(item_amount) AS money_made")
@@ -64,6 +94,7 @@ class ChartsController < ApplicationController
     @accounts_created = []
     @accounts_banned = []
     @recent_profits_rows.each do |pr|
+      next if is_master_mule_log(pr)
       date = pr.date
       @dates << date
       @recent_profits << (pr.money_made / 1000000).round(1)
@@ -105,12 +136,16 @@ class ChartsController < ApplicationController
     interval = @tz_interval
     start_date = 7.days.ago
     recent_profits_rows = MuleLog.where('created_at IS NOT NULL')
+                              .where.not(account_id: @master_mule_ids)
+                              .where.not(mule: @master_mule_names)
                                .where('created_at > ?', start_date.beginning_of_day)
                                .where("account_id IN (SELECT id FROM accounts WHERE account_type_id IN (SELECT id from account_types WHERE name='MULE'))")
                                .select("date_trunc('hour', (created_at #{interval})) as hour, SUM(item_amount) AS money_made")
                                .group("hour")
                                .order("hour").all
     recent_expense_rows = MuleLog.where('created_at IS NOT NULL')
+                              .where.not(account_id: @master_mule_ids)
+                              .where.not(mule: @master_mule_names)
                                .where('created_at > ?', start_date.beginning_of_day)
                                .where("account_id NOT IN (SELECT id FROM accounts WHERE account_type_id IN (SELECT id from account_types WHERE name='MULE'))")
                                .select("date_trunc('hour', (created_at #{interval})) as hour, SUM(item_amount) AS money_made")
@@ -124,6 +159,7 @@ class ChartsController < ApplicationController
     earliest_date = recent_expense_rows.first.hour if recent_expense_rows.first != nil && recent_expense_rows.first.hour < earliest_date
     last_date = earliest_date;
     recent_profits_rows.each do |pr|
+      next if is_master_mule_log(pr)
       while pr.hour - last_date > 60.minutes
         last_date = last_date + 60.minutes
         date = ("#{last_date}".sub!(":00:00 UTC", ""))
@@ -137,6 +173,7 @@ class ChartsController < ApplicationController
     end
     last_date = earliest_date
     recent_expense_rows.each do |pr|
+      next if is_master_mule_log(pr)
       while pr.hour - last_date > 60.minutes
         last_date = last_date + 60.minutes
         recent_expenses << 0
@@ -221,17 +258,22 @@ class ChartsController < ApplicationController
                          .limit(100)
                           .all
 
-    all_schema_data = Array.new
+    original_schema_ids = accounts.map { |acc| acc.schema.original_id }.uniq
+    schemas = Schema.where(id: original_schema_ids).to_a
+
+    all_schema_data = {}
     accounts.each do |account|
       next if account.schema == nil
       next if account.account_type.name.include? "MULE"
       bannedAt = ((account.last_seen - account.created_at) / 3_600).floor
       hours_online = (account.time_online / 3_600).floor
-      next if bannedAt - hours_online > 2
-      schema_id = 0 #account.schema.original_id
+      next if bannedAt - hours_online > 2 # if the account has been offline for a significant time, exclude
+      schema_id = account.schema.original_id
+      original_schema = schemas.find(id: schema_id).first
+      schema_name = (original_schema != nil ? original_schema.name : schema_id.to_s)
       schema_data = all_schema_data[schema_id]
       if schema_data == nil
-        schema_data = all_schema_data[schema_id] = SchemaProfit.new("RSPeer")#account.schema.name)
+        schema_data = all_schema_data[schema_id] = SchemaProfit.new(schema_name)#account.schema.name)
       end
       hourly_profit = Array.new
       account.mule_logs.each do |mule_log|
@@ -253,7 +295,7 @@ class ChartsController < ApplicationController
 
     r = Random.new
     datasets = []
-    all_schema_data.each do |schema_data|
+    all_schema_data.each_value do |schema_data|
       datasets << {
           label: schema_data.name,
           backgroundColor: "rgba(0, 0, 0, 0)",
@@ -279,13 +321,13 @@ class ChartsController < ApplicationController
 end
 class SchemaProfit
   @name = ""
-  def name
+  public def name
     return @name
   end
-  def getRaw
+  public def getRaw
     return @dataPairs
   end
-  def initialize(name)
+  public def initialize(name)
     @dataPairs = Array.new(24, nil )
     @name = name
   end

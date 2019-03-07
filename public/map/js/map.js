@@ -83,7 +83,7 @@ $(document).ready(function () {
             data.forEach(function(pos) {
                 var latlng = new Position(pos[0], pos[1], 0).toCentreLatLng(map)
                 console.log(latlng);
-                posData.push([latlng.lat, latlng.lng, pos[2]]);
+                posData.push([latlng.lat, latlng.lng, 3]);
             });
             map.removeLayer(heat);
             heat = L.heatLayer(posData);

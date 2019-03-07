@@ -75,7 +75,7 @@ $(document).ready(function () {
 
     var addressPoints = [];
     addressPoints = addressPoints.map(function (p) { return [p[0], p[1]]; });
-    var heat = L.heatLayer(addressPoints);
+    var heat = L.heatLayer(addressPoints, {minOpacity: 0.8});
     map.addLayer(heat);
     setInterval(function(){
         $.getJSON("../accounts/get_player_positions", function(data){
@@ -83,10 +83,10 @@ $(document).ready(function () {
             data.forEach(function(pos) {
                 var latlng = new Position(pos[0], pos[1], 0).toCentreLatLng(map)
                 console.log(latlng);
-                posData.push([latlng.lat, latlng.lng, 3]);
+                posData.push([latlng.lat, latlng.lng, 0.1]);
             });
             map.removeLayer(heat);
-            heat = L.heatLayer(posData);
+            heat = L.heatLayer(posData, {minOpacity: 0.8});
             map.addLayer(heat);
         });
     }, 7000);

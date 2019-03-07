@@ -18,7 +18,12 @@ class Account < ApplicationRecord
 
   validates_uniqueness_of :login
 
-
+  def self.all_available_accounts
+    return Account.where(banned: false, locked:false, created: true)
+  end
+  def self.all_accounts_online
+    return all_available_accounts.where("last_seen > NOW() - INTERVAL '1 MINUTE'")
+  end
 
   def proxy
     proxy_id = read_attribute(:proxy_id)

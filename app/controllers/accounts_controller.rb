@@ -141,6 +141,21 @@ class AccountsController < ApplicationController
     redirect_to accounts_path
   end
 
+  def get_player_positions
+    online_players = Account.all_accounts_online
+    task_logs = TaskLog.select("DISTINCT ON (account_id) *").where(account_id: online_players.pluck(:id)).where.not(position: nil).order("account_id, created_at DESC")
+
+    data = []
+    task_logs.each do |task_log|
+      next if task_log.position == nil
+      position = task_log.position.split(';')
+      next if position.length < 4
+      data << [position[1].to_i, position[2].to_i, task_log.account_id.to_s]
+    end
+
+    render json: data.to_json
+  end
+
   private
   def account_params
     params.require(:account).permit(:rs_world_id, :eco_system_id, :login, :password, :proxy_id, :schema_id, :world, :account_type_id, :username, :banned, :should_mule, :computer_id, :mule_id, :created, :locked)

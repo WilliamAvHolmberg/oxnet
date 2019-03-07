@@ -9,7 +9,7 @@ class Proxy < ApplicationRecord
   end
 
   def has_cooldown
-    end_time = DateTime.now
+    end_time = DateTime.now.utc
     start_time = last_used
     elapsed_time = (end_time.to_f - start_time.to_f).to_i
     has_cooldown = elapsed_time < cooldown + custom_cooldown
@@ -23,7 +23,7 @@ class Proxy < ApplicationRecord
     return DateTime.now > unlock_cooldown
   end
   def cooldown
-    num = (last_used.to_f + self[:cooldown] + custom_cooldown - DateTime.now.to_f).to_i
+    num = (last_used.to_f + self[:cooldown] + custom_cooldown - DateTime.now.utc.to_f).to_i
     if num < 0
       self.update_attributes(cooldown: 0)
       num = 0

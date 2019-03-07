@@ -508,7 +508,7 @@ def computer_thread(client, computer)
       if proxy != nil
         puts "PROXY IS NOT NULL AND WE SET TIMEOUT TO : #{cooldown}"
         current_cooldown = proxy.cooldown
-        proxy.update(last_used: DateTime.now)
+        proxy.update(last_used: DateTime.now.utc)
         proxy.update(cooldown: cooldown + current_cooldown)
         proxy.save
       end
@@ -521,7 +521,7 @@ def computer_thread(client, computer)
       if proxy != nil
         puts "PROXY IS NOT NULL AND WE SET TIMEOUT TO : #{cooldown}"
         current_cooldown = proxy.cooldown
-        proxy.update(unlock_cooldown: DateTime.now + 20.minutes)
+        proxy.update(unlock_cooldown: DateTime.now.utc + 20.minutes)
         proxy.save
       end
       client.puts "hello"
@@ -876,7 +876,7 @@ def unlock_accounts
       if computer != nil && computer.is_available_to_nexus && acc.proxy.is_ready_for_unlock
         ##instructionType to - UNLOCK ACCOUNT
         proxy = acc.proxy
-        proxy.update(unlock_cooldown: DateTime.now + 7.minutes)
+        proxy.update(unlock_cooldown: DateTime.now.utc + 7.minutes)
 
         unlock_instruction = getInstructionType("UNLOCK_ACCOUNT")
         Instruction.new(:instruction_type_id => unlock_instruction.id, :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save

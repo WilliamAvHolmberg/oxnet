@@ -63,7 +63,9 @@ Rails.application.routes.draw do
       get 'json'
       get 'ban'
     end
-
+    collection do
+      get 'get_player_positions'
+    end
   end
   resources :proxies do
     member do

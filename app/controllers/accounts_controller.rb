@@ -9,7 +9,12 @@ class AccountsController < ApplicationController
       end
     end
 
+    if params[:launch].present?
+      Account.launch_accounts(0)
+      redirect_to accounts_path
+    end
   end
+
   def show
     @account = Account.find(params[:id])
     @tasks = @account.schema.tasks if !@account.schema.nil?
@@ -17,7 +22,7 @@ class AccountsController < ApplicationController
     @isOnline = !@account.is_available
     @launchTitle = ""
     if @isOnline
-
+      #do nothing
     elsif params[:launched].present?
       @launchTitle = "LAUNCHED!"
     else
@@ -142,15 +147,20 @@ class AccountsController < ApplicationController
   end
 
   def get_player_positions
-    online_players = Account.all_accounts_online
-    task_logs = TaskLog.select("DISTINCT ON (account_id) *").where(account_id: online_players.pluck(:id)).where.not(position: nil).order("account_id, created_at DESC")
+    online_players = Account.all_accounts_online.select(:id, :username).to_a
+    task_logs = TaskLog.includes(:task).select("DISTINCT ON (account_id) *").where(account_id: online_players.pluck(:id)).where.not(position: nil).order("account_id, created_at DESC").to_a
+    # tasks = Task.select(:id, :name).where(id: task_logs.pluck(:task_id)).to_a
 
     data = []
     task_logs.each do |task_log|
       next if task_log.position == nil
       position = task_log.position.split(';')
       next if position.length < 4
-      data << [position[1].to_i, position[2].to_i, task_log.account_id.to_s]
+      account_id = task_log.account_id #cache this dictionary value
+      # task_id = task_log.task_id #cache this dictionary value
+      account = online_players.select { |a| a.id == account_id }.first
+      task = task_log.task # tasks.select { |t| t.id == task_id }.first
+      data << [position[1].to_i, position[2].to_i, account_id.to_s, account.username, task.name]
     end
 
     render json: data.to_json

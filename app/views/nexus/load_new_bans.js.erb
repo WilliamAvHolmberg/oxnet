@@ -1,0 +1,3 @@
+<%= - @banned_logs.each do |log| %>
+$("#recent_bans").prepend('<%= j render partial:'nexus/recentlybanned', locals: {log: log} %></tr>');
+<%= end %>

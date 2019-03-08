@@ -75,7 +75,23 @@ class Account < ApplicationRecord
       return time_since_last_log > 3
     end
   end
-
+  def computer_is_available
+    return self.computer_id != nil && self.computer != nil && self.computer.is_available_to_nexus && self.computer.can_connect_more_accounts
+  end
+  def isAccReadToLaunch
+    acc = self
+    return if !acc.computer_is_available
+    return if !acc.is_available
+    return if acc.proxy == nil || !acc.proxy.is_available
+    if acc.schema == nil
+      puts "No schema for #{acc.username}"
+      return false
+    end
+    if acc.schema.get_suitable_task(acc) == nil
+      return false
+    end
+    return true
+  end
 
 
   def get_time_online
@@ -148,6 +164,28 @@ class Account < ApplicationRecord
       total_level += 100;
     end
     return total_level
+  end
+
+
+  def self.launch_accounts(secsDelay)
+    accounts = Account.includes(:account_type, :computer, :schema).where(banned: false, created: true, locked: false)
+    if !accounts.nil? && !accounts.blank?
+      accounts = accounts.select{|acc| acc != nil && acc.account_type.name == "SLAVE"}
+    end
+    if !accounts.nil? && !accounts.blank?
+      accounts = accounts.sort_by{|acc|acc.get_total_level}.reverse
+      accounts.each do |acc|
+        computer = acc.computer if acc.computer_id != nil
+        next if computer == nil || !computer.is_available_to_nexus || !computer.can_connect_more_accounts
+        next if !acc.isAccReadToLaunch
+        Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save
+        Log.new(computer_id: computer.id, account_id: acc.id, text: "Instruction created")
+        puts "instruction for #{acc.username} to create new client at #{acc.computer.name}"
+        sleep(secsDelay.seconds)
+      end
+    else
+      puts "No accounts to launch"
+    end
   end
 
 end

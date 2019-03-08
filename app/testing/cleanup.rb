@@ -470,7 +470,11 @@ accounts.each do |acc|
 end
 end
 
-delete_accounts
+#delete_accounts
 #update_proxy
 #update_cooldown
-#Hiscore.create(skill: Skill.where(name: "Woodcutting").first).save
+#Hiscore.create(skill: Skill.where(name: "Fishing").first).save
+x = 4
+y = 12
+
+for

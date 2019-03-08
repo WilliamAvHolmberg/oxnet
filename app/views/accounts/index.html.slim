@@ -22,6 +22,7 @@
             th Locked?
             / th Created?
             th Time Per Day
+            th Original Schema
             th
             th
           tbody
@@ -47,5 +48,6 @@
                     = "-"
                 / td = account.created
                 td = account.schema.total_time_per_day if account.schema != nil
+                td = Schema.find(account.schema.original_id).name if account.schema != nil && account.schema.original_id != nil
                 td = link_to 'Ban Account', ban_account_path(account), data: {confirm: 'Are you sure?'}
                 td = link_to 'Destroy', account, data: {confirm: 'Are you sure?'}, method: :delete

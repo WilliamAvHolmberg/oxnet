@@ -420,14 +420,13 @@ def get_tanning_task_respond(task, account)
 end
 def get_fishing_task_respond(task, account)
   task_type = task.task_type.name
-  update_woodcutting_task(task, account)
   if task.bank_area != nil
     bank_area = task.bank_area.coordinates
   else
     bank_area = "none"
   end
   action_area = task.action_area.coordinates
-  fish_name = task.food.item_name
+  fish_name = "lelolo" #not needed in the future as this is hardco
   break_condition = task.break_condition.name
   if break_condition == "TIME"
     task_duration = ((task.get_end_time - Time.now.change(:month => 1, :day => 1, :year => 2000))/60).round

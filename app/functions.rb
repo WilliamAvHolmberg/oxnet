@@ -1,6 +1,7 @@
 
 
 def formatted_duration(total_seconds)
+  return "" if total_seconds == nil
   dhms = [60, 60, 24].reduce([total_seconds]) { |m,o| m.unshift(m.shift.divmod(o)).flatten }
 
   return "%ddays %dhrs" % dhms unless dhms[0].zero?

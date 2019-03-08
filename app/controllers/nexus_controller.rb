@@ -6,8 +6,8 @@ class NexusController < ApplicationController
     @connected_computers = Computer.all.select{|comp|comp.is_connected}
     @mule_logs = MuleLog.includes(:account).where("created_at > NOW() - INTERVAL '? hours ? minutes'", Time.now.hour, Time.now.min).sort_by(&:created_at).reverse
     @mule_logs_last_2_hours = MuleLog.includes(:account).where("created_at > NOW() - INTERVAL '? hours'", 2).sort_by(&:created_at).reverse
-    @banned_logs = Log.includes(:account).where("created_at > NOW() - INTERVAL '? hours' AND text LIKE '%banned%'", 20).order("created_at DESC").limit(10)
-    @available_accounts = Account.all_available_accounts.includes(:account_type)
+    @recently_banned = Account.includes(:stats, :computer).where(banned: true, created: true).order("last_seen DESC").limit(10)
+    @available_accounts = Account.all_available_accounts
     @active_accounts = @available_accounts.select{|acc| !acc.is_available}
     @mules = @available_accounts.select{|acc| acc.account_type.name.include? "MULE"}
     @slaves = @available_accounts.select{|acc| acc.account_type.name == "SLAVE"}

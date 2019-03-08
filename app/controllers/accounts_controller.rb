@@ -1,7 +1,8 @@
 class AccountsController < ApplicationController
 
   def index
-    @available_accounts = Account.includes(:mule, :proxy, :schema, :account_type, :eco_system, :stats).where(banned: false, created: true).sort_by{|acc|acc.get_total_level}.reverse
+    @available_accounts = Account.includes(:mule, :proxy, :schema, {:schema => :time_intervals}, :account_type, :eco_system, :stats).where(banned: false, created: true).sort_by{|acc|acc.get_total_level}.reverse
+
 
     @available_accounts.each do |acc|
       if acc.password.include? "\n"
@@ -147,7 +148,7 @@ class AccountsController < ApplicationController
   end
 
   def get_player_positions
-    online_players = Account.all_accounts_online.select(:id, :username).to_a
+    online_players = Account.all_accounts_online.select(:id, :username, :world).to_a
     task_logs = TaskLog.includes(:task).select("DISTINCT ON (account_id) *").where(account_id: online_players.pluck(:id)).where.not(position: nil).order("account_id, created_at DESC").to_a
     # tasks = Task.select(:id, :name).where(id: task_logs.pluck(:task_id)).to_a
 
@@ -160,7 +161,8 @@ class AccountsController < ApplicationController
       # task_id = task_log.task_id #cache this dictionary value
       account = online_players.select { |a| a.id == account_id }.first
       task = task_log.task # tasks.select { |t| t.id == task_id }.first
-      data << [position[1].to_i, position[2].to_i, account_id.to_s, account.username, task.name]
+      task_name = task.name.partition("---").last
+      data << [position[1].to_i, position[2].to_i, account_id.to_s, account.username, task_name, account.world]
     end
 
     render json: data.to_json

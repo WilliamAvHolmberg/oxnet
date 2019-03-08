@@ -24,15 +24,15 @@ p#notice = notice
                 td
                   span class=(!account.is_available ? "online" : "offline")
                   a href=account_path(account) = account.username
-                td = account.stats.where(skill: @hiscore.skill).first.level
+                td = account.stats.select{|skill| skill = @hiscore.skill }.first.level
                 td = formatted_duration(Time.now.utc - account.created_at) + " ago"
-                td = formatted_duration(account.get_time_online)
+                td = formatted_duration(account.time_online)
                 - if account.money_made != nil
                   -money_made = account.money_made
                 -else
                   -money_made = 1
                 td = account.money_made
-                td = 3600*money_made/account.get_time_online
+                td = 3600*money_made/(account.get_time_online || 1)
                 td = account.computer.name
 
       => link_to 'Edit', edit_hiscore_path(@hiscore)

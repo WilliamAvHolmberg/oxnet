@@ -96,8 +96,12 @@ $(document).ready(function () {
                 if (marker == undefined) {
                     var player_name = pos[3];
                     var task_name = pos[4];
+                    var world = pos[5];
                     marker = L.marker(new L.LatLng(latlng.lat, latlng.lng), {title: player_id});
-                    var popup = `<a target="_blank" href="/accounts/${player_id}"><b>#${player_id} - ${player_name}</b><br/>${task_name}</a>`;
+                    var popup = `<a target="_blank" href="/accounts/${player_id}">
+                                <h4 style="cursor:pointer; margin-bottom:1px;">${player_name}</h4>
+                                <i class="fa fa-globe"></i> <b>${world}</b>
+                                <i class="fa fa-id-badge"></i> <b>${player_id}</b><br/>${task_name}</a>`;
                     marker.bindPopup(popup);
                     markerCache[player_id] = marker;
                     markers.addLayer(marker);
@@ -130,3 +134,26 @@ $(document).ready(function () {
     //     }
     // })
 });
+
+//**** MOBILE SCALING ****//
+var viewport = document.querySelector("meta[name=viewport]");
+if (viewport) {
+    var content = viewport.getAttribute("content");
+    var parts = content.split(",");
+    for (var i = 0; i < parts.length; ++i) {
+        var part = parts[i].trim();
+        var pair = part.split("=");
+        if (pair[0] === "min-width") {
+            var minWidth = parseInt(pair[1]);
+            if (screen.width < minWidth) {
+                document.head.removeChild(viewport);
+
+                var newViewport = document.createElement("meta");
+                newViewport.setAttribute("name", "viewport");
+                newViewport.setAttribute("content", "width=" + minWidth);
+                document.head.appendChild(newViewport);
+                break;
+            }
+        }
+    }
+}

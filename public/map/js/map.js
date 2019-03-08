@@ -76,20 +76,48 @@ $(document).ready(function () {
     var addressPoints = [];
     addressPoints = addressPoints.map(function (p) { return [p[0], p[1]]; });
     var heat = L.heatLayer(addressPoints, {minOpacity: 0.8});
+    var markers = L.markerClusterGroup();
     map.addLayer(heat);
-    setInterval(function(){
+    map.addLayer(markers);
+    var markerCache = {};
+    function update_player_data(){
+        if(document.visibilityState != "visible")
+            return;
         $.getJSON("../accounts/get_player_positions", function(data){
             var posData = [];
+            var unusedmarkers = {...markerCache}
             data.forEach(function(pos) {
                 var latlng = new Position(pos[0], pos[1], 0).toCentreLatLng(map)
                 console.log(latlng);
                 posData.push([latlng.lat, latlng.lng, 0.1]);
+
+                var player_id = pos[2];
+                var marker = markerCache[player_id];
+                if (marker == undefined) {
+                    var player_name = pos[3];
+                    var task_name = pos[4];
+                    marker = L.marker(new L.LatLng(latlng.lat, latlng.lng), {title: player_id});
+                    var popup = `<a target="_blank" href="/accounts/${player_id}"><b>#${player_id} - ${player_name}</b><br/>${task_name}</a>`;
+                    marker.bindPopup(popup);
+                    markerCache[player_id] = marker;
+                    markers.addLayer(marker);
+                }else{
+                    marker.setLatLng(new L.LatLng(latlng.lat, latlng.lng));
+                }
+                delete unusedmarkers[player_id];
             });
+            for (var key in unusedmarkers){
+                markers.removeLayer(markerCache[key]);
+                delete markerCache[key];
+            }
+            markers.refreshClusters();
             map.removeLayer(heat);
             heat = L.heatLayer(posData, {minOpacity: 0.8});
             map.addLayer(heat);
         });
-    }, 7000);
+    }
+    update_player_data();
+    setInterval(update_player_data, 7000);
     // var draw = true;
     // map.on({
     //     movestart: function () { draw = false; },

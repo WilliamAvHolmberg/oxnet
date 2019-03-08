@@ -16,6 +16,8 @@
         crossorigin="anonymous" />
 
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/external/MarkerCluster.css">
+    <link rel="stylesheet" href="css/external/MarkerCluster.Default.css">
 
     <!-- Get jQuery JS from Google CDN, or fallback to local copy -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -43,12 +45,13 @@
         window.L || document.write('<script type="text/javascript" src="js/external/leaflet.js\"><\/script>');
     </script>
     <script type="text/javascript" src="js/external/leaflet-heat.js"></script>
+    <script type="text/javascript" src="js/external/leaflet.markercluster-src.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.33.1/sweetalert2.js" integrity="sha256-u74zWXS2T+G4E4NsM/R8gR8SaTJcq5a0TCks5m+AN9k="
         crossorigin="anonymous"></script>
 
     <!-- Try to load main JS module -->
-    <script type="module" src="js/map.js?r=148"></script>
+    <script type="module" src="js/map.js?r=159"></script>
 
     <!-- If the browser does not support ES6 modules, load the bundled version -->
     <script nomodule defer src="js/bundle.js"></script>

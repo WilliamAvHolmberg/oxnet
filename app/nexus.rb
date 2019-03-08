@@ -565,7 +565,6 @@ end
 def updateAccountLevels(string, account)
   string.slice! "skills;"
   array = string.split(';')
-  account_stats = Stat.where(account_id: account.id)
   array.each do |parsed|
     intern_parse = parsed.split(',')
     # puts parsed
@@ -575,12 +574,12 @@ def updateAccountLevels(string, account)
     # puts level
 
     skill = getSkillByName(name)
-    account_level = account_stats.select { |s| s.id == skill.id}.first
+    account_level = account.stats.find_by(skill: skill)
     if account_level == nil
       account_level = Stat.find_or_initialize_by(account_id: account.id, skill: skill)
       account_level.update(level: level)
       account_level.save
-    else
+    elsif(account_level.level != level)
       account_level.update(level: level)
     end
   end
@@ -605,17 +604,22 @@ def updateAccountQuests(string, account)
     puts parsed
     name = intern_parse[0]
     completed = intern_parse[1]
-    puts name
-    puts completed
-    puts name == nil
+    # puts name
+    # puts completed
+    # puts name == nil
 
     if completed != nil && name != nil
-      puts "in here"
+      # puts "in here"
       quest = getQuestByName(name)
       completed = (completed.include? "true")
-      account_quest = QuestStat.find_or_initialize_by(account_id: account.id, quest: quest)
-      account_quest.update(completed: completed)
-      account_quest.save
+      quest_stat = account.quest_stats.find_by(quest: quest)
+      if quest_stat == nil
+        account_quest = QuestStat.find_or_initialize_by(account_id: account.id, quest: quest)
+        account_quest.update(completed: completed)
+        account_quest.save
+      elsif quest_stat.completed != completed
+        quest_stat.update(completed: completed)
+      end
     end
   end
 end
@@ -821,9 +825,6 @@ def create_account_thread
   end
 end
 
-def computer_is_available(acc)
-  return acc.computer_id != nil && acc.computer != nil && acc.computer.is_available_to_nexus && acc.computer.can_connect_more_accounts
-end
 def connection_established?
   begin
     # use with_connection so the connection doesn't stay pinned to the thread.
@@ -836,34 +837,11 @@ def connection_established?
 end
 
 
-
-
-def launch_accounts
-  accounts = Account.includes(:account_type, :computer, :schema).where(banned: false, created: true, locked: false)
-  if !accounts.nil? && !accounts.blank?
-    accounts = accounts.select{|acc| acc != nil && acc.account_type.name == "SLAVE"}
-  end
-  if !accounts.nil? && !accounts.blank?
-    accounts = accounts.sort_by{|acc|acc.get_total_level}.reverse
-    accounts.each do |acc|
-      computer = acc.computer if acc.computer_id != nil
-      next if computer == nil || !computer.is_available_to_nexus || !computer.can_connect_more_accounts
-      next if !isAccReadToLaunch(acc)
-      Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save
-      Log.new(computer_id: computer.id, account_id: acc.id, text: "Instruction created")
-      puts "instruction for #{acc.username} to create new client at #{acc.computer.name}"
-      sleep(3.seconds)
-    end
-  else
-    puts "No accounts to launch"
-  end
-end
-
 @last_unlock = 0
 def unlock_accounts
   accounts = Account.includes(:account_type, :computer, :schema).where(banned: false, created: true, locked: true)
   if !accounts.nil? && !accounts.blank?
-    accounts = accounts.select{|acc| acc != nil && acc.proxy.is_ready_for_unlock && acc.account_type.name == "SLAVE" && isAccReadToLaunch(acc)} #Shuffled for performance
+    accounts = accounts.select{|acc| acc != nil && acc.proxy.is_ready_for_unlock && acc.account_type.name == "SLAVE" && acc.isAccReadToLaunch} #Shuffled for performance
   end
   if !accounts.nil? && !accounts.blank?
     accounts = accounts.sort_by{|acc|acc.get_total_level}.reverse
@@ -911,7 +889,7 @@ def main_thread
         end
         time = Time.now.change(:month => 1, :day => 1, :year => 2000)
         puts "Main Thread loop nexus #{time}"
-        launch_accounts
+        Account.launch_accounts(3)
         unlock_accounts
 
         sleep(10.seconds)
@@ -923,21 +901,6 @@ def main_thread
       sleep(10.seconds)
     end
   end
-end
-
-def isAccReadToLaunch(acc)
-  return if acc.nil?
-  return if !computer_is_available(acc)
-  return if !acc.is_available
-  return if acc.proxy == nil || !acc.proxy.is_available
-  if acc.schema == nil
-    puts "No schema for #{acc.username}"
-    return false
-  end
-  if acc.schema.get_suitable_task(acc) == nil
-    return false
-  end
-  return true
 end
 
 while !connection_established?
@@ -1065,8 +1028,5 @@ loop do
     puts "errooorororo"
   end
 end
-
-
-
 
 

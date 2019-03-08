@@ -3,7 +3,7 @@
     | Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
     | Tip 2: you can also add an image using data-image tag
   .logo
-    a.simple-text.logo-normal href="#top"
+    a.simple-text.logo-normal href=nexus_path
       img src="https://i.imgur.com/RT2CeD5.png"
   .sidebar-wrapper
     ul.nav
@@ -19,29 +19,33 @@
         a.nav-link href=hiscores_path
           i.material-icons poll
           p Hiscores
+      li.nav-item class=('active' if request.fullpath.include? hiscore_path(1))
+        a.nav-link href=hiscore_path(1)
+          i.fa.fa-tree
+          p Woodcutting Scores
       li.nav-item class=('active' if request.fullpath.include? schemas_path)
         a.nav-link href=schemas_path
           i.material-icons library_books
           p Schemas
-      li.nav-item class=('active' if request.fullpath.include? hiscore_path(1))
-        a.nav-link href=hiscore_path(1)
-          i.material-icons bubble_chart
-          p Woodcutting Scores
       li.nav-item class=('active' if request.fullpath.include? computers_path)
         a.nav-link href=computers_path
           i.material-icons computer
           p Computers
       li.nav-item class=('active' if request.fullpath.include? charts_path)
         a.nav-link href=charts_path
-          i.material-icons show_chart
+          i.fa.fa-bar-chart
           p Charts
+      li.nav-item
+        a.nav-link href="/map/"
+          i.material-icons map
+          p Map
       li.nav-item class=('active' if request.fullpath.include? proxies_path)
         a.nav-link href=proxies_path
-          i.material-icons settings
+          i.material-icons cloud
           p Proxies
       li.nav-item class=('active' if request.fullpath.include? areas_path)
         a.nav-link href=areas_path
-          i.material-icons settings
+          i.material-icons location_on
           p Areas
       li.nav-item.active-pro
         a.nav-link href="../examples/upgrade.html"

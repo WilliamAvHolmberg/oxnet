@@ -140,8 +140,8 @@
               th Computer
               th IP
             tbody id="recent_bans"
-              - @banned_logs.each do |log|
-                = render partial:'nexus/recentlybanned', locals: {log: log}
+              - @recently_banned.each do |acc|
+                = render partial:'nexus/recentlybanned', locals: {account: acc}
                 / - skill = log.account.stats.order("level DESC, skill_id ASC").limit(2).select{|s|s.skill.name != "Hitpoints"}.first
                 / tr
                 /   td
@@ -167,7 +167,7 @@
               th Highest Skill
             tbody
               - @new_accounts.each do |account|
-                - skill = account.stats.order("level DESC, skill_id ASC").limit(2).select {|s| s.skill.name != "Hitpoints"}.first
+                - skill = account.stats.sort_by{ |a, b|( a and b ) ? b <=> a : ( a ? 1 : -1 ) }.select{|s|s.skill.name != "Hitpoints"}.first
                 tr
                   td
                     time class="timeago" datetime="#{account.created_at.localtime}" = "#{formatted_duration(Time.now.utc - account.created_at)} ago"

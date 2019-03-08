@@ -12,23 +12,25 @@ class ChartsController < ApplicationController
   def get_master_mule_account_type
     return AccountType.where(:name => "MASTER_MULE").first
   end
+  def get_mule_account_type
+    return AccountType.where(:name => "MULE").first
+  end
   def get_master_mules
     account_type = get_master_mule_account_type
-    return Account.where(account_type_id: account_type.id, banned: false)
+    return Account.where(account_type_id: account_type.id, banned: false, created: true).all
   end
-  def is_master_mule_log (log)
-    # if @master_mules == nil
-    #   @master_mules = get_master_mules
-    #   if @master_mules.size > 0
-    #     @master_mules_account_type_id = @master_mules.first.account_type_id
-    #   end
-    # end
-    # if @master_mules.size > 0
-    #   return true if log.account.account_type_id == @master_mules_account_type_id
-    #   return true if @master_mules.any? {|mm| mm.username == log.mule }
-    # end
-    return false
+  def get_mules
+    account_type = get_mule_account_type
+    return Account.where(account_type_id: account_type.id, banned: false, created: true).all
   end
+  # def is_master_mule_log (log)
+  #   @master_mules = get_master_mules if @master_mules == nil
+  #   if @master_mules.size > 0
+  #     # return true if @master_mules.any? {|mm| mm.id == log.account_id }
+  #     return true if @master_mules.any? {|mm| mm.username.casecmp(log.mule) == 0 }
+  #   end
+  #   return false
+  # end
 
 
   def show
@@ -48,9 +50,12 @@ class ChartsController < ApplicationController
 
     # render plain: @timezone_offset
     # return
+    @mules = get_mules.to_a
+    @mules_ids = @mules.pluck(:id)
     @master_mules = get_master_mules.to_a
     @master_mule_ids = @master_mules.pluck(:id)
     @master_mule_names = @master_mules.pluck(:username)
+    @master_mule_names = @master_mule_names.map(&:downcase)
 
     @chart_options = { style: 'max-width:900px; min-height: 400px', responsive: false, maintainAspectRatio: false, }
 
@@ -70,9 +75,8 @@ class ChartsController < ApplicationController
 
 
     @recent_profits_rows = MuleLog.where('created_at IS NOT NULL')
-                               .where.not(account_id: @master_mule_ids)
-                               .where.not(mule: @master_mule_names)
                                .where('created_at > ?', start_date.beginning_of_day)
+                               .where.not(account_id: @master_mule_ids, mule: @master_mule_names)
                                .group("DATE(created_at #{interval})", config.time_zone)
                                .select("date(created_at #{interval}) as date, SUM(item_amount) AS money_made")
                                .order("date").all
@@ -94,7 +98,7 @@ class ChartsController < ApplicationController
     @accounts_created = []
     @accounts_banned = []
     @recent_profits_rows.each do |pr|
-      next if is_master_mule_log(pr)
+      # next if is_master_mule_log(pr)
       date = pr.date
       @dates << date
       @recent_profits << (pr.money_made / 1000000).round(1)
@@ -135,19 +139,17 @@ class ChartsController < ApplicationController
   def calc_hourly_profit_chart
     interval = @tz_interval
     start_date = 7.days.ago
-    recent_profits_rows = MuleLog.where('created_at IS NOT NULL')
-                              .where.not(account_id: @master_mule_ids)
-                              .where.not(mule: @master_mule_names)
+    recent_expense_rows = MuleLog.where('created_at IS NOT NULL')
                                .where('created_at > ?', start_date.beginning_of_day)
-                               .where("account_id IN (SELECT id FROM accounts WHERE account_type_id IN (SELECT id from account_types WHERE name='MULE'))")
+                              .where(account_id: @mules_ids)
+                              .where.not(account_id: @master_mule_ids, mule: @master_mule_names)
                                .select("date_trunc('hour', (created_at #{interval})) as hour, SUM(item_amount) AS money_made")
                                .group("hour")
                                .order("hour").all
-    recent_expense_rows = MuleLog.where('created_at IS NOT NULL')
-                              .where.not(account_id: @master_mule_ids)
-                              .where.not(mule: @master_mule_names)
+    recent_profits_rows = MuleLog.where('created_at IS NOT NULL')
                                .where('created_at > ?', start_date.beginning_of_day)
-                               .where("account_id NOT IN (SELECT id FROM accounts WHERE account_type_id IN (SELECT id from account_types WHERE name='MULE'))")
+                               .where.not(account_id: @mules_ids)
+                              .where.not(account_id: @master_mule_ids, mule: @master_mule_names)
                                .select("date_trunc('hour', (created_at #{interval})) as hour, SUM(item_amount) AS money_made")
                                .group("hour")
                                .order("hour").all
@@ -159,7 +161,7 @@ class ChartsController < ApplicationController
     earliest_date = recent_expense_rows.first.hour if recent_expense_rows.first != nil && recent_expense_rows.first.hour < earliest_date
     last_date = earliest_date;
     recent_profits_rows.each do |pr|
-      next if is_master_mule_log(pr)
+      # next if is_master_mule_log(pr)
       while pr.hour - last_date > 60.minutes
         last_date = last_date + 60.minutes
         date = ("#{last_date}".sub!(":00:00 UTC", ""))
@@ -173,13 +175,13 @@ class ChartsController < ApplicationController
     end
     last_date = earliest_date
     recent_expense_rows.each do |pr|
-      next if is_master_mule_log(pr)
+      # next if is_master_mule_log(pr)
       while pr.hour - last_date > 60.minutes
         last_date = last_date + 60.minutes
         recent_expenses << 0
       end
       last_date = pr.hour
-      date = "#{pr.hour}".sub!(":00:00 UTC", "")
+      # date = "#{pr.hour}".sub!(":00:00 UTC", "")
       recent_expenses << pr.money_made.to_i
     end
 

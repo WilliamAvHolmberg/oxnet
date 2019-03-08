@@ -6,6 +6,7 @@ table
       th Ip
       th Name
       th Connected?
+      th Can Connect More?
       th Time Online
       th Money Made (USD)
 
@@ -17,6 +18,7 @@ table
         td
           span class=(computer.is_connected ? "online" : "offline")
           span = (computer.is_connected ? " Online" : " Offline")
+        td = computer.can_connect_more_accounts
         td = formatted_duration(computer.get_time_online)
         td = "$#{'%.2f' % money_made(computer)}"
         td = link_to 'Show', computer
@@ -37,6 +39,7 @@ table
 
   tbody
     - @computers.each do |computer|
+      - next if (Time.now.utc - computer.last_seen) > 7.days
       - data = money_made_days(computer, @days.length)
       tr
         td = computer.name

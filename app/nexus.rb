@@ -738,7 +738,7 @@ def script_thread(client, account)
       client.puts "ok"
     else
       #puts "Script sent: #{respond}"
-      respond = respond.split(":")
+      respond = respond.strip.split(":")
       if respond[0] == "log"
         #get new instructions
         instruction_queue = Instruction.where(completed: false, account_id: account.id).select{|ins|ins.is_relevant}

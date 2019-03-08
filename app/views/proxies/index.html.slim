@@ -33,9 +33,9 @@ table
       td = proxy.accounts.where(banned: false, created: true).length
       td = proxy.auto_assign
       td = proxy.last_used.localtime if proxy.last_used != nil
-      td = formatted_duration(DateTime.now.to_f - proxy.last_used.to_f)
+      td = formatted_duration(DateTime.now.utc.to_f - proxy.last_used.to_f)
       td = proxy.cooldown
       td = proxy.custom_cooldown
-      td = proxy.unlock_cooldown.to_i - DateTime.now.to_i
+      td = formatted_duration(proxy.unlock_cooldown - DateTime.now.utc)
       td = link_to 'Destroy', proxy, method: :delete
 = link_to 'New', new_proxy_path

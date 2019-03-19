@@ -327,7 +327,9 @@ end
 def get_money_made(accounts)
   money_made = 0
   accounts.each do |acc|
-    money_made += acc.money_made
+    if acc.money_made != nil
+      money_made += acc.money_made
+    end
   end
   return money_made
 end
@@ -338,24 +340,6 @@ def clear_suicide
     puts acc.last_seen
     acc.destroy
   end
-end
-def get_daily(name)
-  time = DateTime.parse("15/2/2019 0:00:00")
-  computer = Computer.where(name: name).first
-  amount_of_loops = (DateTime.tomorrow - time).to_i
-  puts amount_of_loops
-  money_made = 0
-  amount_of_loops.times do
-    accounts = Account.where(created: true, computer: computer, created_at: time..time+1.days)
-    money_made_day = get_money_made(accounts)
-    puts "Money made #{time}: #{money_made_day}"
-    money_made += money_made_day
-    time = time + 1.days
-  end
-  puts "total money made: #{money_made}"
-  average = money_made/ amount_of_loops
-  acc_average = average/computer.max_slaves
-  puts "average: #{average}, acc average: #{acc_average}"
 end
 
 def get_cool
@@ -477,4 +461,43 @@ end
 x = 4
 y = 12
 
-for
+def get_daily(name)
+  time = DateTime.parse("8/3/2019 0:00:00")
+  computer = Computer.where(name: name).first
+  amount_of_loops = (DateTime.tomorrow - time).to_i
+  puts amount_of_loops
+  money_made = 0
+  amount_of_loops.times do
+    accounts = Account.where(created: true, computer: computer, created_at: time..time+1.days)
+    money_made_day = get_money_made(accounts)
+    puts "Money made #{time}: #{money_made_day}"
+    money_made += money_made_day
+    time = time + 1.days
+  end
+  puts "total money made: #{money_made}"
+  average = money_made/ amount_of_loops
+  acc_average = average/computer.max_slaves
+  puts "average: #{average}, acc average: #{acc_average}"
+end
+
+def get_total_daily()
+  time = DateTime.parse("8/3/2019 0:00:00")
+  amount_of_loops = (DateTime.tomorrow - time).to_i
+  puts amount_of_loops
+  money_made = 0
+  amount_of_loops.times do
+    accounts = Account.where(created: true, created_at: time..time+1.days)
+    money_made_day = get_money_made(accounts)
+    puts "Money made #{time}: #{money_made_day}"
+    money_made += money_made_day
+    time = time + 1.days
+  end
+  puts "total money made: #{money_made}"
+  average = money_made/ amount_of_loops
+  acc_average = average/180
+  puts "average: #{average}, acc average: #{acc_average}"
+end
+
+
+account = Account.find(14016)
+puts account.schema.get_suitable_task(account)

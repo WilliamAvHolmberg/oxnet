@@ -260,18 +260,6 @@ def get_combat_task_respond(task, account)
   end
   action_area = task.action_area.coordinates
   monster_name = task.monster_name
-  if task.gear.head != nil then head = task.gear.head.formated_name else head = "none" end
-  if task.gear.cape != nil then cape = task.gear.cape.formated_name else cape = "none" end
-  if task.gear.neck != nil then neck = task.gear.neck.formated_name else neck = "none" end
-  if task.gear.weapon != nil then weapon = task.gear.weapon.formated_name else weapon = "none" end
-  if task.gear.chest != nil then chest = task.gear.chest.formated_name else chest = "none" end
-  if task.gear.shield != nil then shield = task.gear.shield.formated_name else shield = "none" end
-  if task.gear.legs != nil then legs = task.gear.legs.formated_name else legs = "none" end
-  if task.gear.hands != nil then hands = task.gear.hands.formated_name else hands = "none" end
-  if task.gear.feet != nil then feet = task.gear.feet.formated_name else feet = "none" end
-  if task.gear.ring != nil then ring = task.gear.ring.formated_name else ring = "none" end
-  if task.gear.ammunition != nil then ammunition = task.gear.ammunition.formated_name else ammunition = "none" end
-  if task.gear.ammunition_amount != nil then ammunition_amount= task.gear.ammunition_amount else "none" end
   if task.inventory != nil then inventory = task.inventory.get_parsed_message else inventory ="none" end
 
   break_condition = task.break_condition.name
@@ -293,7 +281,7 @@ def get_combat_task_respond(task, account)
   log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
   log.save
   puts "sending resp"
-  res = "task_respond:1:#{task_type}:#{task.id}:#{bank_area}:#{action_area}:#{monster_name}:#{break_condition}:#{task_duration}:#{head}:#{cape}:#{neck}:#{weapon}:#{chest}:#{shield}:#{legs}:#{hands}:#{feet}:#{ring}:#{ammunition}:#{ammunition_amount}:#{food}:#{inventory}:#{loot_threshold}:#{task.skill.name}:#{level_goal}:#{account.should_mule}"
+  res = "task_respond:1:#{task_type}:#{task.id}:#{bank_area}:#{action_area}:#{monster_name}:#{break_condition}:#{task_duration}:#{head}:#{cape}:#{get_gear(task)}:#{food}:#{inventory}:#{loot_threshold}:#{task.skill.name}:#{level_goal}:#{account.should_mule}"
   return res
 end
 

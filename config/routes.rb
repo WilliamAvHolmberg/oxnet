@@ -62,6 +62,7 @@ Rails.application.routes.draw do
     member do
       get 'json'
       get 'ban'
+      get 'disconnect'
     end
     collection do
       get 'get_player_positions'

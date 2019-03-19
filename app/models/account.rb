@@ -31,6 +31,35 @@ class Account < ApplicationRecord
     return @@account_types.select { |at| at.id == self.account_type_id }.first
   end
 
+  # @account_stats = nil
+  # def stats_cached
+  #   @account_stats = self.stats.to_a if @account_stats == nil
+  #   return @account_stats
+  # end
+  def stats_find(name_or_id)
+    skill_id = Skill.find_quick(name_or_id).id
+    result = self.stats.select{ |s| s.skill_id == skill_id }.first
+    if result == nil
+      # @account_stats = nil
+      return self.stats.select{ |skill| skill.id == skill_id}.first
+    end
+    return result
+  end
+  # @account_quests = nil
+  # def quests_cached
+  #   @account_quests = self.quest_stats.to_a if @account_quests == nil
+  #   return @account_quests
+  # end
+  def quests_find(name_or_id)
+    quest_id = Quest.find_quick(name_or_id).id
+    result = self.quest_stats.select{ |s| s.quest_id == quest_id }.first
+    if result == nil
+      # @account_quests = self.quest_stats.all.to_a
+      return self.quest_stats.where(quest_id: quest_id).first
+    end
+    return result
+  end
+
   # DONT CACHE COMPUTER AS IT IS FREQUENTLY UPDATED
   # @@computers = nil
   # def computer
@@ -52,6 +81,7 @@ class Account < ApplicationRecord
     end
     if @proxy == nil
       @proxy = Proxy.all.select{|proxy| proxy.accounts.include? self}.first
+      @@proxies = Proxy.all.to_a if @proxy != nil
     end
     if @proxy == nil
       return Proxy.find_or_initialize_by(ip: " ", port: " ", username: " ", password: " ", location: "none")
@@ -73,7 +103,7 @@ class Account < ApplicationRecord
       return 50000000000
     else
       current_time = Time.now
-      return ((current_time - self.last_seen)/60).round # difference in minutes
+      return ((current_time - self.last_seen)/60).round(1) # difference in minutes
     end
   end
 
@@ -113,17 +143,17 @@ class Account < ApplicationRecord
   end
 
   def get_average_money
-    if task_logs != nil && task_logs.all.length > 0
-      amount_of_logs = task_logs.all.length
+    if task_logs != nil && task_logs.length > 0
+      amount_of_logs = task_logs.length
       total_amount_of_money = 0
-      task_logs.all.each do |log|
+      task_logs.each do |log|
         if log.money_per_hour != nil
         total_amount_of_money += log.money_per_hour.to_i
         else
           amount_of_logs -=1
         end
       end
-      return total_amount_of_money/amount_of_logs
+      return total_amount_of_money / amount_of_logs
     end
     return 0
   end
@@ -182,19 +212,27 @@ class Account < ApplicationRecord
 
 
   def self.launch_accounts(secsDelay)
-    accounts = Account.includes(:account_type, :computer, :schema).where(banned: false, created: true, locked: false)
+    accounts = Account.includes(:account_type, :computer, {:schema => [ {:tasks=>:requirements }, :time_intervals]}, { :stats => :skill }, :proxy).where(banned: false, created: true, locked: false).where("last_seen < NOW() - INTERVAL '1 MINUTE'").to_a
     if !accounts.nil? && !accounts.blank?
       accounts = accounts.select{|acc| acc != nil && acc.account_type.name == "SLAVE"}
     end
     if !accounts.nil? && !accounts.blank?
-      accounts = accounts.sort_by{|acc|acc.get_total_level}.reverse
+      accounts = accounts.sort_by{|acc|acc.last_seen}
       accounts.each do |acc|
         computer = acc.computer if acc.computer_id != nil
         next if computer == nil || !computer.is_available_to_nexus || !computer.can_connect_more_accounts
         next if !acc.isAccReadToLaunch
-        Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save
-        Log.new(computer_id: computer.id, account_id: acc.id, text: "Instruction created")
-        puts "instruction for #{acc.username} to create new client at #{acc.computer.name}"
+
+        script = Script.first
+        # Check if this instruction is already queued
+        existing_instruction = Instruction.get_uncompleted_instructions_10
+                    .where(instruction_type_id: InstructionType.find_by_name("NEW_CLIENT").id, computer_id: computer.id, account_id: acc.id, script_id: script.id).limit(1).first
+        next if existing_instruction != nil && existing_instruction.is_relevant
+
+        Instruction.new(:instruction_type_id => InstructionType.find_by_name("NEW_CLIENT").id, :computer_id => computer.id, :account_id => acc.id, :script_id => script.id).save
+        # Log.new(computer_id: computer.id, account_id: acc.id, text: "Instruction created")
+        puts "Havent seen #{acc.username} for #{acc.time_since_last_log} minutes"
+        puts "Instruction for #{acc.username} to create new client at #{acc.computer.name}"
         sleep(secsDelay.seconds)
       end
     else

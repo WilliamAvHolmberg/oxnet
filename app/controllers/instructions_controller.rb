@@ -3,7 +3,8 @@ class InstructionsController < ApplicationController
   # GET /instructions
   # GET /instructions.json
   def index
-    @instructions = Instruction.all
+    now = Time.now.utc
+    @instructions = Instruction.where(completed: false, created_at: now-60.minutes..now)
   end
 
   # GET /instructions/1

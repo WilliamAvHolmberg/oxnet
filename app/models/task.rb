@@ -29,6 +29,10 @@ class Task < ApplicationRecord
     self.inherit_attributes(subklass)
   end
 
+  def task_type
+    return TaskType.find_by_id(task_type_id)
+  end
+
   def get_task_duration
     return (self.end_time - self.start_time)/60
   end
@@ -45,11 +49,11 @@ class Task < ApplicationRecord
   end
   def can_undertake(account)
     #puts "#{id} has #{requirements.length} requirements"
-    if requirements.length == 0
+    if requirements.size == 0
       return true
     end
     requirements.each do |req|
-      account_level = account.stats.find_by(skill: req.skill)
+      account_level = account.stats_find(req.skill_id)
       if account_level == nil
         return true
       end
@@ -66,19 +70,14 @@ class Task < ApplicationRecord
   end
 
   def is_completed(account)
-    if task_type.name == "QUEST" && quest != nil
-      if account.quest_stats.find_by(quest: quest) == nil
-        return false
-      elsif account.quest_stats.find_by(quest: quest).completed
-        #puts "#{account.username} already done quest #{quest.id}"
-        return true
-      end
+    if task_type.name == "QUEST" && quest_id != nil
+      quest = account.quests_find(quest_id)
+      return false if quest == nil
+      return true if quest.completed
     else
-      if account.stats.find_by(skill: skill) == nil
-        # puts "#{account.username} is missing skill #{skill.id}"
-        return false
-      end
-      level = account.stats.find_by(skill: skill).level.to_i
+      skill = account.stats_find(skill_id)
+      return false if skill == nil
+      level = skill.level.to_i
       if break_after.to_i <= level
         #puts "#{account.username} is above level #{break_after.to_i} with #{level}"
         return true

@@ -16,7 +16,7 @@ class GenerateAccount
     while !connection_established?
       puts "Connecting..."
       ActiveRecord::Base.establish_connection(db_configuration["development"])
-      sleep 2
+      sleep 1
     end
     require_all("./models/")
     @generate_gear = GenerateGear.new
@@ -218,7 +218,6 @@ class GenerateAccount
       account.update(schema: new_schema)
       puts "id: #{account.id}:#{name} created for computer #{computer.name} with schema #{schema.name}"
 
-      account.save
       if account.stats != nil
         account.stats.destroy_all
       end
@@ -229,26 +228,17 @@ class GenerateAccount
       #TODO set proxy time
      # proxy.last_used = Time.now
       #proxy.save!
-      ins = Instruction.new(:instruction_type_id => InstructionType.select{|ins| ins.name == "CREATE_ACCOUNT"}.first.id, :computer_id => computer.id, :account_id => account.id, :script_id => Script.first.id)
+      ins = Instruction.new(:instruction_type_id => InstructionType.find_by_name("CREATE_ACCOUNT").id, :computer_id => computer.id, :account_id => account.id, :script_id => Script.first.id)
       ins.save
       Stat.where(account_id: account.id).destroy_all
       QuestStat.where(account_id: account.id).destroy_all
     end
 
   public
-  def create_accounts_for_computer(computer)
-    account_threshold = computer.max_slaves
-    current_amount_of_accounts = get_available_accounts_on_computer(computer)
-    if should_do && current_amount_of_accounts != nil && current_amount_of_accounts.size < account_threshold
-      puts current_amount_of_accounts.size
-      create_account(computer, Proxy.find(140))
-      #puts "lets create acc for #{computer.name}"
-    end
-  end
 
   def get_least_used_proxies(eco_system)
-    available_proxies = Proxy.where(eco_system: eco_system, auto_assign: true).select{|proxy| proxy.is_available && !proxy.has_cooldown}
-
+    available_proxies = Proxy.where(eco_system: eco_system, auto_assign: true)
+                            .select{|proxy| proxy.is_available && !proxy.has_cooldown}
     proxies = Array.new
     current_lowest = 10000
     available_proxies.each do |proxy|
@@ -267,46 +257,6 @@ class GenerateAccount
   def get_random_proxy(eco_system)
     return get_least_used_proxies(eco_system).sample
   end
-  #todo fix size (13 atm)
-  public
-  def create_all_accounts_for_one_computer
-    computers = find_available_computers
-    computers.each do |computer|
-      puts computer.name
-      puts computer.can_connect_more_accounts
-      account_threshold = computer.max_slaves
-      puts account_threshold
-      current_amount_of_accounts = get_available_accounts_on_computer(computer).size
-      puts current_amount_of_accounts
-      accounts_to_make = account_threshold - current_amount_of_accounts
-      puts accounts_to_make
-      if accounts_to_make > 0
-        accounts_to_make.times do
-          proxy = get_random_proxy(computer.eco_system)
-          create_account(computer, proxy)
-        end
-        next_check = (accounts_to_make + 1) * 45
-        return next_check
-      end
-    end
-    return 10
-  end
-  public
-  def create_accounts_for_computer(computer)
-    should_do = true
-    account_threshold = computer.max_slaves
-    current_amount_of_accounts = get_available_accounts_on_computer(computer)
-    if should_do && current_amount_of_accounts != nil && current_amount_of_accounts.size < account_threshold
-      puts current_amount_of_accounts.size
-      proxy = get_random_proxy(computer.eco_system)
-      create_account(computer, proxy)
-      #puts "lets create acc for #{computer.name}"
-    end
-    #if should_do
-    # puts "We reached computer threshold. Lets create more accounts"
-    # create_backups_for_all_computers
-    #end
-  end
   public
     def create_accounts_for_all_computers
 
@@ -316,10 +266,16 @@ class GenerateAccount
         account_threshold = computer.max_slaves
         current_amount_of_accounts = get_available_accounts_on_computer(computer)
         proxy = get_random_proxy(computer.eco_system)
-        if proxy != nil && should_do && current_amount_of_accounts != nil && current_amount_of_accounts.size < account_threshold
-          puts current_amount_of_accounts.size
+        if proxy != nil && should_do && current_amount_of_accounts.size < account_threshold
+
+          # Check if we already have an instruction with this proxy due
+          existing_instructions = Instruction.get_uncompleted_instructions_60
+                                     .where(instruction_type_id: InstructionType.find_by_name("CREATE_ACCOUNT").id, computer_id: computer.id).includes(:account)
+          next if existing_instructions.any? { |ins| ins.is_relevant && ins.account.proxy_id == proxy.id}
+
+          puts "#{computer.name} has #{current_amount_of_accounts.size} of #{account_threshold} slaves"
           create_account(computer, proxy)
-          proxy.update(last_used: DateTime.now)
+          proxy.update(last_used: DateTime.now.utc)
           #puts "lets create acc for #{computer.name}"
           should_do = false
         end

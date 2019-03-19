@@ -64,6 +64,7 @@ class GenerateSchema
       puts "Generating Schedule for: " + account.username
       wipeQuests(account)
       wipeStats(account)
+      account.reload
 
       new_schema = Schema.find_by_name("#{account.username}'s Schema'")
       if new_schema == nil
@@ -74,9 +75,10 @@ class GenerateSchema
       last_weapon_type = 0
       last_armour_type = 0
       puts "#{account.schema.tasks.length} Available Tasks"
-      while account.schema.get_available_tasks(account) != nil && account.schema.get_available_tasks(account).length > 0
-        sleep(0.01)
-        task = account.schema.get_available_tasks(account).sample
+      task = nil
+      while (task = account.schema.get_available_tasks(account).sample) != nil
+        # sleep(0.01)
+        # task = account.schema.get_available_tasks(account).sample
         if task == nil
           puts "No task available"
         elsif task.task_type.name == "QUEST"
@@ -89,7 +91,7 @@ class GenerateSchema
         else
           current_weapon_type = @generate_gear.get_best_weapon_type(account)
           current_armour_type = @generate_gear.get_best_armour_type(account)
-          level = account.stats.find_by(skill: task.skill)
+          level = account.stats_find(task.skill_id)
 
           if level.level.to_i > 15
             if  (last_gear == nil ||current_weapon_type != last_weapon_type || current_armour_type != last_armour_type)
@@ -106,7 +108,6 @@ class GenerateSchema
               gear.update(name: "#{account}:#{task.name}")
             end
           end
-
 
           wanted_level = task.break_after
           our_level = ((level.level.to_i + 1)..wanted_level.to_i).to_a.sample
@@ -127,6 +128,7 @@ class GenerateSchema
             last_weapon_type = current_weapon_type
             last_armour_type = current_armour_type
         end
+        account.reload
       end
 
 

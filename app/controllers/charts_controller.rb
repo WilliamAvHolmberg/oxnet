@@ -57,7 +57,16 @@ class ChartsController < ApplicationController
     @master_mule_names = @master_mules.pluck(:username)
     @master_mule_names = @master_mule_names.map(&:downcase)
 
-    @chart_options = { style: 'max-width:900px; min-height: 400px', responsive: false, maintainAspectRatio: false, }
+    @chart_options = { style: 'max-width:900px; min-height: 400px', responsive: false, maintainAspectRatio: false,
+                      pan: {
+                        enabled: true,
+                        mode: 'x'
+                      },
+                       zoom: {
+                        enabled: true,
+                        mode: 'x',
+                       }
+    }
 
     @profit_chart = calc_profit_chart()
     @hourly_profit_chart = calc_hourly_profit_chart()
@@ -76,19 +85,27 @@ class ChartsController < ApplicationController
 
     @recent_profits_rows = MuleLog.where('created_at IS NOT NULL')
                                .where('created_at > ?', start_date.beginning_of_day)
+                               .where.not(account_id: @mules_ids)
                                .where.not(account_id: @master_mule_ids, mule: @master_mule_names)
                                .group("DATE(created_at #{interval})", config.time_zone)
                                .select("date(created_at #{interval}) as date, SUM(item_amount) AS money_made")
                                .order("date").all
+    @recent_expenses_rows = MuleLog.where('created_at IS NOT NULL')
+                               .where('created_at > ?', start_date.beginning_of_day)
+                               .where(account_id: @mules_ids)
+                               .where.not(account_id: @master_mule_ids, mule: @master_mule_names)
+                               .group("DATE(created_at #{interval})", config.time_zone)
+                               .select("date(created_at #{interval}) as date, SUM(item_amount) AS money_made")
+                               .order("date").all.to_a
     @accounts_created_rows = Account.where('created_at IS NOT NULL')
-                                 .where('time_online > 120')
+                                 .where('time_online > 500')
                                  .where('created_at > ?', start_date.beginning_of_day)
                                  .group("DATE(created_at #{interval})", config.time_zone)
                                  .select("date(created_at #{interval}) as date, COUNT(*) AS count")
                                  .order("date").all
     @accounts_banned_rows = Account.where('last_seen IS NOT NULL')
                                 .where('last_seen > ?', start_date.beginning_of_day)
-                                .where('time_online > 120 AND banned=true')
+                                .where('time_online > 500 AND banned=true')
                                 .group("DATE(last_seen #{interval})", config.time_zone)
                                 .select("date(last_seen #{interval}) as date, COUNT(*) AS count")
                                 .order("date").all
@@ -101,7 +118,9 @@ class ChartsController < ApplicationController
       # next if is_master_mule_log(pr)
       date = pr.date
       @dates << date
-      @recent_profits << (pr.money_made / 1000000).round(1)
+      expenses = @recent_expenses_rows.select{ |row| row.date == date }.first
+      expense = expenses == nil ? 0 : expenses.money_made
+      @recent_profits << ((pr.money_made - expense) / 1000000).round(1)
 
       row = @accounts_created_rows.select { |row| row.date == date}.first
       @accounts_created << (row.nil? ? 0 : row.count)
@@ -436,7 +455,10 @@ def calc_account_creation_rates
     i+=1
   end
 
-  return ChartHelpers.chart('line', data, @chart_options) + ChartHelpers.chart('bar', data2, @chart_options)
+  options = {}.merge(@chart_options)
+  options = options.merge({ style: 'max-width:900px; min-height: 600px; max-height: 600px;', height: 600 })
+
+  return ChartHelpers.chart('line', data, options) + ChartHelpers.chart('bar', data2, options)
 end
 
 module ChartHelpers
@@ -449,8 +471,10 @@ module ChartHelpers
     element_id = opts.delete(:id)     || "chart-#{@chart_id += 1}"
     css_class  = opts.delete(:class)  || 'chart'
     css_style      = opts.delete(:style)  || 'max-height: 300px'
+    height      = opts.delete(:height)  || 400
+    width      = opts.delete(:width)  || 900
 
-    canvas = content_tag :canvas, '', id: element_id, class: css_class, style:css_style
+    canvas = content_tag :canvas, '', id: element_id, class: css_class, width: width, height: height, style:css_style
 
     script = javascript_tag() do
       <<-END.squish.html_safe

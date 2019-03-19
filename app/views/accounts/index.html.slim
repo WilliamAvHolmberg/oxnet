@@ -17,18 +17,19 @@
             th World
             th Proxy
             th Money Invested
+            th Schema
             th Account Type
             th Computer
-            th Mule
+            / th Mule
             / th Banned?
             th Locked?
             / th Created?
             th Time Per Day
-            th Original Schema
             th
             th
           tbody
             - @available_accounts.each do |account|
+              - original_schema = @schemas.select{ |s| s.id == account.schema.original_id }.first
               tr
                 td = account.id
                 td = account.eco_system.name if account.eco_system != nil
@@ -39,9 +40,10 @@
                 td = account.world
                 td = account.proxy.location
                 td Todo
+                td = original_schema.name if original_schema != nil
                 td = account.account_type.name if account.account_type != nil
                 td = account.computer.name if account.computer != nil
-                td = account.mule.username if account.mule != nil
+                / td = account.mule.username if account.mule != nil
                 / td = account.banned
                 td
                   - if account.locked
@@ -50,6 +52,5 @@
                     = "-"
                 / td = account.created
                 td = account.schema.total_time_per_day if account.schema != nil
-                td = Schema.find(account.schema.original_id).name if account.schema != nil && account.schema.original_id != nil
                 td = link_to 'Ban Account', ban_account_path(account), data: {confirm: 'Are you sure?'}
                 td = link_to 'Destroy', account, data: {confirm: 'Are you sure?'}, method: :delete

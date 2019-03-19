@@ -3,7 +3,7 @@ h1 Listing hiscores
 
 .row
   - @hiscores.each do |hiscore|
-    a class="col-3 m-2 btn btn-info button" href="/hiscores/#{hiscore.id}" = hiscore.skill.name
+    a class="col-3 m-2 btn btn-primary button" href="/hiscores/#{hiscore.id}" = hiscore.skill.name
 
 br
 

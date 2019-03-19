@@ -7,7 +7,7 @@ class SchemasController < ApplicationController
     # @schemas = Schema.where(default: false)
 
     ####CLEANUP FUNCTION - SUPER QUICK###
-    orphans = Schema.where(disabled: false).where([ "id NOT IN (?)", Account.where(banned: false, created: true).pluck("schema_id")])
+    orphans = Schema.where(disabled: false).where([ "id NOT IN (?)", Account.select(:schema_id).where(banned: false, created: true)])
     orphans.update_all(disabled: true)
 
     @schemas = Schema.ordered_by_use

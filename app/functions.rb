@@ -34,7 +34,7 @@ module Pinger
       respond = Net::Ping::TCP.new(ip, port).ping
       working = (respond != nil && respond != false && respond > 0)
       @pingHistory[key] = working
-      @pingHistoryTimeStamps[key] = Time.now
+      @pingHistoryTimeStamps[key] = Time.now + rand(5..20).seconds
       if working
         puts "Proxy #{ip} is working"
       else

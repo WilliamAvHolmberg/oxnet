@@ -9,7 +9,7 @@ export var TitleLabel = L.Control.extend({
         var container = L.DomUtil.create('div');
         container.id = 'titleLabel';
         container.href = 'http://osbot.org/forum/user/192661-explv/';
-        container.innerHTML = "<span id='explv'>Explv</span>'s Map";
+        container.innerHTML = "Suicide Squad";
 
         L.DomEvent.disableClickPropagation(container);
         return container;

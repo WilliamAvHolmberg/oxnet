@@ -4,7 +4,8 @@ class RsWorldsController < ApplicationController
   # GET /rs_worlds
   # GET /rs_worlds.json
   def index
-    @rs_worlds = RsWorld.all
+    # ActiveRecord::Base.connection.execute("SELECT setval('rs_worlds_id_seq', (SELECT MAX(id) FROM rs_worlds)+1);")
+    @rs_worlds = RsWorld.order(:number).all
   end
 
   # GET /rs_worlds/1
@@ -54,6 +55,10 @@ class RsWorldsController < ApplicationController
   # DELETE /rs_worlds/1
   # DELETE /rs_worlds/1.json
   def destroy
+    replacement = RsWorld.all.where.not(id: params[:id]).sample
+    Account.where('banned=false AND created=true').where(rs_world_id: params[:id]).update_all(rs_world_id: replacement.id)
+    Account.where(rs_world_id: params[:id]).update_all(rs_world_id: replacement.id)
+
     @rs_world.destroy
     respond_to do |format|
       format.html { redirect_to rs_worlds_url, notice: 'Rs world was successfully destroyed.' }
@@ -69,6 +74,6 @@ class RsWorldsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def rs_world_params
-      params.require(:rs_world).permit(:number, :members_only, :account)
+      params.require(:rs_world).permit(:number, :members_only)
     end
 end

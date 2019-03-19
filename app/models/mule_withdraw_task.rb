@@ -7,7 +7,7 @@ class MuleWithdrawTask < ApplicationRecord
   def time_since_last_log
     last_logged = created_at
     current_time = Time.now.utc
-    return ((current_time - last_logged)/60).round # difference in minutes
+    return ((current_time - last_logged)/60).round(1) # difference in minutes
   end
 
   def is_relevant

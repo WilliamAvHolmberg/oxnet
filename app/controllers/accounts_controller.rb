@@ -1,9 +1,12 @@
+require_relative '../functions'
+
 class AccountsController < ApplicationController
 
   def index
-    @available_accounts = Account.includes(:mule, :proxy, :schema, {:schema => :time_intervals}, :account_type, :eco_system, :stats).where(banned: false, created: true).sort_by{|acc|acc.get_total_level}.reverse
+    @available_accounts = Account.includes(:mule, :proxy, :schema, {:schema => :time_intervals}, :account_type, :eco_system, :stats, :computer)
+                              .where(banned: false, created: true).sort_by{|acc|acc.get_total_level}.reverse
 
-
+    @schemas = Schema.where(default: false).all.to_a
     @available_accounts.each do |acc|
       if acc.password.include? "\n"
         acc.update(password: acc.password.strip)
@@ -34,7 +37,7 @@ class AccountsController < ApplicationController
         @launchTitle = "LAUNCH"
         if params[:launch].present?
           @launchTitle = "LAUNCHED!"
-          Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computer.id, :account_id => @account.id, :script_id => Script.first.id).save
+          Instruction.new(:instruction_type_id => InstructionType.find_by_name("NEW_CLIENT").id, :computer_id => computer.id, :account_id => @account.id, :script_id => Script.first.id).save
           Log.new(computer_id: computer.id, account_id: @account.id, text: "Instruction created")
           redirect_to @account
         end
@@ -139,6 +142,14 @@ class AccountsController < ApplicationController
 
     redirect_to accounts_path
   end
+  def disconnect
+    account = Account.find(params[:id])
+
+    ins = Instruction.new(:instruction_type_id => InstructionType.find_by_name("DISCONNECT").id, :computer_id => account.computer_id, :account_id => account.id, :script_id => nil)
+    ins.save
+
+    render json: { success: true }.to_json
+  end
 
   def destroy
     @account = Account.find(params[:id])
@@ -148,8 +159,8 @@ class AccountsController < ApplicationController
   end
 
   def get_player_positions
-    online_players = Account.all_accounts_online.select(:id, :username, :world).to_a
-    task_logs = TaskLog.includes(:task).select("DISTINCT ON (account_id) *").where(account_id: online_players.pluck(:id)).where.not(position: nil).order("account_id, created_at DESC").to_a
+    online_players = Account.all_accounts_online.select(:id, :username, :world, :created_at).to_a
+    task_logs = TaskLog.includes(:task).select("DISTINCT ON (account_id) *").where(:created_at => (Time.now.utc - 20.minutes..Time.now.utc), account_id: online_players.pluck(:id)).where.not(position: nil).order("account_id, created_at DESC").to_a
     # tasks = Task.select(:id, :name).where(id: task_logs.pluck(:task_id)).to_a
 
     data = []
@@ -160,9 +171,11 @@ class AccountsController < ApplicationController
       account_id = task_log.account_id #cache this dictionary value
       # task_id = task_log.task_id #cache this dictionary value
       account = online_players.select { |a| a.id == account_id }.first
+      next if account == nil
       task = task_log.task # tasks.select { |t| t.id == task_id }.first
-      task_name = task.name.partition("---").last
-      data << [position[1].to_i, position[2].to_i, account_id.to_s, account.username, task_name, account.world]
+      task_name = task.name.partition("---").last if task != nil
+      age = formatted_duration(Time.now.utc - account.created_at)
+      data << [position[1].to_i, position[2].to_i, account_id.to_s, account.username, task_name, account.world, age]
     end
 
     render json: data.to_json

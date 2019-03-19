@@ -41,7 +41,7 @@ def computer_get_respond(instruction_queue)
         log.save
         res =  "create_account:#{account.username}:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + account.world.chomp + ":NEX" + ":http://#{serverAddress}:3000/accounts/#{account.id}/json"
         ins.update(:completed => true)
-        ins.save
+        account.proxy.update(last_used: DateTime.now.utc)
         return res
       elsif ins.instruction_type.name == "UNLOCK_ACCOUNT"
         account = ins.account
@@ -49,7 +49,7 @@ def computer_get_respond(instruction_queue)
         log.save
         res =  "unlock_account:#{account.username}:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + account.world.chomp + ":NEX" + ":http://#{serverAddress}:3000/accounts/#{account.id}/json"
         ins.update(:completed => true)
-        ins.save
+        account.proxy.update(unlock_cooldown: DateTime.now.utc + 5.minutes)
         return res
       elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account_id == nil
         ins.update(:completed => true)
@@ -60,8 +60,9 @@ def computer_get_respond(instruction_queue)
         ins.save
         account = ins.account
         puts "we got the account"
+        return computer_get_respond(instruction_queue) if (Time.now.utc - account.last_seen) < 10.seconds
         #res =  "account_request:1:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + world.chomp + ":NEX"
-        res =  "account_request:1:" + "http://#{serverAddress}:3000/accounts/#{account.id}/json"
+        res =  "account_request:1:#{account.username}:"  + ":http://#{serverAddress}:3000/accounts/#{account.id}/json"
         puts "we got the address"
         if ins.computer != nil
           log = Log.new(computer_id: ins.computer_id, account_id: ins.account.id, text: "Account:#{ins.account.login} Handed out to: #{ins.computer.name}")
@@ -155,6 +156,9 @@ def get_task_respond(task, account)
   when "FISHING"
     puts " res fishing respond"
     return get_fishing_task_respond(task,account)
+  when "CUSTOM"
+    puts " res test respond"
+    return get_custom_task_respond(task,account)
   when "QUEST"
     puts "quest ress"
     return get_quest_task_respond(task, account)
@@ -204,23 +208,23 @@ def account_get_direct_respond(message, account)
 end
 
 def update_woodcutting_task(task, account)
-  level = account.stats.find_by(skill: Skill.find_by(name: "Woodcutting"))
-  puts "updating taskz"
-  if level != nil && level.level.to_i > 0
-    if level.level.to_i < 21
-      puts "bronze axe"
-      axe = RsItem.where(item_name: "Bronze axe", stackable: false).first
-    elsif level.level.to_i < 41
-      puts "rune axe"
-      axe = RsItem.where(item_name: "Mithril axe", stackable: false).first
-    elsif level.level.to_i < 99
-      puts "rune axe"
-      axe = RsItem.where(item_name: "Rune axe", stackable: false).first
-    end
+  wc = account.stats_find("Woodcutting")
+  level = 1
+  level = wc.level.to_i if wc != nil && wc.level.to_i > 0
+  if level < 21 || level == 99
+    axe = RsItem.find_quick("Bronze axe", false)
+  elsif level < 41
+    axe = RsItem.find_quick("Mithril axe", false)
+  elsif level < 99
+    axe = RsItem.find_quick("Rune axe", false)
   end
-  task.axe = axe
-  task.save
-  puts "updated task"
+  if ((task.axe == nil || task.axe.item_name != axe.item_name) && axe != nil)
+    puts "updating woodcutting task"
+    puts axe.item_name
+    task.axe = axe
+    task.save
+    puts "updated task"
+  end
 end
 
 def get_agility_task_respond(task, account)
@@ -286,23 +290,23 @@ def get_combat_task_respond(task, account)
 end
 
 def update_mining_task(task, account)
-  level = account.stats.find_by(skill: Skill.find_by(name: "Mining"))
-  puts "updating taskz"
-  if level != nil && level.level.to_i > 0
-    if level.level.to_i < 21
-      puts "bronze axe"
-      axe = RsItem.where(item_name: "Bronze pickaxe", stackable: false).first
-    elsif level.level.to_i < 41
-      puts "rune axe"
-      axe = RsItem.where(item_name: "Mithril pickaxe", stackable: false).first
-    elsif level.level.to_i < 99
-      puts "rune axe"
-      axe = RsItem.where(item_name: "Rune pickaxe", stackable: false).first
-    end
+  wc = account.stats_find("Mining")
+  level = 1
+  level = wc.level.to_i if wc != nil && wc.level.to_i > 0
+  if level < 21 || level >= 99
+    axe = RsItem.find_quick("Bronze pickaxe", false)
+  elsif level < 41
+    axe = RsItem.find_quick("Mithril pickaxe", false)
+  elsif level < 99
+    axe = RsItem.find_quick("Rune pickaxe", false)
   end
-  task.axe = axe
-  task.save
-  puts "updated task"
+  if ((task.axe == nil || task.axe.id != axe.id) && axe != nil)
+    puts "updating mining task"
+    puts axe.name
+    task.axe = axe
+    task.save
+    puts "updated task"
+  end
 end
 def get_mining_task_respond(task, account)
   task_type = task.task_type.name
@@ -433,6 +437,29 @@ def get_fishing_task_respond(task, account)
   res = "task_respond:1:#{task_type}:#{task.id}:#{bank_area}:#{action_area}:#{fish_name}:#{break_condition}:#{task_duration}:#{level_goal}:#{get_gear(task)}"
   return res
 end
+def get_custom_task_respond(task, account)
+  task_type = task.task_type.name
+
+  break_condition = task.break_condition.name
+  if break_condition == "TIME"
+    task_duration = ((task.get_end_time - Time.now.change(:month => 1, :day => 1, :year => 2000))/60).round
+    level_goal = "99"
+  elsif break_condition == "LEVEL" && task.break_after != nil
+    task_duration = "999999"
+    level_goal = task.break_after
+  elsif break_condition == "TIME_OR_LEVEL"
+    task_duration = ((task.get_end_time - Time.now.change(:month => 1, :day => 1, :year => 2000))/60).round
+    level_goal = task.break_after
+    puts task_duration
+  end
+  if task.inventory != nil then inventory = task.inventory.get_parsed_message else inventory ="none" end
+  log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
+  log.save
+
+  puts "sending resp"
+  res = "task_respond:1:#{task_type}:#{task.id}:#{break_condition}:#{task_duration}:#{level_goal}"
+  return res
+end
 
 def get_gear(task)
   if task.gear != nil
@@ -470,6 +497,7 @@ end
 def computer_thread(client, computer)
   puts "started Thread for:#{computer.name} at ip:#{computer.ip}"
   puts " my computer id: #{computer.id}"
+  serverAddress = getServerAddress
   begin
   while(!client.closed?)
     respond = client.gets.split(":")
@@ -482,8 +510,9 @@ def computer_thread(client, computer)
         puts "no account available"
         client.puts "account_request:0"
       else
-        world = "424"
-        client.puts "account_request:1:" + account.login + ":" + account.password + ":" + account.proxy.ip + ":" + account.proxy.port + ":" + account.proxy.username + ":" + account.proxy.password + ":" + world + ":" + script
+        # world = "424"
+        # client.puts "account_request:1:" + account.login + ":" + account.password + ":" + account.proxy.ip + ":" + account.proxy.port + ":" + account.proxy.username + ":" + account.proxy.password + ":" + world + ":NEX"
+        client.puts  "account_request:1:#{account.username}:" + "http://#{serverAddress}:3000/accounts/#{account.id}/json"
         log = Log.new(computer_id: computer.id, account_id: account.id, text: "Account:#{account.login} Handed out to: #{computer.name}")
         log.save
       end
@@ -519,15 +548,16 @@ def computer_thread(client, computer)
       account = Account.where(login: email).first
       if account != nil
         puts "Account is not null"
-        account.update(password: new_password)
-        account.update(locked: false)
-        account.save
+        account.update(locked: false, created: true, password: new_password)
       end
       client.puts "hello"
     elsif respond[0] == "log"
       #get new instructions
-      instruction_queue = Instruction.where(completed: false).select{|ins| ins.computer_id == computer.id && !ins.completed && ins.is_relevant && ins.instruction_type != nil}
-      instruction_queue = instruction_queue.sort_by{|ins|ins.instruction_type} #prioritise launching clients over creating accounts
+      now = Time.now.utc
+      instruction_queue = Instruction.includes(:account, :instruction_type, :computer)
+                              .where(completed: false, created_at: now-60.minutes..now)
+                              .select{|ins| ins.computer_id == computer.id && ins.is_relevant && ins.instruction_type != nil}
+      # instruction_queue = instruction_queue.sort_by{|ins|ins.instruction_type} #prioritise launching clients over creating accounts
       #puts "Log from: #{computer.name}:::log:#{respond}"
       log = Log.new(computer_id: computer.id, text: respond)
       log.save
@@ -552,43 +582,38 @@ end
 def updateAccountLevels(string, account)
   string.slice! "skills;"
   array = string.split(';')
+  added_stat = false
   array.each do |parsed|
     intern_parse = parsed.split(',')
-    # puts parsed
     name = intern_parse[0]
-    level = intern_parse[1]
+    level = intern_parse[1].to_i
     # puts name
     # puts level
 
-    skill = getSkillByName(name)
-    account_level = account.stats.find_by(skill: skill)
+    skill = Skill.find_by_name(name)
+    account_level = account.stats_find(skill.id) #.find_by(skill: skill)
     if account_level == nil
+      puts parsed
       account_level = Stat.find_or_initialize_by(account_id: account.id, skill: skill)
       account_level.update(level: level)
       account_level.save
+      added_stat = true
     elsif(account_level.level != level)
+      puts parsed
       account_level.update(level: level)
+      account_level.level = level
     end
   end
-end
-
-def getSkillByName (skill_name)
-  @skill_cache = {} if @skill_cache == nil
-  if @skill_cache[skill_name] != nil
-    return @skill_cache[skill_name]
-  end
-  skill = Skill.find_or_initialize_by(name: skill_name)
-  skill.save
-  @skill_cache[skill_name] = skill
-  return skill
+  account.stats.reload if added_stat
 end
 
 def updateAccountQuests(string, account)
   string.slice! "quests;"
   array = string.split(';')
+  added_quest = false
   array.each do |parsed|
     intern_parse = parsed.split(',')
-    puts parsed
+    # puts parsed
     name = intern_parse[0]
     completed = intern_parse[1]
     # puts name
@@ -597,29 +622,23 @@ def updateAccountQuests(string, account)
 
     if completed != nil && name != nil
       # puts "in here"
-      quest = getQuestByName(name)
+      quest = Quest.find_by_name(name)
       completed = (completed.include? "true")
-      quest_stat = account.quest_stats.find_by(quest: quest)
+      quest_stat = account.quests_find(quest.id) # .find_by(quest: quest)
       if quest_stat == nil
+        puts parsed
         account_quest = QuestStat.find_or_initialize_by(account_id: account.id, quest: quest)
         account_quest.update(completed: completed)
         account_quest.save
+        added_quest = true
       elsif quest_stat.completed != completed
+        puts parsed
         quest_stat.update(completed: completed)
+        quest_stat.completed = completed
       end
     end
   end
-end
-
-def getQuestByName (quest_name)
-  @quest_cache = {} if @quest_cache == nil
-  if @quest_cache[quest_name] != nil
-    return @quest_cache[quest_name]
-  end
-  quest = Quest.find_or_initialize_by(name: quest_name)
-  quest.save
-  @quest_cache[quest_name] = quest
-  return quest
+  account.quest_stats.reload if added_quest
 end
 
 def get_mule_respond(respond, account)
@@ -633,9 +652,9 @@ def get_mule_respond(respond, account)
     account_type = "MASTER_MULE"
   end
 
-  mules = Account.includes(:account_type).where(eco_system: account.eco_system, banned: false, created: true).select{|acc| acc.account_type.name == account_type && acc.id != account.id && acc.is_available}
+  mules = Account.includes(:account_type).where(eco_system: account.eco_system, banned: false, created: true).select{|acc| acc.account_type.name == account_type && acc.id != account.id}
   if (account_type != "MULE" && mules == nil || mules.length == 0)
-    mules = Account.includes(:account_type).where(eco_system: account.eco_system, banned: false, created: true).select{|acc| acc.account_type.name == "MULE" && acc.id != account.id && acc.is_available}
+    mules = Account.includes(:account_type).where(eco_system: account.eco_system, banned: false, created: true).select{|acc| acc.account_type.name == "MULE" && acc.id != account.id}
   end
   #if mule != nil && !mule.banned && (mule.proxy_is_available? || mule.proxy.ip.length < 5)
   if mules != nil && mules.length > 0
@@ -646,8 +665,15 @@ def get_mule_respond(respond, account)
     if computer != nil && computer.is_available_to_nexus
       puts "we found computer"
       if !mule.is_connected
-        ins = Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computer.id, :account_id => mule.id, :script_id => Script.first.id)
-        ins.save
+
+        script = Script.first
+        new_client = InstructionType.find_by_name("NEW_CLIENT")
+        existing_instructions = Instruction.get_uncompleted_instructions_10
+                                   .where(instruction_type_id: new_client.id, computer_id: computer.id, account_id: mule.id, script_id: script.id)
+        if !existing_instructions.any? { |ins| ins.is_relevant}
+          ins = Instruction.new(:instruction_type_id => new_client.id, :computer_id => computer.id, :account_id => mule.id, :script_id => script.id)
+          ins.save
+        end
       end
       puts "created instruction"
       #new mule task
@@ -700,6 +726,7 @@ end
 
 def task_log(account, parsed_respond)
   task_id = parsed_respond[2]
+  task_id = nil if task_id.to_s.empty?
   position = parsed_respond[3]
   xp = parsed_respond[4].split(";")[1]
   money = parsed_respond[5].split(";")[1]
@@ -728,9 +755,9 @@ def script_thread(client, account)
       respond = respond.strip.split(":")
       if respond[0] == "log"
         #get new instructions
-        instruction_queue = Instruction.where(completed: false, account_id: account.id).select{|ins|ins.is_relevant}
-        log = Log.new(computer_id: nil, account_id: account.id, text: respond)
-        log.save
+        instruction_queue =  Instruction.where(account_id: account.id).select{|ins|ins.is_relevant}
+        # log = Log.new(computer_id: nil, account_id: account.id, text: respond)
+        # log.save
         client.puts account_get_instruction_respond(instruction_queue, account)
       elsif respond[0] == "task_log"
         task_log(account, respond)
@@ -760,6 +787,8 @@ def script_thread(client, account)
         client.puts get_mule_respond(respond, account)
       elsif respond[0] == "account_info"
         client.puts get_account_info_respond(respond, account)
+      elsif respond[0] == "puts"
+        puts "#{account.username} :" + respond.drop(1).join(':')
       else
         client.puts "ok"
       end
@@ -788,7 +817,7 @@ def create_account_thread
       while !connection_established?
         puts "Connecting..."
         ActiveRecord::Base.establish_connection(db_configuration["development"])
-        sleep 2
+        sleep 1
       end
       loop do
         if Time.now > last_check + interval
@@ -843,7 +872,7 @@ def unlock_accounts
         proxy = acc.proxy
         proxy.update(unlock_cooldown: DateTime.now.utc + 7.minutes)
 
-        unlock_instruction = getInstructionType("UNLOCK_ACCOUNT")
+        unlock_instruction = InstructionType.find_by_name("UNLOCK_ACCOUNT")
         Instruction.new(:instruction_type_id => unlock_instruction.id, :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save
         Log.new(computer_id: computer.id, account_id: acc.id, text: "Instruction created")
         puts "instruction for #{acc.username} to create new client at #{acc.computer.name}"
@@ -856,15 +885,6 @@ def unlock_accounts
   end
 end
 
-def getInstructionType(instruction_name)
-  instruction_type = InstructionType.where(name: instruction_name)
-  if instruction_type == nil
-    InstructionType.create(name: instruction_name).save
-    return InstructionType.where(name: instruction_name)
-  end
-  return instruction_type.first
-end
-
 def main_thread
   loop do
     begin
@@ -872,7 +892,7 @@ def main_thread
         while !connection_established?
           puts "Connecting..."
           ActiveRecord::Base.establish_connection(db_configuration["development"])
-          sleep 2
+          sleep 1
         end
         time = Time.now.change(:month => 1, :day => 1, :year => 2000)
         puts "Main Thread loop nexus #{time}"
@@ -893,7 +913,7 @@ end
 while !connection_established?
   puts "Connecting..."
   ActiveRecord::Base.establish_connection(db_configuration["development"])
-  sleep 2
+  sleep 1
 end
 
 
@@ -915,45 +935,48 @@ loop do
   while !connection_established?
     puts "Connecting..."
     ActiveRecord::Base.establish_connection(db_configuration["development"])
-    sleep 2
+    sleep 1
   end
 
   if added_main_thread == false
     Thread.new do
-      begin
-        added_main_thread = true
-        puts "new main thread"
-        thread =  Thread.new{main_thread}
-        ActiveSupport::Dependencies.interlock.permit_concurrent_loads do
-          thread.join # outer thread waits here, but has no lock
+      while true
+        begin
+          added_main_thread = true
+          puts "new main thread"
+          thread =  Thread.fork{main_thread}
+          ActiveSupport::Dependencies.interlock.permit_concurrent_loads do
+            thread.join # outer thread waits here, but has no lock
+          end
+          thread.join
+        rescue Exception => ex
+          puts ex
+          puts ex.backtrace
+          puts "ERROR [NEW MAIN THREAD]"
         end
-        thread.join
-      rescue Exception => ex
-        puts ex
-        puts ex.backtrace
-        puts "ERROR [NEW MAIN THREAD]"
       end
     end
   end
   if added_account_thread == false
     Thread.new do
-      begin
-        added_account_thread = true
-        puts "new accout thread"
-        thread =  Thread.new{create_account_thread}
-        ActiveSupport::Dependencies.interlock.permit_concurrent_loads do
-          thread.join # outer thread waits here, but has no lock
+      while true
+        begin
+          added_account_thread = true
+          puts "new accout thread"
+          thread =  Thread.fork{create_account_thread}
+          ActiveSupport::Dependencies.interlock.permit_concurrent_loads do
+            thread.join # outer thread waits here, but has no lock
+          end
+          thread.join
+        rescue Exception => ex
+          puts ex
+          puts ex.backtrace
+          puts "ERROR [NEW ACCOUNT THREAD]"
         end
-        thread.join
-      rescue Exception => ex
-        puts ex
-        puts ex.backtrace
-        puts "ERROR [NEW ACCOUNT THREAD]"
       end
     end
   end
   begin
-    thread = nil
     puts "waiting for con"
     Thread.new server.accept do |client|
       begin
@@ -973,14 +996,14 @@ loop do
         elsif respond[0] == "script"
           # start new thread for script
           login = respond[3].chomp
-          account = Account.includes(:schema, :computer, :account_type).where(:login => login).limit(1).first
+          account = Account.includes(:account_type, :computer, {:schema => [ {:tasks=>:requirements }, :time_intervals]}, { :stats => :skill }).where(:login => login).limit(1).first
           if account != nil
             puts "Login: #{login}"
             puts "account found:#{account.login}"
-            account.update(:locked => false)
             if !account.created
-              account.update(:created => true)
-              account.save
+              account.update(:locked => false, :created => true)
+            else
+              account.update(:locked => false)
             end
           else
             ip = respond[2]
@@ -995,7 +1018,7 @@ loop do
             puts "Account not found but created: #{account.login}"
           end
           puts "New Script Thread started for: #{respond[3]}"
-          thread =  Thread.fork{script_thread(client, account)}
+          Thread.fork{script_thread(client, account)}
           client.puts "connected:1:#{account.username}"
         else
           puts "hello"

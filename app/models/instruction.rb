@@ -4,15 +4,26 @@ class Instruction < ApplicationRecord
   belongs_to :computer, optional: true
   belongs_to :script, optional: true
 
+  def self.get_uncompleted_instructions_10
+    now = Time.now.utc
+    return Instruction.where(completed: false, created_at: now-10.minutes..now)
+  end
+  def self.get_uncompleted_instructions_60
+    now = Time.now.utc
+    return Instruction.where(completed: false, created_at: now-60.minutes..now)
+  end
 
   def time_since_last_log
     last_logged = created_at
-    current_time = Time.now
-    return ((current_time - last_logged)/60).round # difference in minutes
+    current_time = Time.now.utc
+    return ((current_time - last_logged)/60).round(1) # difference in minutes
   end
 
   def is_relevant
     #if difference is larger than 5 minutes  we can suppose that the account is not logged in
+    if (instruction_type.name == "CREATE_ACCOUNT")
+      return time_since_last_log < 60
+    end
     return time_since_last_log < 10
   end
 

@@ -13,7 +13,7 @@ class GenerateGear
     while !connection_established?
       puts "Connecting..."
       ActiveRecord::Base.establish_connection(db_configuration["development"])
-      sleep 2
+      sleep 1
     end
     require_all("./models/")
   end
@@ -76,17 +76,17 @@ class GenerateGear
   end
 
   def get_defence_level(account)
-    return account.stats.where(skill: Skill.where(name: "Defence").first).first.level
+    return account.stats_find("Defence").level
   end
   def get_strength_level(account)
-    return account.stats.where(skill: Skill.where(name: "Strength").first).first.level
+    return account.stats_find( "Strength").level
   end
   def get_attack_level(account)
-    return account.stats.where(skill: Skill.where(name: "Attack").first).first.level
+    return account.stats_find("Attack").level
   end
 
   def get_ranged_level(account)
-    return account.stats.where(skill: Skill.where(name: "Ranged").first).first.level
+    return account.stats_find("Ranged").level
   end
 
 
@@ -107,12 +107,14 @@ class GenerateGear
 
   def get_best_weapon_type(account)
     arr = [0,10,20,30,40]
-    return arr.select{|item| item <= get_attack_level(account)}.max
+    attack = get_attack_level(account)
+    return arr.select{|item| item <= attack}.max
   end
 
   def get_best_armour_type(account)
     arr = [0,10,20,30,40]
-    return arr.select{|item| item <= get_defence_level(account)}.max
+    defence = get_defence_level(account)
+    return arr.select{|item| item <= defence}.max
   end
 
 

@@ -17,7 +17,7 @@ class MuleLog < ApplicationRecord
       money_made = money_made + item_amount
     end
     account.update(money_made: money_made)
-    account.save
+    # account.save
   end
 
 end

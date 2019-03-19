@@ -20,10 +20,11 @@ class Log < ApplicationRecord
     end
     if (Time.now - last_seen) < 30
       if computer.time_online == nil then time_online = 0 else time_online = computer.time_online end
-      computer.update(time_online:(Time.now - last_seen + time_online))
+      computer.update(last_seen: Time.now, time_online:(Time.now - last_seen + time_online))
+    else
+      computer.update(last_seen: Time.now)
     end
-    computer.update(last_seen: Time.now)
-    computer.save
+    # computer.save
   end
 
   def update_account
@@ -33,9 +34,10 @@ class Log < ApplicationRecord
       end
       if (Time.now - last_seen) < 30
         if account.time_online == nil then time_online = 0 else time_online = account.time_online end
-        account.update(time_online:(Time.now - last_seen + time_online))
+        account.update(last_seen: Time.now.utc, time_online:(Time.now - last_seen + time_online))
+      else
+        account.update(last_seen: Time.now.utc)
       end
-      account.update(last_seen: Time.now.utc)
-      account.save
+      # account.save
   end
 end

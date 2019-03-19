@@ -129,7 +129,7 @@ def get_accounts_filter
 
   accounts = accounts.sort_by{|acc|acc.get_total_level}.reverse
   accounts.each do |acc|
-    level = acc.stats.where(skill: Skill.where(name: "Woodcutting").first).first
+    level = acc.stats_find("Woodcutting")
     if level != nil
       puts level.level
     end
@@ -200,7 +200,7 @@ def main_thread
         accounts.each do |acc|
           computer = acc.computer if acc.computer_id != nil
           if computer != nil && computer.is_available_to_nexus && computer.can_connect_more_accounts
-            Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save
+            Instruction.new(:instruction_type_id => InstructionType.find_by_name("NEW_CLIENT").id, :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save
             Log.new(computer_id: computer.id, account_id: acc.id, text: "Instruction created")
             puts "instruction for #{acc.username} to create new client at #{acc.computer.name}"
             sleep 1.seconds
@@ -220,7 +220,7 @@ def main_thread
 end
 
 def mule_withdraw_tasks
-  mule_withdraw_tasks = MuleWithdrawTask.where(:created_at => (Time.now.utc - 20.minutes.Time.now.utc)).select{|task| !task.executed && task.is_relevant && !task.account!= nil }
+  mule_withdraw_tasks = MuleWithdrawTask.where(:created_at => (Time.now.utc - 10.minutes.Time.now.utc)).select{|task| !task.executed && task.is_relevant && !task.account!= nil }
   mule_withdraw_tasks.each do |task|
     puts Time.now
     puts task
@@ -341,6 +341,24 @@ def clear_suicide
     acc.destroy
   end
 end
+def get_daily(name)
+  time = DateTime.parse("15/2/2019 0:00:00")
+  computer = Computer.where(name: name).first
+  amount_of_loops = (DateTime.tomorrow - time).to_i
+  puts amount_of_loops
+  money_made = 0
+  amount_of_loops.times do
+    accounts = Account.where(created: true, computer: computer, created_at: time..time+1.days)
+    money_made_day = get_money_made(accounts)
+    puts "Money made #{time}: #{money_made_day}"
+    money_made += money_made_day
+    time = time + 1.days
+  end
+  puts "total money made: #{money_made}"
+  average = money_made/ amount_of_loops
+  acc_average = average/computer.max_slaves
+  puts "average: #{average}, acc average: #{acc_average}"
+end
 
 def get_cool
   accounts = Account.where(banned: true, created: true)
@@ -373,7 +391,7 @@ def test
     accounts.each do |acc|
       computer = acc.computer if acc.computer_id != nil
       if computer != nil && computer.is_available_to_nexus && computer.can_connect_more_accounts
-        #Instruction.new(:instruction_type_id => InstructionType.first.id, :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save
+        #Instruction.new(:instruction_type_id => InstructionType.find_by_name("NEW_CLIENT").id, :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save
         #Log.new(computer_id: computer.id, account_id: acc.id, text: "Instruction created")
         puts "instruction for #{acc.username} to create new client at #{acc.computer.name}"
       end
@@ -454,7 +472,7 @@ accounts.each do |acc|
 end
 end
 
-#delete_accounts
+delete_accounts
 #update_proxy
 #update_cooldown
 #Hiscore.create(skill: Skill.where(name: "Fishing").first).save

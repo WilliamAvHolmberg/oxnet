@@ -11,7 +11,7 @@ class Computer < ApplicationRecord
       return 50000000000
    else
       current_time = Time.now
-      return ((current_time - last_seen)).round # difference in seconds
+      return ((current_time - last_seen)).round(1) # difference in seconds
     end
   end
 
@@ -20,7 +20,7 @@ class Computer < ApplicationRecord
       return 50000000000
     else
       current_time = Time.now
-      return ((current_time - last_seen)).round # difference in seconds
+      return ((current_time - last_seen)).round(1) # difference in seconds
     end
   end
 
@@ -45,9 +45,16 @@ class Computer < ApplicationRecord
     accounts = get_available_accounts.select{|acc| acc.is_connected}
     return accounts
   end
+
+  @lastGotConnected = 0
+  @lastConnected = 0
   def get_connected_accounts_count
+    @lastGotConnected = Time.now - 100.hours if @lastGotConnected == nil
+    return @lastConnected if Time.now - @lastGotConnected < 5.seconds
+    @lastGotConnected = Time.now
     min_ago = Time.now.utc - 1.minutes
-    return Account.where(computer: self, banned: false, locked:false, created: true, last_seen: min_ago..Time.now.utc).count
+    @lastConnected = Account.where(computer: self, banned: false, locked:false, created: true, last_seen: min_ago..Time.now.utc).count
+    return @lastConnected
   end
 
   def can_connect_more_accounts

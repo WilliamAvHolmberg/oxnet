@@ -1,6 +1,6 @@
 .container-fluid
   .row
-    .col-lg-3.col-md-6.col-sm-6
+    .col-lg-4.col-md-6.col-sm-6
       .card.card-stats
         .card-header.card-header-warning.card-header-icon
           .card-icon
@@ -10,7 +10,7 @@
         .card-footer
           .stats
             p = "Sweet"
-    .col-lg-3.col-md-6.col-sm-6
+    .col-lg-4.col-md-6.col-sm-6
       .card.card-stats
         .card-header.card-header-success.card-header-icon
           .card-icon
@@ -32,7 +32,7 @@
     /       .stats
     /         i.material-icons local_offer
     /         | Tracked from Github
-    .col-lg-3.col-md-6.col-sm-6
+    .col-lg-4.col-md-6.col-sm-6
       .card.card-stats
         .card-header.card-header-info.card-header-icon
           .card-icon
@@ -47,7 +47,9 @@
     .col-md-4
       .card.card-chart
         .card-header.card-header-success
-          h4.card-title Latest task logs
+          h4.card-title
+            i.fa.fa-history
+            = " Latest task logs"
         .card-body
           table.table.table-hover
             thead.text-warning
@@ -61,14 +63,16 @@
                 tr
                   td = (Time.now.utc - log.created_at).round(3)
                   td = log.account.username
-                  td = log.task.name
+                  td = log.task.name if log.task != nil
                   /! td = log.xp_per_hour
                   /! td = log.money_per_hour
 
     .col-md-4
       .card.card-chart
         .card-header.card-header-primary
-          h4.card-title = "Computers connected:#{@connected_computers.size} "
+          h4.card-title
+            i.fa.fa-laptop
+            = " Computers connected:#{@connected_computers.size} "
         .card-body.table-responsive
           table.table.table-hover
             thead.text-warning
@@ -80,13 +84,15 @@
               - @connected_computers.each do |comp|
                 tr
                   td = comp.name
-                  td = comp.get_available_accounts.size
+                  td = @available_accounts.select { |acc| acc.computer_id == comp.id }.size
                   td = comp.get_connected_accounts_count
                   td = comp.max_slaves
     .col-md-4
       .card.card-chart
         .card-header.card-header-danger
-          h4.card-title Mule Activity
+          h4.card-title
+            i.fa.fa-money
+            = " Mule Activity"
         .card-body.table-responsive
           table.table.table-hover
             thead.text-warning
@@ -98,7 +104,8 @@
               - @mules.each do |mule|
                 - @offlineMule = mule if mule.is_available
                 tr
-                  td = mule.username
+                  td
+                    a href=account_path(mule) = mule.username
                   td style="color:red" = ActiveSupport::NumberHelper.number_to_delimited(mule.get_money_deposited(@mule_logs))
                   td style="color:green" = ActiveSupport::NumberHelper.number_to_delimited(mule.get_money_withdrawn(@mule_logs))
 

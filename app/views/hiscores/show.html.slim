@@ -32,7 +32,7 @@ p#notice = notice
                 -else
                   -money_made = 1
                 td = account.money_made
-                td = 3600*money_made/(account.get_time_online || 1)
+                td = 3600*money_made/ [(account.get_time_online || 1), 1].max
                 td = account.computer.name
 
       => link_to 'Edit', edit_hiscore_path(@hiscore)

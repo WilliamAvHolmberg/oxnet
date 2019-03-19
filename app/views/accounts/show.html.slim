@@ -53,11 +53,11 @@
         span.label class=(computer_is_available ? "label-success" : "label-danger") style="margin-right:5px;" = "Computer Available? #{computer_is_available}"
         span.label class=(is_available ? "label-success" : "label-danger") style="margin-right:5px;" = "Available to Launch? #{is_available}"
         span.label class=(proxy_available ? "label-success" : "label-danger") style="margin-right:5px;" = "Proxy Available? #{proxy_available}"
-        - task = @account.schema.get_suitable_task(@account)
+        - task = @account.schema.get_suitable_task(@account) if @account.schema != nil
         span.label.label-default = "Next Task: #{(task != nil ? task.name : "NO TASK")}"
       .input-group
         = link_to 'Edit', edit_account_path(@account)
-        = link_to 'Edit Schema', schema_path(@account.schema)
+        = link_to 'Edit Schema', schema_path(@account.schema) if @account.schema != nil
         = link_to 'Back', accounts_path
         = link_to "View Logs", "/logs?account_id=#{@account.id}", class: 'btn btn-info button'
         - if @isOnline

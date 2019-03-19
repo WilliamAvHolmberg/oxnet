@@ -13,4 +13,13 @@ class RsItem < ApplicationRecord
   def formated_name
     return "#{item_name},#{item_id}"
   end
+
+  @@cache = {}
+  def self.find_quick(name, stackable)
+    key = "#{name}:#{stackable}"
+    return @@cache[key] if @@cache[key] != nil
+    result = RsItem.where(item_name: name, stackable: stackable).first
+    @@cache[key] = result
+    return result
+  end
 end

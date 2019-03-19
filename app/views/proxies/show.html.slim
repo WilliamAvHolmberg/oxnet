@@ -1,4 +1,17 @@
 h3 = @proxy.ip.blank? ? "[BLANK]" : @proxy.ip
+
+p
+  strong Location:
+  = @proxy.location
+p
+  strong Username:
+  = @proxy.username
+p
+  strong Port:
+  = @proxy.port
+p
+  strong Auto-Assign:
+  = @proxy.auto_assign
 .input-group
   = link_to 'Edit', edit_proxy_path(@proxy)
   = link_to 'Back', proxies_path

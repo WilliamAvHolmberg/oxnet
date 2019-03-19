@@ -668,9 +668,8 @@ def get_mule_respond(respond, account)
 
         script = Script.first
         new_client = InstructionType.find_by_name("NEW_CLIENT")
-        ins = Instruction.new(:instruction_type_id => new_client.id, :computer_id => computer.id, :account_id => mule.id, :script_id => script.id)
-        ins.save
-        end
+          ins = Instruction.new(:instruction_type_id => new_client.id, :computer_id => computer.id, :account_id => mule.id, :script_id => script.id)
+          ins.save
       end
       puts "created instruction"
       #new mule task

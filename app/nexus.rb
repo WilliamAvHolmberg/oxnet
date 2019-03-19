@@ -60,7 +60,6 @@ def computer_get_respond(instruction_queue)
         ins.save
         account = ins.account
         puts "we got the account"
-        return computer_get_respond(instruction_queue) if (Time.now.utc - account.last_seen) < 10.seconds
         #res =  "account_request:1:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + world.chomp + ":NEX"
         res =  "account_request:1:#{account.username}:"  + ":http://#{serverAddress}:3000/accounts/#{account.id}/json"
         puts "we got the address"

@@ -517,5 +517,11 @@ def get_total_daily()
 end
 
 
-account = Account.find(14016)
-puts account.schema.get_suitable_task(account)
+#account = Account.find(14016)
+#puts account.schema.get_suitable_task(account)
+
+org = TimeInterval.find(1)
+TimeInterval.all.each do |time|
+  time.update(start_time: org.start_time, end_time: org.end_time)
+  time.save
+end

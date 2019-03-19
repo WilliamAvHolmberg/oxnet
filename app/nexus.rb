@@ -668,12 +668,8 @@ def get_mule_respond(respond, account)
 
         script = Script.first
         new_client = InstructionType.find_by_name("NEW_CLIENT")
-        existing_instructions = Instruction.get_uncompleted_instructions_10
-                                   .where(instruction_type_id: new_client.id, computer_id: computer.id, account_id: mule.id, script_id: script.id)
-        if !existing_instructions.any? { |ins| ins.is_relevant}
           ins = Instruction.new(:instruction_type_id => new_client.id, :computer_id => computer.id, :account_id => mule.id, :script_id => script.id)
           ins.save
-        end
       end
       puts "created instruction"
       #new mule task

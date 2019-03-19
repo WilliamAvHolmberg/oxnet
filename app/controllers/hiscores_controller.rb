@@ -12,7 +12,9 @@ class HiscoresController < ApplicationController
   # GET /hiscores/1
   # GET /hiscores/1.json
   def show
-    @accounts = Account.where(created: true, banned:false).select{|acc| acc.stats != nil && acc.stats.where(skill: @hiscore.skill).first != nil }.sort_by{|acc| acc.stats.where(skill: @hiscore.skill).first.level}.reverse
+    @accounts = Account.includes(:computer, :stats).references(:stats).where(created: true, banned:false).where("stats.skill_id=#{@hiscore.skill.id}").order("stats.level DESC")
+    # render json: JSON.pretty_generate(@accounts.as_json)
+    # @accounts = Account.includes(:computer, :stats).where(created: true, banned:false).select{|acc| acc.stats != nil && acc.stats.where(skill: @hiscore.skill).first != nil }.sort_by{|acc| acc.stats.where(skill: @hiscore.skill).first.level}.reverse
   end
 
   def show_all

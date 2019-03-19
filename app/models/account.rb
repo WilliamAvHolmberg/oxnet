@@ -25,22 +25,36 @@ class Account < ApplicationRecord
     return all_available_accounts.where("last_seen > NOW() - INTERVAL '1 MINUTE'")
   end
 
+  @@account_types = nil
+  def account_type
+    @@account_types = AccountType.all.to_a if @@account_types == nil
+    return @@account_types.select { |at| at.id == self.account_type_id }.first
+  end
+
+  # DONT CACHE COMPUTER AS IT IS FREQUENTLY UPDATED
+  # @@computers = nil
+  # def computer
+  #   # return self.association(:computer) if self.association(:computer).loaded?
+  #   @@computers = Computer.all.to_a if @@computers == nil
+  #   return @@computers.select { |at| at.id == self.computer_id }.first
+  # end
+
+  @@proxies = nil
   def proxy
+    @@proxies = Proxy.all.to_a if @@proxies == nil
     proxy_id = read_attribute(:proxy_id)
     if @last_proxy_id != proxy_id
       @proxy = nil
       @last_proxy_id = proxy_id
     end
+    if @proxy == nil && proxy_id != nil
+      @proxy = @@proxies.select { |proxy| proxy.id == proxy_id }.first
+    end
     if @proxy == nil
-      @proxy = Proxy.where(id: proxy_id).first if proxy_id != nil
-      if @proxy == nil
-        @proxy = Proxy.all.select{|proxy| proxy.accounts.include? self}.first
-        if @proxy == nil
-          return Proxy.find_or_initialize_by(ip: " ", port: " ", username: " ", password: " ", location: "none")
-        else
-          return @proxy
-        end
-      end
+      @proxy = Proxy.all.select{|proxy| proxy.accounts.include? self}.first
+    end
+    if @proxy == nil
+      return Proxy.find_or_initialize_by(ip: " ", port: " ", username: " ", password: " ", location: "none")
     end
     return @proxy
   end

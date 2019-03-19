@@ -8,12 +8,14 @@ module NexusHelper
   end
   def get_master_mules
     account_type = get_master_mule_account_type
+    return [] if account_type == nil
     return Account.where(account_type_id: account_type.id, banned: false)
   end
   def is_master_mule_log (master_mules, log)
     if master_mules.size > 0
       return true if log.account.account_type_id == master_mules.first.account_type_id
-      return true if master_mules.any? {|mm| mm.username == log.mule }
+      mule_name = log.mule.strip.downcase
+      return true if master_mules.any? {|mm| mm.username.downcase == mule_name }
     end
     return false
   end
@@ -21,11 +23,11 @@ module NexusHelper
   def money_made_today
     total_money_withdrawn = 0
 
-    master_mules = get_master_mules.all.to_a
+    @master_mules = get_master_mules.to_a if @master_mules == nil
 
     #Real truth profits
     @mule_logs.each do |log|
-      next if is_master_mule_log(master_mules, log)
+      next if is_master_mule_log(@master_mules, log)
       if log.account.account_type.name == "MULE"
         total_money_withdrawn -= log.item_amount
       else
@@ -40,11 +42,11 @@ module NexusHelper
   def money_last_2_hours
     total_money_withdrawn = 0
 
-    master_mules = get_master_mules.all.to_a
+    @master_mules = get_master_mules.to_a if @master_mules == nil
 
     #Real truth profits
     @mule_logs_last_2_hours.each do |log|
-      next if is_master_mule_log(master_mules, log)
+      next if is_master_mule_log(@master_mules, log)
       if (log.account.account_type.name == "MULE")
         total_money_withdrawn -= log.item_amount
       else

@@ -1,15 +1,15 @@
-- skill = log.account.stats.order("level DESC, skill_id ASC").limit(2).select{|s|s.skill.name != "Hitpoints"}.first
-tr
+- skill = account.stats.sort_by{ |a, b|( a and b ) ? b <=> a : ( a ? 1 : -1 ) }.select{|s|s.skill.name != "Hitpoints"}.first
+tr class="#{account.account_type.name == "MULE" ? "table-danger" : ""}"
   td
-    time class="timeago" datetime="#{log.created_at.localtime}" = "#{formatted_duration(Time.now.utc - log.created_at)} ago"
+    time class="timeago" datetime="#{account.last_seen.localtime}" = "#{formatted_duration(Time.now.utc - account.last_seen)} ago"
   td
-    a href=account_path(log.account) = log.account.username
-  td = "#{formatted_duration(log.created_at - log.account.created_at)}"
+    a href=account_path(account) = account.username
+  td = "#{formatted_duration(account.last_seen - account.created_at)}"
   - if skill != nil && skill.skill_id != nil
     td = "#{skill.skill.name}: #{skill.level}"
   - else
     td = "?"
-  td = log.account.money_made
-  td = log.account.created_at.localtime
-  td = log.account.computer.name
-  td = log.account.proxy.location
+  td = account.money_made
+  td = account.created_at.localtime
+  td = account.computer.name
+  td = account.proxy.location

@@ -106,7 +106,7 @@ class Schema < ApplicationRecord
 
   def total_time_per_day
     time = 0
-    self.time_intervals.all.each do |task|
+    self.time_intervals.each do |task|
       time += task.get_task_duration
     end
     return time

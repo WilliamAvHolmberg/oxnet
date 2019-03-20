@@ -197,7 +197,7 @@ class GenerateAccount
       account_type = "SLAVE"
       if get_number_of_mules < 7
         account_type = "MULE"
-        other_mule = Account.where(account_type: AccountType.where(:name => "MULE")).first
+        other_mule = Account.where(banned: false, account_type: AccountType.where(:name => "MULE")).first
         if other_mule != nil
           proxy = other_mule.proxy
         else

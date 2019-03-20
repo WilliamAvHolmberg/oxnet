@@ -756,8 +756,8 @@ def script_thread(client, account)
       if respond[0] == "log"
         #get new instructions
         instruction_queue =  Instruction.where(account_id: account.id).select{|ins|ins.is_relevant}
-        # log = Log.new(computer_id: nil, account_id: account.id, text: respond)
-        # log.save
+        log = Log.new(computer_id: nil, account_id: account.id, text: respond)
+        #log.save
         client.puts account_get_instruction_respond(instruction_queue, account)
       elsif respond[0] == "task_log"
         task_log(account, respond)

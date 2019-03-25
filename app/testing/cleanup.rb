@@ -499,12 +499,12 @@ def get_daily(name)
 end
 
 def get_total_daily()
-  time = DateTime.parse("8/3/2019 0:00:00")
+  time = DateTime.parse("20/3/2019 0:00:00")
   amount_of_loops = (DateTime.tomorrow - time).to_i
   puts amount_of_loops
   money_made = 0
   amount_of_loops.times do
-    accounts = Account.where(created: true, created_at: time..time+1.days)
+    accounts = Account.where(created: true, created_at: time..time+1.days, account_type: AccountType.where(name: "SLAVE"))
     money_made_day = get_money_made(accounts)
     puts "Money made #{time}: #{money_made_day}"
     money_made += money_made_day
@@ -512,16 +512,122 @@ def get_total_daily()
   end
   puts "total money made: #{money_made}"
   average = money_made/ amount_of_loops
-  acc_average = average/180
+  acc_average = average/240
   puts "average: #{average}, acc average: #{acc_average}"
 end
 
 
-#account = Account.find(14016)
-#puts account.schema.get_suitable_task(account)
-proxy = Proxy.find(10)
-mules = Account.where(account_type: AccountType.where(name: "MULE"))
-mules.each do |mule|
-  mule.update(proxy: proxy)
-  mule.save
+def average_for_proxy
+  proxies = Proxy.all
+  accounts = Account.where(account_type: AccountType.where(name: "SLAVE").first)
+  proxies.each do |proxy|
+    location = proxy.location
+    cur_accs = Account.where(proxy: proxy)
+    money_made = 0
+    cur_accs.each do |acc|
+      money_made += acc.money_made if acc.money_made != nil
+    end
+    puts "Proxy: #{location}: Money_made: #{money_made} Accounts#{cur_accs.size} Average: #{money_made/cur_accs.size}"
+  end
 end
+
+def average_money_right_now
+  accounts = Account.where(banned: false, created: true).select{|acc| acc.is_connected}
+  areas = Area.all
+  money_per_hour = 0
+  fails = 0
+  suc = 0
+  areas = []
+  east_money = 0
+  east_usage = 0
+  west_money = 0
+  west_usage = 0
+  accounts.each do |acc|
+    log = acc.task_logs.last
+    cur_money = log.money_per_hour.to_i
+    money_per_hour += cur_money
+    if cur_money == 0
+      fails +=1
+    else
+      suc+=1
+    end
+    puts money_per_hour
+    area = log.task.action_area if log.task != nil
+    if area != nil
+      if area.name == "VARROCK_WEST_OAK_TREE"
+        west_usage += 1
+        west_money += cur_money
+      end
+      if area.name == "VARROCK_EAST_OAK_TREE"
+        east_usage += 1
+        east_money += cur_money
+      end
+
+      end
+  end
+  puts money_per_hour
+  puts fails
+  puts suc
+  puts "EAST USAGE: #{east_usage} average: #{east_money/east_usage}"
+  puts "WEST USAGE: #{west_usage} average: #{west_money/west_usage}"
+end
+
+def average_money_right_now
+  accounts = Account.where(banned: false, created: true).select{|acc| acc.is_connected}
+  areas = Area.all
+  money_per_hour = 0
+  fails = 0
+  suc = 0
+  areas = []
+  east_money = 0
+  east_usage = 0
+  west_money = 0
+  west_usage = 0
+  accounts.each do |acc|
+    log = acc.task_logs.last
+    cur_money = log.money_per_hour.to_i
+    money_per_hour += cur_money
+    if cur_money == 0
+      fails +=1
+    else
+      suc+=1
+    end
+    puts money_per_hour
+    area = log.task.action_area if log.task != nil
+    if area != nil
+      if area.name == "VARROCK_WEST_OAK_TREE"
+        west_usage += 1
+        west_money += cur_money
+      end
+      if area.name == "VARROCK_EAST_OAK_TREE"
+        east_usage += 1
+        east_money += cur_money
+      end
+
+    end
+  end
+  puts money_per_hour
+  puts fails
+  puts suc
+  puts "EAST USAGE: #{east_usage} average: #{east_money/east_usage}"
+  puts "WEST USAGE: #{west_usage} average: #{west_money/west_usage}"
+end
+
+@start_time = 0
+
+def tic
+  @start_time = Time.now
+end
+def toc
+  puts Time.now-@start_time
+end
+
+
+tic
+TaskLog.where('created_at >=?', Time.now-1.hour).
+toc
+tic
+toc
+
+tic
+money_per

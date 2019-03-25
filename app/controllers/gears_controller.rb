@@ -15,7 +15,7 @@ class GearsController < ApplicationController
   # GET /gears/new
   def new
     @gear = Gear.new
-    @items = RsItem.all
+    @items = RsItem.where(noted: false)
   end
 
   def copy
@@ -27,7 +27,7 @@ class GearsController < ApplicationController
 
   # GET /gears/1/edit
   def edit
-    @items = RsItem.all
+    @items = RsItem.where(noted: false)
   end
 
   # POST /gears

@@ -622,12 +622,8 @@ def toc
   puts Time.now-@start_time
 end
 
-
-tic
-TaskLog.where('created_at >=?', Time.now-1.hour).
-toc
-tic
-toc
-
-tic
-money_per
+schema = Schema.find(647)
+Account.where(banned: false, created:true).each do |acc|
+  acc.update(schema: schema)
+  acc.save
+end

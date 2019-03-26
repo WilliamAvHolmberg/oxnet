@@ -195,7 +195,7 @@ class GenerateAccount
       schema = Schema.next_to_use
       mule = Account.where(username: "PetDhaL").first #not needed. random
       account_type = "SLAVE"
-      if get_number_of_mules < 1
+      if get_number_of_mules < 2
         account_type = "MULE"
         other_mule = Account.where(banned: false, account_type: AccountType.where(:name => "MULE")).first
         if other_mule != nil

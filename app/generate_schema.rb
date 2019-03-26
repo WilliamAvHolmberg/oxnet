@@ -93,7 +93,7 @@ class GenerateSchema
           current_armour_type = @generate_gear.get_best_armour_type(account)
           level = account.stats_find(task.skill_id)
 
-          if level.level.to_i > 15
+          if task.task_type.name == "COMBAT"
             if  (last_gear == nil ||current_weapon_type != last_weapon_type || current_armour_type != last_armour_type)
               gear = @generate_gear.generate_gear(account)
               if gear != nil

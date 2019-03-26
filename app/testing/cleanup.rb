@@ -622,8 +622,8 @@ def toc
   puts Time.now-@start_time
 end
 
-schema = Schema.find(647)
-Account.where(banned: false, created:true).each do |acc|
-  acc.update(schema: schema)
+proxy = Proxy.find(17)
+Account.where(account_type: AccountType.where(name: "MULE").first).each do |acc|
+  acc.update(proxy: proxy)
   acc.save
 end

@@ -94,6 +94,11 @@ class GenerateSchema
           level = account.stats_find(task.skill_id)
 
           if task.task_type.name == "COMBAT"
+            if last_gear == nil && task.gear != nil
+              puts "USE FIRST GEAR"
+              last_gear = task.gear
+              puts last_gear.get_formated_gear
+            end
             if  (last_gear == nil ||current_weapon_type != last_weapon_type || current_armour_type != last_armour_type)
               gear = @generate_gear.generate_gear(account)
               if gear != nil
@@ -110,7 +115,12 @@ class GenerateSchema
           end
 
           wanted_level = task.break_after
-          our_level = ((level.level.to_i + 1)..wanted_level.to_i).to_a.sample
+          ##x  cxcfcdx
+          if account.schema.get_available_tasks(account).size > 1
+            our_level = ((level.level.to_i + 1)..wanted_level.to_i).to_a.sample
+          else
+            our_level = wanted_level
+          end
           level.update(level: our_level)
           puts "#{level.skill.name} is now level :#{level.level}"
           new_task = task.dup

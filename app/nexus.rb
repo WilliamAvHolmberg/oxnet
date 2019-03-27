@@ -22,8 +22,8 @@ def getServerAddress
   # @serverAddress = @serverAddress.strip
   #end
   #return @serverAddress.strip
-  #return "oxnetserver.ddns.net"
-  return "oxnetdebug.ddns.net"
+  return "oxnetserver.ddns.net"
+  #return "oxnetdebug.ddns.net"
 end
 
 def computer_get_respond(instruction_queue)

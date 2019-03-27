@@ -25,17 +25,17 @@ development:
   pool: 1000
   timeout: 15000
   adapter: postgresql
-  #encoding: utf8
-  #database: nex
-  #host: 193.108.117.105 ##REAL OXNET
-  #username: wavh
-  #password: 'Lifeunixbook123'
-  #port: 6432 #REAL OXNET
-  database: debug_env
-  host: oxnetdebug.ddns.net #DEBUG
-  username: root
-  password: Lifeunixbook123
-  port: 5432
+  encoding: utf8
+  database: nex
+  host: 193.108.117.105 ##REAL OXNET
+  username: wavh
+  password: 'Lifeunixbook123'
+  port: 6432 #REAL OXNET
+ # database: debug_env
+ # host: oxnetdebug.ddns.net #DEBUG
+ # username: root
+ # password: Lifeunixbook123
+ # port: 5432
 
 
   # The specified database role being used to connect to postgres.

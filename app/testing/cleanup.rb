@@ -4,6 +4,8 @@ require_relative '../models/application_record'
 require 'acts_as_list'
 require 'net/ping'
 require_relative '../generate_account'
+require_relative '../generate_schema'
+require_relative '../generate_gear'
 require_relative '../helpers/rs_worlds_helper'
 
 
@@ -621,9 +623,10 @@ end
 def toc
   puts Time.now-@start_time
 end
-
-proxy = Proxy.find(17)
-Account.where(account_type: AccountType.where(name: "MULE").first).each do |acc|
-  acc.update(proxy: proxy)
+batch5 = Computer.where(name: "BATCH5").first
+accounts = Account.where(banned: false, created: true)
+accounts.each do |acc|
+  acc.update(computer: batch5)
   acc.save
 end
+

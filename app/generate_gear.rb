@@ -97,7 +97,8 @@ class GenerateGear
 
   def get_best_armour(account, slot)
     best_armour_type = get_best_armour_type(account)
-    item = RsItem.where(tradeable: true, members: false,equipment_slot: slot).select{|i| i.range_requirement <= get_ranged_level(account) && i.defence_requirement == best_armour_type.to_i}.sample
+    item = RsItem.where(tradeable: true, members: false,equipment_slot: slot)
+               .select{|i| i.range_requirement <= get_ranged_level(account) && i.defence_requirement == best_armour_type.to_i}.sample
     if item != nil
       return item
     end

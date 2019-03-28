@@ -60,36 +60,13 @@ class AccountsController < ApplicationController
     if port.blank?
       port = 0
     end
-#     render json: "{
-#   'Clients': [{
-#     'UseProxy': true,
-#     'ScriptArgs': '',
-#     'RsPassword': '#{@account.password}',
-#     'Config': {
-#       'EngineTickDelay': 0,
-#       'DisableModelRendering': false,
-#       'LowCpuMode': true,
-#       'DisableSceneRendering': false,
-#       'SuperLowCpuMode': true
-#     },
-#     'ScriptName': 'nex',
-#     'ProxyIp': '#{@account.proxy.ip}',
-#     'ProxyUser': '#{@account.proxy.username}',
-#     'IsRepoScript': false,
-#     'World': #{@account.world},
-#     'ProxyPort': #{port},
-#     'RsUsername': '#{@account.login}',
-#     'ProxyPass': '#{@account.proxy.password}'
-#   }],
-#   'AutoUpdateClient': true
-# }"
     render json: "{
     'UseProxy': true,
     'ScriptArgs': '',
     'RsUsername': '#{@account.login}',
     'RsPassword': '#{@account.password}',
     'Config': {
-      'EngineTickDelay': 0,
+      'EngineTickDelay': 10,
       'DisableModelRendering': false,
       'LowCpuMode': true,
       'DisableSceneRendering': false,

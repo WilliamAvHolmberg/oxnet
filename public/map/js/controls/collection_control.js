@@ -93,12 +93,12 @@ export var CollectionControl = L.Control.extend({
         container.style.height = 'auto';
 
         // Copy to clipboard control
-        this._createControl('<i class="fa fa-copy"></i>', container, function(e) {
+        this._createControl('<i class="fas fa-copy"></i>', container, function(e) {
             this._copyCodeToClipboard();
         });
 
         // Settings control
-        this._createControl('<i class="fa fa-cog"></i>', container, function(e) {
+        this._createControl('<i class="fas fa-cog"></i>', container, function(e) {
             if ($("#settings-panel").is(":visible")) {
                 $("#settings-panel").hide("slide", {direction: "right"}, 300);
             } else {
@@ -132,7 +132,7 @@ export var CollectionControl = L.Control.extend({
         });
 
         // Undo control
-        this._createControl('<i class="fa fa-undo" aria-hidden="true"></i>', container, function(e) {
+        this._createControl('<i class="fas fa-undo" aria-hidden="true"></i>', container, function(e) {
             if (this._currentDrawable !== undefined) {
                 this._currentDrawable.removeLast();
                 this._outputCode();
@@ -140,7 +140,7 @@ export var CollectionControl = L.Control.extend({
         });
 
         // Clear control
-        this._createControl('<i class="fa fa-trash" aria-hidden="true"></i>', container, function(e) {
+        this._createControl('<i class="fas fa-trash" aria-hidden="true"></i>', container, function(e) {
             if (this._currentDrawable !== undefined) {
                 this._currentDrawable.removeAll();
                 this._outputCode();

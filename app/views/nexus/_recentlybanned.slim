@@ -1,10 +1,13 @@
 - skill = account.stats.sort_by{ |a, b|( a and b ) ? b <=> a : ( a ? 1 : -1 ) }.select{|s|s.skill.name != "Hitpoints"}.first
 tr class="#{account.account_type.name == "MULE" ? "table-danger" : ""}"
   td
-    time class="timeago" datetime="#{account.last_seen.localtime}" = "#{formatted_duration(Time.now.utc - account.last_seen)} ago"
+    - if account.last_seen != nil
+      time class="timeago" datetime="#{account.last_seen.localtime}" = "#{formatted_duration(Time.now.utc - account.last_seen)} ago"
+    -else
+     = "Never"
   td
     a href=account_path(account) = account.username
-  td = "#{formatted_duration(account.last_seen - account.created_at)}"
+  td = account.last_seen != nil ? "#{formatted_duration(account.last_seen - account.created_at)}" : ""
   - if skill != nil && skill.skill_id != nil
     td = "#{skill.skill.name}: #{skill.level}"
   - else

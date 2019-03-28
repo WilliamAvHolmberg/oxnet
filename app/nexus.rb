@@ -100,7 +100,7 @@ end
 
 
 def get_mule_withdraw_task_respond(account)
-  mule_withdraw_tasks = MuleWithdrawTask.where(:account => account,:created_at => (Time.now.utc - 20.minutes..Time.now.utc)).select{|task| !task.executed && task.is_relevant && !task.account!= nil && task.account.id == account.id }
+  mule_withdraw_tasks = MuleWithdrawTask.where(:account => account,:created_at => (Time.now.utc - 10.minutes..Time.now.utc)).select{|task| !task.executed && task.is_relevant && !task.account!= nil && task.account.id == account.id }
   if mule_withdraw_tasks != nil && mule_withdraw_tasks.length > 0
     task = mule_withdraw_tasks[0]
   else
@@ -380,7 +380,13 @@ def get_woodcutting_task_respond(task, account)
   log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
   log.save
   puts "sending resp"
-  res = "task_respond:1:#{task_type}:#{task.id}:#{bank_area}:#{action_area}:#{axeID}:#{axe_name}:#{tree_name}:#{break_condition}:#{task_duration}:#{level_goal}:#{get_gear(task)}"
+  begin
+    gear = get_gear(task)
+  rescue Exception => ex
+    puts ex
+    puts ex.backtrace
+  end
+  res = "task_respond:1:#{task_type}:#{task.id}:#{bank_area}:#{action_area}:#{axeID}:#{axe_name}:#{tree_name}:#{break_condition}:#{task_duration}:#{level_goal}:#{gear}"
   return res
 end
 def get_tanning_task_respond(task, account)

@@ -67,7 +67,7 @@ class AccountsController < ApplicationController
     'RsPassword': '#{@account.password}',
     'Config': {
       'EngineTickDelay': 10,
-      'DisableModelRendering': false,
+      'DisableModelRendering': true,
       'LowCpuMode': true,
       'DisableSceneRendering': false,
       'SuperLowCpuMode': true
@@ -114,9 +114,14 @@ class AccountsController < ApplicationController
   end
 
   def ban
-    @account = Account.find(params[:id])
-    @account.update(banned: true)
+    account = Account.find(params[:id])
+    account.update(banned: true)
+    if account.schema.default = true #remember default is inverted...
+      account.schema.update(disabled: true)
+    end
 
+    # render json: JSON.pretty_generate(params.as_json)
+    # render plain: "Tried to ban #{params[:id]}"
     redirect_to accounts_path
   end
   def disconnect
@@ -136,7 +141,7 @@ class AccountsController < ApplicationController
   end
 
   def get_player_positions
-    online_players = Account.all_accounts_online.select(:id, :username, :world, :created_at).to_a
+    online_players = Account.all_accounts_online.select(:id, :username, :world, :created_at, :computer_id).includes(:computer).to_a
     task_logs = TaskLog.includes(:task).select("DISTINCT ON (account_id) *").where(:created_at => (Time.now.utc - 20.minutes..Time.now.utc), account_id: online_players.pluck(:id)).where.not(position: nil).order("account_id, created_at DESC").to_a
     # tasks = Task.select(:id, :name).where(id: task_logs.pluck(:task_id)).to_a
 
@@ -150,9 +155,11 @@ class AccountsController < ApplicationController
       account = online_players.select { |a| a.id == account_id }.first
       next if account == nil
       task = task_log.task # tasks.select { |t| t.id == task_id }.first
-      task_name = task.name.partition("---").last if task != nil
+      task_name = task.name if task != nil
+      task_name = task_name.partition("---").last if task_name != nil && task_name.include?("---")
       age = formatted_duration(Time.now.utc - account.created_at)
-      data << [position[1].to_i, position[2].to_i, account_id.to_s, account.username, task_name, account.world, age]
+      computer = account.computer.name
+      data << [position[1].to_i, position[2].to_i, account_id.to_s, account.username, task_name, account.world, age, computer]
     end
 
     render json: data.to_json

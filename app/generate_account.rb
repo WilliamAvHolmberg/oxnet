@@ -197,7 +197,8 @@ class GenerateAccount
       account_type = "SLAVE"
       if get_number_of_mules < 2
         account_type = "MULE"
-        other_mule = Account.where(banned: false, account_type: AccountType.where(:name => "MULE")).first
+        schema = Schema.primary_schemas.order("max_slaves DESC").first
+        other_mule = Account.where(banned:false, account_type: AccountType.where(:name => "MULE")).first
         if other_mule != nil
           proxy = other_mule.proxy
         else
@@ -260,24 +261,28 @@ class GenerateAccount
   public
     def create_accounts_for_all_computers
 
-      should_do = true
-      computers = find_available_computers
+      computers = find_available_computers.shuffle
+
       computers.each do |computer|
         account_threshold = computer.max_slaves
         current_amount_of_accounts = get_available_accounts_on_computer(computer)
-        proxy = get_random_proxy(computer.eco_system)
-        if proxy != nil && should_do && current_amount_of_accounts.size < account_threshold
+        next if current_amount_of_accounts.size >= account_threshold
 
+        proxies = get_least_used_proxies(computer.eco_system).shuffle
+        proxies.each do |proxy|
+          # proxy = get_random_proxy(computer.eco_system)
           # Check if we already have an instruction with this proxy due
+
           existing_instructions = Instruction.get_uncompleted_instructions_60
-                                     .where(instruction_type_id: InstructionType.find_by_name("CREATE_ACCOUNT").id, computer_id: computer.id).includes(:account)
+                                      .where(instruction_type_id: InstructionType.find_by_name("CREATE_ACCOUNT").id).includes(:account)
           next if existing_instructions.any? { |ins| ins.is_relevant && ins.account.proxy_id == proxy.id}
 
           puts "#{computer.name} has #{current_amount_of_accounts.size} of #{account_threshold} slaves"
           create_account(computer, proxy)
           proxy.update(last_used: DateTime.now.utc)
           #puts "lets create acc for #{computer.name}"
-          should_do = false
+          # should_do = false
+          break #exit loop, only do one account
         end
       end
       #if should_do

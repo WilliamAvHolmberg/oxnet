@@ -118,14 +118,16 @@ export var PlayerLookupControl = L.Control.extend({
                     var task_name = pos[4];
                     var world = pos[5];
                     var created_ago = pos[6];
+                    var computer = pos[7];
                     marker = L.marker(new L.LatLng(latlng.lat, latlng.lng), {title: player_id});
                     var popup = `<a target="_blank" href="/accounts/${player_id}">
                             <h4 style="cursor:pointer; margin-bottom:1px;">${player_name}</h4>
-                            <i class="fa fa-globe"></i> <b>${world}</b>
-                            <i class="fa fa-id-badge"></i> <b>${player_id}</b>
-                            <i class="fa fa-clock-o"></i> <b>${created_ago}</b>
+                            <i class="fas fa-globe"></i> <b>${world}</b>
+                            <i class="fas fa-id-badge"></i> <b>${player_id}</b>
+                            <i class="fas fa-clock-o"></i> <b>${created_ago}</b>
+                            <i class="fas fa-server"></i> <b>${computer}</b>
                             <br/>${task_name}</a><br/>
-                            <a class="btn btn-outline-dangerr" onclick="$.getJSON('../accounts/${player_id}/disconnect', function(data) {if(!data['success']) alert(data);});">Disconnect</a>`;
+                            <a class="btn btn-danger" onclick="$.getJSON('../accounts/${player_id}/disconnect', function(data) {if(!data['success']) alert(data);});">Disconnect</a>`;
                     marker.bindPopup(popup);
                     marker.on('mouseenter', function (e) {
                         marker.clicked = false;

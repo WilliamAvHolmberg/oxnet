@@ -26,7 +26,9 @@ module Pinger
   @pingHistory = {""=> false}
   @pingHistoryTimeStamps = {""=> Time.now}
   def self.ProxyAvailable(ip, port)
+    return true if ip == nil
     return true if ip.length == 0
+    return true if port == nil
     key = ip + ":" + port
     working = @pingHistory[key]
     lastChecked = @pingHistoryTimeStamps[key]

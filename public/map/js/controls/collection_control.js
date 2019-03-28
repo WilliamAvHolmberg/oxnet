@@ -96,6 +96,20 @@ export var CollectionControl = L.Control.extend({
         this._createControl('<i class="fa fa-copy"></i>', container, function(e) {
             this._copyCodeToClipboard();
         });
+        //save area
+        var nameInput = L.DomUtil.create('textarea', 'leaflet-bar leaflet-control leaflet-control-custom', container);
+        nameInput.id = 'area_name';
+        nameInput.placeholder = String.fromCharCode(0xF007) + " Area name";
+        $(nameInput).css('font-family', "Arial, FontAwesome");
+
+        this.saveButton = L.DomUtil.create('a', 'leaflet-bar leaflet-control leaflet-control-custom', container);
+        this.saveButton.id = 'save_area_button';
+        this.saveButton.innerHTML = 'Save Area';
+        L.DomEvent.on(this.saveButton, 'click', this._saveAreaToDatabase, this);
+
+
+
+
 
         // Settings control
         this._createControl('<i class="fa fa-cog"></i>', container, function(e) {
@@ -300,6 +314,37 @@ export var CollectionControl = L.Control.extend({
         $temp.val($("#code-output").text()).select();
         document.execCommand("copy");
         $temp.remove();
+
+        Swal({
+            position: 'top',
+            type: 'success',
+            title: `Copied to clipboard`,
+            showConfirmButton: false,
+            timer: 6000,
+            toast: true,
+        });
+    },
+
+    _saveAreaToDatabase: function() {
+
+        var $name = $('textarea#area_name').val();
+        document.execCommand("copy");
+        var $coords = $('code#code-output').text();
+
+
+        var url = "oxnetserver.ddns.net/areas/new";
+        $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: "http://0.0.0.0:3000/areas",
+            dataType: "json",
+            data: {name: String($name), coordinates:String($coords)}, // or the string: 'id=1'
+            complete:
+                function () {
+
+                }
+
+        });
 
         Swal({
             position: 'top',

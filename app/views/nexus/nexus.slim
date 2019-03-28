@@ -195,6 +195,10 @@
     .col-lg-6.col-md-12
       .card
         .card-header.card-header-primary
+          - money_made_today = money_made_today()
+          - money_last_2_hours = money_last_2_hours()
+          - money_last_24_hours = money_last_24_hours()
+          h4.card-title = "GP Last 24H: #{number_with_delimiter(money_last_24_hours, :delimiter => ",", :separator => ".")}"
           h4.card-title = "GP Today: #{number_with_delimiter(money_made_today, :delimiter => ",", :separator => ".")}"
           h4.card-title = "Per Hour: #{number_with_delimiter((money_made_today / (Time.now.hour + 0.1)).round(0), :delimiter => ",", :separator => ".")}"
           h4.card-title = "Recent Avg: #{number_with_delimiter(money_last_2_hours / 2, :delimiter => ",", :separator => ".")}"

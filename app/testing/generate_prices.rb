@@ -33,8 +33,6 @@ ActiveRecord::Base.establish_connection(db_configuration["development"])
 
 def add_item(doc,id)
 
-
-
   name = doc.parsed_response['name']
   if name != "name"
     id = doc.parsed_response['id']
@@ -57,10 +55,7 @@ end
 
 def add_price_to_item(doc,id)
 
-
-
   item_info = JSON.parse(doc.body)[id.to_s]
-
   if item_info != nil
     puts item_info['id']
     ge_price = item_info['overall_average'].to_i
@@ -70,8 +65,6 @@ def add_price_to_item(doc,id)
       rs_item.save
     end
   end
-
-
 
 end
 
@@ -83,6 +76,13 @@ def add_items(min,max)
     add_price_to_item(doc,i)
   end
 end
+def remove_items
+  items = RsItem.where('item_name like ?', "%(t)%")
+  items.each do |item|
+    puts item.item_name
+    item.delete
+  end
+end
 
 def generate_items
 
@@ -90,5 +90,5 @@ def generate_items
 end
 doc = HTTParty.get("https://rsbuddy.com/exchange/summary.json")
 
-
-add_items(99,10000)
+remove_items
+add_items(0,10000)

@@ -623,10 +623,25 @@ end
 def toc
   puts Time.now-@start_time
 end
-batch5 = Computer.where(name: "BATCH5").first
-accounts = Account.where(banned: false, created: true)
-accounts.each do |acc|
-  acc.update(computer: batch5)
-  acc.save
+
+def generate_combat
+  accounts = Account.where(computer: Computer.where(name: "Suicide").first, banned: false, created: true)
+  schema = Schema.find(12842)
+  ga = GenerateSchema.new
+  accounts.each do |acc|
+    schema = ga.generate_schedule(acc)
+    acc.update(schema: schema)
+    acc.save
+  end
 end
 
+def remove_items
+  items = RsItem.where('item_name like ?', "%(t)%")
+  items.each do |item|
+    puts item.item_name
+    item.delete
+  end
+end
+
+
+remove_items

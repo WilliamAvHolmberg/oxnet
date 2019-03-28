@@ -50,7 +50,6 @@ export class OSBotPolyAreaConverter extends OSBotConverter {
         if (polyarea.positions.length > 0 && polyarea.positions[0].z > 0) {
             output += `.setPlane(${polyarea.positions[0].z})`;
         }
-        output += ";";
         return output;
     }
 }

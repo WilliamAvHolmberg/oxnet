@@ -4,7 +4,7 @@ class QuestsController < ApplicationController
   # GET /quests
   # GET /quests.json
   def index
-    @quests = Quest.all
+    @quests = Quest.all.order(:name)
   end
 
   # GET /quests/1
@@ -69,6 +69,6 @@ class QuestsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def quest_params
-      params.require(:quest).permit(:name, :completed, :account_id)
+      params.require(:quest).permit(:name, :completed, :account_id, :quest_points)
     end
 end

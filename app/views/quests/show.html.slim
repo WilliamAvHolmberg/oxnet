@@ -4,11 +4,8 @@ p
   strong Name:
   = @quest.name
 p
-  strong Completed:
-  = @quest.completed
-p
-  strong Account:
-  = @quest.account
+  strong Quest Points:
+  = @quest.quest_points
 
 => link_to 'Edit', edit_quest_path(@quest)
 '|

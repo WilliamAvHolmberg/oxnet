@@ -4,7 +4,7 @@
       .card.card-stats
         .card-header.card-header-warning.card-header-icon
           .card-icon
-            i.fa.fa-group
+            i.fas.fa-group
           p.card-category Available slaves
           h3.card-title = @slaves.size
         .card-footer
@@ -14,7 +14,7 @@
       .card.card-stats
         .card-header.card-header-success.card-header-icon
           .card-icon
-            i.fa.fa-money
+            i.fas.fa-money-bill-alt
           p.card-category Mules
           h3.card-title = @mules.size
         .card-footer
@@ -36,7 +36,7 @@
       .card.card-stats
         .card-header.card-header-info.card-header-icon
           .card-icon
-            i.fa.fa-gears
+            i.fas.fa-gears
           p.card-category Accounts online
           h3.card-title = @active_accounts.size
         .card-footer
@@ -48,7 +48,7 @@
       .card.card-chart
         .card-header.card-header-success
           h4.card-title
-            i.fa.fa-history
+            i.fas.fa-history
             = " Latest task logs"
         .card-body
           table.table.table-hover
@@ -71,7 +71,7 @@
       .card.card-chart
         .card-header.card-header-primary
           h4.card-title
-            i.fa.fa-laptop
+            i.fas.fa-laptop
             = " Computers connected:#{@connected_computers.size} "
         .card-body.table-responsive
           table.table.table-hover
@@ -83,7 +83,9 @@
             tbody
               - @connected_computers.each do |comp|
                 tr
-                  td = comp.name
+                  td
+                    a href=computer_path(comp)
+                      = comp.name
                   td = @available_accounts.select { |acc| acc.computer_id == comp.id }.size
                   td = comp.get_connected_accounts_count
                   td = comp.max_slaves
@@ -91,7 +93,7 @@
       .card.card-chart
         .card-header.card-header-danger
           h4.card-title
-            i.fa.fa-money
+            i.fas.fa-money-bill-alt
             = " Mule Activity"
         .card-body.table-responsive
           table.table.table-hover
@@ -105,7 +107,10 @@
                 - @offlineMule = mule if mule.is_available
                 tr
                   td
-                    a href=account_path(mule) = mule.username
+                    a href=account_path(mule)
+                      - if @master_mule_ids[mule.id] != nil
+                        i.fas.fa-crown.pr-1 style="color:orange"
+                      = mule.username
                   td style="color:red" = ActiveSupport::NumberHelper.number_to_delimited(mule.get_money_deposited(@mule_logs))
                   td style="color:green" = ActiveSupport::NumberHelper.number_to_delimited(mule.get_money_withdrawn(@mule_logs))
 
@@ -190,6 +195,10 @@
     .col-lg-6.col-md-12
       .card
         .card-header.card-header-primary
+          - money_made_today = money_made_today()
+          - money_last_2_hours = money_last_2_hours()
+          - money_last_24_hours = money_last_24_hours()
+          h4.card-title = "GP Last 24H: #{number_with_delimiter(money_last_24_hours, :delimiter => ",", :separator => ".")}"
           h4.card-title = "GP Today: #{number_with_delimiter(money_made_today, :delimiter => ",", :separator => ".")}"
           h4.card-title = "Per Hour: #{number_with_delimiter((money_made_today / (Time.now.hour + 0.1)).round(0), :delimiter => ",", :separator => ".")}"
           h4.card-title = "Recent Avg: #{number_with_delimiter(money_last_2_hours / 2, :delimiter => ",", :separator => ".")}"
@@ -202,16 +211,32 @@
               th Mule
             tbody
               - @mule_logs.each do |log|
+                - mule_acc_id = @name_to_id[log.mule.downcase]
+                - to_master_mule = @master_mule_ids[mule_acc_id] != nil
+                - amount = log.item_amount
+                - if log.account.account_type.name.include? "MULE"
+                  - amount = -amount
+                - amount = -amount if to_master_mule
                 tr
                   td
                     time class="timeago" datetime="#{log.created_at.localtime}" = "#{formatted_duration(Time.now.utc - log.created_at)} ago"
                   td
-                    a href=account_path(log.account) = log.account.username
-                  - if log.account.account_type.name.include?"MULE"
-                    td style="color:red;" = "-#{log.item_amount}"
+                    a href=account_path(log.account)
+                      - if @master_mule_ids[log.account_id] != nil
+                        i.fas.fa-crown.pr-1 style="color:orange"
+                      = log.account.username
+                  -if amount < 0
+                    td style="color:red;" = "#{number_with_delimiter(amount, :delimiter => ",", :separator => ".")}"
                   - else
-                    td style="color:green" = "+#{log.item_amount}"
-                  td = log.mule
+                    td style="color:green" = "+#{number_with_delimiter(amount, :delimiter => ",", :separator => ".")}"
+                  -if mule_acc_id == nil
+                    td = log.mule
+                  -else
+                    td
+                      a href=account_path(mule_acc_id)
+                        - if to_master_mule
+                          i.fas.fa-crown.pr-1  style="color:orange"
+                        = log.mule
 footer.footer
   .container-fluid
     nav.pull-left

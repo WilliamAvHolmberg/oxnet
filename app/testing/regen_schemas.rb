@@ -75,13 +75,16 @@ if deleteTasks != nil
   puts "Going to delete tasks containing #{deleteTasks}"
 end
 
-accounts = Account.where(banned: false, created: true)
+default_schemas = Schema.all.to_a
+
+accounts = Account.all_available_accounts
 puts "Beginning..."
 #if accounts != nil && accounts.length > 0
 accounts.each do |account|
   if offlineOnly && !account.is_available
     next
   end
+  # origina_schema = account.schema.original_id
   if deleteTasks != nil
     account.schema.tasks.all.each do |task|
       if deleteTasks =~ task.name
@@ -102,11 +105,14 @@ accounts.each do |account|
     next if nonQuests > 0
   end
 
+  next if account.account_type.name != "SLAVE"
+
   puts "Checking for #{account.username}"
 
-  schema = Schema.where(default: false).sample
+  schema = Schema.next_to_use
   account.update(schema: schema)
   account.schema = schema;
+  account.save
 
   puts "Assigned Schema Template:#{schema.id}"
   schema = @generate_schema.generate_schedule(account)

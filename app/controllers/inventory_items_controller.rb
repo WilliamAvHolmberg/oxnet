@@ -15,12 +15,12 @@ class InventoryItemsController < ApplicationController
   # GET /inventory_items/new
   def new
     @inventory_item = InventoryItem.new
-    @items = RsItem.all
+    @items = RsItem.where(noted: false)
   end
 
   # GET /inventory_items/1/edit
   def edit
-    @items = RsItem.all
+    @items = RsItem.where(noted: false)
   end
 
   # POST /inventory_items

@@ -89,31 +89,30 @@ class GenerateGear
     return account.stats_find("Ranged").level
   end
 
-
+  ##quick fix with item_id < 10000 to not count new items added. They have wrong def req
   def get_best_weapon(account)
     best_weapon_type = get_best_weapon_type(account)
-    return RsItem.where(tradeable: true, members: false,equipment_slot: "weapon").select{|i| i.attack_requirement == best_weapon_type.to_i && i.item_name.include?("scimitar")}.sample
+    return RsItem.where(tradeable: true, members: false,equipment_slot: "weapon").select{|i| i.item_id < 10000 && i.attack_requirement == best_weapon_type.to_i && i.item_name.include?("scimitar")}.sample
   end
 
   def get_best_armour(account, slot)
     best_armour_type = get_best_armour_type(account)
-    item = RsItem.where(tradeable: true, members: false,equipment_slot: slot)
-               .select{|i| i.range_requirement <= get_ranged_level(account) && i.defence_requirement == best_armour_type.to_i}.sample
+    item = RsItem.where(tradeable: true, members: false,equipment_slot: slot).select{|i| i.ge_price < 8000 && i.item_id < 10000 && i.range_requirement <= get_ranged_level(account) && i.defence_requirement == best_armour_type.to_i}.sample
     if item != nil
       return item
     end
-    item = RsItem.where(tradeable: true, members: false,equipment_slot: slot).select{|i| i.defence_requirement < best_armour_type.to_i}.sample
+    item = RsItem.where(tradeable: true, members: false,equipment_slot: slot).select{|i| i.ge_price < 8000 && i.item_id < 10000 && i.defence_requirement < best_armour_type.to_i && i.range_requirement <= get_ranged_level(account)}.sample
     return item
   end
 
   def get_best_weapon_type(account)
-    arr = [0,10,20,30,40]
+    arr = [1,10,20,30,40]
     attack = get_attack_level(account)
     return arr.select{|item| item <= attack}.max
   end
 
   def get_best_armour_type(account)
-    arr = [0,10,20,30,40]
+    arr = [1,10,20,30,40]
     defence = get_defence_level(account)
     return arr.select{|item| item <= defence}.max
   end

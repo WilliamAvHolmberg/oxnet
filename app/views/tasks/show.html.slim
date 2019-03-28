@@ -38,6 +38,8 @@ h1 Reqs
 - @task.requirements.each do |req|
   p = req.skill.name
   p = req.level
+h1 Gear
+p = @task.gear.get_formated_gear
 
 => link_to 'Edit', edit_task_path(@task)
 '|

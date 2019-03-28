@@ -23,6 +23,7 @@ def getServerAddress
   #end
   #return @serverAddress.strip
   return "oxnetserver.ddns.net"
+  #return "oxnetdebug.ddns.net"
 end
 
 def computer_get_respond(instruction_queue)
@@ -285,7 +286,7 @@ def get_combat_task_respond(task, account)
   log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
   log.save
   puts "sending resp"
-  res = "task_respond:1:#{task_type}:#{task.id}:#{bank_area}:#{action_area}:#{monster_name}:#{break_condition}:#{task_duration}:#{head}:#{cape}:#{get_gear(task)}:#{food}:#{inventory}:#{loot_threshold}:#{task.skill.name}:#{level_goal}:#{account.should_mule}"
+  res = "task_respond:1:#{task_type}:#{task.id}:#{bank_area}:#{action_area}:#{monster_name}:#{break_condition}:#{task_duration}:#{get_gear(task)}:#{food}:#{inventory}:#{loot_threshold}:#{task.skill.name}:#{level_goal}:#{account.should_mule}"
   return res
 end
 

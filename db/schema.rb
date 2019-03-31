@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_28_120005) do
+ActiveRecord::Schema.define(version: 2019_03_31_184107) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -153,6 +153,7 @@ ActiveRecord::Schema.define(version: 2019_03_28_120005) do
     t.bigint "item_id"
     t.bigint "inventory_id"
     t.integer "buy_amount", default: 1
+    t.boolean "food", default: false
     t.index ["inventory_id"], name: "index_inventory_items_on_inventory_id"
     t.index ["item_id"], name: "index_inventory_items_on_item_id"
   end
@@ -216,7 +217,7 @@ ActiveRecord::Schema.define(version: 2019_03_28_120005) do
     t.integer "cooldown", default: 0
     t.integer "custom_cooldown", default: 120
     t.boolean "auto_assign", default: true
-    t.datetime "unlock_cooldown", default: "2019-03-03 10:22:17"
+    t.datetime "unlock_cooldown", default: "2019-03-04 18:14:08"
     t.index ["account_id"], name: "index_proxies_on_account_id"
     t.index ["eco_system_id"], name: "index_proxies_on_eco_system_id"
   end
@@ -235,7 +236,7 @@ ActiveRecord::Schema.define(version: 2019_03_28_120005) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "quest_points", null: false
+    t.integer "quest_points", default: 1, null: false
   end
 
   create_table "requirements", force: :cascade do |t|

@@ -281,7 +281,14 @@ def get_combat_task_respond(task, account)
     level_goal = task.break_after
     puts task_duration
   end
-  if task.food != nil then food = task.food.formated_name else food = "none" end
+
+  food = "none"
+  task.inventory_items.each do |item|
+    if item.food
+      food = item.item.formated_name
+      break
+    end
+  end
   if task.loot_threshold != nil then loot_threshold = task.loot_threshold else loot_threshold = 100 end
   log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
   log.save

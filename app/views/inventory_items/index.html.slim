@@ -6,7 +6,7 @@ table
       th Item
       th Amount
       th Buy Amount
-      th
+      th Is Food?
       th
       th
 
@@ -16,6 +16,7 @@ table
         td = inventory_item.item.item_name
         td = inventory_item.amount
         td = inventory_item.buy_amount
+        td = inventory_item.food
         td = link_to 'Show', inventory_item
         td = link_to 'Edit', edit_inventory_item_path(inventory_item)
         td = link_to 'Destroy', inventory_item, data: { confirm: 'Are you sure?' }, method: :delete

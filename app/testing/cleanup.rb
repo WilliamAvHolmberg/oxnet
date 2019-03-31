@@ -602,7 +602,10 @@ def average_money_right_now
 
   puts money_per_hour
   areas.each do |area|
-    puts area
+    money = area[1][:money]
+    users = area[1][:users]
+    average = money/users
+    puts "#{area}....average:#{average}}"
   end
 
 end
@@ -634,13 +637,6 @@ def remove_items
     item.delete
   end
 end
-
-gs = GenerateSchema.new
-schema = Schema.find(12842)
-acc = Account.find(22234)
-    acc.update(schema: schema)
-    acc.save
-    schema = gs.generate_schedule(acc)
-    schema.save
-    acc.update(schema: schema)
-    acc.save
+tic
+average_money_right_now
+toc

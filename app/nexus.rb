@@ -283,7 +283,7 @@ def get_combat_task_respond(task, account)
   end
 
   food = "none"
-  task.inventory_items.each do |item|
+  task.inventory.inventory_items.each do |item|
     if item.food
       food = item.item.formated_name
       break

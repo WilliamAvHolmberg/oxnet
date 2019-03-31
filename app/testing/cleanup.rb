@@ -575,44 +575,36 @@ def average_money_right_now
 end
 
 def average_money_right_now
-  accounts = Account.where(banned: false, created: true).select{|acc| acc.is_connected}
-  areas = Area.all
+  online_players = Account.where(banned: false, created: true)
+  task_logs = TaskLog
+                  .includes(:task)
+                  .select("DISTINCT ON (account_id) *")
+                  .where(:created_at => (Time.now.utc - 20.minutes..Time.now.utc), account_id: online_players.pluck(:id))
+                  .where.not(position: nil)
+                  .order("account_id, created_at DESC")
+                  .to_a
+  areas = {}
   money_per_hour = 0
-  fails = 0
-  suc = 0
-  areas = []
-  east_money = 0
-  east_usage = 0
-  west_money = 0
-  west_usage = 0
-  accounts.each do |acc|
-    log = acc.task_logs.last
+  puts "hello"
+  task_logs.each do |log|
+    puts "hiiissi"
     cur_money = log.money_per_hour.to_i
-    money_per_hour += cur_money
-    if cur_money == 0
-      fails +=1
-    else
-      suc+=1
-    end
-    puts money_per_hour
+    if cur_money != nil then money_per_hour += cur_money end
     area = log.task.action_area if log.task != nil
-    if area != nil
-      if area.name == "VARROCK_WEST_OAK_TREE"
-        west_usage += 1
-        west_money += cur_money
-      end
-      if area.name == "VARROCK_EAST_OAK_TREE"
-        east_usage += 1
-        east_money += cur_money
-      end
 
+    if area != nil
+      areas[area.name] = {money: 0, users: 0} if areas[area.name] == nil
+      if cur_money != nil then areas[area.name][:money] += cur_money else areas[area.name][:money] += 0 end
+      areas[area.name][:users] += 1
+      puts area.name
     end
   end
+
   puts money_per_hour
-  puts fails
-  puts suc
-  puts "EAST USAGE: #{east_usage} average: #{east_money/east_usage}"
-  puts "WEST USAGE: #{west_usage} average: #{west_money/west_usage}"
+  areas.each do |area|
+    puts area
+  end
+
 end
 
 @start_time = 0
@@ -644,4 +636,10 @@ def remove_items
 end
 
 
-remove_items
+accounts = Account.where(banned: false, created: true, schema_id: 12842)
+gs = GenerateSchema.new
+accounts.each do |acc|
+    schema = gs.generate_schedule(acc)
+    acc.update(schema: schema)
+    acc.save
+end

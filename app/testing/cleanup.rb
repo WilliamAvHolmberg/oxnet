@@ -575,6 +575,7 @@ def average_money_right_now
 end
 
 def average_money_right_now
+  tic
   online_players = Account.where(banned: false, created: true)
   task_logs = TaskLog
                   .includes(:task)
@@ -583,11 +584,10 @@ def average_money_right_now
                   .where.not(position: nil)
                   .order("account_id, created_at DESC")
                   .to_a
+  toc
   areas = {}
   money_per_hour = 0
-  puts "hello"
   task_logs.each do |log|
-    puts "hiiissi"
     cur_money = log.money_per_hour.to_i
     if cur_money != nil then money_per_hour += cur_money end
     area = log.task.action_area if log.task != nil
@@ -596,11 +596,11 @@ def average_money_right_now
       areas[area.name] = {money: 0, users: 0} if areas[area.name] == nil
       if cur_money != nil then areas[area.name][:money] += cur_money else areas[area.name][:money] += 0 end
       areas[area.name][:users] += 1
-      puts area.name
     end
   end
 
   puts money_per_hour
+
   areas.each do |area|
     money = area[1][:money]
     users = area[1][:users]
@@ -621,9 +621,11 @@ end
 
 def generate_combat
   accounts = Account.where(computer: Computer.where(name: "Suicide").first, banned: false, created: true)
-  schema = Schema.find(12842)
+  org_schema = Schema.find(12842)
   ga = GenerateSchema.new
   accounts.each do |acc|
+    acc.update(schema:org_schema)
+    acc.save
     schema = ga.generate_schedule(acc)
     acc.update(schema: schema)
     acc.save
@@ -637,6 +639,4 @@ def remove_items
     item.delete
   end
 end
-tic
-average_money_right_now
-toc
+generate_combat

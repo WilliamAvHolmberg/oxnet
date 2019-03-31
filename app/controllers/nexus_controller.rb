@@ -15,6 +15,25 @@ class NexusController < ApplicationController
     @latest_task_logs = TaskLog.includes(:task, :account).limit(5).order('id desc').to_a
     @new_accounts = Account.includes(:stats).where("created_at > NOW() - INTERVAL '? hours' AND created", 1).order("created_at DESC").limit(10)
 
+    task_logs = TaskLog
+                    .includes(:task)
+                    .select("DISTINCT ON (account_id) *")
+                    .where(:created_at => (Time.now.utc - 20.minutes..Time.now.utc), account_id: @available_accounts.pluck(:id))
+                    .where.not(position: nil)
+                    .order("account_id, created_at DESC")
+                    .to_a
+    @areas = {}
+    task_logs.each do |log|
+      cur_money = log.money_per_hour.to_i
+      area = log.task.action_area if log.task != nil
+
+      if area != nil
+        @areas[area.name] = {money: 0, users: 0} if @areas[area.name] == nil
+        if cur_money != nil then @areas[area.name][:money] += cur_money else @areas[area.name][:money] += 0 end
+        @areas[area.name][:users] += 1
+      end
+    end
+    @areas = @areas.sort
     @name_to_id = {}
     @available_accounts.each do |acc|
       @name_to_id[acc.username.downcase] = acc.id

@@ -4,6 +4,7 @@ table
   thead
     tr
       th Name
+      th Quest Points
       th
       th
       th
@@ -12,6 +13,7 @@ table
     - @quests.each do |quest|
       tr
         td = quest.name
+        td = quest.quest_points
         td = link_to 'Show', quest
         td = link_to 'Edit', edit_quest_path(quest)
         td = link_to 'Destroy', quest, data: { confirm: 'Are you sure?' }, method: :delete

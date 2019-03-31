@@ -5,7 +5,7 @@ p#notice = notice
     .card
       .card-header.card-header-primary
         h4.card-title
-          i.fa.fa-trophy
+          i.fas.fa-trophy
           = " " + @hiscore.skill.name + " Hiscores!"
       .card-body.table-responsive
         table.table.table-hover
@@ -31,7 +31,7 @@ p#notice = notice
                 -else
                   -money_made = 1
                 td = account.money_made
-                td = 3600*money_made/account.get_time_online
+                td = 3600*money_made / [(account.get_time_online || 1), 1].max
                 td = account.computer.name
 
       => link_to 'Edit', edit_hiscore_path(@hiscore)

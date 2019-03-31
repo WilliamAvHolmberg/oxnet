@@ -5,7 +5,7 @@ p#notice = notice
     .card
       .card-header.card-header-primary
         h4.card-title
-          i.fa.fa-trophy
+          i.fas.fa-trophy
           = " " + @hiscore.skill.name + " Hiscores! (#{@accounts.length}) - Last Updated "
           time class="timeago" datetime="#{Time.now.localtime}" = "Just Now"
       .card-body.table-responsive

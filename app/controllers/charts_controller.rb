@@ -291,8 +291,8 @@ class ChartsController < ApplicationController
       next if bannedAt - hours_online > 2 # if the account has been offline for a significant time, exclude
       schema_id = account.schema.original_id
       original_schema = schemas.find(id: schema_id).first
-      schema_name = (original_schema != nil ? original_schema.name : schema_id.to_s)
-      schema_data = all_schema_data[schema_id]
+      schema_name = (original_schema != nil ? original_schema.name : account.schema.name)
+      schema_data = all_schema_data[schema_name]
       if schema_data == nil
         schema_data = all_schema_data[schema_id] = SchemaProfit.new(schema_name)#account.schema.name)
       end

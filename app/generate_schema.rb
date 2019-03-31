@@ -66,11 +66,11 @@ class GenerateSchema
       wipeStats(account)
       account.reload
 
-      new_schema = Schema.find_by_name("#{account.username}'s Schema'")
-      if new_schema == nil
+      # new_schema = Schema.find_by_name("#{account.username}'s Schema'")
+      # if new_schema == nil
         new_schema = Schema.create
         new_schema.update(name: "#{account.username}'s Schema'", original_id: account.schema.id)
-      end
+      # end
       last_gear = nil
       last_weapon_type = 0
       last_armour_type = 0
@@ -94,10 +94,15 @@ class GenerateSchema
           new_task = task.dup
           new_task.update(schema: new_schema, break_after: our_level, name: "#{account.username} --- #{new_task.name}")
           puts "#{new_task.name} in schema #{new_task.schema.name}"
+
+          qp_skill = Skill.find_by_name("QP")
+          task.skill_id = qp_skill.id
+          stat = account.stats_find("QP")
+          stat.update(level: stat.level + quest.quest_points)
         else
           current_weapon_type = @generate_gear.get_best_weapon_type(account)
           current_armour_type = @generate_gear.get_best_armour_type(account)
-          level = account.stats_find(task.skill_id)
+          stat = account.stats_find(task.skill_id)
 
           if task.task_type.name == "COMBAT"
             if last_gear == nil && task.gear != nil
@@ -123,12 +128,12 @@ class GenerateSchema
           wanted_level = task.break_after
           ##x  cxcfcdx
           if account.schema.get_available_tasks(account).size > 1
-            our_level = ((level.level.to_i + 1)..wanted_level.to_i).to_a.sample
+            our_level = ((stat.level.to_i + 1)..wanted_level.to_i).to_a.sample
           else
             our_level = wanted_level
           end
-          level.update(level: our_level)
-          puts "#{level.skill.name} is now level :#{level.level}"
+          stat.update(level: our_level)
+          puts "#{stat.skill.name} is now level :#{stat.level}"
           new_task = task.dup
           new_task.update(schema: new_schema, break_after: our_level, name: "#{account.username} --- #{new_task.name}")
           puts "#{new_task.name}, break after: #{new_task.break_after}, in schema #{new_task.schema.name}"
@@ -165,5 +170,3 @@ class GenerateSchema
     end
 
 end
-
-

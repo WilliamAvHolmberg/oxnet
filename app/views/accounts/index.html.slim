@@ -3,7 +3,7 @@
     .card
       .card-header.card-header-primary
         h4.card-title
-          i.fa.fa-users
+          i.fas.fa-users
           = " Accounts (#{@available_accounts.length})"
           div style="float:right"
             = link_to "Launch All Slaves", "/accounts/?launch=true", class: 'btn btn-primary button'
@@ -47,7 +47,7 @@
                 / td = account.banned
                 td
                   - if account.locked
-                    i class="fa fa-lock"
+                    i class="fas fa-lock"
                   -else
                     = "-"
                 / td = account.created

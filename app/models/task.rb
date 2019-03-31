@@ -71,6 +71,8 @@ class Task < ApplicationRecord
 
   def is_completed(account)
     if task_type.name == "QUEST" && quest_id != nil
+      qp = account.stats_find("QP")
+      return true if qp != nil && qp.level >= 7
       quest = account.quests_find(quest_id)
       return false if quest == nil
       return true if quest.completed

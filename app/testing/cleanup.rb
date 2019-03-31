@@ -635,11 +635,12 @@ def remove_items
   end
 end
 
-
-accounts = Account.where(banned: false, created: true, schema_id: 12842)
 gs = GenerateSchema.new
-accounts.each do |acc|
-    schema = gs.generate_schedule(acc)
+schema = Schema.find(12842)
+acc = Account.find(22234)
     acc.update(schema: schema)
     acc.save
-end
+    schema = gs.generate_schedule(acc)
+    schema.save
+    acc.update(schema: schema)
+    acc.save

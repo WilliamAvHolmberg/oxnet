@@ -84,21 +84,14 @@ class GenerateSchema
         elsif task.task_type.name == "QUEST"
           quest = Quest.find_or_initialize_by(name: task.quest.name)
           QuestStat.where(account: account, quest: quest).first.update(completed: true)
-          level = account.stats_find(task.skill_id)
-          our_level = level.level
-          wanted_level = task.break_after
-          if wanted_level != nil && wanted_level > level.level
-            our_level = wanted_level
-            level.update(level: our_level)
-          end
-          new_task = task.dup
-          new_task.update(schema: new_schema, break_after: our_level, name: "#{account.username} --- #{new_task.name}")
-          puts "#{new_task.name} in schema #{new_task.schema.name}"
-
           qp_skill = Skill.find_by_name("QP")
           task.skill_id = qp_skill.id
           stat = account.stats_find("QP")
           stat.update(level: stat.level + quest.quest_points)
+          new_task = task.dup
+          new_task.update(schema: new_schema,name: "#{account.username} --- #{new_task.name}")
+          puts "#{new_task.name} in schema #{new_task.schema.name}"
+
         else
           current_weapon_type = @generate_gear.get_best_weapon_type(account)
           current_armour_type = @generate_gear.get_best_armour_type(account)

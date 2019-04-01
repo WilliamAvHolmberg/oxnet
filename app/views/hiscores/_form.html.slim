@@ -8,5 +8,5 @@
 
   .field
     = f.label :skill
-    = f.text_field :skill
+    = collection_select(:hiscore, :skill_id, Skill.all, :id, :name, {include_blank: 'None'})
   .actions = f.submit

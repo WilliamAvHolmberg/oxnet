@@ -50,7 +50,9 @@ def computer_get_respond(instruction_queue)
         log.save
         res =  "unlock_account:#{account.username}:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + account.world.chomp + ":NEX" + ":http://#{serverAddress}:3000/accounts/#{account.id}/json"
         ins.update(:completed => true)
-        account.proxy.update(unlock_cooldown: DateTime.now.utc + 5.minutes)
+        proxy = account.proxy
+        proxy.update(unlock_cooldown: DateTime.now.utc + 15.minutes)
+        proxy.save
         return res
       elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account_id == nil
         ins.update(:completed => true)
@@ -884,8 +886,8 @@ def unlock_accounts
       if computer != nil && computer.is_available_to_nexus && acc.proxy.is_ready_for_unlock
         ##instructionType to - UNLOCK ACCOUNT
         proxy = acc.proxy
-        proxy.update(unlock_cooldown: DateTime.now.utc + 7.minutes)
-
+        proxy.update(unlock_cooldown: DateTime.now.utc + 15.minutes)
+        proxy.save
         unlock_instruction = InstructionType.find_by_name("UNLOCK_ACCOUNT")
         Instruction.new(:instruction_type_id => unlock_instruction.id, :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save
         Log.new(computer_id: computer.id, account_id: acc.id, text: "Instruction created")

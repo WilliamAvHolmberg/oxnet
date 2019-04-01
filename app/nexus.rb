@@ -867,7 +867,14 @@ def connection_established?
     false
   end
 end
-
+def proxy_is_already_used(accounts, proxy)
+  accounts.each do |acc|
+    if acc.proxy.location == proxy.location
+      return true
+    end
+  end
+  return false
+end
 
 @last_unlock = 0
 def unlock_accounts
@@ -875,6 +882,15 @@ def unlock_accounts
   if !accounts.nil? && !accounts.blank?
     accounts = accounts.select{|acc| acc != nil && acc.proxy.is_ready_for_unlock && acc.account_type.name == "SLAVE" && acc.isAccReadToLaunch} #Shuffled for performance
   end
+
+  new_accounts = Array.new
+  accounts.each do |acc|
+    if !proxy_is_already_used(new_accounts,acc.proxy)
+      new_accounts << acc
+    end
+  end
+  accounts = new_accounts
+
   if !accounts.nil? && !accounts.blank?
     accounts = accounts.sort_by{|acc|acc.get_total_level}.reverse
     accounts.each do |acc|
@@ -899,6 +915,15 @@ def unlock_accounts
   else
     puts "No accounts to unlock"
   end
+end
+
+def remove_accounts_with_same_proxy(accounts, proxy)
+  accounts.each do |acc|
+    if account.proxy.location == proxy.location
+      accounts.delete(acc)
+    end
+  end
+  return accounts
 end
 
 def main_thread

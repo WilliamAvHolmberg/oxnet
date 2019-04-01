@@ -562,7 +562,7 @@ def computer_thread(client, computer)
       account = Account.where(login: email).first
       if account != nil
         puts "Account is not null"
-        account.update(locked: false, created: true, password: new_password)
+        account.update(locked: false, banned: false, created: true, password: new_password)
       end
       client.puts "hello"
     elsif respond[0] == "log"
@@ -877,7 +877,7 @@ def unlock_accounts
     accounts = accounts.sort_by{|acc|acc.get_total_level}.reverse
     accounts.each do |acc|
       if !@generate_account.canUnlockEmail(acc.login) || (Time.now.utc - acc.last_seen) > 6.hours
-        acc.update(banned: true)
+        acc.update(banned: true, last_seen: Time.now.utc)
         next
       end
       computer = acc.computer if acc.computer_id != nil
@@ -887,6 +887,12 @@ def unlock_accounts
         proxy.update(unlock_cooldown: DateTime.now.utc + 7.minutes)
 
         unlock_instruction = InstructionType.find_by_name("UNLOCK_ACCOUNT")
+        # Check if this instruction is already queued
+        existing_instruction = Instruction.get_uncompleted_instructions_10
+                                   .where(instruction_type_id: unlock_instruction.id, computer_id: computer.id, account_id: acc.id, script_id: Script.first.id).limit(1).first
+        next if existing_instruction != nil && existing_instruction.is_relevant
+
+
         Instruction.new(:instruction_type_id => unlock_instruction.id, :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save
         Log.new(computer_id: computer.id, account_id: acc.id, text: "Instruction created")
         puts "instruction for #{acc.username} to create new client at #{acc.computer.name}"

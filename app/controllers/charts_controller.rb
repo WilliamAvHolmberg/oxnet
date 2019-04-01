@@ -280,21 +280,22 @@ class ChartsController < ApplicationController
                           .all
 
     original_schema_ids = accounts.map { |acc| acc.schema.original_id }.uniq
-    schemas = Schema.where(id: original_schema_ids).to_a
+    original_schemas = Schema.where(id: original_schema_ids).to_a
 
+    max_hour = 24
     all_schema_data = {}
     accounts.each do |account|
       next if account.schema == nil
       next if account.account_type.name.include? "MULE"
       bannedAt = ((account.last_seen - account.created_at) / 3_600).floor
       hours_online = (account.time_online / 3_600).floor
-      next if bannedAt - hours_online > 2 # if the account has been offline for a significant time, exclude
+      next if bannedAt - hours_online > 4 # if the account has been offline for a significant time, exclude
       schema_id = account.schema.original_id
-      original_schema = schemas.find(id: schema_id).first
+      original_schema = original_schemas.select{|s|s.id == schema_id}.first
       schema_name = (original_schema != nil ? original_schema.name : account.schema.name)
       schema_data = all_schema_data[schema_name]
       if schema_data == nil
-        schema_data = all_schema_data[schema_id] = SchemaProfit.new(schema_name)#account.schema.name)
+        schema_data = all_schema_data[schema_name] = SchemaProfit.new(schema_name)#account.schema.name)
       end
       hourly_profit = Array.new
       account.mule_logs.each do |mule_log|
@@ -306,11 +307,12 @@ class ChartsController < ApplicationController
       #   profit = 0 if profit.nil?
       #   schema_data.addProfitForHour(i, profit)
       # end
-      hourly_profit.each_with_index do |val,index|
+      hourly_profit.each_with_index do |val,hour|
         val = 0 if val.nil?
-        break if index > bannedAt
-        break if index >= bannedAt && val = 0
-        schema_data.addProfitForHour(index, val)
+        break if hour > bannedAt
+        break if hour >= bannedAt && val = 0
+        max_hour = hour if hour > max_hour
+        schema_data.addProfitForHour(hour, val)
       end
     end
 
@@ -325,7 +327,7 @@ class ChartsController < ApplicationController
       }
     end
 
-    labels = Array.new(24)
+    labels = Array.new([max_hour,48].min)
     labels.size.times do |i|
       labels[i] = "#{i}H"
     end

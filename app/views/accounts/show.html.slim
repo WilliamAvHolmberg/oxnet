@@ -99,3 +99,8 @@
                 td = link_to 'Destroy', task, data: {confirm: 'Are you sure?'}, method: :delete
 
         br
+
+      h2 Skills
+      .row
+        - @account.stats.sort_by{|stat| stat.level }.reverse.each do |stat|
+          span class="col-3 m-2 btn btn-primary button" = "#{Skill.find_by_id(stat.skill_id).name}: #{stat.level}"

@@ -5,6 +5,7 @@ table
     th IP
     th PORT
     th Location
+    th Max Slaves
     th Username
     th Password
     th Created At
@@ -27,6 +28,7 @@ table
           a href="/proxies/#{proxy.id}" = proxy.ip
       td = proxy.port
       td = proxy.location
+      td = proxy.max_slaves
       td = proxy.username
       td = proxy.password
       td = proxy.created_at.localtime

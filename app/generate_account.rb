@@ -239,7 +239,7 @@ class GenerateAccount
 
   def get_least_used_proxies(eco_system)
     available_proxies = Proxy.where(eco_system: eco_system, auto_assign: true)
-                            .select{|proxy| proxy.is_available && !proxy.has_cooldown}
+                            .select{|proxy| proxy.is_available && !proxy.has_cooldown &&  proxy.get_active_accounts.size < proxy.max_slaves}
     proxies = Array.new
     current_lowest = 10000
     available_proxies.each do |proxy|

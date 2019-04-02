@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_31_184107) do
+ActiveRecord::Schema.define(version: 2019_04_02_115908) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -218,6 +218,7 @@ ActiveRecord::Schema.define(version: 2019_03_31_184107) do
     t.integer "custom_cooldown", default: 120
     t.boolean "auto_assign", default: true
     t.datetime "unlock_cooldown", default: "2019-03-04 18:14:08"
+    t.integer "max_slaves", default: 1
     t.index ["account_id"], name: "index_proxies_on_account_id"
     t.index ["eco_system_id"], name: "index_proxies_on_eco_system_id"
   end

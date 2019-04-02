@@ -474,7 +474,6 @@ accounts.each do |acc|
 end
 end
 
-delete_accounts
 #update_proxy
 #update_cooldown
 #Hiscore.create(skill: Skill.where(name: "Fishing").first).save
@@ -639,14 +638,8 @@ def remove_items
     item.delete
   end
 end
-Proxy.all.each do |proxy|
-  proxy.update(unlock_cooldown: Time.now - 20.minutes)
-  proxy.save
-end
-accounts = Account.includes(:account_type, :computer, :schema, :proxy).where(banned: false, created: true, locked: true)
-if !accounts.nil? && !accounts.blank?
-  accounts = accounts.select{|acc| acc != nil && acc.proxy.is_ready_for_unlock && acc.account_type.name == "SLAVE"} #Shuffled for performance
-end
+
+
 def proxy_is_already_used(accounts, proxy)
   accounts.each do |acc|
     if acc.proxy.location == proxy.location
@@ -655,13 +648,10 @@ def proxy_is_already_used(accounts, proxy)
   end
   return false
 end
-new_accounts = Array.new
-accounts.each do |acc|
-  if !proxy_is_already_used(new_accounts,acc.proxy)
-    new_accounts << acc
-  end
-end
 
-new_accounts.each do |acc|
-  puts acc.proxy.location
+locked_accs = Account.where(banned: false, created: true, locked: true)
+
+locked_accs.each do |acc|
+  acc.update(banned: true)
+  acc.save
 end

@@ -68,6 +68,6 @@ class ProxiesController < ApplicationController
 
   private
   def proxy_params
-    params.require(:proxy).permit(:location, :ip, :username, :password, :account_id, :port, :eco_system_id, :custom_cooldown, :auto_assign)
+    params.require(:proxy).permit(:location, :ip, :username, :password, :account_id, :port, :eco_system_id, :custom_cooldown, :auto_assign, :max_slaves)
   end
 end

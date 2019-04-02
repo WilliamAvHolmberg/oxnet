@@ -1,12 +1,12 @@
 - current_area = area[0]
 - money = area[1][:money]
 - users = area[1][:users]
-- average = money/users
+- average = money / users
 tr
 
   td = current_area
   td = users
-  td = money
-  td = average
+  td = formatted_gp(money)
+  td = formatted_gp(average)
 
 

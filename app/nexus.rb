@@ -5,6 +5,21 @@ require 'net/ping'
 require 'acts_as_list'
 require_relative 'generate_account'
 
+default_port = 43594
+server_port = default_port
+
+#ruby app/nexus.rb -port 1
+prevArg = ""
+ARGV.each do|a|
+  if prevArg == "-port"
+    val = a.to_i
+    server_port += val if val <= 10
+    server_port = val if val > 10
+  end
+  prevArg = a
+end
+puts "Oxnet server launched with port #{server_port} (+#{server_port - default_port})"
+
 @hello = 0
 def db_configuration
   db_configuration_file = File.join(File.expand_path('..', __FILE__), '..', 'config', 'database.yml')
@@ -963,8 +978,7 @@ while !connection_established?
   sleep 1
 end
 
-
-server = TCPServer.new 43594 #Server bind to port 43594
+server = TCPServer.new server_port #Server bind to port 43594
 #controllerThread = Thread.new(controller_thread)
 def require_all(_dir)
   Dir[File.expand_path(File.join(File.dirname(File.absolute_path(__FILE__)), _dir)) + "/**/*.rb"].each do |file|
@@ -985,7 +999,7 @@ loop do
     sleep 1
   end
 
-  if added_main_thread == false
+  if added_main_thread == false && server_port == default_port
     Thread.new do
       while true
         begin
@@ -1004,7 +1018,7 @@ loop do
       end
     end
   end
-  if added_account_thread == false
+  if added_account_thread == false && server_port == default_port
     Thread.new do
       while true
         begin

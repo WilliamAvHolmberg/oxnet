@@ -50,7 +50,9 @@ def computer_get_respond(instruction_queue)
         log.save
         res =  "unlock_account:#{account.username}:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + account.world.chomp + ":NEX" + ":http://#{serverAddress}:3000/accounts/#{account.id}/json"
         ins.update(:completed => true)
-        account.proxy.update(unlock_cooldown: DateTime.now.utc + 5.minutes)
+        proxy = account.proxy
+        proxy.update(unlock_cooldown: DateTime.now.utc + 10.minutes)
+        proxy.save
         return res
       elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account_id == nil
         ins.update(:completed => true)
@@ -551,7 +553,7 @@ def computer_thread(client, computer)
       if proxy != nil
         puts "PROXY IS NOT NULL AND WE SET TIMEOUT TO : #{cooldown}"
         current_cooldown = proxy.cooldown
-        proxy.update(unlock_cooldown: DateTime.now.utc + 20.minutes)
+        proxy.update(unlock_cooldown: DateTime.now.utc + 60.minutes)
         proxy.save
       end
       client.puts "hello"
@@ -865,7 +867,14 @@ def connection_established?
     false
   end
 end
-
+def proxy_is_already_used(accounts, proxy)
+  accounts.each do |acc|
+    if acc.proxy.location == proxy.location
+      return true
+    end
+  end
+  return false
+end
 
 @last_unlock = 0
 def unlock_accounts
@@ -873,6 +882,15 @@ def unlock_accounts
   if !accounts.nil? && !accounts.blank?
     accounts = accounts.select{|acc| acc != nil && acc.proxy.is_ready_for_unlock && acc.account_type.name == "SLAVE" && acc.isAccReadToLaunch} #Shuffled for performance
   end
+
+  new_accounts = Array.new
+  accounts.each do |acc|
+    if !proxy_is_already_used(new_accounts,acc.proxy)
+      new_accounts << acc
+    end
+  end
+  accounts = new_accounts
+
   if !accounts.nil? && !accounts.blank?
     accounts = accounts.sort_by{|acc|acc.get_total_level}.reverse
     accounts.each do |acc|
@@ -884,8 +902,8 @@ def unlock_accounts
       if computer != nil && computer.is_available_to_nexus && acc.proxy.is_ready_for_unlock
         ##instructionType to - UNLOCK ACCOUNT
         proxy = acc.proxy
-        proxy.update(unlock_cooldown: DateTime.now.utc + 7.minutes)
-
+        proxy.update(unlock_cooldown: DateTime.now.utc + 10.minutes)
+        proxy.save
         unlock_instruction = InstructionType.find_by_name("UNLOCK_ACCOUNT")
         # Check if this instruction is already queued
         existing_instruction = Instruction.get_uncompleted_instructions_10
@@ -903,6 +921,15 @@ def unlock_accounts
   else
     puts "No accounts to unlock"
   end
+end
+
+def remove_accounts_with_same_proxy(accounts, proxy)
+  accounts.each do |acc|
+    if account.proxy.location == proxy.location
+      accounts.delete(acc)
+    end
+  end
+  return accounts
 end
 
 def main_thread

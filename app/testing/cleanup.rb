@@ -650,7 +650,9 @@ def proxy_is_already_used(accounts, proxy)
 end
 
 def get_recently_unlocked
-  recently_unlocked= Log.where("text like ?", "%unlocked_account%").order('created_at DESC').limit(10)
+  #recently_unlocked= Log.where("created_at > NOW() - INTERVAL '? minutes'", 10).where("text like ?", "%unlocked_account%").order('created_at DESC').limit(10)
+  recently_unlocked = Log.where('computer_id IS NOT NULL AND created_at IS NOT NULL')
+                           .where('created_at > ?', Time.now - 5.minutes).where("text like ?", "%unlocked_account%").limit(10)
   puts recently_unlocked.size
   recently_unlocked.each do |log|
     puts log.text
@@ -680,7 +682,4 @@ def delete_locked_accounts
     acc.save
   end
 end
-
-get_recently_unlocked
-get_recently_cooldowns
-get_recently_unlock_instructions
+update_cooldown

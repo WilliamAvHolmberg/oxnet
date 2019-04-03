@@ -191,7 +191,7 @@ class GenerateAccount
       return create_account2(computer, proxy, name, email, world)
     end
     def get_creation_computer(computer)
-      creation_computer = Computer.where(name: "William") #hardcoded
+      creation_computer = Computer.where(name: "William").first #hardcoded
       if creation_computer != nil && creation_computer.is_connected
         return creation_computer.id
       end

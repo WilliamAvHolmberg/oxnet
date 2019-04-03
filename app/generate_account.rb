@@ -190,6 +190,13 @@ class GenerateAccount
       world = get_random_world
       return create_account2(computer, proxy, name, email, world)
     end
+    def get_creation_computer(computer)
+      creation_computer = Computer.where(name: "William") #hardcoded
+      if creation_computer != nil && creation_computer.is_connected
+        return creation_computer.id
+      end
+      return computer.id
+    end
     def create_account2(computer, proxy, name, email, world)
       password = "ugot00wned2"
       schema = Schema.next_to_use
@@ -234,13 +241,7 @@ class GenerateAccount
       Stat.where(account_id: account.id).destroy_all
       QuestStat.where(account_id: account.id).destroy_all
     end
-    def get_creation_computer(computer)
-      creation_computer = Computer.where(name: "William") #hardcoded
-      if creation_computer != nil && creation_computer.is_connected
-        return creation_computer.id
-      end
-      return computer.id
-    end
+
 
   public
 

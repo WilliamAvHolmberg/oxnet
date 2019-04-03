@@ -10,6 +10,7 @@ table
     th Password
     th Created At
     th Linked Account
+    th Locked accounts
     th Auto Assign
     th Lastest Use
     th Time Since Last Use
@@ -33,6 +34,7 @@ table
       td = proxy.password
       td = proxy.created_at.localtime
       td = proxy.accounts.where(banned: false, created: true).length
+      td = proxy.accounts.where(banned: false, created: true, locked: true).length
       td = proxy.auto_assign
       td = proxy.last_used.localtime if proxy.last_used != nil
       td = formatted_duration(DateTime.now.utc.to_f - proxy.last_used.to_f)

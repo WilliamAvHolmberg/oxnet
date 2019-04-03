@@ -693,7 +693,12 @@ def update_proxy_cooldown
 end
 
 
-Proxies.all.each do |proxy|
+def set_max_slaves_for_proxy
+  Proxy.all.each do |proxy|
   proxy.update(max_slaves: 1)
   proxy.save
+  end
 end
+tic
+get_recently_unlocked
+toc

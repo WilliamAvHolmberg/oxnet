@@ -657,12 +657,30 @@ def get_recently_unlocked
   end
 end
 
+def get_recently_cooldowns
+  recently_unlocked= Log.where("text like ?", "%unlock_cooldown%").order('created_at DESC').limit(10)
+  puts recently_unlocked.size
+  recently_unlocked.each do |log|
+    puts log.text
+  end
+end
+
+def get_recently_unlock_instructions
+  recently_unlocked= Log.where("text like ?", "%unlock_account%").order('created_at DESC').limit(10)
+  puts recently_unlocked.size
+  recently_unlocked.each do |log|
+    puts log.text
+  end
+end
+
 def delete_locked_accounts
   accounts = Account.where(banned: false, created: true, locked: true)
   accounts.each do |acc|
-    acc.update(created: true)
+    acc.update(banned: true)
     acc.save
   end
 end
 
-delete_locked_accounts
+get_recently_unlocked
+get_recently_cooldowns
+get_recently_unlock_instructions

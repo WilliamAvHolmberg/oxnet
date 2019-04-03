@@ -682,4 +682,18 @@ def delete_locked_accounts
     acc.save
   end
 end
-update_cooldown
+
+def update_proxy_cooldown
+
+  proxies = Proxy.all
+  proxies.each do |proxy|
+    proxy.update(unlock_cooldown: DateTime.now - 3.hours)
+    proxy.save
+  end
+end
+
+
+Proxies.all.each do |proxy|
+  proxy.update(max_slaves: 1)
+  proxy.save
+end

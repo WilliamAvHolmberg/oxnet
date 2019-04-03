@@ -567,9 +567,11 @@ def computer_thread(client, computer)
       if account != nil
         puts "Account is not null"
         account.update(locked: false, created: true, password: new_password)
+        account.save
       end
       log = Log.new(computer_id: computer.id,account_id: account.id, text: respond)
       log.save
+      client.puts "ok"
     elsif respond[0] == "log"
       #get new instructions
       now = Time.now.utc

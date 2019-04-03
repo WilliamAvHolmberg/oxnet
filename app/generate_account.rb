@@ -229,10 +229,17 @@ class GenerateAccount
       #TODO set proxy time
      # proxy.last_used = Time.now
       #proxy.save!
-      ins = Instruction.new(:instruction_type_id => InstructionType.find_by_name("CREATE_ACCOUNT").id, :computer_id => computer.id, :account_id => account.id, :script_id => Script.first.id)
+      ins = Instruction.new(:instruction_type_id => InstructionType.find_by_name("CREATE_ACCOUNT").id, :computer_id => get_creation_computer(computer), :account_id => account.id, :script_id => Script.first.id)
       ins.save
       Stat.where(account_id: account.id).destroy_all
       QuestStat.where(account_id: account.id).destroy_all
+    end
+    def get_creation_computer(computer)
+      creation_computer = Computer.where(name: "William") #hardcoded
+      if creation_computer != nil && creation_computer.is_connected
+        return creation_computer.id
+      end
+      return computer.id
     end
 
   public

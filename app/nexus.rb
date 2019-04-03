@@ -878,7 +878,13 @@ def proxy_is_already_used(accounts, proxy)
   end
   return false
 end
-
+def get_creation_computer(computer)
+  creation_computer = Computer.where(name: "William") #hardcoded
+  if creation_computer != nil && creation_computer.is_connected
+    return creation_computer.id
+  end
+  return computer.id
+end
 @last_unlock = 0
 def unlock_accounts
   accounts = Account.includes(:account_type, :computer, :schema).where(banned: false, created: true, locked: true)
@@ -908,7 +914,7 @@ def unlock_accounts
         proxy.update(unlock_cooldown: DateTime.now.utc + 10.minutes)
         proxy.save
         unlock_instruction = InstructionType.find_by_name("UNLOCK_ACCOUNT")
-        Instruction.new(:instruction_type_id => unlock_instruction.id, :computer_id => computer.id, :account_id => acc.id, :script_id => Script.first.id).save
+        Instruction.new(:instruction_type_id => unlock_instruction.id, :computer_id => get_creation_computer(computer), :account_id => acc.id, :script_id => Script.first.id).save
         Log.new(computer_id: computer.id, account_id: acc.id, text: "Instruction created")
         puts "instruction for #{acc.username} to create new client at #{acc.computer.name}"
         sleep(3.seconds)

@@ -556,6 +556,8 @@ def computer_thread(client, computer)
         proxy.update(unlock_cooldown: DateTime.now.utc + 60.minutes)
         proxy.save
       end
+      log = Log.new(computer_id: computer.id, text: respond)
+      log.save
       client.puts "hello"
     elsif respond[0] == "unlocked_account"
       email = respond[1]
@@ -566,7 +568,8 @@ def computer_thread(client, computer)
         puts "Account is not null"
         account.update(locked: false, created: true, password: new_password)
       end
-      client.puts "hello"
+      log = Log.new(computer_id: computer.id,account_id: account.id, text: respond)
+      log.save
     elsif respond[0] == "log"
       #get new instructions
       now = Time.now.utc

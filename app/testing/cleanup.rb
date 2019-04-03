@@ -649,9 +649,20 @@ def proxy_is_already_used(accounts, proxy)
   return false
 end
 
-locked_accs = Account.where(banned: false, created: true, locked: true)
-
-locked_accs.each do |acc|
-  acc.update(banned: true)
-  acc.save
+def get_recently_unlocked
+  recently_unlocked= Log.where("text like ?", "%unlocked_account%").order('created_at DESC').limit(10)
+  puts recently_unlocked.size
+  recently_unlocked.each do |log|
+    puts log.text
+  end
 end
+
+def delete_locked_accounts
+  accounts = Account.where(banned: false, created: true, locked: true)
+  accounts.each do |acc|
+    acc.update(created: true)
+    acc.save
+  end
+end
+
+delete_locked_accounts

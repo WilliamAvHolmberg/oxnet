@@ -652,7 +652,7 @@ end
 def get_recently_unlocked
   #recently_unlocked= Log.where("created_at > NOW() - INTERVAL '? minutes'", 10).where("text like ?", "%unlocked_account%").order('created_at DESC').limit(10)
   recently_unlocked = Log.where('computer_id IS NOT NULL AND created_at IS NOT NULL')
-                           .where('created_at > ?', Time.now - 5.minutes).where("text like ?", "%unlocked_account%").limit(10)
+                           .where('created_at > ?', Time.now - 60.minutes).where("text like ?", "%unlocked_account%").limit(50)
   puts recently_unlocked.size
   recently_unlocked.each do |log|
     puts log.text
@@ -700,5 +700,15 @@ def set_max_slaves_for_proxy
   end
 end
 tic
-get_recently_unlocked
+online_players = Account.where(banned: false, created: true,locked: false)
+logs = Log
+                .includes(:account)
+                .select("DISTINCT ON (account_id) *")
+                .where(account_id: online_players.pluck(:id))
+                .where('created_at > ?', Time.now - 60.minutes).where("text like ?", "%unlocked_account%")
+                .order("account_id, created_at DESC").limit(10)
+                .select(:account_id)
+puts logs.size
+
 toc
+

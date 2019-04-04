@@ -166,6 +166,21 @@
                   /   td = log.account.computer.name
                   /   td = log.account.proxy.location
         .card-body.table-responsive
+          h3 = "Recently Unlocked - #{@unlocked_logs.size} this hour"
+          table.table.table-hover
+            thead.text-warning
+              th Time
+              th Account Name
+              th Time Alive
+              th Highest Skill
+              th Money Made
+              th Created
+              th Computer
+              th IP
+            tbody id="recent_unlocks"
+              - @unlocked_logs.limit(10).each do |log|
+                = render partial: 'nexus/recently_unlocked', locals: {unlocked_log: log}
+        .card-body.table-responsive
           h3 = "Recently Banned"
           table.table.table-hover
             thead.text-warning

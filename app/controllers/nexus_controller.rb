@@ -15,6 +15,11 @@ class NexusController < ApplicationController
     @slaves = @available_accounts.select{|acc| acc.account_type.name == "SLAVE"}
     @latest_task_logs = TaskLog.includes(:task, :account).limit(5).order('id desc').to_a
     @new_accounts = Account.includes(:stats).where("created_at > NOW() - INTERVAL '? hours' AND created", 1).order("created_at DESC").limit(10)
+    online_players = Account.where(banned: false, created: true,locked: false)
+    @unlocked_logs = Log
+                     .where(account_id: @available_accounts.pluck(:id))
+                     .where('created_at > ?', Time.now - 120.minutes).where("text like ?", "%unlocked_account%")
+                     .order("created_at DESC")
 
     task_logs = TaskLog
                     .includes(:task)

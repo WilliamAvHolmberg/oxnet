@@ -699,16 +699,14 @@ def set_max_slaves_for_proxy
   proxy.save
   end
 end
-tic
-online_players = Account.where(banned: false, created: true,locked: false)
-logs = Log
-                .includes(:account)
-                .select("DISTINCT ON (account_id) *")
-                .where(account_id: online_players.pluck(:id))
-                .where('created_at > ?', Time.now - 60.minutes).where("text like ?", "%unlocked_account%")
-                .order("account_id, created_at DESC").limit(10)
-                .select(:account_id)
-puts logs.size
+def generate_wc
+  accounts = Account.where(banned: false, created: true)
+  org_schema = Schema.find(2)
+  accounts.each do |acc|
+    acc.update(schema:org_schema)
+    acc.save
+  end
+end
 
-toc
 
+generate_wc

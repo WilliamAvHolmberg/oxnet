@@ -14,16 +14,11 @@ class NexusController < ApplicationController
     @mule_logs_last_2_hours = MuleLog.includes(:account).where("created_at > NOW() - INTERVAL '? hours'", 2).reverse
     @mule_logs_last_24_hours = MuleLog.includes(:account).where("created_at > NOW() - INTERVAL '? hours'", 24).reverse
     @latest_task_logs = TaskLog.includes(:task, :account).limit(5).order('id desc').to_a
-    online_players = Account.where(banned: false, created: true,locked: false)
-    @unlocked_logs = Log
-                         .where(account_id: @available_accounts.pluck(:id))
-                         .where('created_at > ?', Time.now - 120.minutes).where("text like ?", "%unlocked_account%")
-                         .order("created_at DESC")
     task_logs = TaskLog
                     .includes(:task)
                     .select("DISTINCT ON (account_id) *")
                     .where.not(position: nil)
-                    .where(:created_at => (Time.now.utc - 20.minutes..Time.now.utc), account_id: Account.all_available_accounts)
+                    .where(:created_at => (Time.now.utc - 20.minutes..Time.now.utc), account_id: @available_accounts.pluck(:id))
                     .order("account_id, created_at DESC")
                     .to_a
     @areas = {}

@@ -474,7 +474,6 @@ accounts.each do |acc|
 end
 end
 
-delete_accounts
 #update_proxy
 #update_cooldown
 #Hiscore.create(skill: Skill.where(name: "Fishing").first).save
@@ -639,14 +638,8 @@ def remove_items
     item.delete
   end
 end
-Proxy.all.each do |proxy|
-  proxy.update(unlock_cooldown: Time.now - 20.minutes)
-  proxy.save
-end
-accounts = Account.includes(:account_type, :computer, :schema, :proxy).where(banned: false, created: true, locked: true)
-if !accounts.nil? && !accounts.blank?
-  accounts = accounts.select{|acc| acc != nil && acc.proxy.is_ready_for_unlock && acc.account_type.name == "SLAVE"} #Shuffled for performance
-end
+
+
 def proxy_is_already_used(accounts, proxy)
   accounts.each do |acc|
     if acc.proxy.location == proxy.location
@@ -655,13 +648,67 @@ def proxy_is_already_used(accounts, proxy)
   end
   return false
 end
-new_accounts = Array.new
-accounts.each do |acc|
-  if !proxy_is_already_used(new_accounts,acc.proxy)
-    new_accounts << acc
+
+def get_recently_unlocked
+  #recently_unlocked= Log.where("created_at > NOW() - INTERVAL '? minutes'", 10).where("text like ?", "%unlocked_account%").order('created_at DESC').limit(10)
+  recently_unlocked = Log.where('computer_id IS NOT NULL AND created_at IS NOT NULL')
+                           .where('created_at > ?', Time.now - 60.minutes).where("text like ?", "%unlocked_account%").limit(50)
+  puts recently_unlocked.size
+  recently_unlocked.each do |log|
+    puts log.text
   end
 end
 
-new_accounts.each do |acc|
-  puts acc.proxy.location
+def get_recently_cooldowns
+  recently_unlocked= Log.where("text like ?", "%unlock_cooldown%").order('created_at DESC').limit(10)
+  puts recently_unlocked.size
+  recently_unlocked.each do |log|
+    puts log.text
+  end
 end
+
+def get_recently_unlock_instructions
+  recently_unlocked= Log.where("text like ?", "%unlock_account%").order('created_at DESC').limit(10)
+  puts recently_unlocked.size
+  recently_unlocked.each do |log|
+    puts log.text
+  end
+end
+
+def delete_locked_accounts
+  accounts = Account.where(banned: false, created: true, locked: true)
+  accounts.each do |acc|
+    acc.update(banned: true)
+    acc.save
+  end
+end
+
+def update_proxy_cooldown
+
+  proxies = Proxy.all
+  proxies.each do |proxy|
+    proxy.update(unlock_cooldown: DateTime.now - 3.hours)
+    proxy.save
+  end
+end
+
+
+def set_max_slaves_for_proxy
+  Proxy.all.each do |proxy|
+  proxy.update(max_slaves: 1)
+  proxy.save
+  end
+end
+tic
+online_players = Account.where(banned: false, created: true,locked: false)
+logs = Log
+                .includes(:account)
+                .select("DISTINCT ON (account_id) *")
+                .where(account_id: online_players.pluck(:id))
+                .where('created_at > ?', Time.now - 60.minutes).where("text like ?", "%unlocked_account%")
+                .order("account_id, created_at DESC").limit(10)
+                .select(:account_id)
+puts logs.size
+
+toc
+

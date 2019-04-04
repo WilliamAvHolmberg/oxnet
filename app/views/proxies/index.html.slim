@@ -5,11 +5,13 @@ table
     th IP
     th PORT
     th Location
+    th Max Slaves
     th Username
     th Password
     th Created At
     th Max Slaves
     th Linked Account
+    th Locked accounts
     th Auto Assign
     th Lastest Use
     th Time Since Last Use
@@ -28,11 +30,13 @@ table
           a href="/proxies/#{proxy.id}" = proxy.ip
       td = proxy.port
       td = proxy.location
+      td = proxy.max_slaves
       td = proxy.username
       td = proxy.password
       td = proxy.created_at.localtime
       td = proxy.max_slaves
       td = proxy.accounts.where(banned: false, created: true).size
+      td = proxy.accounts.where(banned: false, created: true, locked: true).size
       td = proxy.auto_assign
       td = proxy.last_used.localtime if proxy.last_used != nil
       td = formatted_duration(DateTime.now.utc.to_f - proxy.last_used.to_f)

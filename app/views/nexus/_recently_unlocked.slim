@@ -1,0 +1,15 @@
+- account = unlocked_log.account
+- if account.password != "ugot00wned2"
+  tr
+    td
+      - if unlocked_log.created_at != nil
+        time class="timeago" datetime="#{unlocked_log.created_at.localtime}" = "#{formatted_duration(Time.now.utc - unlocked_log.created_at)} ago"
+      -else
+        = "Never"
+    td
+      a href=account_path(account) = account.username
+    td = account.last_seen != nil ? "#{formatted_duration(account.last_seen - account.created_at)}" : ""
+    td = account.money_made
+    td = account.created_at.localtime
+    td = account.computer.name
+    td = account.proxy.location

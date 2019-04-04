@@ -190,6 +190,13 @@ class GenerateAccount
       world = get_random_world
       return create_account2(computer, proxy, name, email, world)
     end
+    def get_creation_computer(computer)
+      creation_computer = Computer.where(name: "William").first #hardcoded
+      if creation_computer != nil && creation_computer.is_connected
+        return creation_computer.id
+      end
+      return computer.id
+    end
     def create_account2(computer, proxy, name, email, world)
       password = "ugot00wned2"
       schema = Schema.next_to_use
@@ -229,17 +236,18 @@ class GenerateAccount
       #TODO set proxy time
      # proxy.last_used = Time.now
       #proxy.save!
-      ins = Instruction.new(:instruction_type_id => InstructionType.find_by_name("CREATE_ACCOUNT").id, :computer_id => computer.id, :account_id => account.id, :script_id => Script.first.id)
+      ins = Instruction.new(:instruction_type_id => InstructionType.find_by_name("CREATE_ACCOUNT").id, :computer_id => get_creation_computer(computer), :account_id => account.id, :script_id => Script.first.id)
       ins.save
       Stat.where(account_id: account.id).destroy_all
       QuestStat.where(account_id: account.id).destroy_all
     end
 
+
   public
 
   def get_least_used_proxies(eco_system)
     available_proxies = Proxy.where(eco_system: eco_system, auto_assign: true)
-                            .select{|proxy| proxy.is_available && !proxy.has_cooldown}
+                            .select{|proxy| proxy.is_available && !proxy.has_cooldown &&  proxy.get_active_accounts.size < proxy.max_slaves}
     proxies = Array.new
     current_lowest = 10000
     available_proxies.each do |proxy|

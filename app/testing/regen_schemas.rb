@@ -105,7 +105,7 @@ accounts.each do |account|
     next if nonQuests > 0
   end
 
-  next if account.account_type.name != "SLAVE"
+  # next if account.account_type.name != "SLAVE"
 
   puts "Checking for #{account.username}"
 

@@ -67,7 +67,6 @@ def computer_get_respond(instruction_queue)
         ins.update(:completed => true)
         proxy = account.proxy
         proxy.update(unlock_cooldown: DateTime.now.utc + 10.minutes)
-        proxy.save
         return res
       elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account_id == nil
         ins.update(:completed => true)
@@ -918,7 +917,7 @@ def unlock_accounts
         ##instructionType to - UNLOCK ACCOUNT
         proxy = acc.proxy
         proxy.update(unlock_cooldown: DateTime.now.utc + 10.minutes)
-        proxy.save
+        
         unlock_instruction = InstructionType.find_by_name("UNLOCK_ACCOUNT")
         # Check if this instruction is already queued
         existing_instruction = Instruction.get_uncompleted_instructions_10

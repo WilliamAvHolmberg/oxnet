@@ -72,6 +72,10 @@ Rails.application.routes.draw do
     member do
       get 'json'
     end
+    collection do
+      get 'import'
+      post 'import', action: :import, controller: 'proxies'
+    end
   end
   resources :logs
 end

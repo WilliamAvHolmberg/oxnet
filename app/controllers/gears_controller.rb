@@ -4,7 +4,7 @@ class GearsController < ApplicationController
   # GET /gears
   # GET /gears.json
   def index
-    @gears = Gear.all
+    @gears = Gear.where("name NOT LIKE '%account:%'")
   end
 
   # GET /gears/1

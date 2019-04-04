@@ -29,10 +29,10 @@ h1 Listing tasks
             td = task.task_type.name if task.task_type != nil
             td = task.gear.name if task.gear != nil
             td = link_to 'Show', task
-            td = link_to 'Edit', edit_task_path(task)
+            td = link_to 'Edit', edit_task_path(task), {"data-turbolinks" => "false"}
             td = link_to 'Copy', copy_task_path(task)
             td = link_to 'Destroy', task, data: { confirm: 'Are you sure?' }, method: :delete
 
     br
 
-= link_to 'New Task', new_task_path
+= link_to 'New Task', new_task_path, {"data-turbolinks" => "false"}

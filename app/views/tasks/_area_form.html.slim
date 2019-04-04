@@ -1,11 +1,11 @@
 .field
-  - if @areas != nil && @areas.length > 0
+  - if @areas != nil && @areas.size > 0
     = f.label :bank_area
     = collection_select(:task, :bank_area_id, @areas, :id, :name, {include_blank: 'None'})
   - else
     = "Please create a area before creating the task"
   .field
-    - if @areas != nil && @areas.length > 0
+    - if @areas != nil && @areas.size > 0
       = f.label :action_area
       = collection_select(:task, :action_area_id, @areas, :id, :name)
     - else

@@ -30,7 +30,7 @@
     = render partial: 'mining_form', locals: {items: @items, f: f}
   #schema
     .field
-      - if @schemas != nil && @schemas.length > 0
+      - if @schemas != nil && @schemas.size > 0
         = f.label :schema
         = collection_select(:task, :schema_id, @schemas, :id, :name)
       - else

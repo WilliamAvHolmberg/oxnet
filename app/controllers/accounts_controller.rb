@@ -146,7 +146,7 @@ class AccountsController < ApplicationController
 
   def get_player_positions
     online_players = Account.all_accounts_online.select(:id, :username, :world, :created_at, :computer_id).includes(:computer).to_a
-    task_logs = TaskLog.includes(:task).select("DISTINCT ON (account_id) *").where(:created_at => (Time.now.utc - 20.minutes..Time.now.utc), account_id: Account.all_accounts_online.select("id")).where.not(position: nil).order("account_id, created_at DESC").to_a
+    task_logs = TaskLog.includes(:task).select("DISTINCT ON (account_id) *").where(:created_at => (Time.now.utc - 20.minutes..Time.now.utc), account_id: online_players.pluck(:id)).where.not(position: nil).order("account_id, created_at DESC").to_a
     # tasks = Task.select(:id, :name).where(id: task_logs.pluck(:task_id)).to_a
 
     data = []

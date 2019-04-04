@@ -1,6 +1,6 @@
 #break_condition
   .field
-    - if @break_conditions != nil && @break_conditions.length > 0
+    - if @break_conditions != nil && @break_conditions.size > 0
       = f.label :break_condition
       = collection_select(:task, :break_condition_id, @break_conditions, :id, :name, {:id => "break_condition_selection"})
 div class="ml-5"

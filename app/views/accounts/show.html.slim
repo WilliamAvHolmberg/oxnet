@@ -94,7 +94,7 @@
                   - task.requirements.each do |req|
                     p = "#{req.level} #{req.skill.name}"
                 td = link_to 'Show', task
-                td = link_to 'Edit', edit_task_path(task)
+                td = link_to 'Edit', edit_task_path(task), {"data-turbolinks" => "false"}
                 td = link_to 'Copy', copy_task_path(task)
                 td = link_to 'Destroy', task, data: {confirm: 'Are you sure?'}, method: :delete
 

@@ -1,0 +1,11 @@
+h2 Import Proxy List
+= form_tag do |form|
+  = label_tag "Location"
+  = text_field_tag "location", "", :size => 40
+  = label_tag "Auto Assign"
+  = check_box_tag "auto_assign", "", :size => 40
+  = label_tag "Custom Cooldown"
+  = text_field_tag "custom_cooldown", "500", :size=> 40
+  = label_tag "Proxies"
+  = text_area_tag "proxies", "ip:port:username:password", :size=>"40x8"
+  = submit_tag "Import"

@@ -250,6 +250,8 @@
                     a href=account_path(log.account)
                       - if @master_mule_ids[log.account_id] != nil
                         i.fas.fa-crown.pr-1 style="color:orange"
+                      - elsif @mule_ids[log.account_id] != nil
+                        i.fas.fa-democrat.pr-1 style="color:gray"
                       = log.account.username
                   -if amount < 0
                     td style="color:red;" = "#{number_with_delimiter(amount, :delimiter => ",", :separator => ".")}"
@@ -262,6 +264,8 @@
                       a href=account_path(mule_acc_id)
                         - if to_master_mule
                           i.fas.fa-crown.pr-1  style="color:orange"
+                        - elsif @mule_ids[mule_acc_id] != nil
+                          i.fas.fa-democrat.pr-1 style="color:gray"
                         = log.mule
 footer.footer
   .container-fluid

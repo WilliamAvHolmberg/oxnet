@@ -1,6 +1,6 @@
 .field
-  - if Inventory.all != nil && Inventory.all.length > 0
+  - if @inventory != nil && @inventory.size > 0
     = f.label :Inventory
-    = collection_select(:task, :inventory_id, Inventory.all, :id, :name, {include_blank: 'None'})
+    = collection_select(:task, :inventory_id, @inventory, :id, :name, {include_blank: 'None'})
   - else
     = "Please create an inventory before creating the task"

@@ -8,6 +8,7 @@ table
     th Username
     th Password
     th Created At
+    th Max Slaves
     th Linked Account
     th Auto Assign
     th Lastest Use
@@ -30,7 +31,8 @@ table
       td = proxy.username
       td = proxy.password
       td = proxy.created_at.localtime
-      td = proxy.accounts.where(banned: false, created: true).length
+      td = proxy.max_slaves
+      td = proxy.accounts.where(banned: false, created: true).size
       td = proxy.auto_assign
       td = proxy.last_used.localtime if proxy.last_used != nil
       td = formatted_duration(DateTime.now.utc.to_f - proxy.last_used.to_f)
@@ -39,3 +41,4 @@ table
       td = formatted_duration(proxy.unlock_cooldown - DateTime.now.utc)
       td = link_to 'Destroy', proxy, method: :delete
 = link_to 'New', new_proxy_path
+= link_to 'Import'

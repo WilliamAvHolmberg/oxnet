@@ -14,6 +14,37 @@ class ProxiesController < ApplicationController
     @proxy = Proxy.find(params[:id])
   end
 
+  def import
+    if (params[:proxies] != nil)
+      custom_cooldown = params[:custom_cooldown]
+      location = params[:location]
+      count = 0
+      auto_assign = params[:auto_assign]
+      eco_system = EcoSystem.all.first
+      proxy_text = params[:proxies].gsub "\r", ""
+      proxy_text.split("\n").each do |proxy_line|
+        count += 1
+        parts = proxy_line.strip.split(':')
+        next if parts.length < 2
+        ip = parts[0]
+        port = parts[1]
+        username = parts[2]
+        password = parts[3]
+        proxy = Proxy.new(location: "#{location} - #{count}",
+                          ip: ip,
+                          port: port,
+                          username: username,
+                          password: password,
+                          custom_cooldown: custom_cooldown,
+                          eco_system: eco_system,
+                          auto_assign: auto_assign
+        )
+        proxy.save
+      end
+    end
+  end
+
+
   def json
     @proxy = Proxy.find(params[:id])
     host = @proxy.ip
@@ -68,6 +99,6 @@ class ProxiesController < ApplicationController
 
   private
   def proxy_params
-    params.require(:proxy).permit(:location, :ip, :username, :password, :account_id, :port, :eco_system_id, :custom_cooldown, :auto_assign)
+    params.require(:proxy).permit(:location, :ip, :username, :password, :account_id, :port, :eco_system_id, :custom_cooldown, :auto_assign, :max_slaves)
   end
 end

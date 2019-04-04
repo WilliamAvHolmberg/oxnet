@@ -15,8 +15,9 @@ class Schema < ApplicationRecord
 (SELECT COUNT(*) FROM schemas as schB WHERE schB.disabled=true AND schB.original_id=schemas.id) as dead_slaves")
           .order('max_slaves ASC,num_slaves ASC')
     end
+
     def next_to_use
-      results = primary_schemas
+      results = primary_schemas.where("max_slaves > ?", 0)
                    .select("schemas.*,
 (SELECT COUNT(*) FROM schemas as schB WHERE schB.disabled=false AND schB.original_id=schemas.id) as num_slaves")
                     .sort_by{|row| (row.max_slaves - row.num_slaves) }
@@ -55,12 +56,12 @@ class Schema < ApplicationRecord
     else
       puts "#{account.username} time is right (#{tasks.size} tasks)"
       interval = get_time_interval
-      task = tasks.select{|t| t.should_do(account) && t.task_type.name == "QUEST"}.first
-      if task != nil
-        task.update(:start_time => interval.start_time, :end_time => interval.end_time)
-        puts "#{account.username} : quest task shall start"
-        return task
-      end
+      # task = tasks.select{|t| t.should_do(account) && t.task_type.name == "QUEST"}.first
+      # if task != nil
+      #   task.update(:start_time => interval.start_time, :end_time => interval.end_time)
+      #   puts "#{account.username} : quest task shall start"
+      #   return task
+      # end
       task = tasks.select{|t| t.should_do(account)}.first
       if task == nil
         puts "No doable tasks for #{account.username}"

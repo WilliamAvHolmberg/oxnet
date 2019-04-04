@@ -244,6 +244,7 @@ class GenerateAccount
     current_lowest = 10000
     available_proxies.each do |proxy|
       account_amount = proxy.get_active_accounts.size
+      next if account_amount > proxy.max_slaves
       if account_amount < current_lowest
         proxies.clear
         proxies.push(proxy)

@@ -5,13 +5,13 @@
   = f.label :loot_threshold
   = f.number_field :loot_threshold
 .field
-  - if Gear.all != nil && Gear.all.length > 0
+  - if @gears != nil && @gears.size > 0
     = f.label :Gear
-    = collection_select(:task, :gear_id, Gear.all, :id, :name)
+    = collection_select(:task, :gear_id, @gears, :id, :name)
   - else
     = "Please create a gear before creating the task"
 .field
-  - if @items != nil && @items.length > 0
+  - if @items != nil && @items.size > 0
     = f.label :Food
     = collection_select(:task, :food_id, @items, :id, :item_name)
   - else

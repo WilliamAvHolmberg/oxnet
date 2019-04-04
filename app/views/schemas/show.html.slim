@@ -2,10 +2,10 @@ p#notice = notice
 
 h2 = @schema.name
 
-h3 Accounts using this schema
-- @schema.accounts.all.each do |account|
-  p = account.login
-  p = "total duration: #{@schema.total_time_per_day}"
+/ h3 Accounts using this schema
+/ - @schema.accounts.all.each do |account|
+/   p = account.login
+/   p = "total duration: #{@schema.total_time_per_day}"
 h3 Tasks associated to this schema
 table
   th Name
@@ -28,7 +28,7 @@ table
       td = link_to 'Move_up', move_up_task_schema_path(schema: @schema, task_id: task.id)
       td = link_to 'Move_down', move_down_task_schema_path(schema: @schema, task_id: task.id)
 
-= link_to 'New Task', "#{new_task_path()}?schema_id=#{@schema.id}"
+= link_to 'New Task', "#{new_task_path()}?schema_id=#{@schema.id}", {"data-turbolinks" => "false"}
 h3 = "Schedule for this schema. Total-time: #{@schema.total_time_per_day} minutes out of #{24*60} minutes"
 
 table

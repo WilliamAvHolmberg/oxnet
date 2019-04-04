@@ -5,6 +5,21 @@ require 'net/ping'
 require 'acts_as_list'
 require_relative 'generate_account'
 
+default_port = 43594
+server_port = default_port
+
+#ruby app/nexus.rb -port 1
+prevArg = ""
+ARGV.each do|a|
+  if prevArg == "-port"
+    val = a.to_i
+    server_port += val if val <= 10
+    server_port = val if val > 10
+  end
+  prevArg = a
+end
+puts "Oxnet server launched with port #{server_port} (+#{server_port - default_port})"
+
 @hello = 0
 def db_configuration
   db_configuration_file = File.join(File.expand_path('..', __FILE__), '..', 'config', 'database.yml')
@@ -34,7 +49,7 @@ def computer_get_respond(instruction_queue)
 
     puts "ACC: #{ins.account}"
     serverAddress = getServerAddress
-    
+
     if ins.account != nil
       if ins.instruction_type.name == "CREATE_ACCOUNT"
         account = ins.account
@@ -52,7 +67,6 @@ def computer_get_respond(instruction_queue)
         ins.update(:completed => true)
         proxy = account.proxy
         proxy.update(unlock_cooldown: DateTime.now.utc + 10.minutes)
-        proxy.save
         return res
       elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account_id == nil
         ins.update(:completed => true)
@@ -566,8 +580,7 @@ def computer_thread(client, computer)
       account = Account.where(login: email).first
       if account != nil
         puts "Account is not null"
-        account.update(locked: false, created: true, password: new_password)
-        account.save
+        account.update(locked: false, banned: false, created: true, password: new_password)
       end
       log = Log.new(computer_id: computer.id,account_id: account.id, text: respond)
       log.save
@@ -906,7 +919,7 @@ def unlock_accounts
     accounts = accounts.sort_by{|acc|acc.get_total_level}.reverse
     accounts.each do |acc|
       if !@generate_account.canUnlockEmail(acc.login) || (Time.now.utc - acc.last_seen) > 6.hours
-        acc.update(banned: true)
+        acc.update(banned: true, last_seen: Time.now.utc)
         next
       end
       computer = acc.computer if acc.computer_id != nil
@@ -914,8 +927,14 @@ def unlock_accounts
         ##instructionType to - UNLOCK ACCOUNT
         proxy = acc.proxy
         proxy.update(unlock_cooldown: DateTime.now.utc + 10.minutes)
-        proxy.save
+
         unlock_instruction = InstructionType.find_by_name("UNLOCK_ACCOUNT")
+        # Check if this instruction is already queued
+        existing_instruction = Instruction.get_uncompleted_instructions_10
+                                   .where(instruction_type_id: unlock_instruction.id, computer_id: computer.id, account_id: acc.id, script_id: Script.first.id).limit(1).first
+        next if existing_instruction != nil && existing_instruction.is_relevant
+
+
         Instruction.new(:instruction_type_id => unlock_instruction.id, :computer_id => get_creation_computer(computer), :account_id => acc.id, :script_id => Script.first.id).save
         Log.new(computer_id: computer.id, account_id: acc.id, text: "Instruction created")
         puts "instruction for #{acc.username} to create new client at #{acc.computer.name}"
@@ -968,8 +987,7 @@ while !connection_established?
   sleep 1
 end
 
-
-server = TCPServer.new 43594 #Server bind to port 43594
+server = TCPServer.new server_port #Server bind to port 43594
 #controllerThread = Thread.new(controller_thread)
 def require_all(_dir)
   Dir[File.expand_path(File.join(File.dirname(File.absolute_path(__FILE__)), _dir)) + "/**/*.rb"].each do |file|
@@ -990,7 +1008,7 @@ loop do
     sleep 1
   end
 
-  if added_main_thread == false
+  if added_main_thread == false && server_port == default_port
     Thread.new do
       while true
         begin
@@ -1009,7 +1027,7 @@ loop do
       end
     end
   end
-  if added_account_thread == false
+  if added_account_thread == false && server_port == default_port
     Thread.new do
       while true
         begin
@@ -1090,5 +1108,3 @@ loop do
     puts "errooorororo"
   end
 end
-
-

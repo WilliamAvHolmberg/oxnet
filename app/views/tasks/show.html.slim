@@ -39,7 +39,7 @@ h1 Reqs
   p = req.skill.name
   p = req.level
 
-=> link_to 'Edit', edit_task_path(@task)
+=> link_to 'Edit', edit_task_path(@task), {"data-turbolinks" => "false"}
 '|
 =< link_to 'Back', tasks_path
 

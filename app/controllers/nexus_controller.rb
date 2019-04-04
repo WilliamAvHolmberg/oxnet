@@ -4,34 +4,28 @@ class NexusController < ApplicationController
   def show
     @proxies = Proxy.all
     @connected_computers = Computer.all.select{|comp|comp.is_connected}
-    @mule_logs = MuleLog.includes(:account).where("created_at > NOW() - INTERVAL '? hours ? minutes'", Time.now.hour, Time.now.min).sort_by(&:created_at).reverse
-    @mule_logs_last_2_hours = MuleLog.includes(:account).where("created_at > NOW() - INTERVAL '? hours'", 2).sort_by(&:created_at).reverse
-    @mule_logs_last_24_hours = MuleLog.includes(:account).where("created_at > NOW() - INTERVAL '? hours'", 24).sort_by(&:created_at).reverse
-    @recently_banned = Account.includes(:stats, :computer).where(banned: true, created: true).where("last_seen > NOW() - INTERVAL '2 days'").order("last_seen DESC").limit(10).to_a
-
     @available_accounts = Account.all_available_accounts
     @active_accounts = @available_accounts.select{|acc| !acc.is_available}
     @mules = @available_accounts.select{|acc| acc.account_type.name.include? "MULE"}
     @slaves = @available_accounts.select{|acc| acc.account_type.name == "SLAVE"}
-    @latest_task_logs = TaskLog.includes(:task, :account).limit(5).order('id desc').to_a
     @new_accounts = Account.includes(:stats).where("created_at > NOW() - INTERVAL '? hours' AND created", 1).order("created_at DESC").limit(10)
-    online_players = Account.where(banned: false, created: true,locked: false)
-    @unlocked_logs = Log
-                     .where(account_id: @available_accounts.pluck(:id))
-                     .where('created_at > ?', Time.now - 120.minutes).where("text like ?", "%unlocked_account%")
-                     .order("created_at DESC")
+    @recently_banned = Account.includes(:stats, :computer).where(banned: true, created: true).where("last_seen > NOW() - INTERVAL '2 days'").order("last_seen DESC").limit(10).to_a
+    @mule_logs = MuleLog.includes(:account).where("created_at > NOW() - INTERVAL '? hours ? minutes'", Time.now.hour, Time.now.min).sort_by(&:created_at).reverse
+    @mule_logs_last_2_hours = MuleLog.includes(:account).where("created_at > NOW() - INTERVAL '? hours'", 2).reverse
+    @mule_logs_last_24_hours = MuleLog.includes(:account).where("created_at > NOW() - INTERVAL '? hours'", 24).reverse
+    @latest_task_logs = TaskLog.includes(:task, :account).limit(5).order('id desc').to_a
 
     task_logs = TaskLog
                     .includes(:task)
                     .select("DISTINCT ON (account_id) *")
-                    .where(:created_at => (Time.now.utc - 20.minutes..Time.now.utc), account_id: @available_accounts.pluck(:id))
                     .where.not(position: nil)
+                    .where(:created_at => (Time.now.utc - 20.minutes..Time.now.utc), account_id: Account.all_available_accounts)
                     .order("account_id, created_at DESC")
                     .to_a
     @areas = {}
     task_logs.each do |log|
       cur_money = log.money_per_hour.to_i
-      area = log.task.action_area if log.task != nil
+      area = Area.find_by_id(log.task.action_area_id) if log.task != nil
 
       if area != nil
         @areas[area.name] = {money: 0, users: 0} if @areas[area.name] == nil
@@ -40,14 +34,18 @@ class NexusController < ApplicationController
       end
     end
     @areas = @areas.sort
+
     @name_to_id = {}
     @available_accounts.each do |acc|
       @name_to_id[acc.username.downcase] = acc.id
     end
     @master_mule_ids = {}
+    @mule_ids = {}
     @mules.each do |acc|
         if acc.account_type.name == "MASTER_MULE"
           @master_mule_ids[acc.id] = acc
+        else
+          @mule_ids[acc.id] = acc
         end
     end
 

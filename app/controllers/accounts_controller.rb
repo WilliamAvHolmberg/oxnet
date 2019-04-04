@@ -17,6 +17,10 @@ class AccountsController < ApplicationController
       Account.launch_accounts(0)
       redirect_to accounts_path
     end
+    if params[:delete_locked].present?
+      Account.where(created:true, locked: true, banned: false).update_all(banned:true)
+      redirect_to accounts_path
+    end
   end
 
   def show

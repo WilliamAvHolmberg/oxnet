@@ -4,8 +4,13 @@
       .card-header.card-header-primary
         h4.card-title
           i.fas.fa-users
-          = " Accounts (#{@available_accounts.length})"
+          = " Accounts #{@available_accounts.length}"
+          i class="fas fa-lock ml-2"
+          span class="ml-2" = @available_accounts.count { |acc| acc.locked }
+          span class="online ml-2"
+          span class="ml-2" = @available_accounts.count {|acc| !acc.is_available}
           div style="float:right"
+            = link_to "Delete All Locked", "/accounts/?delete_locked=true", class: 'btn btn-primary button'
             = link_to "Launch All Slaves", "/accounts/?launch=true", class: 'btn btn-primary button'
       .card-body.table-responsive
         table.table.table-hover

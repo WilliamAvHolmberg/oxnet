@@ -18,11 +18,13 @@ class TasksController < ApplicationController
   # GET /tasks/new
   def new
     @task = Task.new
+    @time_intervalls = TimeInterval.all
     @areas = Area.all
     @task_types = TaskType.all
     @items = RsItem.all
+    @gears = Gear.where("name NOT ILIKE '%Account:%'")
     @break_conditions = BreakCondition.all
-    @time_intervalls = TimeInterval.all
+    @inventory = Inventory.all
     if params[:schema_id].present?
       @schemas = Schema.where(id: params[:schema_id])
     else
@@ -37,8 +39,10 @@ class TasksController < ApplicationController
     @areas = Area.all
     @task_types = TaskType.all
     @items = RsItem.all
+    @gears = Gear.where("name NOT ILIKE '%Account:%'")
     @break_conditions = BreakCondition.all
-    @schemas = Schema.all
+    @inventory = Inventory.all
+    @schemas = Schema.where(default: false).or(Schema.where(id: @task.schema_id))
     #if we accidentally delete them all, lets create one
     if @task.requirements == nil || @task.requirements.size == 0
       1.times {@task.requirements.build}

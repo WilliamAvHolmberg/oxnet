@@ -220,15 +220,15 @@
               th Highest Skill
             tbody
               - @new_accounts.each do |account|
-                - skill = account.stats.sort_by{ |a, b|( a and b ) ? b <=> a : ( a ? 1 : -1 ) }.select{|s|s.skill.name != "Hitpoints"}.first
+                - stat = account.stats.sort_by{|s|s.level}.select{|s|s.skill.name != "Hitpoints"}.last
                 tr
                   td
                     time class="timeago" datetime="#{account.created_at.localtime}" = "#{formatted_duration(Time.now.utc - account.created_at)} ago"
                   td
                     a href=account_path(account) = account.username
 
-                  - if skill != nil && skill.skill_id != nil
-                    td = "#{skill.skill.name}: #{skill.level}"
+                  - if stat != nil && stat.skill_id != nil
+                    td = "#{stat.skill.name}: #{stat.level}"
                   - else
                     td = "?"
 
@@ -265,6 +265,8 @@
                     a href=account_path(log.account)
                       - if @master_mule_ids[log.account_id] != nil
                         i.fas.fa-crown.pr-1 style="color:orange"
+                      - elsif @mule_ids[log.account_id] != nil
+                        i.fas.fa-democrat.pr-1 style="color:gray"
                       = log.account.username
                   -if amount < 0
                     td style="color:red;" = "#{number_with_delimiter(amount, :delimiter => ",", :separator => ".")}"
@@ -277,6 +279,8 @@
                       a href=account_path(mule_acc_id)
                         - if to_master_mule
                           i.fas.fa-crown.pr-1  style="color:orange"
+                        - elsif @mule_ids[mule_acc_id] != nil
+                          i.fas.fa-democrat.pr-1 style="color:gray"
                         = log.mule
 footer.footer
   .container-fluid

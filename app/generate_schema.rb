@@ -45,8 +45,9 @@ class GenerateSchema
 
     def wipeStats(account)
       account.stats.destroy_all
-      Skill.all.each do |level|
-        Stat.create(:skill => level, :level => 1, :account => account)
+      Skill.all.each do |skill|
+        level = skill.name == "QP" ? 0 : 1
+        Stat.create(:skill => skill, :level => level, :account => account)
         #puts level
       end
     end

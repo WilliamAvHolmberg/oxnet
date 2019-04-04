@@ -1,7 +1,7 @@
 class Skill < ApplicationRecord
   after_initialize :after_initialize
   has_many :tasks
-  has_many :stats
+  has_many :stats,  dependent: :destroy
 
   def after_initialize
     @@cache = nil

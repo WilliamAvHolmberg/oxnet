@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_04_061743) do
+ActiveRecord::Schema.define(version: 2019_04_12_144126) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(version: 2019_04_04_061743) do
     t.integer "money_made"
     t.integer "money_withdrawn", default: 0
     t.boolean "locked", default: false
+    t.boolean "member", default: false
     t.index ["account_type_id"], name: "index_accounts_on_account_type_id"
     t.index ["computer_id"], name: "index_accounts_on_computer_id"
     t.index ["eco_system_id"], name: "index_accounts_on_eco_system_id"
@@ -217,8 +218,8 @@ ActiveRecord::Schema.define(version: 2019_04_04_061743) do
     t.integer "cooldown", default: 0
     t.integer "custom_cooldown", default: 120
     t.boolean "auto_assign", default: true
-    t.datetime "unlock_cooldown", default: "2019-03-03 10:22:17"
-    t.integer "max_slaves", default: 1000, null: false
+    t.datetime "unlock_cooldown", default: "2019-03-04 18:14:08"
+    t.integer "max_slaves", default: 1
     t.index ["account_id"], name: "index_proxies_on_account_id"
     t.index ["eco_system_id"], name: "index_proxies_on_eco_system_id"
   end

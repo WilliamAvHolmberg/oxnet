@@ -755,7 +755,8 @@ def get_account_info_respond(respond, account)
   computer_name = (account.computer == nil ? "" : account.computer.name)
   account_type = (account.account_type == nil ? "" : account.account_type.name)
   created_at = account.created_at.httpdate.gsub!(":", ".") # RFC 1123 compliant date format
-  return "account_info:#{account.id}:#{account_type}:#{schema_name}:#{computer_name}:#{created_at}"
+  member = account.member
+  return "account_info:#{account.id}:#{account_type}:#{schema_name}:#{computer_name}:#{created_at}:#{member}"
 end
 
 def task_log(account, parsed_respond)

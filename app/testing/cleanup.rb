@@ -731,8 +731,7 @@ def test_get_woodcutting_task_respond(task, account)
   log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
   log.save
   res = "task_respond:1:#{json_respond}"
-  puts res
-  return res
+  return json_respond.to_json
 end
 
 

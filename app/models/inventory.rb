@@ -20,6 +20,7 @@ class Inventory < ApplicationRecord
   end
 
   def to_json
+
     items = {}
     if inventory_items != nil && inventory_items.length >= 1
       inventory_items.each do |p|

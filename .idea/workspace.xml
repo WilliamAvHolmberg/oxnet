@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cc712b19-eba9-4483-bc4c-53d431a3e866" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/app/models/inventory.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/inventory.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/nexus.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/nexus.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/testing/cleanup.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/testing/cleanup.rb" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.bundle/" />
     <ignored path="$PROJECT_DIR$/components/" />
@@ -23,8 +25,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/nexus.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="396">
-              <caret line="396" column="20" lean-forward="true" selection-start-line="396" selection-start-column="20" selection-end-line="396" selection-end-column="20" />
+            <state relative-caret-position="388">
+              <caret line="396" column="28" selection-start-line="396" selection-start-column="28" selection-end-line="396" selection-end-column="28" />
             </state>
           </provider>
         </entry>
@@ -32,8 +34,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/testing/cleanup.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="167">
-              <caret line="717" column="2" selection-start-line="717" selection-start-column="2" selection-end-line="734" selection-end-column="12" />
+            <state relative-caret-position="385">
+              <caret line="733" column="29" selection-start-line="733" selection-start-column="29" selection-end-line="733" selection-end-column="29" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/models/inventory.rb">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="295">
+              <caret line="21" column="6" selection-start-line="21" selection-start-column="6" selection-end-line="21" selection-end-column="6" />
             </state>
           </provider>
         </entry>
@@ -41,8 +52,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/models/task.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="100">
-              <caret line="104" column="10" selection-start-line="104" selection-start-column="10" selection-end-line="104" selection-end-column="10" />
+            <state relative-caret-position="183">
+              <caret line="89" column="6" selection-start-line="89" selection-start-column="6" selection-end-line="89" selection-end-column="6" />
             </state>
           </provider>
         </entry>
@@ -50,8 +61,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/models/gear.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="48">
-              <caret line="44" column="44" selection-start-line="44" selection-start-column="44" selection-end-line="44" selection-end-column="44" />
+            <state relative-caret-position="268">
+              <caret line="57" column="19" selection-start-line="57" selection-start-column="19" selection-end-line="57" selection-end-column="19" />
             </state>
           </provider>
         </entry>
@@ -78,8 +89,8 @@
       <find>woodcu</find>
       <find>break_name</find>
       <find>formated_name</find>
-      <find>get_tes</find>
       <find>'</find>
+      <find>get_tes</find>
     </findStrings>
     <replaceStrings>
       <replace>jso</replace>
@@ -104,11 +115,11 @@
         <option value="$PROJECT_DIR$/.ruby-version" />
         <option value="$PROJECT_DIR$/Gemfile" />
         <option value="$PROJECT_DIR$/app/controllers/accounts_controller.rb" />
-        <option value="$PROJECT_DIR$/app/models/inventory.rb" />
-        <option value="$PROJECT_DIR$/app/testing/cleanup.rb" />
-        <option value="$PROJECT_DIR$/app/models/gear.rb" />
         <option value="$PROJECT_DIR$/app/models/rs_item.rb" />
         <option value="$PROJECT_DIR$/app/models/task.rb" />
+        <option value="$PROJECT_DIR$/app/models/inventory.rb" />
+        <option value="$PROJECT_DIR$/app/models/gear.rb" />
+        <option value="$PROJECT_DIR$/app/testing/cleanup.rb" />
         <option value="$PROJECT_DIR$/app/nexus.rb" />
       </list>
     </option>
@@ -304,12 +315,12 @@
       <workItem from="1555064518852" duration="1213000" />
       <workItem from="1555080069861" duration="1124000" />
       <workItem from="1555167057097" duration="1227000" />
-      <workItem from="1555309075247" duration="6685000" />
+      <workItem from="1555309075247" duration="7563000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="11666000" />
+    <option name="totallyTimeSpent" value="12544000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1400" height="987" extended-state="0" />
@@ -419,13 +430,6 @@
     <entry file="file://$PROJECT_DIR$/app/models/inventory_item.rb">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/models/inventory.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="21" column="13" selection-start-line="21" selection-start-column="13" selection-end-line="21" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/.rbenv/versions/2.4.1/lib/ruby/gems/2.4.0/gems/activemodel-5.2.3/lib/active_model/attribute_methods.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="175">
@@ -449,29 +453,36 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/models/gear.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="48">
-          <caret line="44" column="44" selection-start-line="44" selection-start-column="44" selection-end-line="44" selection-end-column="44" />
+        <state relative-caret-position="268">
+          <caret line="57" column="19" selection-start-line="57" selection-start-column="19" selection-end-line="57" selection-end-column="19" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/models/task.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="100">
-          <caret line="104" column="10" selection-start-line="104" selection-start-column="10" selection-end-line="104" selection-end-column="10" />
+        <state relative-caret-position="183">
+          <caret line="89" column="6" selection-start-line="89" selection-start-column="6" selection-end-line="89" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/models/inventory.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="295">
+          <caret line="21" column="6" selection-start-line="21" selection-start-column="6" selection-end-line="21" selection-end-column="6" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/testing/cleanup.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="167">
-          <caret line="717" column="2" selection-start-line="717" selection-start-column="2" selection-end-line="734" selection-end-column="12" />
+        <state relative-caret-position="385">
+          <caret line="733" column="29" selection-start-line="733" selection-start-column="29" selection-end-line="733" selection-end-column="29" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/nexus.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="396" column="20" lean-forward="true" selection-start-line="396" selection-start-column="20" selection-end-line="396" selection-end-column="20" />
+        <state relative-caret-position="388">
+          <caret line="396" column="28" selection-start-line="396" selection-start-column="28" selection-end-line="396" selection-end-column="28" />
         </state>
       </provider>
     </entry>

@@ -59,14 +59,14 @@ class Gear< ApplicationRecord
           head: json_head,
           cape: json_cape,
           neck: json_neck,
-          weapon: json_weapon,
+          mainhand: json_weapon,
           chest: json_chest,
-          shield: json_shield,
+          offhand: json_shield,
           legs: json_legs,
           hands: json_hands,
           feet: json_feet,
           ring: json_ring,
-          ammunition: json_ammunition,
+          quiver: json_ammunition,
           ammunition_amount: json_ammunition_amount
       }
       return json_gear

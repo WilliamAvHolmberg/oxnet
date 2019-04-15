@@ -190,9 +190,10 @@ class GenerateAccount
       world = get_random_world
       return create_account2(computer, proxy, name, email, world)
     end
+    @use_default_computer = false
     def get_creation_computer(computer)
       creation_computer = Computer.where(name: "William").first #hardcoded
-      if creation_computer != nil && creation_computer.is_connected
+      if creation_computer != nil && creation_computer.is_connected && @use_default_computer
         return creation_computer.id
       end
       return computer.id

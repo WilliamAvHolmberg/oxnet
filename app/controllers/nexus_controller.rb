@@ -3,26 +3,28 @@ class NexusController < ApplicationController
 
   def show
     @proxies = Proxy.all
-    @connected_computers = Computer.all.select{|comp|comp.is_connected}
-    @available_accounts = Account.all_available_accounts
+    @connected_computers = Computer.all.order(:id).select{|comp|comp.is_connected}
+    @available_accounts = Account.all_available_accounts.eager_load(:account_type)
     @active_accounts = @available_accounts.select{|acc| !acc.is_available}
     @mules = @available_accounts.select{|acc| acc.account_type.name.include? "MULE"}
     @slaves = @available_accounts.select{|acc| acc.account_type.name == "SLAVE"}
-    @new_accounts = Account.includes(:stats).where("created_at > NOW() - INTERVAL '? hours' AND created", 1).order("created_at DESC").limit(10)
-    @recently_banned = Account.includes(:stats, :computer).where(banned: true, created: true).where("last_seen > NOW() - INTERVAL '2 days'").order("last_seen DESC").limit(10).to_a
-    @mule_logs = MuleLog.includes(:account).where("created_at > NOW() - INTERVAL '? hours ? minutes'", Time.now.hour, Time.now.min).sort_by(&:created_at).reverse
-    @mule_logs_last_2_hours = MuleLog.includes(:account).where("created_at > NOW() - INTERVAL '? hours'", 2).reverse
-    @mule_logs_last_24_hours = MuleLog.includes(:account).where("created_at > NOW() - INTERVAL '? hours'", 24).reverse
-    @latest_task_logs = TaskLog.includes(:task, :account).limit(5).order('id desc').to_a
+    @schemas = Schema.where(default: false).to_a
+    @new_accounts = Account.includes(:stats, :schema).where("accounts.created_at > NOW() - INTERVAL '? hours' AND created", 1).order("accounts.created_at DESC").limit(10)
+    @recently_banned = Account.includes(:stats, :computer).where(banned: true, created: true).where("accounts.last_seen > NOW() - INTERVAL '2 days'").order("accounts.last_seen DESC").limit(10).to_a
+    @mule_logs = MuleLog.includes(:account).where("mule_logs.created_at > NOW() - INTERVAL '? hours ? minutes'", Time.now.hour, Time.now.min).to_a.sort_by(&:created_at).reverse
+    @mule_logs_last_2_hours = MuleLog.includes(:account).where("mule_logs.created_at > NOW() - INTERVAL '? hours'", 2).to_a.reverse
+    @mule_logs_last_24_hours = MuleLog.includes(:account).where("mule_logs.created_at > NOW() - INTERVAL '? hours'", 24).to_a.reverse
+    @latest_task_logs = TaskLog.includes(:task, :account).limit(5).order('task_logs.id desc').to_a
 
+    @areas = {}
     task_logs = TaskLog
                     .includes(:task)
-                    .select("DISTINCT ON (account_id) *")
+                    .select("DISTINCT ON (task_logs.account_id) *")
                     .where.not(position: nil)
-                    .where(:created_at => (Time.now.utc - 20.minutes..Time.now.utc), account_id: Account.all_available_accounts)
-                    .order("account_id, created_at DESC")
+                    .where(:created_at => (Time.now.utc - 20.minutes..Time.now.utc))
+                    .where(account_id: @active_accounts.pluck(:id))
+                    .order("task_logs.account_id, task_logs.created_at DESC")
                     .to_a
-    @areas = {}
     task_logs.each do |log|
       cur_money = log.money_per_hour.to_i
       area = Area.find_by_id(log.task.action_area_id) if log.task != nil

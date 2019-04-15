@@ -47,15 +47,21 @@ def computer_get_respond(instruction_queue)
   else
     ins = instruction_queue.pop
 
-    puts "ACC: #{ins.account}"
+    puts "ACC: #{ins.account.username}"
     serverAddress = getServerAddress
-
+    
     if ins.account != nil
       if ins.instruction_type.name == "CREATE_ACCOUNT"
         account = ins.account
         log = Log.new(account_id: ins.account.id, text: "Account:#{ins.account.login} Handed out for the first time to: #{ins.computer.name}")
         log.save
-        res =  "create_account:#{account.username}:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + account.world.chomp + ":NEX" + ":http://#{serverAddress}:3000/accounts/#{account.id}/json"
+        res =  "create_account:#{account.username}:" + account.login + ":" + account.password + ":" +
+            account.proxy.ip.chomp + ":" +
+            account.proxy.port.chomp + ":" +
+            account.proxy.username.chomp + ":" +
+            account.proxy.password.chomp + ":" +
+            account.world.chomp +
+            ":NEX" + ":http://#{serverAddress}:3000/accounts/#{account.id}/json"
         ins.update(:completed => true)
         account.proxy.update(last_used: DateTime.now.utc)
         return res
@@ -595,7 +601,14 @@ def computer_thread(client, computer)
       #puts "Log from: #{computer.name}:::log:#{respond}"
       log = Log.new(computer_id: computer.id, text: respond)
       log.save
-      client.puts computer_get_respond(instruction_queue)
+      begin
+        response = computer_get_respond(instruction_queue)
+      rescue Exception => ex
+        response = ""
+        puts ex
+        puts ex.backtrace
+      end
+      client.puts response
       #puts "sent"
     else
       client.puts "ok"
@@ -874,6 +887,36 @@ def create_account_thread
     end
   end
 end
+def proxy_thread
+  loop do
+    begin
+      while !connection_established?
+        puts "Connecting..."
+        ActiveRecord::Base.establish_connection(db_configuration["development"])
+        sleep 1
+      end
+      loop do
+        started = Time.now
+        Proxy.where(auto_assign: true).all do |proxy|
+          proxy.is_available
+          sleep(0.5)
+        end
+        seconds_taken = Time.now - started
+        if(seconds_taken < 60.seconds)
+          sleep((60 - seconds_taken).seconds)
+        end
+      end
+    rescue => error
+      puts error
+      puts error.backtrace
+      puts "account threadloop crashed"
+      ActiveRecord::Base.clear_active_connections!
+      sleep(10.seconds)
+    ensure
+      ActiveRecord::Base.clear_active_connections!
+    end
+  end
+end
 
 def connection_established?
   begin
@@ -1001,6 +1044,7 @@ require_all("./models/")
 Thread::abort_on_exception = true
 added_main_thread = false
 added_account_thread = false
+added_proxy_thread = false
 loop do
   while !connection_established?
     puts "Connecting..."
@@ -1032,7 +1076,7 @@ loop do
       while true
         begin
           added_account_thread = true
-          puts "new accout thread"
+          puts "new account thread"
           thread =  Thread.fork{create_account_thread}
           ActiveSupport::Dependencies.interlock.permit_concurrent_loads do
             thread.join # outer thread waits here, but has no lock
@@ -1042,6 +1086,25 @@ loop do
           puts ex
           puts ex.backtrace
           puts "ERROR [NEW ACCOUNT THREAD]"
+        end
+      end
+    end
+  end
+  if added_proxy_thread == false && server_port == default_port + 1
+    Thread.new do
+      while true
+        begin
+          added_proxy_thread = true
+          puts "new proxy thread"
+          thread =  Thread.fork{proxy_thread}
+          ActiveSupport::Dependencies.interlock.permit_concurrent_loads do
+            thread.join # outer thread waits here, but has no lock
+          end
+          thread.join
+        rescue Exception => ex
+          puts ex
+          puts ex.backtrace
+          puts "ERROR [NEW PROXY THREAD]"
         end
       end
     end
@@ -1108,3 +1171,5 @@ loop do
     puts "errooorororo"
   end
 end
+
+

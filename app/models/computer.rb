@@ -50,10 +50,11 @@ class Computer < ApplicationRecord
   @lastConnected = 0
   def get_connected_accounts_count
     @lastGotConnected = Time.now - 100.hours if @lastGotConnected == nil
-    return @lastConnected if Time.now - @lastGotConnected < 5.seconds
+    return @lastConnected if Time.now - @lastGotConnected < 5.seconds # Caching
     @lastGotConnected = Time.now
+
     min_ago = Time.now.utc - 1.minutes
-    @lastConnected = Account.where(computer: self, banned: false, locked:false, created: true, last_seen: min_ago..Time.now.utc).count
+    @lastConnected = Account.where(computer_id: self.id, banned: false, locked:false, created: true, last_seen: min_ago..Time.now.utc).count
     return @lastConnected
   end
 

@@ -87,7 +87,10 @@
                     a href=computer_path(comp)
                       = comp.name
                   td = @available_accounts.select { |acc| acc.computer_id == comp.id }.size
-                  td = comp.get_connected_accounts_count
+                  td
+                    span.online.mr-2
+                    = @active_accounts.select {|acc| acc.computer_id == comp.id }.size
+                    / = " (#{comp.get_connected_accounts_count})"
                   td = comp.max_slaves
     .col-md-4
       .card.card-chart
@@ -193,8 +196,9 @@
               th Computer
               th IP
             tbody id="recent_bans"
-              - @recently_banned.each do |acc|
-                = render partial:'nexus/recentlybanned', locals: {account: acc}
+              = render partial:'nexus/recentlybanned', collection: @recently_banned, as: :account
+              / - @recently_banned.each do |acc|
+              /   = render partial:'nexus/recentlybanned', locals: {account: acc}
                 / - skill = log.account.stats.order("level DESC, skill_id ASC").limit(2).select{|s|s.skill.name != "Hitpoints"}.first
                 / tr
                 /   td
@@ -216,21 +220,19 @@
             thead.text-warning
               th Time
               th Account Name
-
-              th Highest Skill
+              th Proxy
+              th Schema
             tbody
               - @new_accounts.each do |account|
-                - stat = account.stats.sort_by{|s|s.level}.select{|s|s.skill.name != "Hitpoints"}.last
+                - proxy = @proxies.select {|p|p.id == account.proxy_id}.first
+                - original_schema = @schemas.select{ |s| s.id == account.schema.original_id }.first
                 tr
                   td
                     time class="timeago" datetime="#{account.created_at.localtime}" = "#{formatted_duration(Time.now.utc - account.created_at)} ago"
                   td
                     a href=account_path(account) = account.username
-
-                  - if stat != nil && stat.skill_id != nil
-                    td = "#{stat.skill.name}: #{stat.level}"
-                  - else
-                    td = "?"
+                  td = "#{proxy == nil ? "" : proxy.location}"
+                  td = "#{original_schema == nil ? "?" : original_schema.name}"
 
 
     .col-lg-6.col-md-12
@@ -262,7 +264,7 @@
                   td
                     time class="timeago" datetime="#{log.created_at.localtime}" = "#{formatted_duration(Time.now.utc - log.created_at)} ago"
                   td
-                    a href=account_path(log.account)
+                    a href=account_path(log.account) style="text-decoration: #{log.account.banned ? 'line-through' : ''};"
                       - if @master_mule_ids[log.account_id] != nil
                         i.fas.fa-crown.pr-1 style="color:orange"
                       - elsif @mule_ids[log.account_id] != nil
@@ -276,7 +278,7 @@
                     td = log.mule
                   -else
                     td
-                      a href=account_path(mule_acc_id)
+                      a href=account_path(mule_acc_id) 
                         - if to_master_mule
                           i.fas.fa-crown.pr-1  style="color:orange"
                         - elsif @mule_ids[mule_acc_id] != nil

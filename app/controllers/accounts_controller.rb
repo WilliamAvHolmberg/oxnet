@@ -18,8 +18,11 @@ class AccountsController < ApplicationController
       redirect_to accounts_path
     end
     if params[:delete_locked].present?
-      Account.where(created:true, locked: true, banned: false).update_all(banned:true)
-      redirect_to accounts_path
+      changes_made = Account.where(created:true, locked: true, banned: false).update_all(banned:true)
+      respond_to do |format|
+        format.html { redirect_to accounts_path, notice: "#{changes_made} Accounts were banned." }
+      end
+      # redirect_to accounts_path
     end
   end
 

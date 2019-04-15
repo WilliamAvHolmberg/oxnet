@@ -155,7 +155,7 @@ def get_task_respond(task, account)
     return get_agility_task_respond(task, account)
   when "WOODCUTTING"
     puts " res wc respond"
-    return get_test_oodcutting_task_respond(task, account)
+    return get_test_woodcutting_task_respond(task, account)
     #other cases, such as combat, druids.. etc
   when "MINING"
     puts " res mining respond"

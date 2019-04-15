@@ -52,7 +52,7 @@ class Gear< ApplicationRecord
     if hands != nil then json_hands = hands.to_json else json_hands = "none" end
     if feet != nil then json_feet = feet.to_json else json_feet = "none" end
     if ring != nil then json_ring = ring.to_json else json_ring = "none" end
-    if ammunition != nil then json_ammunition = ammunition.to_json else json_json_ammunition = "none" end
+    if ammunition != nil then json_ammunition = ammunition.to_json else json_ammunition = "none" end
         if ammunition_amount != nil then json_ammunition_amount= ammunition_amount else json_ammunition_amount="none" end
 
       json_gear = {

@@ -14,6 +14,13 @@ class RsItem < ApplicationRecord
     return "#{item_name},#{item_id}"
   end
 
+  def to_json
+    info = {
+        'id' => item_id,
+        'name' => item_name
+    }
+  end
+
   @@cache = {}
   def self.find_quick(name, stackable)
     key = "#{name}:#{stackable}"

@@ -27,7 +27,7 @@ class AccountsController < ApplicationController
     @account = Account.find(params[:id])
     @tasks = @account.schema.tasks if !@account.schema.nil?
 
-    @isOnline = !@account.is_available
+    @isOnline = Time.now - @account.last_seen < 30.seconds
     @launchTitle = ""
     if @isOnline
       #do nothing

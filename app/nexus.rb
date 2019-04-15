@@ -155,7 +155,7 @@ def get_task_respond(task, account)
     return get_agility_task_respond(task, account)
   when "WOODCUTTING"
     puts " res wc respond"
-    return get_woodcutting_task_respond(task, account)
+    return get_test_oodcutting_task_respond(task, account)
     #other cases, such as combat, druids.. etc
   when "MINING"
     puts " res mining respond"
@@ -373,6 +373,28 @@ def get_mining_task_respond(task, account)
   log.save
   puts "sending resp"
   res = "task_respond:1:#{task_type}:#{task.id}:#{bank_area}:#{action_area}:#{axeID}:#{axe_name}:#{ores}:#{break_condition}:#{task_duration}:#{level_goal}:#{head}:#{cape}:#{neck}:#{weapon}:#{chest}:#{shield}:#{legs}:#{hands}:#{feet}:#{ring}:#{ammunition}:#{ammunition_amount}"
+  return res
+end
+
+def get_test_woodcutting_task_respond(task, account)
+  update_woodcutting_task(task, account)
+  if task.bank_area != nil then bank_area = task.bank_area.coordinates else bank_area = "none" end
+  if task.action_area != nil then action_area = task.action_area.coordinates else action_area = "none" end
+  json_respond = {
+      'task_type' => task.task_type.name,
+      'task_id' => task.id,
+      'gear' => task.gear.to_json,
+      'inventory' => task.inventory.to_json,
+      'break_condition' => task.break_condition_to_json,
+      'bank_area' => bank_area,
+      'action_area' => action_area,
+      'axe' => task.axe.to_json,
+      'tree_name' => task.treeName,
+  }
+  log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
+  log.save
+  res = "task_respond:1:#{json_respond}"
+  puts res
   return res
 end
 def get_woodcutting_task_respond(task, account)

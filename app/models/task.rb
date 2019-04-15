@@ -100,9 +100,9 @@ class Task < ApplicationRecord
         level_goal = break_after
       end
       json_break = {
-          'type' => break_name,
-          'task_duration' => task_duration,
-          'level_goal' => level_goal
+          type:break_name,
+          task_duration: task_duration,
+          level_goal: level_goal
       }
       return json_break
   end

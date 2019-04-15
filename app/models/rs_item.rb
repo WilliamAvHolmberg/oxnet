@@ -16,9 +16,10 @@ class RsItem < ApplicationRecord
 
   def to_json
     info = {
-        'id' => item_id,
-        'name' => item_name
+        id: item_id,
+        name: item_name
     }
+    return info
   end
 
   @@cache = {}

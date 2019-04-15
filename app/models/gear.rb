@@ -56,18 +56,18 @@ class Gear< ApplicationRecord
         if ammunition_amount != nil then json_ammunition_amount= ammunition_amount else json_ammunition_amount="none" end
 
       json_gear = {
-          'head' => json_head,
-          'cape' => json_cape,
-          'neck' => json_neck,
-          'weapon' => json_weapon,
-          'chest' => json_chest,
-          'shield' => json_shield,
-          'legs' => json_legs,
-          'hands' => json_hands,
-          'feet' => json_feet,
-          'ring' => json_ring,
-          'ammunition' => json_ammunition,
-          'ammunition_amount' => json_ammunition_amount
+          head: json_head,
+          cape: json_cape,
+          neck: json_neck,
+          weapon: json_weapon,
+          chest: json_chest,
+          shield: json_shield,
+          legs: json_legs,
+          hands: json_hands,
+          feet: json_feet,
+          ring: json_ring,
+          ammunition: json_ammunition,
+          ammunition_amount: json_ammunition_amount
       }
       return json_gear
   end

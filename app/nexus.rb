@@ -189,9 +189,13 @@ def get_quest_task_respond(task, account)
 
   log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
   log.save
-  puts "sending resp"
-  res = "task_respond:1:#{task_type}:#{task.id}:#{task.quest.name}"
-  return res
+  json_respond = {
+      respond_type: "task_respond",
+      task_type:task_type,
+      task_id: task.id,
+      quest_name: task.quest.name
+  }
+  return json_respond.to_json
 end
 
 def account_get_direct_respond(message, account)

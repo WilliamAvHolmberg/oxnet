@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cc712b19-eba9-4483-bc4c-53d431a3e866" name="Default Changelist" comment="" />
+    <list default="true" id="cc712b19-eba9-4483-bc4c-53d431a3e866" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/app/nexus.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/nexus.rb" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/.bundle/" />
     <ignored path="$PROJECT_DIR$/components/" />
     <ignored path="$PROJECT_DIR$/log/" />
@@ -18,11 +20,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/nexus.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="388">
-              <caret line="396" column="28" selection-start-line="396" selection-start-column="28" selection-end-line="396" selection-end-column="28" />
+            <state relative-caret-position="212">
+              <caret line="191" column="18" lean-forward="true" selection-start-line="191" selection-start-column="18" selection-end-line="191" selection-end-column="18" />
             </state>
           </provider>
         </entry>
@@ -54,7 +56,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/models/gear.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="14">
@@ -85,9 +87,10 @@
       <find>woodcu</find>
       <find>break_name</find>
       <find>formated_name</find>
-      <find>'</find>
       <find>get_tes</find>
       <find>test</find>
+      <find>'</find>
+      <find>quest</find>
     </findStrings>
     <replaceStrings>
       <replace>jso</replace>
@@ -116,8 +119,8 @@
         <option value="$PROJECT_DIR$/app/models/task.rb" />
         <option value="$PROJECT_DIR$/app/models/inventory.rb" />
         <option value="$PROJECT_DIR$/app/testing/cleanup.rb" />
-        <option value="$PROJECT_DIR$/app/nexus.rb" />
         <option value="$PROJECT_DIR$/app/models/gear.rb" />
+        <option value="$PROJECT_DIR$/app/nexus.rb" />
       </list>
     </option>
   </component>
@@ -312,12 +315,12 @@
       <workItem from="1555064518852" duration="1213000" />
       <workItem from="1555080069861" duration="1124000" />
       <workItem from="1555167057097" duration="1227000" />
-      <workItem from="1555309075247" duration="8227000" />
+      <workItem from="1555309075247" duration="8493000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="13208000" />
+    <option name="totallyTimeSpent" value="13474000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1400" height="987" extended-state="0" />
@@ -469,17 +472,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/nexus.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="388">
-          <caret line="396" column="28" selection-start-line="396" selection-start-column="28" selection-end-line="396" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/models/gear.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="14">
           <caret line="46" column="76" lean-forward="true" selection-start-line="46" selection-start-column="76" selection-end-line="46" selection-end-column="76" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/nexus.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="212">
+          <caret line="191" column="18" lean-forward="true" selection-start-line="191" selection-start-column="18" selection-end-line="191" selection-end-column="18" />
         </state>
       </provider>
     </entry>

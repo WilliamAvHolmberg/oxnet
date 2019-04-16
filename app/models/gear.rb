@@ -39,5 +39,37 @@ class Gear< ApplicationRecord
             Ammunition:#{ammunition1}\n
             Ammunition Amount:#{ammunition_amount1}"
   end
+  
+  
+  def to_json
+    if head != nil then json_head = head.to_json else json_head = "none" end
+    if cape != nil then json_cape = cape.to_json else json_cape = "none" end
+    if neck != nil then json_neck = neck.to_json else json_neck = "none" end
+    if weapon != nil then json_weapon = weapon.to_json else json_weapon = "none" end
+    if chest != nil then json_chest = chest.to_json else json_chest = "none" end
+    if shield != nil then json_shield = shield.to_json else json_shield = "none" end
+    if legs != nil then json_legs = legs.to_json else json_legs = "none" end
+    if hands != nil then json_hands = hands.to_json else json_hands = "none" end
+    if feet != nil then json_feet = feet.to_json else json_feet = "none" end
+    if ring != nil then json_ring = ring.to_json else json_ring = "none" end
+    if ammunition != nil then json_ammunition = ammunition.to_json else json_ammunition = "none" end
+        if ammunition_amount != nil then json_ammunition_amount= ammunition_amount else json_ammunition_amount="none" end
+
+      json_gear = {
+          head: json_head,
+          cape: json_cape,
+          neck: json_neck,
+          mainhand: json_weapon,
+          chest: json_chest,
+          offhand: json_shield,
+          legs: json_legs,
+          hands: json_hands,
+          feet: json_feet,
+          ring: json_ring,
+          quiver: json_ammunition,
+          ammunition_amount: json_ammunition_amount
+      }
+      return json_gear
+  end
 
 end

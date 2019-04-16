@@ -18,4 +18,15 @@ class Inventory < ApplicationRecord
     puts "out of parsed mess"
     return message
   end
+
+  def to_json
+
+    items = {}
+    if inventory_items != nil && inventory_items.length >= 1
+      inventory_items.each do |p|
+        items[p.item.item_name] = { id: p.item.item_id, amount:p.amount, buy_amount: p.buy_amount}
+      end
+    end
+    return items
+  end
 end

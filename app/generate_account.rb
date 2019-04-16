@@ -195,9 +195,10 @@ class GenerateAccount
       world = get_random_world
       return create_account2(computer, proxy, name, email, world)
     end
+    @use_default_computer = false
     def get_creation_computer(computer)
       creation_computer = Computer.where(name: "William").first #hardcoded
-      if creation_computer != nil && creation_computer.is_connected
+      if creation_computer != nil && creation_computer.is_connected && @use_default_computer
         return creation_computer.id
       end
       return computer.id
@@ -207,7 +208,7 @@ class GenerateAccount
       schema = Schema.next_to_use
       mule = Account.where(username: "PetDhaL").first #not needed. random
       account_type = "SLAVE"
-      if get_number_of_mules < 2
+      if get_number_of_mules < 5
         account_type = "MULE"
         schema = Schema.primary_schemas.order("max_slaves DESC").first
         other_mule = Account.where(banned:false, account_type: AccountType.where(:name => "MULE")).first

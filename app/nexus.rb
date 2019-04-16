@@ -147,7 +147,17 @@ def get_mule_withdraw_task_respond(account)
 
   log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
   log.save
-  res = "task_respond:1:#{task_type.name}:#{slave_name}:#{world.chomp}:#{item_id.chomp}:#{item_amount.chomp}:#{position.chomp}"
+  json_respond = {
+      respond_type: "task_respond",
+      task_type:task_type.name,
+      task_id: task.id,
+      slave_name: slave_name,
+      world: world,
+      item_id: item_id.chomp,
+      item_amount: item_amount.chomp,
+      position: position.chomp
+  }
+  res = json_respond.to_json
   task.update(:executed => true)
   task.save
   puts res
@@ -161,7 +171,7 @@ def get_task_respond(task, account)
     return get_agility_task_respond(task, account)
   when "WOODCUTTING"
     puts " res wc respond"
-    return get_woodcutting_task_respond(task, account)
+    return get_test_woodcutting_task_respond(task, account)
     #other cases, such as combat, druids.. etc
   when "MINING"
     puts " res mining respond"
@@ -195,9 +205,13 @@ def get_quest_task_respond(task, account)
 
   log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
   log.save
-  puts "sending resp"
-  res = "task_respond:1:#{task_type}:#{task.id}:#{task.quest.name}"
-  return res
+  json_respond = {
+      respond_type: "task_respond",
+      task_type:task_type,
+      task_id: task.id,
+      quest_name: task.quest.name
+  }
+  return json_respond.to_json
 end
 
 def account_get_direct_respond(message, account)
@@ -379,6 +393,29 @@ def get_mining_task_respond(task, account)
   log.save
   puts "sending resp"
   res = "task_respond:1:#{task_type}:#{task.id}:#{bank_area}:#{action_area}:#{axeID}:#{axe_name}:#{ores}:#{break_condition}:#{task_duration}:#{level_goal}:#{head}:#{cape}:#{neck}:#{weapon}:#{chest}:#{shield}:#{legs}:#{hands}:#{feet}:#{ring}:#{ammunition}:#{ammunition_amount}"
+  return res
+end
+
+def get_test_woodcutting_task_respond(task, account)
+  update_woodcutting_task(task, account)
+  if task.bank_area != nil then bank_area = task.bank_area.coordinates else bank_area = "none" end
+  if task.action_area != nil then action_area = task.action_area.coordinates else action_area = "none" end
+  json_respond = {
+      respond_type: "task_respond",
+      task_type:task.task_type.name,
+      task_id: task.id,
+      gear: task.gear.to_json,
+      inventory: task.inventory.to_json,
+      break_condition: task.break_condition_to_json,
+      bank_area: bank_area,
+      action_area: action_area,
+      axe: task.axe.to_json,
+      tree_name: task.treeName,
+  }
+  log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
+  log.save
+  res = json_respond.to_json
+  puts res
   return res
 end
 def get_woodcutting_task_respond(task, account)
@@ -768,7 +805,8 @@ def get_account_info_respond(respond, account)
   computer_name = (account.computer == nil ? "" : account.computer.name)
   account_type = (account.account_type == nil ? "" : account.account_type.name)
   created_at = account.created_at.httpdate.gsub!(":", ".") # RFC 1123 compliant date format
-  return "account_info:#{account.id}:#{account_type}:#{schema_name}:#{computer_name}:#{created_at}"
+  member = account.member
+  return "account_info:#{account.id}:#{account_type}:#{schema_name}:#{computer_name}:#{created_at}:#{member}"
 end
 
 def task_log(account, parsed_respond)

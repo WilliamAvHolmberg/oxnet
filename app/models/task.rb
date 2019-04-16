@@ -37,6 +37,24 @@ class Task < ApplicationRecord
     return (self.end_time - self.start_time)/60
   end
 
+  def get_duration_left
+    return ((get_end_time - Time.now.change(:month => 1, :day => 1, :year => 2000))/60).round
+  end
+
+  def get_parsed_duration
+    if break_condition == "TIME"
+      task_duration = ((task.get_end_time - Time.now.change(:month => 1, :day => 1, :year => 2000))/60).round
+      level_goal = "99"
+    elsif break_condition == "LEVEL" && task.break_after != nil
+      task_duration = "999999"
+      level_goal = task.break_after
+    elsif break_condition == "TIME_OR_LEVEL"
+      task_duration = ((task.get_end_time - Time.now.change(:month => 1, :day => 1, :year => 2000))/60).round
+      level_goal = task.break_after
+      puts task_duration
+    end
+  end
+
   def get_start_time
     return self.start_time - 3600
   end
@@ -67,6 +85,26 @@ class Task < ApplicationRecord
       end
     end
     return true
+  end
+
+  def break_condition_to_json
+      break_name = break_condition.name
+      if break_name == "TIME"
+        task_duration = get_duration_left
+        level_goal = "99"
+      elsif break_name == "LEVEL" && break_after != nil
+        task_duration = "999999"
+        level_goal = break_after
+      elsif break_name == "TIME_OR_LEVEL"
+        task_duration = get_duration_left
+        level_goal = break_after
+      end
+      json_break = {
+          type:break_name,
+          task_duration: task_duration,
+          level_goal: level_goal
+      }
+      return json_break
   end
 
   def is_completed(account)

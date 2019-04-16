@@ -29,6 +29,7 @@
             / th Mule
             / th Banned?
             th Locked?
+            th Member?
             / th Created?
             th Time Per Day
             th
@@ -56,6 +57,7 @@
                     i class="fas fa-lock"
                   -else
                     = "-"
+                td = account.member
                 / td = account.created
                 td = account.schema.total_time_per_day if account.schema != nil
                 td = link_to 'Ban Account', ban_account_path(account), data: {confirm: 'Are you sure?'}

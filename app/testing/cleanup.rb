@@ -734,5 +734,9 @@ def test_get_woodcutting_task_respond(task, account)
   return json_respond.to_json
 end
 
-
-puts test_get_woodcutting_task_respond(Task.find(10),Account.find(10))
+old_comp = Computer.where(name:"William").first
+new_comp = Computer.where(name: "Suicide").first
+accounts = Account.where(banned: false, locked: false, created: true, computer: old_comp)
+accounts.each do |acc|
+  acc.update(computer: new_comp)
+end

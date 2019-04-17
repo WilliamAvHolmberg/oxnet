@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="cc712b19-eba9-4483-bc4c-53d431a3e866" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/app/models/account.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/account.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/testing/cleanup.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/testing/cleanup.rb" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.bundle/" />
     <ignored path="$PROJECT_DIR$/components/" />
@@ -33,8 +32,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/models/account.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="520">
-              <caret line="273" column="5" selection-start-line="273" selection-start-column="5" selection-end-line="273" selection-end-column="5" />
+            <state relative-caret-position="276">
+              <caret line="241" column="164" selection-start-line="241" selection-start-column="164" selection-end-line="241" selection-end-column="164" />
             </state>
           </provider>
         </entry>
@@ -42,8 +41,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/testing/cleanup.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="740" selection-start-line="740" selection-end-line="771" selection-end-column="3" />
+            <state relative-caret-position="183">
+              <caret line="737" column="17" selection-start-line="737" selection-end-line="738" />
             </state>
           </provider>
         </entry>
@@ -322,12 +321,12 @@
       <workItem from="1555167057097" duration="1227000" />
       <workItem from="1555309075247" duration="11116000" />
       <workItem from="1555437726052" duration="1728000" />
-      <workItem from="1555500471658" duration="1166000" />
+      <workItem from="1555500471658" duration="1242000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="18991000" />
+    <option name="totallyTimeSpent" value="19067000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1400" height="987" extended-state="0" />
@@ -531,15 +530,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/testing/cleanup.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="740" selection-start-line="740" selection-end-line="771" selection-end-column="3" />
+        <state relative-caret-position="183">
+          <caret line="737" column="17" selection-start-line="737" selection-end-line="738" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/models/account.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="520">
-          <caret line="273" column="5" selection-start-line="273" selection-start-column="5" selection-end-line="273" selection-end-column="5" />
+        <state relative-caret-position="276">
+          <caret line="241" column="164" selection-start-line="241" selection-start-column="164" selection-end-line="241" selection-end-column="164" />
         </state>
       </provider>
     </entry>

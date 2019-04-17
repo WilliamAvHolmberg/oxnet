@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :configurations
   root :to => redirect('/nexus')
   resources :eco_systems
   resources :hiscores do

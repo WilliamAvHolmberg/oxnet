@@ -32,7 +32,7 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/models/account.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="508">
+            <state relative-caret-position="520">
               <caret line="266" selection-start-line="266" selection-end-line="266" />
             </state>
           </provider>
@@ -321,12 +321,12 @@
       <workItem from="1555167057097" duration="1227000" />
       <workItem from="1555309075247" duration="11116000" />
       <workItem from="1555437726052" duration="1728000" />
-      <workItem from="1555500471658" duration="1341000" />
+      <workItem from="1555500471658" duration="1481000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="19166000" />
+    <option name="totallyTimeSpent" value="19306000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1400" height="987" extended-state="0" />
@@ -537,7 +537,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/models/account.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="508">
+        <state relative-caret-position="520">
           <caret line="266" selection-start-line="266" selection-end-line="266" />
         </state>
       </provider>

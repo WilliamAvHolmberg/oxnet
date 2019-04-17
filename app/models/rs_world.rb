@@ -29,8 +29,11 @@ class RsWorld < ApplicationRecord
     current_world = world.chomp.to_i
     if @unavailable_worlds.contains(current_world)
       new_world = get_least_used_worlds.sample
+      puts "------------------Changed world to #{new_world.number}"
       return new_world.number
     end
+    puts "------------------Did not change world. world shall be #{current_world}"
+
     return current_world
   end
 

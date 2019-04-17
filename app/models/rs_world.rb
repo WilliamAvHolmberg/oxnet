@@ -11,7 +11,7 @@ class RsWorld < ApplicationRecord
     current_lowest = 10000
     rs_worlds.each do |world|
       player_amount = world.get_amount_of_players
-      if @unavailable_worlds.contains(world.number)
+      if @unavailable_worlds.contains(world.number.chomp.to_i)
         puts "bad world"
       elsif player_amount < current_lowest
         worlds.clear

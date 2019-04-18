@@ -1,0 +1,15 @@
+= form_for @configuration do |f|
+  - if @configuration.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@configuration.errors.count, "error")} prohibited this configuration from being saved:"
+      ul
+        - @configuration.errors.full_messages.each do |message|
+          li = message
+
+  .field
+    = f.label :use_creation_server
+    = f.check_box :use_creation_server
+  .field
+    = f.label :computer
+    = f.text_field :computer
+  .actions = f.submit

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_12_144126) do
+ActiveRecord::Schema.define(version: 2019_04_16_180804) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -78,6 +78,15 @@ ActiveRecord::Schema.define(version: 2019_04_12_144126) do
     t.bigint "eco_system_id"
     t.index ["eco_system_id"], name: "index_computers_on_eco_system_id"
     t.index ["name"], name: "index_computers_on_name", unique: true
+  end
+
+  create_table "configurations", force: :cascade do |t|
+    t.string "name"
+    t.boolean "use_creation_server"
+    t.bigint "computer_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["computer_id"], name: "index_configurations_on_computer_id"
   end
 
   create_table "eco_systems", force: :cascade do |t|
@@ -406,6 +415,7 @@ ActiveRecord::Schema.define(version: 2019_04_12_144126) do
   add_foreign_key "accounts", "rs_worlds"
   add_foreign_key "accounts", "schemas"
   add_foreign_key "computers", "eco_systems"
+  add_foreign_key "configurations", "computers"
   add_foreign_key "hiscores", "skills"
   add_foreign_key "instructions", "accounts"
   add_foreign_key "instructions", "instruction_types"

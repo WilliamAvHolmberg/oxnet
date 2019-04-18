@@ -49,7 +49,7 @@ def computer_get_respond(instruction_queue)
 
     puts "ACC: #{ins.account.username}"
     serverAddress = getServerAddress
-    
+
     if ins.account != nil
       if ins.instruction_type.name == "CREATE_ACCOUNT"
         account = ins.account
@@ -60,7 +60,7 @@ def computer_get_respond(instruction_queue)
             account.proxy.port.chomp + ":" +
             account.proxy.username.chomp + ":" +
             account.proxy.password.chomp + ":" +
-            account.world.chomp +
+            account.get_world +
             ":NEX" + ":http://#{serverAddress}:3000/accounts/#{account.id}/json"
         ins.update(:completed => true)
         account.proxy.update(last_used: DateTime.now.utc)
@@ -69,7 +69,7 @@ def computer_get_respond(instruction_queue)
         account = ins.account
         log = Log.new(account_id: ins.account.id, text: "Account:#{ins.account.login} is gonna be unlocked: #{ins.computer.name}")
         log.save
-        res =  "unlock_account:#{account.username}:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + account.world.chomp + ":NEX" + ":http://#{serverAddress}:3000/accounts/#{account.id}/json"
+        res =  "unlock_account:#{account.username}:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + "#{account.get_world}"  + ":NEX" + ":http://#{serverAddress}:3000/accounts/#{account.id}/json"
         ins.update(:completed => true)
         proxy = account.proxy
         proxy.update(unlock_cooldown: DateTime.now.utc + 10.minutes)
@@ -1209,5 +1209,3 @@ loop do
     puts "errooorororo"
   end
 end
-
-

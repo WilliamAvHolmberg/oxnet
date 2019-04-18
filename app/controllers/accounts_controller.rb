@@ -83,7 +83,7 @@ class AccountsController < ApplicationController
     'ProxyIp': '#{@account.proxy.ip}',
     'ProxyUser': '#{@account.proxy.username}',
     'IsRepoScript': false,
-    'World': #{@account.world},
+    'World': #{@account.get_world},
     'ProxyPort': #{port},
     'ProxyPass': '#{@account.proxy.password}'
 }"

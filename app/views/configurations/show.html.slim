@@ -1,0 +1,12 @@
+p#notice = notice
+
+p
+  strong Use creation server:
+  = @configuration.use_creation_server
+p
+  strong Computer:
+  = @configuration.computer
+
+=> link_to 'Edit', edit_configuration_path(@configuration)
+'|
+=< link_to 'Back', configurations_path

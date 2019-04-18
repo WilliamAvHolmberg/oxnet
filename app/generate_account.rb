@@ -192,9 +192,9 @@ class GenerateAccount
     end
     @use_default_computer = true
     def get_creation_computer(computer)
-      creation_computer = Computer.where(name: "William").first #hardcoded
+      creation_computer = Computer.where(name: "Testcomputer").first #hardcoded
       if creation_computer != nil && creation_computer.is_connected
-        puts "USE DEFAULT COMPUTER: WILLIAM"
+        puts "USE DEFAULT COMPUTER: Testcomputer"
         return creation_computer.id
       end
       return computer.id

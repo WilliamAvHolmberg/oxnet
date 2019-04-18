@@ -1088,14 +1088,17 @@ loop do
     puts "waiting for con"
     Thread.new server.accept do |client|
       begin
-        puts "new client: #{client}"
+
         response = client.gets;
+        puts "new client: #{client}::::#{response}"
         next if response.nil?
         respond = response.split(":")
         if respond[0] == "computer"
           #start new thread for computer
           ip = respond[2]
+          puts "IP: #{ip}"
           name = respond[3].chomp!
+          puts "NAME:#{name}"
           computer = Computer.find_or_create_by(:name => name)
           computer.update(:ip => ip)
           puts "New Computer Thread started for: #{computer}}"

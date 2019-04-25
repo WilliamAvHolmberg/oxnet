@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cc712b19-eba9-4483-bc4c-53d431a3e866" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/generate_account.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/generate_account.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/nexus.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/nexus.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/testing/Test/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/testing/Test/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/testing/Test/runescape-account-creator-master/NexHelper.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/testing/Test/runescape-account-creator-master/src/NexHelper.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/testing/Test/runescape-account-creator-master/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/testing/Test/runescape-account-creator-master/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/testing/Test/runescape-account-creator-master/src/account.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/testing/Test/runescape-account-creator-master/src/account.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/testing/cleanup.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/testing/cleanup.rb" afterDir="false" />
-    </list>
+    <list default="true" id="cc712b19-eba9-4483-bc4c-53d431a3e866" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/.bundle/" />
     <ignored path="$PROJECT_DIR$/components/" />
     <ignored path="$PROJECT_DIR$/log/" />
@@ -316,12 +307,12 @@
       <workItem from="1555309075247" duration="11116000" />
       <workItem from="1555437726052" duration="1728000" />
       <workItem from="1555500471658" duration="10940000" />
-      <workItem from="1556186603072" duration="1510000" />
+      <workItem from="1556186603072" duration="1687000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="30275000" />
+    <option name="totallyTimeSpent" value="30452000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="355" y="67" width="1400" height="987" extended-state="0" />

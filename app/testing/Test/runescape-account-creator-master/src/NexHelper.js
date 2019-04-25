@@ -1,7 +1,5 @@
 // creating a custom socket client and connecting it....
 var net = require('net');
-var request = require('request');
-const supplier = require('./supplier');
 var publicIp = require('public-ip');
 const account = require('./account');
 const two_captcha_api_key = 'e31776b8685b07026204462c8919564e';

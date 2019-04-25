@@ -8,7 +8,9 @@ class NexusController < ApplicationController
     @active_accounts = @available_accounts.select{|acc| !acc.is_available}
     @mules = @available_accounts.select{|acc| acc.account_type.name.include? "MULE"}
     @slaves = @available_accounts.select{|acc| acc.account_type.name == "SLAVE"}
-    @new_accounts = Account.includes(:stats).where("created_at > NOW() - INTERVAL '? hours' AND created", 1).order("created_at DESC").limit(10)
+    @new_accounts = Account.includes(:stats).where("created_at > NOW() - INTERVAL '? hours' AND created", 1).order("created_at DESC").limit(30)
+    @failed_accounts = Account.includes(:stats).where("created_at > NOW() - INTERVAL '? hours' AND NOT created", 1).order("created_at DESC").limit(30)
+
     @recently_banned = Account.includes(:stats, :computer).where(banned: true, created: true).where("last_seen > NOW() - INTERVAL '2 days'").order("last_seen DESC").limit(10).to_a
     @mule_logs = MuleLog.includes(:account).where("created_at > NOW() - INTERVAL '? hours ? minutes'", Time.now.hour, Time.now.min).sort_by(&:created_at).reverse
     @mule_logs_last_2_hours = MuleLog.includes(:account).where("created_at > NOW() - INTERVAL '? hours'", 2).reverse

@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="691cc206-7aa4-4c83-9b12-ee418b886cfa" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../../../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/runescape-account-creator-master/src/NexHelper.js" beforeDir="false" afterPath="$PROJECT_DIR$/runescape-account-creator-master/src/NexHelper.js" afterDir="false" />
-    </list>
+    <list default="true" id="691cc206-7aa4-4c83-9b12-ee418b886cfa" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -177,12 +174,12 @@
       <workItem from="1555527923720" duration="981000" />
       <workItem from="1555529327716" duration="560000" />
       <workItem from="1555530102223" duration="23877000" />
-      <workItem from="1556186479715" duration="4101000" />
+      <workItem from="1556186479715" duration="4226000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="29519000" />
+    <option name="totallyTimeSpent" value="29644000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">

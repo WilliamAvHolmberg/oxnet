@@ -14,8 +14,9 @@ class Account {
             let get_password = supplier._getPassword(password);
 
             let recaptcha_post = await this._sendRecaptchaPost(two_captcha_api_key, proxy_url);
+            console.log("Got captcha response");
             let account_post = await this._sendAccountPost(recaptcha_post.text, get_email, get_password, socks_ip, socks_port, socks_username, socks_password);
-
+            console.log("Got account response");
             return this._formatResponse(account_post, get_email, get_password, proxy_url)
         } catch (error) {
             return error;

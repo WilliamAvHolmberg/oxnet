@@ -1006,7 +1006,7 @@ def main_thread
         time = Time.now.change(:month => 1, :day => 1, :year => 2000)
         puts "Main Thread loop nexus #{time}"
         Account.launch_accounts(3)
-        unlock_accounts
+        #unlock_accounts
 
         sleep(10.seconds)
       end

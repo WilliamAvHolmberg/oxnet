@@ -687,7 +687,7 @@ def update_proxy_cooldown
 
   proxies = Proxy.all
   proxies.each do |proxy|
-    proxy.update(unlock_cooldown: DateTime.now - 3.hours)
+    proxy.update(cooldown: 0)
     proxy.save
   end
 end
@@ -828,3 +828,9 @@ def computer_get_respond(instruction_queue)
 end
 
 
+
+proxies = Proxy.all
+proxies.each do |proxy|
+  proxy.update(cooldown: 600)
+  proxy.save
+end

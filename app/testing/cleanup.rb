@@ -231,7 +231,7 @@ def mule_withdraw_tasks
 end
 
 def transfer_accounts
-  new_computer = Computer.all.select{|comp| comp.name == "William"}.first
+  new_computer = Computer.all.select{|comp| comp.name == "Suicide"}.first
   computers = Computer.all
   computers.each do |comp|
     accounts = comp.accounts.where(banned: false, created: true).select{|acc|acc.account_type.name != "MULE"}
@@ -272,16 +272,7 @@ def test_generate_account
   ga.create_account(suicide, proxy)
 end
 
-def transfer_accounts
-  old_eco = EcoSystem.find(1)
-  new_eco = EcoSystem.find(2)
-  proxy = Proxy.find(145)
-  accounts = Account.where(banned: false, created: true, eco_system: new_eco, proxy: proxy)
-  accounts.each do |acc|
-    acc.update(eco_system: old_eco)
-    acc.save
-  end
-end
+
 
 def transfer_schemas
   accounts = Account.where(banned: false, created: true).where(created_at: Time.now.beginning_of_day..Time.now.end_of_day)
@@ -829,8 +820,4 @@ end
 
 
 
-proxies = Proxy.all
-proxies.each do |proxy|
-  proxy.update(cooldown: 600)
-  proxy.save
-end
+transfer_accounts

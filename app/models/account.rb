@@ -217,7 +217,7 @@ class Account < ApplicationRecord
       accounts = accounts.select{|acc| acc != nil && acc.account_type.name == "SLAVE"}
     end
     if !accounts.nil? && !accounts.blank?
-      accounts = accounts.sort_by{|acc| acc.get_total_level}
+      accounts = accounts.sort_by{|acc| acc.get_total_level}.reverse
       accounts.each do |acc|
         computer = acc.computer if acc.computer_id != nil
         next if computer == nil || !computer.is_available_to_nexus || !computer.can_connect_more_accounts

@@ -820,4 +820,13 @@ end
 
 
 
-transfer_accounts
+accounts = Account.includes(:account_type, :computer, {:schema => [ {:tasks=>:requirements }, :time_intervals]}, { :stats => :skill }, :proxy).where(banned: false, created: true, locked: false).where("last_seen < NOW() - INTERVAL '1 MINUTE'").to_a
+if !accounts.nil? && !accounts.blank?
+  accounts = accounts.select{|acc| acc != nil && acc.account_type.name == "SLAVE"}
+end
+if !accounts.nil? && !accounts.blank?
+  accounts = accounts.sort_by{|acc| acc.get_total_level}.reverse
+  accounts.each do |acc|
+    puts acc.get_total_level
+  end
+end

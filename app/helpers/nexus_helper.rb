@@ -25,8 +25,10 @@ module NexusHelper
 
     @master_mules = get_master_mules.to_a if @master_mules == nil
 
+    midnight = DateTime.now.utc - (Time.now.hour.hours + Time.now.min.minutes + Time.now.sec.seconds)
     #Real truth profits
-    @mule_logs.each do |log|
+    @mule_logs_last_24_hours.each do |log|
+      break if log.created_at < midnight
       next if is_master_mule_log(@master_mules, log)
       if log.account.account_type.name == "MULE"
         total_money_withdrawn -= log.item_amount
@@ -44,8 +46,10 @@ module NexusHelper
 
     @master_mules = get_master_mules.to_a if @master_mules == nil
 
+    twoHrsAgo = DateTime.now.utc - 2.hours
     #Real truth profits
-    @mule_logs_last_2_hours.each do |log|
+    @mule_logs_last_24_hours.each do |log|
+      break if log.created_at < twoHrsAgo
       next if is_master_mule_log(@master_mules, log)
       if (log.account.account_type.name == "MULE")
         total_money_withdrawn -= log.item_amount

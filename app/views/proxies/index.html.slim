@@ -1,48 +1,45 @@
-h1 Proxies
+h1 == "<i class='fas fa-server'> </i> Proxies"
 table
   tr
     th index
     th IP
     th PORT
     th Location
-    th Max Slaves
     th Username
     th Password
     th Created At
-    th Max Slaves
-    th Linked Account
-    th Locked accounts
-    th Auto Assign
-    th Lastest Use
-    th Time Since Last Use
-    th Current Cooldown
-    th Creation Cooldown
-    th Unlock Cooldown
+    th Linked / Max Slaves
+    th Auto<br/>Assign
+    /th Last Used
+    th Time Since<br/>Last Use
+    th Current<br/>Cooldown
+    th Creation<br/>Cooldown
+    th Unlock<br/>Cooldown
     th
 
   - @proxies.each do |proxy|
+    / accounts = proxy.accounts.where(banned: false, created: true).size
+    - linked_accounts = @proxy_users.select { |u| u.proxy_id == proxy.id }.first
+    - linked_accounts = linked_accounts.count if linked_accounts != nil
+    - linked_accounts = 0 if linked_accounts == nil
     tr
       td = proxy.id
       td
-        - if proxy.ip.blank?
-          a href="/proxies/#{proxy.id}" = "[EMPTY]"
-        - else
-          a href="/proxies/#{proxy.id}" = proxy.ip
+        a href="/proxies/#{proxy.id}" title="Last Checked: #{formatted_duration(DateTime.now.utc.to_f - proxy.last_checked.to_f)} ago"
+          span class=(proxy.available ? "online mr-1" : "offline mr-1")
+          = proxy.ip.blank? ? "[EMPTY]" : proxy.ip
       td = proxy.port
       td = proxy.location
-      td = proxy.max_slaves
       td = proxy.username
       td = proxy.password
-      td = proxy.created_at.localtime
-      td = proxy.max_slaves
-      td = proxy.accounts.where(banned: false, created: true).size
-      td = proxy.accounts.where(banned: false, created: true, locked: true).size
-      td = proxy.auto_assign
-      td = proxy.last_used.localtime if proxy.last_used != nil
+      td = formatted_duration(DateTime.now.utc.to_f - proxy.created_at.to_f)
+      td = "#{linked_accounts} / #{proxy.max_slaves}"
+      td == proxy.auto_assign ? "<i class='fas fa-check'></i>" : ""
+      /td = proxy.last_used.localtime if proxy.last_used != nil
       td = formatted_duration(DateTime.now.utc.to_f - proxy.last_used.to_f)
       td = proxy.cooldown
       td = proxy.custom_cooldown
       td = formatted_duration(proxy.unlock_cooldown - DateTime.now.utc)
       td = link_to 'Destroy', proxy, method: :delete
 = link_to 'New', new_proxy_path
-= link_to 'Import'
+= link_to 'Import', import_proxies_path

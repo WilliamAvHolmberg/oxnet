@@ -38,7 +38,7 @@
               td = @account.time_since_last_log
               td = @account.get_time_online
               td = @account.get_average_money
-              td = @account.created_at.httpdate.gsub!(":", ".")
+              td = @account.created_at.localtime
               td = @account.account_type.name if @account.account_type != nil
               td = @account.schema.total_time_per_day if @account.schema != nil
               td = @account.should_mule

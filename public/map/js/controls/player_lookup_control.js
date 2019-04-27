@@ -39,8 +39,8 @@ export var PlayerLookupControl = L.Control.extend({
         var nameInput = L.DomUtil.create('input', 'leaflet-bar leaflet-control leaflet-control-custom', container);
         nameInput.id = 'player-lookup';
         nameInput.type = 'text';
-        nameInput.placeholder = String.fromCharCode(0xF007) + " Find a player";
-        $(nameInput).css('font-family', "Arial, FontAwesome");
+        nameInput.placeholder = String.fromCharCode(0xF002) + " Find a player";
+        $(nameInput).css('font-family', "Arial, 'Font Awesome 5 Free'");
 
         $(nameInput).autocomplete({
             minLength: 2,

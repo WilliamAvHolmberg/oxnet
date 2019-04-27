@@ -17,8 +17,8 @@ export var LocationLookupControl = L.Control.extend({
         var locationInput = L.DomUtil.create('input', 'leaflet-bar leaflet-control leaflet-control-custom', container);
         locationInput.id = 'location-lookup';
         locationInput.type = 'text';
-        locationInput.placeholder = String.fromCharCode(0xF041) + " Go to location";
-        $(locationInput).css('font-family', "Arial, FontAwesome");
+        locationInput.placeholder = String.fromCharCode(0xF3C5) + " Go to location";
+        $(locationInput).css('font-family', "Arial, 'Font Awesome\ 5 Free'");
 
         var self = this;
         Locations.getLocations(function(locations) {

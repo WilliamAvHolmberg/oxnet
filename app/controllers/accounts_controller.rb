@@ -3,6 +3,20 @@ require_relative '../functions'
 class AccountsController < ApplicationController
 
   def index
+    if params[:launch].present?
+      Account.launch_accounts(0)
+      redirect_to accounts_path
+    end
+    if params[:delete_locked].present?
+      accounts = Account.where(created:true, locked: true, banned: false)
+      changes_made = accounts.update_all(banned:true)
+      Schema.where(id: accounts.pluck(:schema_id)).update_all(disabled: true)
+      respond_to do |format|
+        format.html { redirect_to accounts_path, notice: "#{changes_made} Accounts were banned." }
+      end
+      # redirect_to accounts_path
+    end
+
     @available_accounts = Account.includes(:mule, :proxy, :schema, {:schema => :time_intervals}, :account_type, :eco_system, :stats, :computer)
                               .where(banned: false, created: true).sort_by{|acc|acc.get_total_level}.reverse
 
@@ -11,15 +25,6 @@ class AccountsController < ApplicationController
       if acc.password.include? "\n"
         acc.update(password: acc.password.strip)
       end
-    end
-
-    if params[:launch].present?
-      Account.launch_accounts(0)
-      redirect_to accounts_path
-    end
-    if params[:delete_locked].present?
-      Account.where(created:true, locked: true, banned: false).update_all(banned:true)
-      redirect_to accounts_path
     end
   end
 
@@ -64,6 +69,13 @@ class AccountsController < ApplicationController
     if port.blank?
       port = 0
     end
+
+    world = @account.world.to_i
+    offline_worlds = []
+    while offline_worlds.include? world
+      world = RsWorld.all.select {|w| !offline_worlds.include? w }.sample.number
+    end
+
     render json: "{
     'UseProxy': true,
     'ScriptArgs': '',
@@ -80,7 +92,7 @@ class AccountsController < ApplicationController
     'ProxyIp': '#{@account.proxy.ip}',
     'ProxyUser': '#{@account.proxy.username}',
     'IsRepoScript': false,
-    'World': #{@account.get_world},
+    'World': #{world},
     'ProxyPort': #{port},
     'ProxyPass': '#{@account.proxy.password}'
 }"

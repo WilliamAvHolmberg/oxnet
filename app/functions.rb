@@ -25,18 +25,25 @@ end
 module Pinger
   @pingHistory = {""=> false}
   @pingHistoryTimeStamps = {""=> Time.now}
-  def self.ProxyAvailable(ip, port)
-    return true if ip == nil
-    return true if ip.length == 0
-    return true if port == nil
+  def self.ProxyAvailable(proxy)
+    return true if proxy == nil
+    ip = proxy.ip
+    port = proxy.port
+    return true if ip == nil || ip.length == 0
+    return true if port == nil || port.length == 0
     key = ip + ":" + port
     working = @pingHistory[key]
     lastChecked = @pingHistoryTimeStamps[key]
-    if(working == nil || lastChecked == nil || (Time.now - lastChecked) > 120)
+    if (lastChecked == nil || proxy.last_checked.localtime > lastChecked)
+      lastChecked = proxy.last_checked.localtime
+      working = proxy.available
+    end
+    if(working == nil || lastChecked == nil || (Time.now - lastChecked) > 10.minutes)
       respond = Net::Ping::TCP.new(ip, port).ping
       working = (respond != nil && respond != false && respond > 0)
       @pingHistory[key] = working
-      @pingHistoryTimeStamps[key] = Time.now + rand(5..20).seconds
+      @pingHistoryTimeStamps[key] = Time.now + rand(5..120).seconds
+      proxy.update(last_checked: Time.now.utc + rand(5..120).seconds, available: working)
       if working
         puts "Proxy #{ip} is working"
       else

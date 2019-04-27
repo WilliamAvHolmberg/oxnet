@@ -1001,6 +1001,9 @@ def unlock_accounts
     accounts.each do |acc|
       if !@generate_account.canUnlockEmail(acc.login) || (Time.now.utc - acc.last_seen) > 6.hours
         acc.update(banned: true, last_seen: Time.now.utc)
+        if acc.schema.default == true #remember default is inverted...
+          acc.schema.update(disabled: true)
+        end
         next
       end
       computer = acc.computer if acc.computer_id != nil

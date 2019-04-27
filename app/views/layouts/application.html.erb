@@ -35,63 +35,63 @@
   </body>
 </html>
 <script type="application/javascript">
+  if ($('table, .card').length == 0) {
+    $('.content').wrapInner('<div class="card p-4 m-4"/>');
+    $('.content').wrapInner('<div class="col-md-5 col-xs-12"/>');
+    $('.content').wrapInner('<div class="row" />');
+  }
+  function page_load_stuff(range) {
+      range.find('.card a').each(function () {
+          if (!$(this).hasClass('btn') || $(this).hasClass('btn-sm')) {
+              $(this).removeClass('btn-sm')
+              $(this).addClass('btn btn-default button');
+          }
+      });
+      range.find('table a[data-method], td a').each(function () {
+          $(this).removeClass('btn')
+          $(this).removeClass('btn-default')
+          $(this).removeClass('btn-default')
+          $(this).addClass('btn-sm btn-light button');
 
-    if ($('table, .card').length == 0) {
-        $('.content').wrapInner('<div class="card p-4 m-4"/>');
-        $('.content').wrapInner('<div class="col-md-5 col-xs-12"/>');
-        $('.content').wrapInner('<div class="row" />');
-    }
-    $('.card a').each(function() {
-        if(!$(this).hasClass('btn') || $(this).hasClass('btn-sm')) {
-            $(this).removeClass('btn-sm')
-            $(this).addClass('btn btn-default button');
-        }
-    });
-    $('table a[data-method], td a').each(function() {
-        $(this).removeClass('btn')
-        $(this).removeClass('btn-default')
-        $(this).removeClass('btn-default')
-        $(this).addClass('btn-sm btn-light button');
-
-    });
-    $('a[data-method="delete"]').each(function() {
-        $(this).removeClass('btn-default')
-        $(this).addClass('btn-danger');
-    });
-    $('table').each(function() {
-        $(this).addClass('table');
-    });
-    $('input[type="text"], input[type="select"], input[type="submit"], input[type="number"], textarea, select').each(function() {
-        $(this).addClass('form-control');
-    });
-    $('input[type="select"], select').each(function() {
-        $(this).attr('size', 1);
-        $(this).css('background-image', 'none');
-        $(this).wrap('<label class="wrap"/>')
-    });
-    $('input[type="submit"]').each(function() {
-        $(this).addClass('btn btn-success');
-    });
-    $('.content>a').each(function() {
-        if(!$(this).hasClass('button') && !$(this).hasClass('btn') && !$(this).hasClass('btn-sm')) {
-            $(this).addClass('btn btn-default button');
-        }
-    });
-    $('input[value="Search"], input[name="search"]').each(function() {
-        $(this).css('maxWidth', '220px')
-        $(this).addClass('col-6');
-        $(this).addClass('mt-0');
-    });
-    $('.btn').each(function() {
-        if($(this).html() == "Back")
-            $(this).html('<i class="material-icons " style="font-size: 24px">chevron_left</i> Back');
-    });
-    $('table').each(function() {
-        $(this).addClass('table table-striped table-responsive-sm');
-    });
-  jQuery(document).ready(function() {
-      jQuery("time.timeago").timeago();
-  });
+      });
+      range.find('a[data-method="delete"]').each(function () {
+          $(this).removeClass('btn-default')
+          $(this).addClass('btn-danger');
+      });
+      range.find('table').each(function () {
+          $(this).addClass('table');
+      });
+      range.find('input[type="text"], input[type="select"], input[type="submit"], input[type="number"], textarea, select').each(function () {
+          $(this).addClass('form-control');
+      });
+      range.find('input[type="select"], select').each(function () {
+          $(this).attr('size', 1);
+          $(this).css('background-image', 'none');
+          $(this).wrap('<label class="wrap"/>')
+      });
+      range.find('input[type="submit"]').each(function () {
+          $(this).addClass('btn btn-success');
+      });
+      range.find('.content>a').each(function () {
+          if (!$(this).hasClass('button') && !$(this).hasClass('btn') && !$(this).hasClass('btn-sm')) {
+              $(this).addClass('btn btn-default button');
+          }
+      });
+      range.find('input[value="Search"], input[name="search"]').each(function () {
+          $(this).css('maxWidth', '220px')
+          $(this).addClass('col-6');
+          $(this).addClass('mt-0');
+      });
+      range.find('.btn').each(function () {
+          if ($(this).html() == "Back")
+              $(this).html('<i class="material-icons " style="font-size: 24px">chevron_left</i> Back');
+      });
+      range.find('table').each(function () {
+          $(this).addClass('table table-striped table-responsive-sm');
+      });
+      range.find("time.timeago").timeago();
+  }
+  page_load_stuff($(document));
 </script>
 <style>
   input, select, button {

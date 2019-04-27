@@ -1,0 +1,7 @@
+tr id="new_stats"
+  td
+    input type='hidden' id='gpPrev24' value='#{number_with_delimiter(money_last_24_hours, :delimiter => ',', :separator => '.')}'
+    input type='hidden' id='gpToday' value='#{number_with_delimiter(money_made_today, :delimiter => ',', :separator => '.')}'
+    input type='hidden' id='gpPerHr' value='#{number_with_delimiter((money_made_today / (Time.now.hour + 0.1)).round(0), :delimiter => ',', :separator => '.')}'
+    input type='hidden' id='gpRecAvg' value='#{number_with_delimiter(money_last_2_hours / 2, :delimiter => ',', :separator => '.')}'
+= render partial:'nexus/mule_log', collection: @mule_logs, as: :log

@@ -1,4 +1,4 @@
-- skill = account.stats.sort_by{ |a, b|( a and b ) ? b <=> a : ( a ? 1 : -1 ) }.select{|s|s.skill.name != "Hitpoints"}.first
+- skill = account.stats.sort_by{ |s| s.level }.select{|s|s.skill.name != "Hitpoints"}.last
 tr class="#{account.account_type.name == "MULE" ? "table-danger" : ""}"
   td
     - if account.last_seen != nil

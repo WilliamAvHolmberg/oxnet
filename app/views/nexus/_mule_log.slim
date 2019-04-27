@@ -1,0 +1,30 @@
+- mule_acc_id = @name_to_id[log.mule.downcase]
+- to_master_mule = @master_mule_ids[mule_acc_id] != nil
+- amount = log.item_amount
+- if log.account.account_type.name.include? "MULE"
+  - amount = -amount
+- amount = -amount if to_master_mule
+tr id=log.id
+  td
+    time class="timeago" datetime="#{log.created_at.localtime}" = "#{formatted_duration(Time.now.utc - log.created_at)} ago"
+  td
+    a href=account_path(log.account) style="text-decoration: #{log.account.banned ? 'line-through' : ''};"
+      - if @master_mule_ids[log.account_id] != nil
+        i.fas.fa-crown.pr-1 style="color:orange"
+      - elsif @mule_ids[log.account_id] != nil
+        i.fas.fa-democrat.pr-1 style="color:gray"
+      = log.account.username
+  -if amount < 0
+    td style="color:red;" = "#{number_with_delimiter(amount, :delimiter => ",", :separator => ".")}"
+  - else
+    td style="color:green" = "+#{number_with_delimiter(amount, :delimiter => ",", :separator => ".")}"
+  -if mule_acc_id == nil
+    td = log.mule
+  -else
+    td
+      a href=account_path(mule_acc_id)
+        - if to_master_mule
+          i.fas.fa-crown.pr-1  style="color:orange"
+        - elsif @mule_ids[mule_acc_id] != nil
+          i.fas.fa-democrat.pr-1 style="color:gray"
+        = log.mule

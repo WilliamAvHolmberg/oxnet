@@ -197,9 +197,9 @@ class GenerateAccount
     end
     @use_default_computer = true
     def get_creation_computer(computer)
-      creation_computer = Computer.where(name: "William").first #hardcoded
+      creation_computer = Computer.where(name: "Testcomputer").first #hardcoded
       if creation_computer != nil && creation_computer.is_connected
-        puts "USE DEFAULT COMPUTER: WILLIAM"
+        puts "USE DEFAULT COMPUTER: Testcomputer"
         return creation_computer.id
       end
       return computer.id
@@ -279,7 +279,7 @@ class GenerateAccount
   end
   public
     def create_accounts_for_all_computers
-
+      created = false
       computers = find_available_computers.shuffle
 
       computers.each do |computer|
@@ -299,10 +299,14 @@ class GenerateAccount
           puts "#{computer.name} has #{current_amount_of_accounts.size} of #{account_threshold} slaves"
           create_account(computer, proxy)
           proxy.update(last_used: DateTime.now.utc)
+          created = true
           #puts "lets create acc for #{computer.name}"
           # should_do = false
           break #exit loop, only do one account
         end
+      end
+      if !created
+        create_backups_for_all_computers
       end
       #if should_do
        # puts "We reached computer threshold. Lets create more accounts"
@@ -314,12 +318,25 @@ class GenerateAccount
       computer = find_available_computers.sample
       if computer != nil
 
-        account_threshold = computer.max_slaves +5
+        account_threshold = computer.max_slaves * 3
         current_amount_of_accounts = get_available_accounts_on_computer(computer)
         if current_amount_of_accounts != nil && current_amount_of_accounts.size < account_threshold
-          puts current_amount_of_accounts.size
-          proxy = get_random_proxy
-          create_account(computer, proxy)
+          proxies = get_least_used_proxies(computer.eco_system).shuffle
+          proxies.each do |proxy|
+            # proxy = get_random_proxy(computer.eco_system)
+            # Check if we already have an instruction with this proxy due
+
+            existing_instructions = Instruction.get_uncompleted_instructions_60
+                                        .where(instruction_type_id: InstructionType.find_by_name("CREATE_ACCOUNT").id).includes(:account)
+            next if existing_instructions.any? { |ins| ins.is_relevant && ins.account.proxy_id == proxy.id}
+
+            puts "#{computer.name} has #{current_amount_of_accounts.size} of #{account_threshold} slaves"
+            create_account(computer, proxy)
+            proxy.update(last_used: DateTime.now.utc)
+            #puts "lets create acc for #{computer.name}"
+            # should_do = false
+            break #exit loop, only do one account
+          end
           #puts "lets create acc for #{computer.name}"
         end
       end

@@ -217,8 +217,30 @@
                     time class="timeago" datetime="#{account.created_at.localtime}" = "#{formatted_duration(Time.now.utc - account.created_at)} ago"
                   td
                     a href=account_path(account) = account.username
-                  td = "#{proxy == nil ? "" : proxy.location}"
-                  td = "#{original_schema == nil ? "?" : original_schema.name}"
+
+                  - if stat != nil && stat.skill_id != nil
+                    td = "#{stat.skill.name}: #{stat.level}"
+                  - else
+                    td = "?"
+        .card-body.table-responsive
+          h3 = "Recently failed creations"
+          table.table.table-hover
+            thead.text-warning
+              th Time
+              th Account Name
+
+              th IP
+            tbody
+              - @failed_accounts.each do |account|
+                - stat = account.stats.sort_by {|s| s.level}.select {|s| s.skill.name != "Hitpoints"}.last
+                tr
+                  td
+                    time class="timeago" datetime="#{account.created_at.localtime}" = "#{formatted_duration(Time.now.utc - account.created_at)} ago"
+                  td
+                    a href=account_path(account) = account.username
+
+                  td
+                    a href=proxy_path(account.proxy) = account.proxy.location
 
 
     .col-lg-6.col-md-12
@@ -264,7 +286,7 @@
                     td = log.mule
                   -else
                     td
-                      a href=account_path(mule_acc_id) 
+                      a href=account_path(mule_acc_id)
                         - if to_master_mule
                           i.fas.fa-crown.pr-1  style="color:orange"
                         - elsif @mule_ids[mule_acc_id] != nil

@@ -231,7 +231,7 @@ def mule_withdraw_tasks
 end
 
 def transfer_accounts
-  new_computer = Computer.all.select{|comp| comp.name == "William"}.first
+  new_computer = Computer.all.select{|comp| comp.name == "Suicide"}.first
   computers = Computer.all
   computers.each do |comp|
     accounts = comp.accounts.where(banned: false, created: true).select{|acc|acc.account_type.name != "MULE"}
@@ -272,16 +272,7 @@ def test_generate_account
   ga.create_account(suicide, proxy)
 end
 
-def transfer_accounts
-  old_eco = EcoSystem.find(1)
-  new_eco = EcoSystem.find(2)
-  proxy = Proxy.find(145)
-  accounts = Account.where(banned: false, created: true, eco_system: new_eco, proxy: proxy)
-  accounts.each do |acc|
-    acc.update(eco_system: old_eco)
-    acc.save
-  end
-end
+
 
 def transfer_schemas
   accounts = Account.where(banned: false, created: true).where(created_at: Time.now.beginning_of_day..Time.now.end_of_day)
@@ -687,7 +678,7 @@ def update_proxy_cooldown
 
   proxies = Proxy.all
   proxies.each do |proxy|
-    proxy.update(unlock_cooldown: DateTime.now - 3.hours)
+    proxy.update(cooldown: 0)
     proxy.save
   end
 end
@@ -771,4 +762,71 @@ def get_world
   return current_world
 end
 
-puts get_world
+
+
+def computer_get_respond(instruction_queue)
+  if instruction_queue.empty?
+    return "logged:fine"
+  else
+    ins = instruction_queue.pop
+
+    puts "ACC: #{ins.account}"
+    serverAddress = getServerAddress
+
+    if ins.account != nil
+      if ins.instruction_type.name == "CREATE_ACCOUNT"
+        account = ins.account
+        log = Log.new(account_id: ins.account.id, text: "Account:#{ins.account.login} Handed out for the first time to: #{ins.computer.name}")
+        log.save
+        res =  "create_account:#{account.username}:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + "#{account.get_world}" + ":NEX" + ":http://#{serverAddress}:3000/accounts/#{account.id}/json"
+        ins.update(:completed => true)
+        account.proxy.update(last_used: DateTime.now.utc)
+        return res
+      elsif ins.instruction_type.name == "UNLOCK_ACCOUNT"
+        account = ins.account
+        log = Log.new(account_id: ins.account.id, text: "Account:#{ins.account.login} is gonna be unlocked: #{ins.computer.name}")
+        log.save
+        res =  "unlock_account:#{account.username}:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + "#{account.get_world}"  + ":NEX" + ":http://#{serverAddress}:3000/accounts/#{account.id}/json"
+        ins.update(:completed => true)
+        proxy = account.proxy
+        proxy.update(unlock_cooldown: DateTime.now.utc + 10.minutes)
+        return res
+      elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account_id == nil
+        ins.update(:completed => true)
+        puts "wrong"
+        return "account_request:0"
+      elsif ins.instruction_type.name == "NEW_CLIENT" && ins.account_id != nil
+        ins.update(:completed => true)
+        ins.save
+        account = ins.account
+        puts "we got the account"
+        #return computer_get_respond(instruction_queue) if (Time.now.utc - account.last_seen) < 10.seconds
+        #res =  "account_request:1:" + account.login + ":" + account.password + ":" + account.proxy.ip.chomp + ":" + account.proxy.port.chomp + ":" + account.proxy.username.chomp + ":" + account.proxy.password.chomp + ":" + world.chomp + ":NEX"
+        res =  "account_request:1:#{account.username}:"  + ":http://#{serverAddress}:3000/accounts/#{account.id}/json"
+        puts "we got the address"
+        if ins.computer != nil
+          log = Log.new(computer_id: ins.computer_id, account_id: ins.account.id, text: "Account:#{ins.account.login} Handed out to: #{ins.computer.name}")
+        else
+          log = Log.new(account_id: ins.account.id, text: "Account:#{ins.account.login} Handed out to: #{ins.computer.name}")
+        end
+        log.save
+        return res
+      end
+    end
+    puts "handed out"
+    return "logged:f"
+  end
+end
+
+
+
+accounts = Account.includes(:account_type, :computer, {:schema => [ {:tasks=>:requirements }, :time_intervals]}, { :stats => :skill }, :proxy).where(banned: false, created: true, locked: false).where("last_seen < NOW() - INTERVAL '1 MINUTE'").to_a
+if !accounts.nil? && !accounts.blank?
+  accounts = accounts.select{|acc| acc != nil && acc.account_type.name == "SLAVE"}
+end
+if !accounts.nil? && !accounts.blank?
+  accounts = accounts.sort_by{|acc| acc.get_total_level}.reverse
+  accounts.each do |acc|
+    puts acc.get_total_level
+  end
+end

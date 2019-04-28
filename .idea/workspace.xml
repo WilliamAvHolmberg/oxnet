@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cc712b19-eba9-4483-bc4c-53d431a3e866" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/app/models/rs_world.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/rs_world.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/nexus.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/nexus.rb" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.bundle/" />
@@ -24,8 +23,26 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/nexus.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="158">
-              <caret line="63" column="30" lean-forward="true" selection-start-line="63" selection-start-column="30" selection-end-line="63" selection-end-column="30" />
+            <state relative-caret-position="134">
+              <caret line="405" column="14" selection-start-line="405" selection-start-column="14" selection-end-line="405" selection-end-column="14" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/models/inventory.rb">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="265">
+              <caret line="19" column="5" lean-forward="true" selection-start-line="19" selection-start-column="5" selection-end-line="19" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/models/task.rb">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="173">
+              <caret line="89" column="29" selection-start-line="89" selection-start-column="22" selection-end-line="89" selection-end-column="29" />
             </state>
           </provider>
         </entry>
@@ -79,8 +96,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>computer_thr</find>
-      <find>create_acc</find>
       <find>unlocked</find>
       <find>unlocked_</find>
       <find>generatex</find>
@@ -109,6 +124,8 @@
       <find>combat_</find>
       <find>get_world</find>
       <find>account.get_world</find>
+      <find>combat</find>
+      <find>to_json</find>
     </findStrings>
     <replaceStrings>
       <replace>jso</replace>
@@ -165,8 +182,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="136" />
-    <option name="y" value="66" />
+    <option name="x" value="499" />
+    <option name="y" value="103" />
     <option name="width" value="1400" />
     <option name="height" value="987" />
   </component>
@@ -348,15 +365,15 @@
       <workItem from="1555500471658" duration="10940000" />
       <workItem from="1556186603072" duration="4828000" />
       <workItem from="1556369292159" duration="1379000" />
-      <workItem from="1556388842941" duration="6908000" />
+      <workItem from="1556388842941" duration="7380000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="41880000" />
+    <option name="totallyTimeSpent" value="42352000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="136" y="66" width="1400" height="987" extended-state="0" />
+    <frame x="499" y="103" width="1400" height="987" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49333334" visible="true" weight="0.28645065" />
@@ -385,12 +402,6 @@
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/db/migrate/20181227174750_create_hiscores.rb">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/db/migrate/20181227144102_create_rs_worlds.rb">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/db/migrate/20181210184503_create_mule_logs.rb">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -682,10 +693,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/models/task.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="173">
+          <caret line="89" column="29" selection-start-line="89" selection-start-column="22" selection-end-line="89" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/models/inventory.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="265">
+          <caret line="19" column="5" lean-forward="true" selection-start-line="19" selection-start-column="5" selection-end-line="19" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/nexus.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="158">
-          <caret line="63" column="30" lean-forward="true" selection-start-line="63" selection-start-column="30" selection-end-line="63" selection-end-column="30" />
+        <state relative-caret-position="134">
+          <caret line="405" column="14" selection-start-line="405" selection-start-column="14" selection-end-line="405" selection-end-column="14" />
         </state>
       </provider>
     </entry>

@@ -403,6 +403,7 @@ def get_test_combat_task_respond(task, account)
   puts "get combat respond"
   if task.bank_area != nil then bank_area = task.bank_area.coordinates else bank_area = "none" end
   if task.action_area != nil then action_area = task.action_area.coordinates else action_area = "none" end
+  food = "none"
   task.inventory.inventory_items.each do |item|
     if item.food
       food = item.item.formated_name

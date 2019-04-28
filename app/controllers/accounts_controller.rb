@@ -78,7 +78,7 @@ class AccountsController < ApplicationController
       world = RsWorld.all.select {|w| !offline_worlds.include? w }.sample.number
     end
 
-    render json: "{
+    render json: ("{
     'UseProxy': true,
     'ScriptArgs': '',
     'RsUsername': '#{@account.login}',
@@ -97,7 +97,7 @@ class AccountsController < ApplicationController
     'World': #{world},
     'ProxyPort': #{port},
     'ProxyPass': '#{@account.proxy.password}'
-}"
+}").to_json
   end
 
   def edit

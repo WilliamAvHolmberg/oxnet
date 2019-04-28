@@ -837,12 +837,24 @@ def get_mule_respond(respond, account)
 end
 
 def get_account_info_respond(respond, account)
+  account_id = account.id
   schema_name = (account.schema == nil ? "" : account.schema.name)
   computer_name = (account.computer == nil ? "" : account.computer.name)
   account_type = (account.account_type == nil ? "" : account.account_type.name)
   created_at = account.created_at.httpdate.gsub!(":", ".") # RFC 1123 compliant date format
   member = account.member
-  return "account_info:#{account.id}:#{account_type}:#{schema_name}:#{computer_name}:#{created_at}:#{member}"
+
+  json_respond = {
+      account_id: account_id,
+      schema_name: schema_name,
+      computer_name: computer_name,
+      account_type: account_type,
+      created_at: created_at,
+      member: member,
+      mule: account.should_mule
+  }
+  res = json_respond.to_json
+  return res
 end
 
 def task_log(account, parsed_respond)

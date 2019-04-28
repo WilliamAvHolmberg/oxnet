@@ -1,6 +1,7 @@
 require_relative '../functions'
 
 class AccountsController < ApplicationController
+  skip_before_action :authenticate_user!, only: [:json]
 
   def index
 

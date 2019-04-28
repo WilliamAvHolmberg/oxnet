@@ -4,6 +4,8 @@ require_relative '../app/models/application_record'
 require 'net/ping'
 require 'acts_as_list'
 require_relative 'generate_account'
+require 'devise'
+require_relative "../config/initializers/devise.rb"
 
 default_port = 43594
 server_port = default_port

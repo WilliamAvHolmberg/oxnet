@@ -69,6 +69,6 @@ class EcoSystemsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def eco_system_params
-      params.require(:eco_system).permit(:accounts, :computers, :proxies, :name)
+      params.require(:eco_system).permit(:accounts, :computers, :proxies, :name, :user_id)
     end
 end

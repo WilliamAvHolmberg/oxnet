@@ -3,8 +3,9 @@ require_relative '../functions'
 class AccountsController < ApplicationController
 
   def index
-    @available_accounts = Account.includes(:mule, :proxy, :schema, {:schema => :time_intervals}, :account_type, :eco_system, :stats, :computer)
-                              .where(banned: false, created: true).sort_by{|acc|acc.get_total_level}.reverse
+
+    @available_accounts = Account.includes( :mule, :proxy, :schema, {:schema => :time_intervals}, :account_type, :eco_system, :stats, :computer)
+                              .where(eco_system: current_user.eco_systems, banned: false, created: true).sort_by{|acc|acc.get_total_level}.reverse
 
     @schemas = Schema.where(default: false).all.to_a
     @available_accounts.each do |acc|

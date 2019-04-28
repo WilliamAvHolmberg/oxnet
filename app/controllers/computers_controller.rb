@@ -6,7 +6,7 @@ class ComputersController < ApplicationController
   # GET /computers
   # GET /computers.json
   def index
-    @computers = Computer.all
+    @computers = Computer.where(eco_system: current_user.eco_systems)
     start_day = DateTime.now.beginning_of_day - 7.days
     @days = []
     i = 1

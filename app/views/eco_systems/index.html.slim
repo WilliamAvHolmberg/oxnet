@@ -3,6 +3,7 @@ h1 Listing eco_systems
 table
   thead
     tr
+      th Belongs to User
       th Name
       th Accounts
       th Computers
@@ -14,6 +15,7 @@ table
   tbody
     - @eco_systems.each do |eco_system|
       tr
+        td = eco_system.user.email
         td = eco_system.name
         td = eco_system.accounts.size
         td = eco_system.computers.size

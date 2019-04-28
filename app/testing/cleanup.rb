@@ -7,6 +7,8 @@ require_relative '../generate_account'
 require_relative '../generate_schema'
 require_relative '../generate_gear'
 require_relative '../helpers/rs_worlds_helper'
+require 'devise'
+require_relative "../../config/initializers/devise.rb"
 
 
 
@@ -275,8 +277,8 @@ end
 
 
 def transfer_schemas
-  accounts = Account.where(banned: false, created: true).where(created_at: Time.now.beginning_of_day..Time.now.end_of_day)
-  new_schema = Schema.where(name: "RSPEER").first
+  accounts = Account.where(banned: false, created: true)
+  new_schema = Schema.where(name: "SUICIDE_DEFAULT").first
 
   accounts.each do |acc|
     acc.update(schema: new_schema)
@@ -820,13 +822,3 @@ end
 
 
 
-accounts = Account.includes(:account_type, :computer, {:schema => [ {:tasks=>:requirements }, :time_intervals]}, { :stats => :skill }, :proxy).where(banned: false, created: true, locked: false).where("last_seen < NOW() - INTERVAL '1 MINUTE'").to_a
-if !accounts.nil? && !accounts.blank?
-  accounts = accounts.select{|acc| acc != nil && acc.account_type.name == "SLAVE"}
-end
-if !accounts.nil? && !accounts.blank?
-  accounts = accounts.sort_by{|acc| acc.get_total_level}.reverse
-  accounts.each do |acc|
-    puts acc.get_total_level
-  end
-end

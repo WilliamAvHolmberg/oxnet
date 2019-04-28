@@ -176,7 +176,7 @@ def get_task_respond(task, account)
     return get_mule_withdraw_task_respond(account)
   when "COMBAT"
     puts "combat res"
-    return get_combat_task_respond(task,account)
+    return get_test_combat_task_respond(task,account)
   when "TANNER"
     puts " res tanner respond"
     return get_tanning_task_respond(task,account)
@@ -387,6 +387,39 @@ def get_mining_task_respond(task, account)
   log.save
   puts "sending resp"
   res = "task_respond:1:#{task_type}:#{task.id}:#{bank_area}:#{action_area}:#{axeID}:#{axe_name}:#{ores}:#{break_condition}:#{task_duration}:#{level_goal}:#{head}:#{cape}:#{neck}:#{weapon}:#{chest}:#{shield}:#{legs}:#{hands}:#{feet}:#{ring}:#{ammunition}:#{ammunition_amount}"
+  return res
+end
+
+
+def get_test_combat_task_respond(task, account)
+  puts "get combat respond"
+  if task.bank_area != nil then bank_area = task.bank_area.coordinates else bank_area = "none" end
+  if task.action_area != nil then action_area = task.action_area.coordinates else action_area = "none" end
+  task.inventory.inventory_items.each do |item|
+    if item.food
+      food = item.item.formated_name
+      break
+    end
+  end
+  if task.loot_threshold != nil then loot_threshold = task.loot_threshold else loot_threshold = 100 end
+  json_respond = {
+      respond_type: "task_respond",
+      task_type:task.task_type.name,
+      task_id: task.id,
+      gear: task.gear.to_json,
+      inventory: task.inventory.to_json,
+      break_condition: task.break_condition_to_json,
+      bank_area: bank_area,
+      action_area: action_area,
+      monster_name: task.monster_name,
+      tree_name: task.treeName,
+      food: food,
+      loot_threshold: loot_threshold,
+      skill: task.skill.name,
+  }
+  log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
+  log.save
+  res = json_respond.to_json
   return res
 end
 

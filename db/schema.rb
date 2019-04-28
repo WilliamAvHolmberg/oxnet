@@ -236,6 +236,8 @@ ActiveRecord::Schema.define(version: 2019_04_27_190459) do
     t.boolean "auto_assign", default: true
     t.datetime "unlock_cooldown", default: "2019-03-04 18:14:08"
     t.integer "max_slaves", default: 1
+    t.datetime "last_checked", default: "2019-04-28 11:57:36", null: false
+    t.boolean "available", default: true, null: false
     t.index ["account_id"], name: "index_proxies_on_account_id"
     t.index ["eco_system_id"], name: "index_proxies_on_eco_system_id"
   end

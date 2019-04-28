@@ -4,7 +4,7 @@ class AddCreatedAtIndexes < ActiveRecord::Migration[5.2]
     # add_reference :task_logs, :created_at, index: true
     # add_reference :logs, :created_at, index: true
     #add_reference :accounts, :last_seen, index: true
-    remove_index :task_logs, [:created_at]
+    #remove_index :task_logs, [:created_at]
     add_index :task_logs, [:created_at]
     add_index :mule_logs, [:created_at]
     add_index :logs, [:created_at]

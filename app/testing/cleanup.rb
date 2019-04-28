@@ -820,5 +820,6 @@ def computer_get_respond(instruction_queue)
   end
 end
 
-
+account = Account.where(login: "whitcreha@3mail.rocks").first
+account.update(last_seen: Time.now)
 

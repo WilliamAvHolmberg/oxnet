@@ -27,17 +27,6 @@ class RsWorld < ApplicationRecord
     return worlds
   end
 
-  @unavailable_worlds = [302, 308, 309, 310, 316, 317, 318, 325, 326, 333, 334, 341, 342, 349, 350, 358, 364, 365, 366, 371, 372, 373, 379, 380, 381, 382, 407, 408]
-  def get_world
-    current_world = world.chomp.to_i
-    if @unavailable_worlds.contains(current_world)
-      new_world = get_least_used_worlds.sample
-      puts "------------------Changed world to #{new_world.number}"
-      return new_world.number
-    end
-    puts "------------------Did not change world. world shall be #{current_world}"
 
-    return current_world
-  end
 
 end

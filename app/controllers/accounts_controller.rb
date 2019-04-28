@@ -78,11 +78,11 @@ class AccountsController < ApplicationController
       world = RsWorld.all.select {|w| !offline_worlds.include? w }.sample.number
     end
 
-    render json: ("{
+    render json: {
     'UseProxy': true,
     'ScriptArgs': '',
-    'RsUsername': '#{@account.login}',
-    'RsPassword': '#{@account.password}',
+    'RsUsername': "#{@account.login}",
+    'RsPassword': "#{@account.password}",
     'Config': {
       'EngineTickDelay': 10,
       'DisableModelRendering': true,
@@ -91,13 +91,13 @@ class AccountsController < ApplicationController
       'SuperLowCpuMode': true
     },
     'ScriptName': 'nex',
-    'ProxyIp': '#{@account.proxy.ip}',
-    'ProxyUser': '#{@account.proxy.username}',
+    'ProxyIp': "#{@account.proxy.ip}",
+    'ProxyUser': "#{@account.proxy.username}",
     'IsRepoScript': false,
-    'World': #{world},
-    'ProxyPort': #{port},
-    'ProxyPass': '#{@account.proxy.password}'
-}").to_json
+    'World': "#{world}",
+    'ProxyPort': "#{port}",
+    'ProxyPass': "#{@account.proxy.password}"
+}.to_json
   end
 
   def edit

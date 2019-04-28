@@ -1,6 +1,10 @@
 class ProxiesController < ApplicationController
   def index
-    @proxies = Proxy.all
+    @proxies = Proxy.all.order(:id)
+
+    @proxy_users = Account.where(banned: false, created: true).group('proxy_id')
+                                                                    .order("proxy_id")
+                                                                    .select("proxy_id, COUNT(*) as count")
   end
   def show
     @proxy = Proxy.find(params[:id])
@@ -17,6 +21,7 @@ class ProxiesController < ApplicationController
   def import
     if (params[:proxies] != nil)
       custom_cooldown = params[:custom_cooldown]
+      max_slaves = params[:max_slaves]
       location = params[:location]
       count = 0
       auto_assign = params[:auto_assign]
@@ -28,8 +33,8 @@ class ProxiesController < ApplicationController
         next if parts.length < 2
         ip = parts[0]
         port = parts[1]
-        username = parts[2]
-        password = parts[3]
+        username = parts[2].nil? ? "" : parts[2]
+        password = parts[3].nil? ? "" : parts[3]
         proxy = Proxy.new(location: "#{location} - #{count}",
                           ip: ip,
                           port: port,
@@ -37,10 +42,12 @@ class ProxiesController < ApplicationController
                           password: password,
                           custom_cooldown: custom_cooldown,
                           eco_system: eco_system,
-                          auto_assign: auto_assign
+                          auto_assign: auto_assign,
+                          max_slaves: max_slaves
         )
         proxy.save
       end
+      redirect_to proxies_path
     end
   end
 

@@ -4,8 +4,8 @@ class Proxy < ApplicationRecord
   belongs_to :eco_system
 
   def is_available
-
-    return Pinger.ProxyAvailable(ip, port)
+    result = Pinger.ProxyAvailable(self)
+    return result
   end
 
   def has_cooldown

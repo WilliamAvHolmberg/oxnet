@@ -99,8 +99,8 @@ export var CollectionControl = L.Control.extend({
         //save area
         var nameInput = L.DomUtil.create('textarea', 'leaflet-bar leaflet-control leaflet-control-custom', container);
         nameInput.id = 'area_name';
-        nameInput.placeholder = String.fromCharCode(0xF007) + " Area name";
-        $(nameInput).css('font-family', "Arial, FontAwesome");
+        nameInput.placeholder = String.fromCharCode(0xf0fe) + " Area name";
+        $(nameInput).css('font-family', "Arial, 'Font Awesome 5 Free'");
 
         this.saveButton = L.DomUtil.create('a', 'leaflet-bar leaflet-control leaflet-control-custom', container);
         this.saveButton.id = 'save_area_button';

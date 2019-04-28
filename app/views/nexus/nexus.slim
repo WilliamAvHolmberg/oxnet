@@ -87,7 +87,10 @@
                     a href=computer_path(comp)
                       = comp.name
                   td = @available_accounts.select { |acc| acc.computer_id == comp.id }.size
-                  td = comp.get_connected_accounts_count
+                  td
+                    span.online.mr-2
+                    = @active_accounts.select {|acc| acc.computer_id == comp.id }.size
+                    / = " (#{comp.get_connected_accounts_count})"
                   td = comp.max_slaves
     .col-md-4
       .card.card-chart
@@ -148,23 +151,7 @@
               th Money per Hour
               th Average
             tbody id="area_overview"
-              - @areas.each do |area|
-                = render partial: 'nexus/area', locals: {area: area}
-                / - skill = log.account.stats.order("level DESC, skill_id ASC").limit(2).select{|s|s.skill.name != "Hitpoints"}.first
-                  / tr
-                  /   td
-                  /     time class="timeago" datetime="#{log.created_at.localtime}" = "#{formatted_duration(Time.now.utc - log.created_at)} ago"
-                  /   td
-                  /     a href=account_path(log.account) = log.account.username
-                  /   td = "#{formatted_duration(log.created_at - log.account.created_at)}"
-                  /   - if skill != nil && skill.skill_id != nil
-                  /     td = "#{skill.skill.name}: #{skill.level}"
-                  /   - else
-                  /     td = "?"
-                  /   td = log.account.money_made
-                  /   td = log.account.created_at.localtime
-                  /   td = log.account.computer.name
-                  /   td = log.account.proxy.location
+              = render partial:'nexus/area', collection: @areas, as: :area
 
         .card-body.table-responsive
           h3 = "Recently Banned"
@@ -179,44 +166,18 @@
               th Computer
               th IP
             tbody id="recent_bans"
-              - @recently_banned.each do |acc|
-                = render partial:'nexus/recentlybanned', locals: {account: acc}
-                / - skill = log.account.stats.order("level DESC, skill_id ASC").limit(2).select{|s|s.skill.name != "Hitpoints"}.first
-                / tr
-                /   td
-                /     time class="timeago" datetime="#{log.created_at.localtime}" = "#{formatted_duration(Time.now.utc - log.created_at)} ago"
-                /   td
-                /     a href=account_path(log.account) = log.account.username
-                /   td = "#{formatted_duration(log.created_at - log.account.created_at)}"
-                /   - if skill != nil && skill.skill_id != nil
-                /     td = "#{skill.skill.name}: #{skill.level}"
-                /   - else
-                /     td = "?"
-                /   td = log.account.money_made
-                /   td = log.account.created_at.localtime
-                /   td = log.account.computer.name
-                /   td = log.account.proxy.location
+              = render partial:'nexus/recentlybanned', collection: @recently_banned, as: :account
+
         .card-body.table-responsive
           h3 = "Recently Created"
           table.table.table-hover
             thead.text-warning
               th Time
               th Account Name
-
-              th Highest Skill
+              th Proxy
+              th Schema
             tbody
-              - @new_accounts.each do |account|
-                - stat = account.stats.sort_by{|s|s.level}.select{|s|s.skill.name != "Hitpoints"}.last
-                tr
-                  td
-                    time class="timeago" datetime="#{account.created_at.localtime}" = "#{formatted_duration(Time.now.utc - account.created_at)} ago"
-                  td
-                    a href=account_path(account) = account.username
-
-                  - if stat != nil && stat.skill_id != nil
-                    td = "#{stat.skill.name}: #{stat.level}"
-                  - else
-                    td = "?"
+              = render partial:'nexus/recently_created', collection: @new_accounts, as: :account
         .card-body.table-responsive
           h3 = "Recently failed creations"
           table.table.table-hover
@@ -244,10 +205,18 @@
           - money_made_today = money_made_today()
           - money_last_2_hours = money_last_2_hours()
           - money_last_24_hours = money_last_24_hours()
-          h4.card-title = "GP Last 24H: #{number_with_delimiter(money_last_24_hours, :delimiter => ",", :separator => ".")}"
-          h4.card-title = "GP Today: #{number_with_delimiter(money_made_today, :delimiter => ",", :separator => ".")}"
-          h4.card-title = "Per Hour: #{number_with_delimiter((money_made_today / (Time.now.hour + 0.1)).round(0), :delimiter => ",", :separator => ".")}"
-          h4.card-title = "Recent Avg: #{number_with_delimiter(money_last_2_hours / 2, :delimiter => ",", :separator => ".")}"
+          h4.card-title id="gpPrev24"
+            = "GP Last 24H: "
+            span = "#{number_with_delimiter(money_last_24_hours, :delimiter => ",", :separator => ".")}"
+          h4.card-title id="gpToday"
+            = "GP Today: "
+            span = "#{number_with_delimiter(money_made_today, :delimiter => ",", :separator => ".")}"
+          h4.card-title id="gpPerHr"
+            = "Per Hour: "
+            span = "#{number_with_delimiter((money_made_today / (Time.now.hour + 0.1)).round(0), :delimiter => ",", :separator => ".")}"
+          h4.card-title id="gpRecAvg"
+            = "Recent Avg: "
+            span = "#{number_with_delimiter(money_last_2_hours / 2, :delimiter => ",", :separator => ".")}"
         .card-body.table-responsive
           table.table.table-hover
             thead.text-warning
@@ -255,38 +224,8 @@
               th Account Name
               th Amount of Cash
               th Mule
-            tbody
-              - @mule_logs.each do |log|
-                - mule_acc_id = @name_to_id[log.mule.downcase]
-                - to_master_mule = @master_mule_ids[mule_acc_id] != nil
-                - amount = log.item_amount
-                - if log.account.account_type.name.include? "MULE"
-                  - amount = -amount
-                - amount = -amount if to_master_mule
-                tr
-                  td
-                    time class="timeago" datetime="#{log.created_at.localtime}" = "#{formatted_duration(Time.now.utc - log.created_at)} ago"
-                  td
-                    a href=account_path(log.account)
-                      - if @master_mule_ids[log.account_id] != nil
-                        i.fas.fa-crown.pr-1 style="color:orange"
-                      - elsif @mule_ids[log.account_id] != nil
-                        i.fas.fa-democrat.pr-1 style="color:gray"
-                      = log.account.username
-                  -if amount < 0
-                    td style="color:red;" = "#{number_with_delimiter(amount, :delimiter => ",", :separator => ".")}"
-                  - else
-                    td style="color:green" = "+#{number_with_delimiter(amount, :delimiter => ",", :separator => ".")}"
-                  -if mule_acc_id == nil
-                    td = log.mule
-                  -else
-                    td
-                      a href=account_path(mule_acc_id)
-                        - if to_master_mule
-                          i.fas.fa-crown.pr-1  style="color:orange"
-                        - elsif @mule_ids[mule_acc_id] != nil
-                          i.fas.fa-democrat.pr-1 style="color:gray"
-                        = log.mule
+            tbody id="mule_logs"
+              = render partial:'nexus/mule_log', collection: @mule_logs, as: :log
 footer.footer
   .container-fluid
     nav.pull-left
@@ -296,16 +235,39 @@ footer.footer
             | Oxnet + Nexus
 javascript:
   $(document).ready(function () {
-      /!/i
-      nit
-      wizard
-      / !/ demo.initMaterialWizard();
-      /!/
-      Javascript
-      method
-      's body can be found in assets/js/demos.js
-      | demo.initDashboardPageCharts();
-  |
-      demo.initCharts();
-  |
+      var isIntervalInProgress = false;
+      var lastChecked = new Date(0);
+      var interval = 20000;
+      setInterval(function() {
+          var now = new Date();
+          if(now - lastChecked < interval)
+              return;
+          if(now - lastChecked < 10 * 60 * 1000) {
+              if (document.visibilityState != "visible")
+                  return;
+              if (!document.hasFocus())
+                  return;
+          }
+          if(isIntervalInProgress) return;
+          lastChecked = now;
+          isIntervalInProgress = true;
+          var most_recent = $("#mule_logs>tr>td>time").attr('datetime');
+          $.get("/nexus/update_mule_logs?since=" + most_recent, function (data) {
+              isIntervalInProgress = false;
+              if(data.length > 0) {
+                  $new_html = $("<tbody>" + data + "</tbody>");
+                  $("#gpPrev24>span").html($new_html.find("#gpPrev24").val());
+                  //var prevGPToday = parseInt($("#gpToday>span").text().replace(/[^\d\.\-]/g, ""));
+                  // var additionalGPToday = parseInt($new_html.find("#gpToday").val().replace(/[^\d\.\-]/g, ""));
+                  // $("#gpToday>span").html((prevGPToday + additionalGPToday).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+                  $("#gpToday>span").html($new_html.find("#gpToday").val());
+                  $("#gpPerHr>span").html($new_html.find("#gpPerHr").val());
+                  $("#gpRecAvg>span").html($new_html.find("#gpRecAvg").val());
+                  $new_html = $new_html.find("#new_stats").remove().end().html();
+                  $($new_html).prependTo($("#mule_logs")).hide(0).fadeIn(2000)
+                  // $("#mule_logs").prepend($new_html);
+                  page_load_stuff($("#mule_logs"));
+              }
+          });
+      }, interval);
   });

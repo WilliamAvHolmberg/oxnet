@@ -46,6 +46,7 @@ ActiveRecord::Schema.define(version: 2019_04_27_190459) do
     t.boolean "member", default: false
     t.index ["account_type_id"], name: "index_accounts_on_account_type_id"
     t.index ["computer_id"], name: "index_accounts_on_computer_id"
+    t.index ["created_at"], name: "index_accounts_on_created_at"
     t.index ["eco_system_id"], name: "index_accounts_on_eco_system_id"
     t.index ["mule_id"], name: "index_accounts_on_mule_id"
     t.index ["proxy_id"], name: "index_accounts_on_proxy_id"
@@ -148,6 +149,7 @@ ActiveRecord::Schema.define(version: 2019_04_27_190459) do
     t.bigint "script_id"
     t.index ["account_id"], name: "index_instructions_on_account_id"
     t.index ["computer_id"], name: "index_instructions_on_computer_id"
+    t.index ["created_at"], name: "index_instructions_on_created_at"
     t.index ["instruction_type_id"], name: "index_instructions_on_instruction_type_id"
     t.index ["script_id"], name: "index_instructions_on_script_id"
   end
@@ -182,6 +184,7 @@ ActiveRecord::Schema.define(version: 2019_04_27_190459) do
     t.datetime "updated_at", null: false
     t.integer "computer_id"
     t.index ["account_id"], name: "index_logs_on_account_id"
+    t.index ["created_at"], name: "index_logs_on_created_at"
   end
 
   create_table "mule_logs", force: :cascade do |t|
@@ -191,6 +194,7 @@ ActiveRecord::Schema.define(version: 2019_04_27_190459) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_mule_logs_on_account_id"
+    t.index ["created_at"], name: "index_mule_logs_on_created_at"
   end
 
   create_table "mule_withdraw_tasks", force: :cascade do |t|
@@ -207,6 +211,7 @@ ActiveRecord::Schema.define(version: 2019_04_27_190459) do
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_mule_withdraw_tasks_on_account_id"
     t.index ["area_id"], name: "index_mule_withdraw_tasks_on_area_id"
+    t.index ["created_at"], name: "index_mule_withdraw_tasks_on_created_at"
     t.index ["task_type_id"], name: "index_mule_withdraw_tasks_on_task_type_id"
   end
 
@@ -341,6 +346,7 @@ ActiveRecord::Schema.define(version: 2019_04_27_190459) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_task_logs_on_account_id"
+    t.index ["created_at"], name: "index_task_logs_on_created_at"
     t.index ["task_id"], name: "index_task_logs_on_task_id"
   end
 

@@ -17,14 +17,17 @@ class Schema < ApplicationRecord
     end
 
     def next_to_use
-      results = primary_schemas.where("max_slaves > ?", 0)
-                   .select("schemas.*,
-(SELECT COUNT(*) FROM schemas as schB WHERE schB.disabled=false AND schB.original_id=schemas.id) as num_slaves")
-                    .sort_by{|row| (row.max_slaves - row.num_slaves) }
-      results.each do |result|
-        return result if (result.num_slaves < result.max_slaves)
+      Schema.uncached do
+        results = primary_schemas.where("max_slaves > ?", 0)
+                     .select("schemas.*,
+  (SELECT COUNT(*) FROM schemas as schB WHERE schB.disabled=false AND schB.original_id=schemas.id) as num_slaves")
+                      .select{|row| row.num_slaves < row.max_slaves }
+                      .sort_by{|row| (row.max_slaves - row.num_slaves) }
+        results.each do |result|
+          return result if (result.num_slaves < result.max_slaves)
+        end
+        return results.last
       end
-      return results.last
     end
   end
 

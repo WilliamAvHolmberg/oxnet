@@ -107,13 +107,18 @@ class GenerateAccount
 
   private
   def get_domains
-    if @lastGotMailDomains == nil || Time.now > @lastGotMailDomains + 900
-      @mail_domains = []
-      @lastGotMailDomains = Time.now
-      doc = Nokogiri::HTML(open("https://temp-mail.org/en/option/change/"))
-      doc.css('#domain option').each do |option|
-        @mail_domains << option.attr('value')
+    begin
+      if @lastGotMailDomains == nil || Time.now > @lastGotMailDomains + 900
+        @mail_domains = []
+        @lastGotMailDomains = Time.now
+        doc = Nokogiri::HTML(open("https://temp-mail.org/en/option/change/"))
+        doc.css('#domain option').each do |option|
+          @mail_domains << option.attr('value')
+        end
       end
+    rescue => error
+      puts error
+      puts error.backtrace
     end
     if @mail_domains.nil? || @mail_domains.length == 0
       @mail_domains = ["@yahoo.com", "@gmail.com", "@outlook.com", "@hotmail.com", "@live.se", "@hotmail.co.uk"]
@@ -168,7 +173,7 @@ class GenerateAccount
     end
   private
     def find_available_proxy
-      return Proxy.where(auto_assign: true).select{|proxy| proxy.is_available && !proxy.has_cooldown}.sample
+      return Proxy.where(auto_assign: true).select{|proxy| !proxy.has_cooldown && proxy.is_available}.sample
     end
 
   public
@@ -248,13 +253,16 @@ class GenerateAccount
   public
 
   def get_least_used_proxies(eco_system)
-    available_proxies = Proxy.where(eco_system: eco_system, auto_assign: true)
-                            .select{|proxy| proxy.is_available && !proxy.has_cooldown &&  proxy.get_active_accounts.size < proxy.max_slaves}
+    available_proxies = nil
+    Proxy.uncached do
+      available_proxies = Proxy.where(eco_system: eco_system, auto_assign: true)
+                              .select{|proxy| proxy.is_available && !proxy.has_cooldown}
+    end
     proxies = Array.new
     current_lowest = 10000
     available_proxies.each do |proxy|
       account_amount = proxy.get_active_accounts.size
-      next if account_amount > proxy.max_slaves
+      next if account_amount >= proxy.max_slaves
       if account_amount < current_lowest
         proxies.clear
         proxies.push(proxy)

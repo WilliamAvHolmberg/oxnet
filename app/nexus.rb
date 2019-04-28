@@ -406,7 +406,7 @@ def get_test_combat_task_respond(task, account)
   food = "none"
   task.inventory.inventory_items.each do |item|
     if item.food
-      food = item.item.formated_name
+      food = item.item.to_json
       break
     end
   end

@@ -81,8 +81,8 @@ class AccountsController < ApplicationController
     render json: {
     'UseProxy': true,
     'ScriptArgs': '',
-    'RsUsername': "#{@account.login}",
-    'RsPassword': "#{@account.password}",
+    'RsUsername': @account.login,
+    'RsPassword': @account.password,
     'Config': {
       'EngineTickDelay': 10,
       'DisableModelRendering': true,
@@ -91,12 +91,12 @@ class AccountsController < ApplicationController
       'SuperLowCpuMode': true
     },
     'ScriptName': 'nex',
-    'ProxyIp': "#{@account.proxy.ip}",
-    'ProxyUser': "#{@account.proxy.username}",
+    'ProxyIp': @account.proxy.ip,
+    'ProxyUser': @account.proxy.username,
     'IsRepoScript': false,
-    'World': "#{world}",
-    'ProxyPort': "#{port}",
-    'ProxyPass': "#{@account.proxy.password}"
+    'World': world.to_i,
+    'ProxyPort': port,
+    'ProxyPass': @account.proxy.password
 }.to_json
   end
 

@@ -278,47 +278,33 @@ class GenerateAccount
     return get_least_used_proxies(eco_system).sample
   end
   public
+    def get_available_acounts
+      return Account.where(banned: false, created: true, locked: false, assigned: false)
+    end
     def create_accounts_for_all_computers
-      created = false
-      computers = find_available_computers.shuffle
+      available_accounts = get_available_accounts
+      if available_accounts != nil && available_accounts.length > 0
+        computers = find_available_computers.shuffle
 
-      computers.each do |computer|
-        account_threshold = computer.max_slaves
-        current_amount_of_accounts = get_available_accounts_on_computer(computer)
-        next if current_amount_of_accounts.size >= account_threshold
-
-        proxies = get_least_used_proxies(computer.eco_system).shuffle
-        proxies.each do |proxy|
-          # proxy = get_random_proxy(computer.eco_system)
-          # Check if we already have an instruction with this proxy due
-
-          existing_instructions = Instruction.get_uncompleted_instructions_60
-                                      .where(instruction_type_id: InstructionType.find_by_name("CREATE_ACCOUNT").id).includes(:account)
-          next if existing_instructions.any? { |ins| ins.is_relevant && ins.account.proxy_id == proxy.id}
-
-          puts "#{computer.name} has #{current_amount_of_accounts.size} of #{account_threshold} slaves"
-          create_account(computer, proxy)
-          proxy.update(last_used: DateTime.now.utc)
-          created = true
-          #puts "lets create acc for #{computer.name}"
-          # should_do = false
-          break #exit loop, only do one account
+        computers.each do |computer|
+          account_threshold = computer.max_slaves
+          current_amount_of_accounts = get_available_accounts_on_computer(computer)
+          accounts_needed = account_threshold - current_amount_of_accounts
+          accounts_needed.times do
+            if available_accounts.length > 0
+              account = available_accounts.pop
+              account.update(computer: computer, assigned: true)
+            end
+          end
         end
       end
-      if !created
-        create_backups_for_all_computers
-      end
-      #if should_do
-       # puts "We reached computer threshold. Lets create more accounts"
-       # create_backups_for_all_computers
-      #end
+      create_backups_for_all_computers
     end
   private
     def create_backups_for_all_computers
-      computer = find_available_computers.sample
+      computer = Computer.find(25) #testcomputer. Default computer for account creation
       if computer != nil
-
-        account_threshold = computer.max_slaves * 3
+        account_threshold = 500
         current_amount_of_accounts = get_available_accounts_on_computer(computer)
         if current_amount_of_accounts != nil && current_amount_of_accounts.size < account_threshold
           proxies = get_least_used_proxies(computer.eco_system).shuffle

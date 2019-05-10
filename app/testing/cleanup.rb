@@ -820,6 +820,8 @@ def computer_get_respond(instruction_queue)
   end
 end
 
-account = Account.where(login: "whitcreha@3mail.rocks").first
-account.update(last_seen: Time.now)
+accounts = Account.where(banned: false, created: true, member: false)
+accounts.each do |acc|
+  acc.update(assigned: true)
+end
 

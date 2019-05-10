@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_27_190459) do
+ActiveRecord::Schema.define(version: 2019_05_10_143143) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,6 +44,7 @@ ActiveRecord::Schema.define(version: 2019_04_27_190459) do
     t.integer "money_withdrawn", default: 0
     t.boolean "locked", default: false
     t.boolean "member", default: false
+    t.boolean "assigned", default: false
     t.index ["account_type_id"], name: "index_accounts_on_account_type_id"
     t.index ["computer_id"], name: "index_accounts_on_computer_id"
     t.index ["created_at"], name: "index_accounts_on_created_at"

@@ -29,6 +29,7 @@
             / th Mule
             / th Banned?
             th Locked?
+            th Assigned?
             th Member?
             / th Created?
             th Time Per Day
@@ -57,6 +58,7 @@
                     i class="fas fa-lock"
                   -else
                     = "-"
+                td = account.assigned
                 td = account.member
                 / td = account.created
                 td = account.schema.total_time_per_day if account.schema != nil

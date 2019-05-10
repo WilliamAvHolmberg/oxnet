@@ -278,7 +278,7 @@ class GenerateAccount
     return get_least_used_proxies(eco_system).sample
   end
   public
-    def get_available_acounts
+    def get_available_accounts
       return Account.where(banned: false, created: true, locked: false, assigned: false)
     end
     def create_accounts_for_all_computers

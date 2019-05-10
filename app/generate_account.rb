@@ -289,7 +289,7 @@ class GenerateAccount
         computers.each do |computer|
           account_threshold = computer.max_slaves
           current_amount_of_accounts = get_available_accounts_on_computer(computer)
-          accounts_needed = account_threshold - current_amount_of_accounts
+          accounts_needed = account_threshold - current_amount_of_accounts.length
           accounts_needed.times do
             if available_accounts.length > 0
               account = available_accounts.pop

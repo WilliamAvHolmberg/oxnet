@@ -279,7 +279,7 @@ class GenerateAccount
   end
   public
     def get_available_accounts
-      return Account.where(banned: false, created: true, locked: false, assigned: false)
+      return Account.where(banned: false, created: true, locked: false, assigned: false).to_a
     end
     def create_accounts_for_all_computers
       available_accounts = get_available_accounts

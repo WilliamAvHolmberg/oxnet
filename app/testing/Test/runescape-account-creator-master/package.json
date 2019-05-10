@@ -26,7 +26,8 @@
     "public-ip": "^3.0.0",
     "request-promise": "^4.2.4",
     "socks-client": "^1.1.4",
-    "socks5-https-client": "latest"
+    "socks5-https-client": "latest",
+    "unirest": "latest"
   },
   "devDependencies": {
     "request": "^2.88.0"

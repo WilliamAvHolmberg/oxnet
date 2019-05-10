@@ -78,7 +78,7 @@ class GenerateAccount
 
   private
     def get_available_accounts_on_computer(computer)
-      accounts = Account.where(computer_id: computer.id, banned:false, created:true)
+      accounts = Account.where(computer_id: computer.id, banned:false, created:true, locked: false, assigned: true)
       puts "Computer:#{computer.name}:#{accounts.length} accounts"
       return accounts
     end

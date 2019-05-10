@@ -212,7 +212,7 @@ class Account < ApplicationRecord
 
 
   def self.launch_accounts(secsDelay)
-    accounts = Account.includes(:account_type, :computer, {:schema => [ {:tasks=>:requirements }, :time_intervals]}, { :stats => :skill }, :proxy).where(banned: false, created: true, locked: false).where("last_seen < NOW() - INTERVAL '1 MINUTE'").to_a
+    accounts = Account.includes(:account_type, :computer, {:schema => [ {:tasks=>:requirements }, :time_intervals]}, { :stats => :skill }, :proxy).where(banned: false, created: true, locked: false, assigned: true).where("last_seen < NOW() - INTERVAL '1 MINUTE'").to_a
     if !accounts.nil? && !accounts.blank?
       accounts = accounts.select{|acc| acc != nil && acc.account_type.name == "SLAVE"}
     end

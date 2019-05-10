@@ -6,6 +6,8 @@ ruby '2.4.1'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.1'
 gem 'devise'
+gem 'httparty'
+gem 'two_captcha'
 # Use postgresql as the database for Active Record
 gem 'bootstrap-sass'
 gem 'pg', '>= 0.18', '< 2.0'

@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="691cc206-7aa4-4c83-9b12-ee418b886cfa" name="Default Changelist" comment="" />
+    <list default="true" id="691cc206-7aa4-4c83-9b12-ee418b886cfa" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/runescape-account-creator-master/src/unlock_account.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../unlock_account.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Gemfile" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Gemfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Gemfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Gemfile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../generate_account.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../../generate_account.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../models/account.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../../models/account.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/runescape-account-creator-master/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/runescape-account-creator-master/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/runescape-account-creator-master/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/runescape-account-creator-master/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../cleanup.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../cleanup.rb" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -17,16 +29,34 @@
         <entry file="file://$PROJECT_DIR$/runescape-account-creator-master/index.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="60">
-              <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+              <caret line="4" selection-start-line="4" selection-end-line="4" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/runescape-account-creator-master/src/NexHelper.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-335">
-              <caret line="1" column="25" selection-start-line="1" selection-start-column="25" selection-end-line="1" selection-end-column="25" />
+            <state relative-caret-position="32">
+              <caret line="4" column="37" selection-start-line="4" selection-end-line="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/runescape-account-creator-master/src/unlock_account.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="60">
+              <caret line="4" column="18" selection-start-line="4" selection-start-column="18" selection-end-line="4" selection-end-column="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/runescape-account-creator-master/package.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="435">
+              <caret line="29" column="23" selection-start-line="29" selection-start-column="23" selection-end-line="29" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -34,16 +64,25 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/runescape-account-creator-master/src/account.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" column="17" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="17" />
+            <state relative-caret-position="398">
+              <caret line="54" column="60" lean-forward="true" selection-start-line="46" selection-start-column="15" selection-end-line="54" selection-end-column="60" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/runescape-account-creator-master/src/constants.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="135">
+              <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/runescape-account-creator-master/src/supplier.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="183">
+            <state relative-caret-position="405">
               <caret line="27" column="11" selection-start-line="27" selection-start-column="11" selection-end-line="27" selection-end-column="11" />
             </state>
           </provider>
@@ -68,6 +107,8 @@
       <find>reciev</find>
       <find>5</find>
       <find>request</find>
+      <find>promise</find>
+      <find>queue</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -80,19 +121,14 @@
         <option value="$PROJECT_DIR$/runescape-account-creator-master/NexHelper.js" />
         <option value="$PROJECT_DIR$/runescape-account-creator-master/index.js" />
         <option value="$PROJECT_DIR$/runescape-account-creator-master/src/NexHelper.js" />
-      </list>
-    </option>
-  </component>
-  <component name="ProjectConfigurationFiles">
-    <option name="files">
-      <list>
-        <option value="$PROJECT_DIR$/.idea/vcs.xml" />
+        <option value="$PROJECT_DIR$/runescape-account-creator-master/package.json" />
+        <option value="$PROJECT_DIR$/runescape-account-creator-master/src/unlock_account.js" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="12" />
-    <option name="y" value="42" />
+    <option name="x" value="11" />
+    <option name="y" value="41" />
     <option name="width" value="1082" />
     <option name="height" value="987" />
   </component>
@@ -102,7 +138,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -131,6 +166,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -175,11 +211,13 @@
       <workItem from="1555529327716" duration="560000" />
       <workItem from="1555530102223" duration="23877000" />
       <workItem from="1556186479715" duration="4945000" />
+      <workItem from="1557509318620" duration="2297000" />
+      <workItem from="1557514524300" duration="1992000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="30363000" />
+    <option name="totallyTimeSpent" value="34652000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -191,7 +229,8 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="12" y="42" width="1082" height="987" extended-state="0" />
+    <frame x="11" y="41" width="1082" height="987" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.32422245" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -226,13 +265,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/runescape-account-creator-master/src/constants.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/runescape-account-creator-master/examples/examples.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360">
@@ -254,31 +286,52 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/runescape-account-creator-master/src/supplier.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="183">
-          <caret line="27" column="11" selection-start-line="27" selection-start-column="11" selection-end-line="27" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/runescape-account-creator-master/src/account.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="17" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/runescape-account-creator-master/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
-          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+          <caret line="4" selection-start-line="4" selection-end-line="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/runescape-account-creator-master/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="29" column="23" selection-start-line="29" selection-start-column="23" selection-end-line="29" selection-end-column="23" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/runescape-account-creator-master/src/NexHelper.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-335">
-          <caret line="1" column="25" selection-start-line="1" selection-start-column="25" selection-end-line="1" selection-end-column="25" />
+        <state relative-caret-position="32">
+          <caret line="4" column="37" selection-start-line="4" selection-end-line="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/runescape-account-creator-master/src/unlock_account.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="18" selection-start-line="4" selection-start-column="18" selection-end-line="4" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/runescape-account-creator-master/src/constants.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/runescape-account-creator-master/src/account.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="398">
+          <caret line="54" column="60" lean-forward="true" selection-start-line="46" selection-start-column="15" selection-end-line="54" selection-end-column="60" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/runescape-account-creator-master/src/supplier.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="27" column="11" selection-start-line="27" selection-start-column="11" selection-end-line="27" selection-end-column="11" />
         </state>
       </provider>
     </entry>

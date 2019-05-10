@@ -820,8 +820,8 @@ def computer_get_respond(instruction_queue)
   end
 end
 
-accounts = Account.where(banned: false, created: true, member: false)
+accounts = Account.where(locked: true)
 accounts.each do |acc|
-  acc.update(assigned: true)
+  puts acc.id
 end
 

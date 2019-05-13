@@ -1,8 +1,25 @@
 require_relative '../functions'
 
 class AccountsController < ApplicationController
-  skip_before_action :authenticate_user!, only: [:json]
+  skip_before_action :authenticate_user!, only: [:json, :available_mail_domains]
+  private
+    def get_domains
+      if @lastGotMailDomains == nil || Time.now > @lastGotMailDomains + 900
+        @mail_domains = []
+        @lastGotMailDomains = Time.now
+        doc = Nokogiri::HTML(open("https://temp-mail.org/en/option/change/"))
+        doc.css('#domain option').each do |option|
+          @mail_domains << option.attr('value')
+        end
+      end
+      return @mail_domains
+    end
+  public
+  def available_mail_domains
 
+
+    render json: get_domains.to_json
+  end
   def index
 
     @available_accounts = Account.includes( :mule, :proxy, :schema, {:schema => :time_intervals}, :account_type, :eco_system, :stats, :computer)

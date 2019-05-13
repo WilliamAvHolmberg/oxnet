@@ -73,6 +73,9 @@ Rails.application.routes.draw do
       get 'disconnect'
     end
     collection do
+      get 'available_mail_domains'
+    end
+    collection do
       get 'get_player_positions'
     end
   end

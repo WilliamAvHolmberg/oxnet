@@ -26,6 +26,7 @@ gem 'slim-rails'
 
 gem 'net-ping'
 
+
 gem 'acts_as_list'
 
 # Use CoffeeScript for .coffee assets and views

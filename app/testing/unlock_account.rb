@@ -81,8 +81,11 @@ end
 def get_reset_password_link(email_content)
   password_link = email_content.to_s
   password_id = password_link[/#{"code="}(.*?)#{'">reset'}/m, 1].chomp("\\")
-  start_url = "https://secure.runescape.com/m=accountappeal/enter_security_code.ws?code="
-  return "#{start_url}#{password_id}"
+  #this url is later being redirected so we have to visit the link in order to get the real address
+  start_url = "https://secure.runescape.com/m=accountappeal/enter_security_code.ws?code=" + password_id
+
+  url = HTTParty.head(start_url, follow_redirects:true).request.last_uri.to_s
+  return url
 end
 
 @google_recaptcha_api_key = '6Lcsv3oUAAAAAGFhlKrkRb029OHio098bbeyi_Hv'
@@ -104,29 +107,32 @@ def get_captcha_response
 end
 
 def send_reset_password_post(url)
-  puts "Requesting google recaptcha."
-  google_recaptcha_key = get_captcha_response
-  respond = HTTParty.post(url, body:{password: "ugot00wned5",
-                                              confirm: "ugot00wned5",
-                                              'submit': "Change+Password",
-                                              'g-recaptcha-response': google_recaptcha_key
-    })
+  #body:{password: "ugot00wned5",
+  #confirm: "ugot00wned5",
+  #    submit: "Change Password"
+  respond = HTTParty.post(url,follow_redirects: true,   body: "password=ugot00wned3&confirm=ugot00wned3&submit=Change+Password"
+
+    )
   puts respond
   return respond
 end
 
-def analyse_respond(respond)
-  bad_responses = ["You have been temporarily blocked from using this service"]
-  if bad_responses.any? { |word| respond.include?(word) }
-    return "BAD_RESPONSE"
-  else
-    return "PROBABLY GOOD???" #need more responses.
+def successfully_recovered(respond)
+  good_response = "Successfully set a new password and completed the process"
+  #bad_responses = ["You have been temporarily blocked from using this service"]
+  if respond.include?(good_response)
+    return true
   end
+  return false
+end
+
+def unlock_account(account)
+  account.update(locked: false, created: true, assigned: true, banned: false)
 end
 
 
 def recover
-  account = Account.find(43590)
+  account = Account.find(43597)
   md5 = get_md5(account.login)
   puts "MD5 key:#{md5}"
   puts "Requesting emails."
@@ -145,10 +151,16 @@ def recover
     password_link = get_reset_password_link(email_content)
     puts "Password link:#{password_link}"
     respond = send_reset_password_post(password_link)
-    puts respond.header
+    if successfully_recovered(respond)
+      puts "Successfully unlocked account!"
+      unlock_account(account)
+    else
+      puts "Failed to unlock. Lets give cooldown of 20 minutes to the proxy"
+      #todo proxy cooldown
+    end
 
   else
-    puts "No email recieved. Lets recover account."
+    puts "No email received. Lets recover account."
   end
 end
 

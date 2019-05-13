@@ -820,8 +820,35 @@ def computer_get_respond(instruction_queue)
   end
 end
 
-accounts = Account.where(locked: true)
-accounts.each do |acc|
-  puts acc.id
+def mail_is_available(email)
+  domains = get_domains
+  email_domain = "@#{email.split("@")[1]}"
+  if domains.include?(email_domain)
+    return true
+  end
+end
+def get_domains
+  begin
+    if @lastGotMailDomains == nil || Time.now > @lastGotMailDomains + 900
+      @mail_domains = []
+      @lastGotMailDomains = Time.now
+      doc = Nokogiri::HTML(open("https://temp-mail.org/en/option/change/"))
+      doc.css('#domain option').each do |option|
+        @mail_domains << option.attr('value')
+      end
+    end
+  rescue => error
+    puts error
+    puts error.backtrace
+  end
+  return @mail_domains
 end
 
+
+account = Account.find(45322)
+
+if mail_is_available(account.login)
+  puts "mail si available"
+else
+  puts "not available"
+end

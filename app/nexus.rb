@@ -1029,11 +1029,36 @@ def get_creation_computer(computer)
   end
   return computer.id
 end
+
+def mail_is_available(email)
+  domains = get_domains
+  email_domain = "@#{email.split("@")[1]}"
+  if domains.include?(email_domain)
+    return true
+  end
+end
+def get_domains
+  begin
+    if @lastGotMailDomains == nil || Time.now > @lastGotMailDomains + 900
+      @mail_domains = []
+      @lastGotMailDomains = Time.now
+      doc = Nokogiri::HTML(open("https://temp-mail.org/en/option/change/"))
+      doc.css('#domain option').each do |option|
+        @mail_domains << option.attr('value')
+      end
+    end
+  rescue => error
+    puts error
+    puts error.backtrace
+  end
+  return @mail_domains
+end
+
 @last_unlock = 0
 def unlock_accounts
   accounts = Account.includes(:account_type, :computer, :schema).where(banned: false, created: true, locked: true)
   if !accounts.nil? && !accounts.blank?
-    accounts = accounts.select{|acc| acc != nil && acc.proxy.is_ready_for_unlock && acc.account_type.name == "SLAVE" && acc.isAccReadToLaunch} #Shuffled for performance
+    accounts = accounts.select{|acc| acc != nil && acc.proxy.is_ready_for_unlock && acc.account_type.name == "SLAVE" && acc.isAccReadToLaunch && mail_is_available(acc.login)} #Shuffled for performance
   end
 
   new_accounts = Array.new
@@ -1100,7 +1125,7 @@ def main_thread
         time = Time.now.change(:month => 1, :day => 1, :year => 2000)
         puts "Main Thread loop nexus #{time}"
         Account.launch_accounts(3)
-        #unlock_accounts
+        unlock_accounts
 
         sleep(10.seconds)
       end

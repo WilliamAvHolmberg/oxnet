@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cc712b19-eba9-4483-bc4c-53d431a3e866" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Gemfile" beforeDir="false" afterPath="$PROJECT_DIR$/Gemfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/account.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/account.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/eco_system.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/eco_system.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/testing/cleanup.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/testing/cleanup.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/database.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config/database.yml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.bundle/" />
     <ignored path="$PROJECT_DIR$/components/" />
@@ -65,7 +60,7 @@
         <entry file="file://$PROJECT_DIR$/Gemfile">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="45">
-              <caret line="3" column="9" selection-start-line="3" selection-start-column="9" selection-end-line="3" selection-end-column="9" />
+              <caret line="3" column="11" selection-start-line="3" selection-start-column="11" selection-end-line="3" selection-end-column="11" />
             </state>
           </provider>
         </entry>
@@ -398,18 +393,18 @@
       <workItem from="1557945485301" duration="893000" />
       <workItem from="1558520882014" duration="2721000" />
       <workItem from="1558544340248" duration="2589000" />
-      <workItem from="1558621311376" duration="8000" />
+      <workItem from="1558621311376" duration="110000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="71158000" />
+    <option name="totallyTimeSpent" value="71260000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="424" y="23" width="1128" height="987" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49333334" visible="true" weight="0.40055248" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49333334" visible="true" weight="0.40055248" />
       <window_info id="Structure" order="1" sideWeight="0.50666666" side_tool="true" weight="0.28645065" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -422,7 +417,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Version Control" order="9" />
-      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.59484345" visible="true" weight="0.32960895" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" sideWeight="0.59484345" visible="true" weight="0.32960895" />
       <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.40515652" side_tool="true" visible="true" weight="0.32960895" />
       <window_info anchor="bottom" id="Messages" order="12" weight="0.32960895" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -723,7 +718,7 @@
     <entry file="file://$PROJECT_DIR$/Gemfile">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
-          <caret line="3" column="9" selection-start-line="3" selection-start-column="9" selection-end-line="3" selection-end-column="9" />
+          <caret line="3" column="11" selection-start-line="3" selection-start-column="11" selection-end-line="3" selection-end-column="11" />
         </state>
       </provider>
     </entry>

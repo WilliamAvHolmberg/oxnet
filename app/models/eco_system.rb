@@ -7,7 +7,7 @@ class EcoSystem < ApplicationRecord
   has_many :accounts
   has_many :computers
   belongs_to :user
-  validates :user, presence: true
+  validates :user, presence: false
 
   def email_required?
     false

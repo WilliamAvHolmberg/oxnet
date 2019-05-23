@@ -26,11 +26,11 @@ development:
   timeout: 15000
   adapter: postgresql
   encoding: utf8
-  database: nex
-  host: 193.108.117.105 ##REAL OXNET
+  database: postgresql
+  host: 0.0.0.0 ##REAL OXNET
   username: wavh
   password: 'Lifeunixbook123'
-  port: 6432 #REAL OXNET
+  port: 5432 #REAL OXNET
  # database: debug_env
  # host: oxnetdebug.ddns.net #DEBUG
  # username: root

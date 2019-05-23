@@ -25,6 +25,14 @@ class Account < ApplicationRecord
     return all_available_accounts.where("last_seen > NOW() - INTERVAL '1 MINUTE'")
   end
 
+  def last_seen
+    real_value = read_attribute(:last_seen)
+    if real_value == nil
+      return DateTime.now - 10.days
+    end
+    return real_value
+  end
+
   @@account_types = nil
   def account_type
     @@account_types = AccountType.all.to_a if @@account_types == nil

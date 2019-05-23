@@ -844,11 +844,6 @@ def get_domains
   return @mail_domains
 end
 
-
-account = Account.find(45322)
-
-if mail_is_available(account.login)
-  puts "mail si available"
-else
-  puts "not available"
-end
+eco = EcoSystem.new(name: "Williams_first", user_id: 1)
+puts eco.name
+eco.save!

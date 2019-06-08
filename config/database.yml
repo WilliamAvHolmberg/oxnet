@@ -21,6 +21,7 @@ default: &default
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: 1000
   timeout: 15000
+  port: 5433
 development:
   pool: 1000
   timeout: 15000
@@ -71,6 +72,7 @@ development:
 test:
   <<: *default
   database: myapp_test
+  port: 5433
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is

@@ -27,7 +27,7 @@ development:
   adapter: postgresql
   encoding: utf8
   database: nexus
-  host: 0.0.0.0 ##REAL OXNET
+  host: localhost ##REAL OXNET
   username: wavh
   password: 'Lifeunixbook123'
   port: 5432 #REAL OXNET

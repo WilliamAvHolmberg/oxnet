@@ -28,7 +28,7 @@ development:
   encoding: utf8
   database: nexus
   host: localhost
-  username: wavh
+  username: postgres
   password: Lifeunixbook123
   port: 5432 #REAL OXNET
  # database: debug_env

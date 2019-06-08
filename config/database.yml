@@ -29,7 +29,7 @@ development:
   database: nexus
   host: localhost
   username: wavh
-  password: 'Lifeunixbook123'
+  password: Lifeunixbook123
   port: 5432 #REAL OXNET
  # database: debug_env
  # host: oxnetdebug.ddns.net #DEBUG

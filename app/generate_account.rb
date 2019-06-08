@@ -298,7 +298,7 @@ class GenerateAccount
           end
         end
       end
-      create_backups_for_all_computers
+      #create_backups_for_all_computers
     end
   private
     def create_backups_for_all_computers

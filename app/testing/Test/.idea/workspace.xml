@@ -2,15 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="691cc206-7aa4-4c83-9b12-ee418b886cfa" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/http.rb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../http.rb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../socksify.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Gemfile" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Gemfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/runescape-account-creator-master/src/unlock_account.js" beforeDir="false" afterPath="$PROJECT_DIR$/runescape-account-creator-master/src/unlock_account.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../create_account.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../create_account.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../unlock_account.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../unlock_account.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../generate_account.rb" beforeDir="false" afterPath="$PROJECT_DIR$/../../generate_account.rb" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -35,7 +28,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/runescape-account-creator-master/src/NexHelper.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="176">
+            <state relative-caret-position="240">
               <caret line="16" column="9" selection-start-line="16" selection-start-column="9" selection-end-line="16" selection-end-column="9" />
             </state>
           </provider>
@@ -53,7 +46,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/runescape-account-creator-master/package.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="334">
+            <state relative-caret-position="435">
               <caret line="29" column="23" selection-start-line="29" selection-start-column="23" selection-end-line="29" selection-end-column="23" />
             </state>
           </provider>
@@ -62,7 +55,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/runescape-account-creator-master/src/account.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-441">
+            <state relative-caret-position="285">
               <caret line="19" column="26" selection-start-line="19" selection-start-column="26" selection-end-line="19" selection-end-column="26" />
             </state>
           </provider>
@@ -126,8 +119,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="10" />
-    <option name="y" value="31" />
+    <option name="x" value="17" />
+    <option name="y" value="33" />
     <option name="width" value="1401" />
     <option name="height" value="987" />
   </component>
@@ -212,11 +205,12 @@
       <workItem from="1556186479715" duration="4945000" />
       <workItem from="1557509318620" duration="2297000" />
       <workItem from="1557514524300" duration="7035000" />
+      <workItem from="1559938155239" duration="33000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="39695000" />
+    <option name="totallyTimeSpent" value="39728000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -228,7 +222,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="10" y="31" width="1401" height="987" extended-state="0" />
+    <frame x="17" y="33" width="1401" height="987" extended-state="0" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24927536" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -291,6 +285,27 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/runescape-account-creator-master/src/NexHelper.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="16" column="9" selection-start-line="16" selection-start-column="9" selection-end-line="16" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/runescape-account-creator-master/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="29" column="23" selection-start-line="29" selection-start-column="23" selection-end-line="29" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/runescape-account-creator-master/src/account.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="19" column="26" selection-start-line="19" selection-start-column="26" selection-end-line="19" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/runescape-account-creator-master/src/constants.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
@@ -302,27 +317,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <caret column="6" selection-start-column="6" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/runescape-account-creator-master/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="334">
-          <caret line="29" column="23" selection-start-line="29" selection-start-column="23" selection-end-line="29" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/runescape-account-creator-master/src/account.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-441">
-          <caret line="19" column="26" selection-start-line="19" selection-start-column="26" selection-end-line="19" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/runescape-account-creator-master/src/NexHelper.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="16" column="9" selection-start-line="16" selection-start-column="9" selection-end-line="16" selection-end-column="9" />
         </state>
       </provider>
     </entry>

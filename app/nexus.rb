@@ -609,7 +609,7 @@ end
 def computer_thread(client, computer)
   puts "started Thread for:#{computer.name} at ip:#{computer.ip}"
   puts " my computer id: #{computer.id}"
-  serverAddress = getServerAddress
+  serverAddress = getServerAddress(computer)
   begin
   while(!client.closed?)
     respond = client.gets.split(":")

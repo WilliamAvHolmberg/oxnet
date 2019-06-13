@@ -209,7 +209,7 @@ class GenerateAccount
       schema = Schema.next_to_use
       mule = Account.where(username: "PetDhaL").first #not needed. random
       account_type = "SLAVE"
-      if get_number_of_mules < 5
+      if get_number_of_mules < 2
         account_type = "MULE"
         schema = Schema.primary_schemas.order("max_slaves DESC").first
         other_mule = Account.where(banned:false, account_type: AccountType.where(:name => "MULE")).first
@@ -307,6 +307,7 @@ class GenerateAccount
         account_threshold = 10
         current_amount_of_accounts = get_available_accounts_on_computer(computer)
         if current_amount_of_accounts == nil || current_amount_of_accounts.size < account_threshold
+          puts "We are in! Lets create acc right?"
           proxies = get_least_used_proxies(computer.eco_system).shuffle
           proxies.each do |proxy|
             # proxy = get_random_proxy(computer.eco_system)

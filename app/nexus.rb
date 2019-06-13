@@ -1064,7 +1064,7 @@ end
 def unlock_accounts
   accounts = Account.includes(:account_type, :computer, :schema).where(banned: false, created: true, locked: true)
   if !accounts.nil? && !accounts.blank?
-    accounts = accounts.select{|acc| acc != nil && acc.proxy.is_ready_for_unlock && acc.account_type.name == "SLAVE" && acc.isAccReadToLaunch && mail_is_available(acc.login)} #Shuffled for performance
+    accounts = accounts.select{|acc| acc != nil && acc.computer.is_connected &&acc.proxy.is_ready_for_unlock && acc.account_type.name == "SLAVE"  && mail_is_available(acc.login)} #Shuffled for performance
   end
 
   new_accounts = Array.new

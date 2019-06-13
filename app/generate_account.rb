@@ -306,7 +306,7 @@ class GenerateAccount
       if computer != nil
         account_threshold = 10
         current_amount_of_accounts = get_available_accounts_on_computer(computer)
-        if current_amount_of_accounts != nil || current_amount_of_accounts.size < account_threshold
+        if current_amount_of_accounts == nil || current_amount_of_accounts.size < account_threshold
           proxies = get_least_used_proxies(computer.eco_system).shuffle
           proxies.each do |proxy|
             # proxy = get_random_proxy(computer.eco_system)
@@ -315,8 +315,6 @@ class GenerateAccount
             existing_instructions = Instruction.get_uncompleted_instructions_60
                                         .where(instruction_type_id: InstructionType.find_by_name("CREATE_ACCOUNT").id).includes(:account)
             next if existing_instructions.any? { |ins| ins.is_relevant && ins.account.proxy_id == proxy.id}
-
-            puts "#{computer.name} has #{current_amount_of_accounts.size} of #{account_threshold} slaves"
             create_account(computer, proxy)
             proxy.update(last_used: DateTime.now.utc)
             #puts "lets create acc for #{computer.name}"

@@ -39,7 +39,10 @@ def getServerAddress
   # @serverAddress = @serverAddress.strip
   #end
   #return @serverAddress.strip
-  return "0.0.0.0"
+  if computer.ip.to_s == "217.215.154.211"
+    return "0.0.0.0"
+  end
+  return "nexus.myfpt.biz"
   #return "oxnetdebug.ddns.net"
 end
 

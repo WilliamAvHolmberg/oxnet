@@ -186,6 +186,7 @@ class GenerateAccount
       return Account.where(account_type: account_type, banned: false).where("created=true OR created_at > NOW()- INTERVAL '2 HOURS'").count
     end
     def create_account(computer, proxy)
+      puts "in create acc"
       if proxy == nil
         puts "No proxy found for this ecosystem"
         return
@@ -193,6 +194,7 @@ class GenerateAccount
       name = generate_name
       email = generate_email(name)
       world = get_random_world
+      puts "got name email and world"
       return create_account2(computer, proxy, name, email, world)
     end
     @use_default_computer = true
@@ -207,9 +209,9 @@ class GenerateAccount
     def create_account2(computer, proxy, name, email, world)
       password = "ugot00wned2"
       schema = Schema.next_to_use
-      mule = Account.where(username: "PetDhaL").first #not needed. random
+      mule = Account.where(username: "BlaGnomSk").first #not needed. random
       account_type = "SLAVE"
-      if get_number_of_mules < 2
+      if get_number_of_mules < 1
         account_type = "MULE"
         schema = Schema.primary_schemas.order("max_slaves DESC").first
         other_mule = Account.where(banned:false, account_type: AccountType.where(:name => "MULE")).first
@@ -310,6 +312,7 @@ class GenerateAccount
           puts "We are in! Lets create acc right?"
           proxies = get_least_used_proxies(computer.eco_system).shuffle
           proxies.each do |proxy|
+            puts "in proxies"
             # proxy = get_random_proxy(computer.eco_system)
             # Check if we already have an instruction with this proxy due
 

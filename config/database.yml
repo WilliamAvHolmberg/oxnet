@@ -30,7 +30,7 @@ development:
   adapter: postgresql
   encoding: utf8
   database: nexus
-  host: nexus.myftp.biz
+  host: localhost
   username: wavh
   password: Lifeunixbook123
   port: 5433 #REAL OXNET

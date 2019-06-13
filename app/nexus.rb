@@ -854,7 +854,9 @@ def get_account_info_respond(respond, account)
       account_type: account_type,
       created_at: created_at,
       member: member,
-      mule: account.should_mule
+      mule: account.should_mule,
+      login_time: account.schema.get_login_time,
+      logout_time: account.schema.get_logout_time,
   }
   res = json_respond.to_json
   return res

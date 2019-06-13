@@ -68,6 +68,8 @@
           = link_to "Online", "#", class: 'btn btn-success button'
         - elsif @readyToLaunch
           = link_to "#{@launchTitle}", "/accounts/#{@account.id}?launch=true", class: 'btn btn-primary button'
+        - if @isLocked
+          = link_to "#{@unlockTitle}", "/accounts/#{@account.id}?unlock=true", class: 'btn btn-primary button'
 
 
       h2 Tasks

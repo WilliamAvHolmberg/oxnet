@@ -73,6 +73,25 @@ class AccountsController < ApplicationController
       end
     end
 
+    @isLocked = @account.locked
+    if !@isLocked
+      #do nothing
+    else
+      computer = @account.computer if @account.computer_id != nil
+      @readyToUnlock = false
+      if computer != nil && computer.is_available_to_nexus && computer.can_connect_more_accounts
+        @readyToUnlock = true
+        @unlockTitle = "UNLOCK"
+        if params[:unlock].present?
+          @unlockTitle = "TRYING TO UNLOCK!"
+          unlock_instruction = InstructionType.find_by_name("UNLOCK_ACCOUNT")
+
+          Instruction.new(:instruction_type_id => unlock_instruction.id, :computer_id => computer.id, :account_id => @account.id, :script_id => Script.first.id).save
+          redirect_to @account
+        end
+      end
+    end
+
   end
 
   def new
@@ -101,7 +120,7 @@ class AccountsController < ApplicationController
     'ScriptArgs': '',
     'RsUsername': @account.login,
     'RsPassword': @account.password,
-    'Config': {
+    'config': {
       'EngineTickDelay': 10,
       'DisableModelRendering': true,
       'LowCpuMode': true,

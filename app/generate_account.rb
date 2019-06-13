@@ -79,7 +79,6 @@ class GenerateAccount
   private
     def get_available_accounts_on_computer(computer)
       accounts = Account.where(computer_id: computer.id, banned:false, created:true, locked: false, assigned: true)
-      accounts = accounts.map{|account| account.shall_do_task}
       puts "Computer:#{computer.name}:#{accounts.length} accounts"
       return accounts
     end
@@ -289,7 +288,7 @@ class GenerateAccount
 
         computers.each do |computer|
           account_threshold = computer.max_slaves
-          current_amount_of_accounts = get_available_accounts_on_computer(computer)
+          current_amount_of_accounts = get_available_accounts_on_computer(computer).select{|account| account.shall_do_task}
           accounts_needed = account_threshold - current_amount_of_accounts.length
           accounts_needed.times do
             if available_accounts.length > 0

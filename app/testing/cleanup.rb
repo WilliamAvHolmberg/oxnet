@@ -844,6 +844,8 @@ def get_domains
   return @mail_domains
 end
 
-eco = EcoSystem.new(name: "Williams_first", user_id: 1)
-puts eco.name
-eco.save!
+computer = Computer.find(1)
+accounts = Account.where(computer_id: computer.id)
+accounts.each do |acc|
+  puts acc.assigned
+end

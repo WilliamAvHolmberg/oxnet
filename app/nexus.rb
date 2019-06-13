@@ -42,7 +42,7 @@ def getServerAddress(computer)
   if computer.ip.to_s == "217.215.154.211"
     return "0.0.0.0"
   end
-  return "nexus.myfpt.biz"
+  return "nexus.myftp.biz"
   #return "oxnetdebug.ddns.net"
 end
 

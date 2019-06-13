@@ -113,7 +113,7 @@ class AccountsController < ApplicationController
     'ProxyUser': @account.proxy.username,
     'IsRepoScript': false,
     'World': world.to_i,
-    'ProxyPort': port,
+    'ProxyPort': port.to_i,
     'ProxyPass': @account.proxy.password
 }.to_json
   end

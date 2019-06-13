@@ -186,7 +186,6 @@ class GenerateAccount
       return Account.where(account_type: account_type, banned: false).where("created=true OR created_at > NOW()- INTERVAL '2 HOURS'").count
     end
     def create_account(computer, proxy)
-      puts "in create acc"
       if proxy == nil
         puts "No proxy found for this ecosystem"
         return
@@ -194,7 +193,6 @@ class GenerateAccount
       name = generate_name
       email = generate_email(name)
       world = get_random_world
-      puts "got name email and world"
       return create_account2(computer, proxy, name, email, world)
     end
     @use_default_computer = true
@@ -309,10 +307,8 @@ class GenerateAccount
         account_threshold = 10
         current_amount_of_accounts = get_available_accounts_on_computer(computer)
         if current_amount_of_accounts == nil || current_amount_of_accounts.size < account_threshold
-          puts "We are in! Lets create acc right?"
           proxies = get_least_used_proxies(computer.eco_system).shuffle
           proxies.each do |proxy|
-            puts "in proxies"
             # proxy = get_random_proxy(computer.eco_system)
             # Check if we already have an instruction with this proxy due
 

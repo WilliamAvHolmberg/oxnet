@@ -39,7 +39,7 @@ def getServerAddress
   # @serverAddress = @serverAddress.strip
   #end
   #return @serverAddress.strip
-  return "oxnetserver.ddns.net"
+  return "nexus.myftp.biz"
   #return "oxnetdebug.ddns.net"
 end
 

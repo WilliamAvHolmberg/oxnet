@@ -306,7 +306,7 @@ class GenerateAccount
       if computer != nil
         account_threshold = 10
         current_amount_of_accounts = get_available_accounts_on_computer(computer)
-        if current_amount_of_accounts != nil && current_amount_of_accounts.size < account_threshold
+        if current_amount_of_accounts != nil || current_amount_of_accounts.size < account_threshold
           proxies = get_least_used_proxies(computer.eco_system).shuffle
           proxies.each do |proxy|
             # proxy = get_random_proxy(computer.eco_system)

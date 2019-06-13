@@ -101,13 +101,13 @@ class AccountsController < ApplicationController
     'ScriptArgs': '',
     'RsUsername': @account.login,
     'RsPassword': @account.password,
-    ##'Config': {
-    ##  'EngineTickDelay': 10,
-    ##  'DisableModelRendering': true,
-    ##  'LowCpuMode': true,
-    ##  'DisableSceneRendering': false,
-    ##  'SuperLowCpuMode': true
-    ##},
+    'Config': {
+      'EngineTickDelay': 10,
+      'DisableModelRendering': true,
+      'LowCpuMode': true,
+      'DisableSceneRendering': false,
+      'SuperLowCpuMode': true
+    },
     'ScriptName': 'nex',
     'ProxyIp': @account.proxy.ip,
     'ProxyUser': @account.proxy.username,

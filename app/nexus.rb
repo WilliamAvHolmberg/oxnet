@@ -33,7 +33,7 @@ def find_suitable_account
 end
 
 @serverAddress = nil
-def getServerAddress
+def getServerAddress(computer)
   #if(@serverAddress == nil || @serverAddress.length)
   ##  @serverAddress = File.readlines("server.txt").first
   # @serverAddress = @serverAddress.strip
@@ -46,14 +46,14 @@ def getServerAddress
   #return "oxnetdebug.ddns.net"
 end
 
-def computer_get_respond(instruction_queue)
+def computer_get_respond(instruction_queue, computer)
   if instruction_queue.empty?
     return "logged:fine"
   else
     ins = instruction_queue.pop
 
     puts "ACC: #{ins.account.username}"
-    serverAddress = getServerAddress
+    serverAddress = getServerAddress(computer)
 
     if ins.account != nil
       if ins.instruction_type.name == "CREATE_ACCOUNT"
@@ -678,7 +678,7 @@ def computer_thread(client, computer)
       log = Log.new(computer_id: computer.id, text: respond)
       log.save
       begin
-        response = computer_get_respond(instruction_queue)
+        response = computer_get_respond(instruction_queue, computer)
       rescue Exception => ex
         response = ""
         puts ex

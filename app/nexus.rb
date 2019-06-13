@@ -39,7 +39,7 @@ def getServerAddress(computer)
   # @serverAddress = @serverAddress.strip
   #end
   #return @serverAddress.strip
-  if computer.ip.to_s == "217.215.154.211"
+  if computer.ip.include?("217.215.154.111")
     return "0.0.0.0"
   end
   return "nexus.myftp.biz"

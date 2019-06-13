@@ -113,6 +113,14 @@ class Schema < ApplicationRecord
     return time
   end
 
+  def get_login_time
+    self.time_intervals.first.get_start_time
+  end
+
+  def get_logout_time
+    self.time_intervals.first.get_end_time
+  end
+
   def get_hours_per_day
     time = 0
     self.time_intervals.each do |task|

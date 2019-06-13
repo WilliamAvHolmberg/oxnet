@@ -18,6 +18,8 @@
             th Created At
             th @account Type
             th Time per day
+            th Login Time
+            th Logout Time
             th Should mule?
             th Computer
             th Mule
@@ -41,6 +43,8 @@
               td = @account.created_at.localtime
               td = @account.account_type.name if @account.account_type != nil
               td = @account.schema.total_time_per_day if @account.schema != nil
+              td = @account.schema.get_login_time
+              td = @account.schema.get_logout_time
               td = @account.should_mule
               td = @account.computer.name if @account.computer != nil
               td = @account.mule.username if @account.mule != nil

@@ -33,13 +33,13 @@ def find_suitable_account
 end
 
 @serverAddress = nil
-def getServerAddress(computer)
+def getServerAddress(computer, proxy)
   #if(@serverAddress == nil || @serverAddress.length)
   ##  @serverAddress = File.readlines("server.txt").first
   # @serverAddress = @serverAddress.strip
   #end
   #return @serverAddress.strip
-  if computer.ip.include?("217.215.154.111")
+  if computer.ip.include?("217.215.154.111") && !proxy
     return "0.0.0.0"
   end
   return "nexus.myftp.biz"
@@ -53,7 +53,7 @@ def computer_get_respond(instruction_queue, computer)
     ins = instruction_queue.pop
 
     puts "ACC: #{ins.account.username}"
-    serverAddress = getServerAddress(computer)
+    serverAddress = getServerAddress(computer, false)
 
     if ins.account != nil
       if ins.instruction_type.name == "CREATE_ACCOUNT"
@@ -71,6 +71,7 @@ def computer_get_respond(instruction_queue, computer)
         account.proxy.update(last_used: DateTime.now.utc)
         return res
       elsif ins.instruction_type.name == "UNLOCK_ACCOUNT"
+        serverAddress = getServerAddress(computer, true)
         account = ins.account
         log = Log.new(account_id: ins.account.id, text: "Account:#{ins.account.login} is gonna be unlocked: #{ins.computer.name}")
         log.save
@@ -609,7 +610,7 @@ end
 def computer_thread(client, computer)
   puts "started Thread for:#{computer.name} at ip:#{computer.ip}"
   puts " my computer id: #{computer.id}"
-  serverAddress = getServerAddress(computer)
+  serverAddress = getServerAddress(computer, false)
   begin
   while(!client.closed?)
     respond = client.gets.split(":")

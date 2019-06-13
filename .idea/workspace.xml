@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cc712b19-eba9-4483-bc4c-53d431a3e866" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/app/controllers/accounts_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/accounts_controller.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/nexus.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/nexus.rb" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.bundle/" />
     <ignored path="$PROJECT_DIR$/components/" />
@@ -20,11 +20,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/nexus.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="173">
-              <caret line="962" column="49" selection-start-line="962" selection-start-column="49" selection-end-line="962" selection-end-column="49" />
+            <state relative-caret-position="278">
+              <caret line="47" lean-forward="true" selection-start-line="47" selection-end-line="47" />
             </state>
           </provider>
         </entry>
@@ -38,11 +38,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/controllers/accounts_controller.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="136">
-              <caret line="122" column="6" selection-start-line="122" selection-start-column="6" selection-end-line="122" selection-end-column="6" />
+              <caret line="122" column="15" lean-forward="true" selection-start-line="122" selection-start-column="15" selection-end-line="122" selection-end-column="15" />
             </state>
           </provider>
         </entry>
@@ -114,8 +114,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>unire</find>
-      <find>httpp</find>
       <find>digest</find>
       <find>length</find>
       <find>sock</find>
@@ -144,6 +142,8 @@
       <find>select</find>
       <find>backup</find>
       <find>get_cre</find>
+      <find>getserveraddress</find>
+      <find>serveraddress</find>
     </findStrings>
     <replaceStrings>
       <replace>jso</replace>
@@ -200,11 +200,11 @@
         <option value="$PROJECT_DIR$/app/models/task.rb" />
         <option value="$PROJECT_DIR$/app/models/computer.rb" />
         <option value="$PROJECT_DIR$/app/views/accounts/show.html.slim" />
-        <option value="$PROJECT_DIR$/app/nexus.rb" />
         <option value="$PROJECT_DIR$/app/testing/cleanup.rb" />
         <option value="$PROJECT_DIR$/app/generate_account.rb" />
         <option value="$PROJECT_DIR$/config/database.yml" />
         <option value="$PROJECT_DIR$/app/controllers/accounts_controller.rb" />
+        <option value="$PROJECT_DIR$/app/nexus.rb" />
       </list>
     </option>
   </component>
@@ -401,12 +401,12 @@
       <workItem from="1558621311376" duration="441000" />
       <workItem from="1559486076490" duration="855000" />
       <workItem from="1559985880384" duration="3642000" />
-      <workItem from="1560430043799" duration="7734000" />
+      <workItem from="1560430043799" duration="7957000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="83822000" />
+    <option name="totallyTimeSpent" value="84045000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="424" y="23" width="1128" height="987" extended-state="0" />
@@ -702,13 +702,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/nexus.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="173">
-          <caret line="962" column="49" selection-start-line="962" selection-start-column="49" selection-end-line="962" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/config/database.yml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="260">
@@ -733,7 +726,14 @@
     <entry file="file://$PROJECT_DIR$/app/controllers/accounts_controller.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="136">
-          <caret line="122" column="6" selection-start-line="122" selection-start-column="6" selection-end-line="122" selection-end-column="6" />
+          <caret line="122" column="15" lean-forward="true" selection-start-line="122" selection-start-column="15" selection-end-line="122" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/nexus.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="278">
+          <caret line="47" lean-forward="true" selection-start-line="47" selection-end-line="47" />
         </state>
       </provider>
     </entry>

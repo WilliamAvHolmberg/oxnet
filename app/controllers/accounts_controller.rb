@@ -120,7 +120,7 @@ class AccountsController < ApplicationController
     'ScriptArgs': '',
     'RsUsername': @account.login,
     'RsPassword': @account.password,
-    'config': {
+    'Config': {
       'EngineTickDelay': 10,
       'DisableModelRendering': true,
       'LowCpuMode': true,

@@ -79,7 +79,7 @@ class AccountsController < ApplicationController
     else
       computer = @account.computer if @account.computer_id != nil
       @readyToUnlock = false
-      if computer != nil && computer.is_available_to_nexus && computer.can_connect_more_accounts
+      if computer != nil && computer.is_available_to_nexus
         @readyToUnlock = true
         @unlockTitle = "UNLOCK"
         if params[:unlock].present?

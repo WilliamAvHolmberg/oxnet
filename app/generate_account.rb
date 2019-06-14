@@ -295,6 +295,7 @@ class GenerateAccount
           account_threshold = computer.max_slaves
           current_amount_of_accounts = get_available_accounts_on_computer(computer).select{|account| account.shall_do_task}
           accounts_needed = account_threshold - current_amount_of_accounts.length
+          puts "ACCOUNTSW NEEDED::::#{accounts_needed}"
           accounts_needed.times do
             if available_accounts.length > 0
               account = available_accounts.pop

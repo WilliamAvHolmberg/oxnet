@@ -77,6 +77,11 @@ class GenerateAccount
     end
 
   private
+    def get_unused_accounts_on_computer(computer)
+      accounts = Account.where(computer_id: computer.id, banned:false, created:true, locked: false, assigned: false)
+      puts "Computer:#{computer.name}:#{accounts.length} accounts"
+      return accounts
+    end
     def get_available_accounts_on_computer(computer)
       accounts = Account.where(computer_id: computer.id, banned:false, created:true, locked: false, assigned: true)
       puts "Computer:#{computer.name}:#{accounts.length} accounts"
@@ -305,7 +310,7 @@ class GenerateAccount
       computer = Computer.find(1) #testcomputer. Default computer for account creation
       if computer != nil
         account_threshold = 10
-        current_amount_of_accounts = get_available_accounts_on_computer(computer)
+        current_amount_of_accounts = get_unused_accounts_on_computer(computer)
         if current_amount_of_accounts == nil || current_amount_of_accounts.size < account_threshold
           proxies = get_least_used_proxies(computer.eco_system).shuffle
           proxies.each do |proxy|

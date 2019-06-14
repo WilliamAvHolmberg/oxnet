@@ -843,9 +843,12 @@ def get_domains
   end
   return @mail_domains
 end
-
-computer = Computer.find(1)
+unused_computer = Computer.find(1)
+computer = Computer.find(2)
+puts computer.name
 accounts = Account.where(computer_id: computer.id)
+puts accounts.size
+accounts = accounts.select{|acc| acc.get_total_level < 30}
 accounts.each do |acc|
-  puts acc.assigned
+  acc.update(computer: unused_computer, assigned: false)
 end

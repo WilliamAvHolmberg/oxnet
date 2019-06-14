@@ -209,12 +209,18 @@ class GenerateAccount
       end
       return computer.id
     end
+
+    def get_amount_of_active_slaves
+      return Account.where(banned: false, created: true, locked: false, assigned: true).size
+    end
     def create_account2(computer, proxy, name, email, world)
       password = "ugot00wned2"
       schema = Schema.next_to_use
       mule = Account.where(username: "BlaGnomSk").first #not needed. random
       account_type = "SLAVE"
-      if get_number_of_mules < 1
+      amount_of_active_slaves = get_amount_of_active_slaves
+
+      if get_number_of_mules < amount_of_active_slaves/10
         account_type = "MULE"
         schema = Schema.primary_schemas.order("max_slaves DESC").first
         other_mule = Account.where(banned:false, account_type: AccountType.where(:name => "MULE")).first

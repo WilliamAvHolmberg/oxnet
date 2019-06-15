@@ -77,25 +77,35 @@ class Account < ApplicationRecord
   # end
 
   @@proxies = nil
+
   def proxy
-    @@proxies = Proxy.all.to_a if @@proxies == nil
     proxy_id = read_attribute(:proxy_id)
-    if @last_proxy_id != proxy_id
-      @proxy = nil
-      @last_proxy_id = proxy_id
+    if proxy_id != nil
+      return Proxy.find(proxy_id)
     end
-    if @proxy == nil && proxy_id != nil
-      @proxy = @@proxies.select { |proxy| proxy.id == proxy_id }.first
-    end
-    if @proxy == nil
-      @proxy = Proxy.all.select{|proxy| proxy.accounts.include? self}.first
-      @@proxies = Proxy.all.to_a if @proxy != nil
-    end
-    if @proxy == nil
-      return Proxy.find_or_initialize_by(ip: " ", port: " ", username: " ", password: " ", location: "none")
-    end
-    return @proxy
+    return Proxy.first
   end
+
+
+  #def proxy
+  #  @@proxies = Proxy.all.to_a if @@proxies == nil
+  #  proxy_id = read_attribute(:proxy_id)
+  ##  if @last_proxy_id != proxy_id
+  ##    @proxy = nil
+   #   @last_proxy_id = proxy_id
+   # end
+   # if @proxy == nil && proxy_id != nil
+   #   @proxy = @@proxies.select { |proxy| proxy.id == proxy_id }.first
+   # end
+   # if @proxy == nil
+   ##   @proxy = Proxy.all.select{|proxy| proxy.accounts.include? self}.first
+   #   @@proxies = Proxy.all.to_a if @proxy != nil
+   # end
+   # if @proxy == nil
+   #   return Proxy.find_or_initialize_by(ip: " ", port: " ", username: " ", password: " ", location: "none")
+   # end
+   # return @proxy
+ # end
 
   def proxy_is_available?()
     if proxy == nil || proxy.ip.length < 5
@@ -147,7 +157,11 @@ class Account < ApplicationRecord
 
 
   def get_time_online
-    return time_online
+    if time_online != nil
+      return time_online
+    else
+      return 0
+    end
   end
 
   def get_average_money

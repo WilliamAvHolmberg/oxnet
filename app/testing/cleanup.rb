@@ -843,6 +843,27 @@ def get_domains
   end
   return @mail_domains
 end
-accounts = Account.where(banned: false, created: true, locked: false, assigned: true)
 
-puts accounts.size/10
+
+def get_average
+  proxies = Proxy.all
+  proxies.each do |proxy|
+    puts proxy.location
+    accounts = Account.where(proxy: proxy, locked:true)
+    amount_of_accounts = accounts.size
+    puts "TOTAL AMOUNT OF ACCOUNTS #{accounts.size}"
+    play_time = 0
+    accounts.each {|acc| play_time += acc.get_time_online}
+    puts "TOTAL PLAY TIME #{play_time}"
+    if amount_of_accounts != 0
+      puts "AVERAGE PLAY TIME #{play_time/amount_of_accounts}"
+    end
+    puts "................................................."
+    puts "................................................."
+    puts "................................................."
+
+
+  end
+end
+
+get_average

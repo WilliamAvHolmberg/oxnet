@@ -315,10 +315,14 @@ class GenerateAccount
   private
     def create_backups_for_all_computers
       computer = Computer.find(1) #testcomputer. Default computer for account creation
+      puts "computer is nil #{computer == nil}"
       if computer != nil
         account_threshold = computer.max_slaves #only create one account.
+        puts account_threshold
         current_amount_of_accounts = get_unused_accounts_on_computer(computer)
+        puts current_amount_of_accounts
         if current_amount_of_accounts == nil || current_amount_of_accounts.size < account_threshold
+          puts "lets get proxies"
           proxies = get_least_used_proxies(computer.eco_system).shuffle
           proxies.each do |proxy|
             # proxy = get_random_proxy(computer.eco_system)
@@ -334,6 +338,8 @@ class GenerateAccount
             break #exit loop, only do one account
           end
           #puts "lets create acc for #{computer.name}"
+        else
+          puts "current amount of accounts is wrong"
         end
       end
     end

@@ -865,10 +865,10 @@ def get_average
 
   end
 end
-replacement = Proxy.find(392)
-proxies = Proxy.where(port: 1085)
-proxies.each do |proxy|
-    Account.where(proxy_id: proxy.id).update_all(proxy_id: replacement.id)
-    Account.where(proxy_id: proxy.id).update_all(proxy_id: nil)
-    proxy.destroy
+
+
+instructions = Instruction.get_uncompleted_instructions_60
+
+instructions.each do |ins|
+  puts ins
 end

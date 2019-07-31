@@ -30,8 +30,8 @@ development:
   adapter: postgresql
   encoding: utf8
   database: nexus
-  host: localhost
-  #host: 217.215.154.111
+  #host: localhost
+  host: 217.215.154.111
   username: wavh
   password: Lifeunixbook123
   port: 5433 #REAL OXNET

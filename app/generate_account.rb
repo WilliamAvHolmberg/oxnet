@@ -316,7 +316,7 @@ class GenerateAccount
     def create_backups_for_all_computers
       computer = Computer.find(1) #testcomputer. Default computer for account creation
       if computer != nil
-        account_threshold = 10
+        account_threshold = computer.max_slaves #only create one account.
         current_amount_of_accounts = get_unused_accounts_on_computer(computer)
         if current_amount_of_accounts == nil || current_amount_of_accounts.size < account_threshold
           proxies = get_least_used_proxies(computer.eco_system).shuffle

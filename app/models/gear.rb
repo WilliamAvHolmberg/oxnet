@@ -73,8 +73,7 @@ class Gear< ApplicationRecord
   end
 
 
-
-  def empty
+  def self.empty
     json_head = "none"
     json_cape = "none"
     json_neck = "none"
@@ -104,4 +103,6 @@ class Gear< ApplicationRecord
     }
     return json_gear
   end
+
+
 end

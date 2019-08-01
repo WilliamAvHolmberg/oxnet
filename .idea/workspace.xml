@@ -44,8 +44,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/generate_account.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="134">
-              <caret line="305" column="46" selection-start-line="305" selection-start-column="46" selection-end-line="305" selection-end-column="46" />
+            <state relative-caret-position="81">
+              <caret line="297" column="22" selection-start-line="297" selection-start-column="22" selection-end-line="297" selection-end-column="22" />
             </state>
           </provider>
         </entry>
@@ -366,12 +366,12 @@
       <workItem from="1560430043799" duration="11380000" />
       <workItem from="1560593366940" duration="1856000" />
       <workItem from="1564159773262" duration="164000" />
-      <workItem from="1564504182958" duration="10142000" />
+      <workItem from="1564504182958" duration="10275000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="99630000" />
+    <option name="totallyTimeSpent" value="99763000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="20" y="23" width="1608" height="1027" extended-state="0" />
@@ -709,8 +709,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/generate_account.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="134">
-          <caret line="305" column="46" selection-start-line="305" selection-start-column="46" selection-end-line="305" selection-end-column="46" />
+        <state relative-caret-position="81">
+          <caret line="297" column="22" selection-start-line="297" selection-start-column="22" selection-end-line="297" selection-end-column="22" />
         </state>
       </provider>
     </entry>

@@ -295,20 +295,18 @@ class GenerateAccount
     def create_accounts_for_all_computers
       available_accounts = get_available_accounts
       create_backup = false
-      if available_accounts != nil && available_accounts.length > 0
-        computers = find_available_computers.shuffle
+      computers = find_available_computers.shuffle
 
-        computers.each do |computer|
-          account_threshold = computer.max_slaves
-          current_amount_of_accounts = get_available_accounts_on_computer(computer).select{|account| account.shall_do_task}
-          accounts_needed = account_threshold - current_amount_of_accounts.length
-          create_backup = accounts_needed > 0
-          puts "NEEDED? #{accounts_needed > 0}"
-          accounts_needed.times do
-            if available_accounts.length > 0
-              account = available_accounts.pop
-              account.update(computer: computer, assigned: true)
-            end
+      computers.each do |computer|
+        account_threshold = computer.max_slaves
+        current_amount_of_accounts = get_available_accounts_on_computer(computer).select{|account| account.shall_do_task}
+        accounts_needed = account_threshold - current_amount_of_accounts.length
+        create_backup = accounts_needed > 0
+        puts "NEEDED? #{accounts_needed > 0}"
+        accounts_needed.times do
+          if available_accounts.length > 0
+            account = available_accounts.pop
+            account.update(computer: computer, assigned: true)
           end
         end
       end

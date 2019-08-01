@@ -220,7 +220,7 @@ class GenerateAccount
       account_type = "SLAVE"
       amount_of_active_slaves = get_amount_of_active_slaves
 
-      if get_number_of_mules < amount_of_active_slaves/10
+      if get_number_of_mules < amount_of_active_slaves/4
         account_type = "MULE"
         schema = Schema.primary_schemas.order("max_slaves DESC").first
         other_mule = Account.where(banned:false, account_type: AccountType.where(:name => "MULE")).first

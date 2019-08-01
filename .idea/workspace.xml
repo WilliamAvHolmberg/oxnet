@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cc712b19-eba9-4483-bc4c-53d431a3e866" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/app/nexus.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/nexus.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/generate_account.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/generate_account.rb" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.bundle/" />
     <ignored path="$PROJECT_DIR$/components/" />
@@ -23,7 +23,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/nexus.rb">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="89">
@@ -32,11 +32,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/generate_account.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3180">
-              <caret line="212" column="8" selection-start-line="212" selection-start-column="8" selection-end-line="212" selection-end-column="8" />
+            <state relative-caret-position="307">
+              <caret line="226" column="28" lean-forward="true" selection-start-line="226" selection-start-column="28" selection-end-line="226" selection-end-column="28" />
             </state>
           </provider>
         </entry>
@@ -68,7 +68,6 @@
       <find>launch</find>
       <find>generate_accoun</find>
       <find>get_cre</find>
-      <find>mule</find>
       <find>time_online</find>
       <find>generate_acco</find>
       <find>unlock</find>
@@ -84,6 +83,7 @@
       <find>json</find>
       <find>fishing</find>
       <find>generate_acc</find>
+      <find>mule</find>
     </findStrings>
     <replaceStrings>
       <replace>jso</replace>
@@ -144,9 +144,9 @@
         <option value="$PROJECT_DIR$/config/routes.rb" />
         <option value="$PROJECT_DIR$/app/controllers/nexus_controller.rb" />
         <option value="$PROJECT_DIR$/config/database.yml" />
-        <option value="$PROJECT_DIR$/app/generate_account.rb" />
         <option value="$PROJECT_DIR$/app/models/gear.rb" />
         <option value="$PROJECT_DIR$/app/nexus.rb" />
+        <option value="$PROJECT_DIR$/app/generate_account.rb" />
       </list>
     </option>
   </component>
@@ -357,18 +357,18 @@
       <workItem from="1560430043799" duration="11380000" />
       <workItem from="1560593366940" duration="1856000" />
       <workItem from="1564159773262" duration="164000" />
-      <workItem from="1564504182958" duration="13485000" />
+      <workItem from="1564504182958" duration="13672000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="102973000" />
+    <option name="totallyTimeSpent" value="103160000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="20" y="23" width="1608" height="1027" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.8921875" visible="true" weight="0.30970627" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.8921875" visible="true" weight="0.30970627" />
       <window_info id="Structure" order="1" sideWeight="0.50666666" side_tool="true" weight="0.28645065" />
       <window_info id="Favorites" order="2" sideWeight="0.1078125" side_tool="true" visible="true" weight="0.30970627" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -381,7 +381,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Version Control" order="9" />
-      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.592081" visible="true" weight="0.315508" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" sideWeight="0.592081" visible="true" weight="0.315508" />
       <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.50092083" side_tool="true" weight="0.32960895" />
       <window_info anchor="bottom" id="Messages" order="12" weight="0.32960895" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -676,13 +676,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/generate_account.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3180">
-          <caret line="212" column="8" selection-start-line="212" selection-start-column="8" selection-end-line="212" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/controllers/charts_controller.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-102">
@@ -694,6 +687,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="89">
           <caret line="944" column="14" selection-start-line="944" selection-start-column="14" selection-end-line="944" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/generate_account.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="307">
+          <caret line="226" column="28" lean-forward="true" selection-start-line="226" selection-start-column="28" selection-end-line="226" selection-end-column="28" />
         </state>
       </provider>
     </entry>

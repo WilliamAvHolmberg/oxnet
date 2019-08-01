@@ -176,7 +176,11 @@ class ChartsController < ApplicationController
     dates = []
     recent_profits = Array.new
     recent_expenses = Array.new
-    earliest_date = recent_profits_rows.first.hour
+    if recent_profits_rows.first == nil
+      earliest_date = DateTime.now
+    else
+      earliest_date = recent_profits_rows.first.hour
+    end
     earliest_date = recent_expense_rows.first.hour if recent_expense_rows.first != nil && recent_expense_rows.first.hour < earliest_date
     last_date = earliest_date;
     recent_profits_rows.each do |pr|

@@ -1,6 +1,16 @@
 require_relative '../generate_account'
 class NexusController < ApplicationController
+  def dashboard
+    @available_accounts = Account.all_available_accounts.eager_load(:account_type)
+    @active_accounts = @available_accounts.select{|acc| !acc.is_available}
+    @active_slaves = @available_accounts.select{|acc| acc.account_type.name == "SLAVE"}
 
+    response = {
+        'available_accounts': @available_accounts,
+        'active_slaves': @active_slaves
+    }
+    render json: response
+  end
   def index
     @proxies = Proxy.all
     @connected_computers = Computer.all.order(:id).select{|comp|comp.is_connected}

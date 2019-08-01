@@ -2,6 +2,12 @@ Rails.application.routes.draw do
 
   devise_for :users
   devise_for :eco_systems
+
+  scope '/api' do
+    scope '/dashboard' do
+      get '/', action: :dashboard, controller: 'nexus'
+    end
+  end
   root :to => redirect('/nexus')
   resources :eco_systems
   resources :hiscores do
@@ -16,6 +22,9 @@ Rails.application.routes.draw do
   resources :requirements
   resources :skills
   resources :nexus do
+    member do
+      get 'dashboard' => 'nexus/dashboard'
+    end
     collection do
       get 'update_mule_logs'
     end

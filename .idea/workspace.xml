@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cc712b19-eba9-4483-bc4c-53d431a3e866" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/app/generate_account.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/generate_account.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/nexus.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/nexus.rb" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.bundle/" />
     <ignored path="$PROJECT_DIR$/components/" />
@@ -41,11 +42,20 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/generate_account.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="81">
-              <caret line="297" column="22" selection-start-line="297" selection-start-column="22" selection-end-line="297" selection-end-column="22" />
+            <state relative-caret-position="-67">
+              <caret line="301" column="99" selection-start-line="301" selection-start-column="99" selection-end-line="301" selection-end-column="120" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/nexus.rb">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="172">
+              <caret line="534" column="47" selection-start-line="534" selection-start-column="47" selection-end-line="534" selection-end-column="47" />
             </state>
           </provider>
         </entry>
@@ -148,7 +158,6 @@
         <option value="$PROJECT_DIR$/app/views/accounts/show.html.slim" />
         <option value="$PROJECT_DIR$/app/controllers/accounts_controller.rb" />
         <option value="$PROJECT_DIR$/app/models/account.rb" />
-        <option value="$PROJECT_DIR$/app/nexus.rb" />
         <option value="$PROJECT_DIR$/app/testing/cleanup.rb" />
         <option value="$PROJECT_DIR$/app/controllers/charts_controller.rb" />
         <option value="$PROJECT_DIR$/app/controllers/inventories_controller.rb" />
@@ -156,6 +165,7 @@
         <option value="$PROJECT_DIR$/app/controllers/nexus_controller.rb" />
         <option value="$PROJECT_DIR$/config/database.yml" />
         <option value="$PROJECT_DIR$/app/generate_account.rb" />
+        <option value="$PROJECT_DIR$/app/nexus.rb" />
       </list>
     </option>
   </component>
@@ -366,18 +376,18 @@
       <workItem from="1560430043799" duration="11380000" />
       <workItem from="1560593366940" duration="1856000" />
       <workItem from="1564159773262" duration="164000" />
-      <workItem from="1564504182958" duration="10275000" />
+      <workItem from="1564504182958" duration="11758000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="99763000" />
+    <option name="totallyTimeSpent" value="101246000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="20" y="23" width="1608" height="1027" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.8921875" visible="true" weight="0.30970627" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.8921875" visible="true" weight="0.30970627" />
       <window_info id="Structure" order="1" sideWeight="0.50666666" side_tool="true" weight="0.28645065" />
       <window_info id="Favorites" order="2" sideWeight="0.1078125" side_tool="true" visible="true" weight="0.30970627" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -390,7 +400,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Version Control" order="9" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="10" sideWeight="0.592081" visible="true" weight="0.315508" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.592081" visible="true" weight="0.315508" />
       <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.50092083" side_tool="true" weight="0.32960895" />
       <window_info anchor="bottom" id="Messages" order="12" weight="0.32960895" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -667,13 +677,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/nexus.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="382">
-          <caret line="963" column="43" lean-forward="true" selection-start-line="963" selection-start-column="43" selection-end-line="963" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/config/routes.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
@@ -709,8 +712,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/generate_account.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="81">
-          <caret line="297" column="22" selection-start-line="297" selection-start-column="22" selection-end-line="297" selection-end-column="22" />
+        <state relative-caret-position="-67">
+          <caret line="301" column="99" selection-start-line="301" selection-start-column="99" selection-end-line="301" selection-end-column="120" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/nexus.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="172">
+          <caret line="534" column="47" selection-start-line="534" selection-start-column="47" selection-end-line="534" selection-end-column="47" />
         </state>
       </provider>
     </entry>

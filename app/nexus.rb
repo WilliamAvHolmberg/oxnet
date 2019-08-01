@@ -523,31 +523,19 @@ def get_tanning_task_respond(task, account)
   return res
 end
 def get_fishing_task_respond(task, account)
-  task_type = task.task_type.name
-  if task.bank_area != nil
-    bank_area = task.bank_area.coordinates
-  else
-    bank_area = "none"
-  end
-  action_area = task.action_area.coordinates
-  fish_name = "lelolo" #not needed in the future as this is hardco
-  break_condition = task.break_condition.name
-  if break_condition == "TIME"
-    task_duration = ((task.get_end_time - Time.now.change(:month => 1, :day => 1, :year => 2000))/60).round
-    level_goal = "99"
-  elsif break_condition == "LEVEL" && task.break_after != nil
-    task_duration = "999999"
-    level_goal = task.break_after
-  elsif break_condition == "TIME_OR_LEVEL"
-    task_duration = ((task.get_end_time - Time.now.change(:month => 1, :day => 1, :year => 2000))/60).round
-    level_goal = task.break_after
-    puts task_duration
-  end
-  if task.inventory != nil then inventory = task.inventory.get_parsed_message else inventory ="none" end
+  if task.bank_area != nil then bank_area = task.bank_area.coordinates else bank_area = "none" end
+  if task.action_area != nil then action_area = task.action_area.coordinates else action_area = "none" end
+  json_respond = {
+      respond_type: "task_respond",
+      task_type:task.task_type.name,
+      task_id: task.id,
+      gear: task.gear.to_json,
+      break_condition: task.break_condition_to_json,
+  }
   log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
   log.save
-  puts "sending resp"
-  res = "task_respond:1:#{task_type}:#{task.id}:#{bank_area}:#{action_area}:#{fish_name}:#{break_condition}:#{task_duration}:#{level_goal}:#{get_gear(task)}"
+  res = json_respond.to_json
+  puts res
   return res
 end
 def get_custom_task_respond(task, account)

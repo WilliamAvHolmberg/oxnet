@@ -72,4 +72,36 @@ class Gear< ApplicationRecord
       return json_gear
   end
 
+
+
+  def empty
+    json_head = "none"
+    json_cape = "none"
+    json_neck = "none"
+    json_weapon = "none"
+    json_chest = "none"
+    json_shield = "none"
+    json_legs = "none"
+    json_hands = "none"
+    json_feet = "none"
+    json_ring = "none"
+    json_ammunition = "none"
+    json_ammunition_amount="none"
+
+    json_gear = {
+        head: json_head,
+        cape: json_cape,
+        neck: json_neck,
+        mainhand: json_weapon,
+        chest: json_chest,
+        offhand: json_shield,
+        legs: json_legs,
+        hands: json_hands,
+        feet: json_feet,
+        ring: json_ring,
+        quiver: json_ammunition,
+        ammunition_amount: json_ammunition_amount
+    }
+    return json_gear
+  end
 end

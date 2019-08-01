@@ -525,11 +525,16 @@ end
 def get_fishing_task_respond(task, account)
   if task.bank_area != nil then bank_area = task.bank_area.coordinates else bank_area = "none" end
   if task.action_area != nil then action_area = task.action_area.coordinates else action_area = "none" end
+  if task.gear != nil
+    gear = task.gear.to_json
+  else
+    gear = Gear.empty
+  end
   json_respond = {
       respond_type: "task_respond",
       task_type:task.task_type.name,
       task_id: task.id,
-      gear: task.gear.to_json,
+      gear: gear,
       break_condition: task.break_condition_to_json,
   }
   log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")

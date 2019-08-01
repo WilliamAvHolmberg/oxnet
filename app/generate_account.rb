@@ -303,6 +303,7 @@ class GenerateAccount
           current_amount_of_accounts = get_available_accounts_on_computer(computer).select{|account| account.shall_do_task}
           accounts_needed = account_threshold - current_amount_of_accounts.length
           create_backup = accounts_needed > 0
+          puts "NEEDED? #{accounts_needed > 0}"
           accounts_needed.times do
             if available_accounts.length > 0
               account = available_accounts.pop

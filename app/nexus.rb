@@ -942,7 +942,7 @@ end
 
 def create_account_thread
   last_check = 0
-  interval = 50
+  interval = 5
   @generate_account = GenerateAccount.new
   loop do
     begin

@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cc712b19-eba9-4483-bc4c-53d431a3e866" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/app/controllers/charts_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/charts_controller.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controllers/nexus_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/nexus_controller.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/generate_account.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/generate_account.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/database.yml" beforeDir="false" afterPath="$PROJECT_DIR$/config/database.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/routes.rb" beforeDir="false" afterPath="$PROJECT_DIR$/config/routes.rb" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.bundle/" />
     <ignored path="$PROJECT_DIR$/components/" />
@@ -48,8 +44,17 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/generate_account.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="343">
-              <caret line="332" column="71" selection-start-line="332" selection-start-column="71" selection-end-line="332" selection-end-column="71" />
+            <state relative-caret-position="274">
+              <caret line="318" column="37" selection-start-line="318" selection-start-column="37" selection-end-line="318" selection-end-column="37" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/config/database.yml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="495">
+              <caret line="33" column="3" selection-start-line="33" selection-start-column="3" selection-end-line="33" selection-end-column="3" />
             </state>
           </provider>
         </entry>
@@ -145,11 +150,11 @@
         <option value="$PROJECT_DIR$/app/models/account.rb" />
         <option value="$PROJECT_DIR$/app/nexus.rb" />
         <option value="$PROJECT_DIR$/app/testing/cleanup.rb" />
-        <option value="$PROJECT_DIR$/config/database.yml" />
         <option value="$PROJECT_DIR$/app/controllers/charts_controller.rb" />
         <option value="$PROJECT_DIR$/app/controllers/inventories_controller.rb" />
         <option value="$PROJECT_DIR$/config/routes.rb" />
         <option value="$PROJECT_DIR$/app/controllers/nexus_controller.rb" />
+        <option value="$PROJECT_DIR$/config/database.yml" />
         <option value="$PROJECT_DIR$/app/generate_account.rb" />
       </list>
     </option>
@@ -361,18 +366,18 @@
       <workItem from="1560430043799" duration="11380000" />
       <workItem from="1560593366940" duration="1856000" />
       <workItem from="1564159773262" duration="164000" />
-      <workItem from="1564504182958" duration="9785000" />
+      <workItem from="1564504182958" duration="10069000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="99273000" />
+    <option name="totallyTimeSpent" value="99557000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="20" y="23" width="1608" height="1027" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.8921875" visible="true" weight="0.30970627" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.8921875" visible="true" weight="0.30970627" />
       <window_info id="Structure" order="1" sideWeight="0.50666666" side_tool="true" weight="0.28645065" />
       <window_info id="Favorites" order="2" sideWeight="0.1078125" side_tool="true" visible="true" weight="0.30970627" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -385,7 +390,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Version Control" order="9" />
-      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.592081" visible="true" weight="0.315508" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" sideWeight="0.592081" visible="true" weight="0.315508" />
       <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.50092083" side_tool="true" weight="0.32960895" />
       <window_info anchor="bottom" id="Messages" order="12" weight="0.32960895" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -648,13 +653,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/config/database.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="32" column="3" selection-start-line="32" selection-start-column="3" selection-end-line="32" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/views/charts/charts.slim">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
@@ -702,10 +700,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/config/database.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="495">
+          <caret line="33" column="3" selection-start-line="33" selection-start-column="3" selection-end-line="33" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/generate_account.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="343">
-          <caret line="332" column="71" selection-start-line="332" selection-start-column="71" selection-end-line="332" selection-end-column="71" />
+        <state relative-caret-position="274">
+          <caret line="318" column="37" selection-start-line="318" selection-start-column="37" selection-end-line="318" selection-end-column="37" />
         </state>
       </provider>
     </entry>

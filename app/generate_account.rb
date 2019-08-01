@@ -316,6 +316,7 @@ class GenerateAccount
   private
     def create_backups_for_all_computers(create_backup)
       if !create_backup
+        puts "lets not create backup"
         return
       end
       computer = Computer.find(1) #testcomputer. Default computer for account creation

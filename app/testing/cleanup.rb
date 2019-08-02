@@ -866,9 +866,25 @@ def get_average
   end
 end
 
+banned_slaves = []
 
-instructions = Instruction.get_uncompleted_instructions_60
-
-instructions.each do |ins|
-  puts ins
+accounts = Account.where(banned: true, created_at: DateTime.now.beginning_of_day..DateTime.now.end_of_day)
+slaves =  accounts.where(account_type_id: 1)
+mules = accounts.where(account_type_id: 2)
+logs = Log.where(account:slaves)
+slaves.each do |slave|
+  traded = []
+  traded.push("slave:#{slave.username}")
+  mules.each do |mule|
+    new_logs = logs.where("text like ?", "%new mule request from slave:#{slave.username}%")
+    new_logs.each do |log|
+      puts log.text
+      traded.push("mule: #{mule.username}")
+    end
+  end
+  banned_slaves.push(traded)
 end
+
+
+
+puts banned_slaves

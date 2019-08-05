@@ -131,7 +131,7 @@ class GenerateSchema
           new_task = task.dup
           new_task.update(schema: new_schema, break_after: our_level, name: "#{account.username} --- #{new_task.name}")
           puts "#{new_task.name}, break after: #{new_task.break_after}, in schema #{new_task.schema.name}"
-          if gear != nil
+          if gear != nil && task.use_gear
            new_task.update(gear: gear)
           end
         end

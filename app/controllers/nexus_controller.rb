@@ -1,5 +1,16 @@
 require_relative '../generate_account'
 class NexusController < ApplicationController
+
+  def view
+
+    slaves = Account.where(created_at: DateTime.now.beginning_of_day..DateTime.now.end_of_day)
+
+    mule_logs = MuleLog.where(account: slaves)
+
+
+
+    render 'mule_connections'
+  end
   def dashboard
     @available_accounts = Account.all_available_accounts.eager_load(:account_type)
     @active_accounts = @available_accounts.select{|acc| !acc.is_available}

@@ -6,6 +6,7 @@
         - @task.errors.full_messages.each do |message|
           li = message
 
+
   .field
     = f.label :name
     = f.text_field :name
@@ -15,6 +16,12 @@
         = collection_select(:task, :task_type_id, @task_types, :id, :name, {:id => "task_type_selection"})
       - else
         = "Please create a task type before creating the task"
+  .field
+    = f.label :use_gear
+    = f.check_box :use_gear
+  .field
+    = f.label :mule_threshold
+    = f.number_field :mule_threshold
   #agility_task style="display: none"
     = render partial: 'agility_form', locals: {items: @items, f: f}
   #wc_task

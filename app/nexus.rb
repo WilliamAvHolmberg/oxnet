@@ -429,6 +429,7 @@ def get_test_combat_task_respond(task, account)
       food: food,
       loot_threshold: loot_threshold,
       skill: task.skill.name,
+      mule_threshold: task.mule_threshold
   }
   log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
   log.save
@@ -451,6 +452,7 @@ def get_test_woodcutting_task_respond(task, account)
       action_area: action_area,
       axe: task.axe.to_json,
       tree_name: task.treeName,
+      mule_threshold: task.mule_threshold
   }
   log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
   log.save
@@ -536,6 +538,7 @@ def get_fishing_task_respond(task, account)
       task_id: task.id,
       gear: gear,
       break_condition: task.break_condition_to_json,
+      mule_threshold: task.mule_threshold
   }
   log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
   log.save

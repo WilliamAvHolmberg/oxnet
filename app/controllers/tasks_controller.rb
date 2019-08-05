@@ -111,7 +111,7 @@ class TasksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def task_params
-      params.require(:task).permit(:name, :bank_area_id, :action_area_id, :task_type_id, :axe_id, :treeName,
+      params.require(:task).permit(:name, :use_gear, :mule_threshold, :bank_area_id, :action_area_id, :task_type_id, :axe_id, :treeName,
                                    :break_condition_id, :break_after, :start_time, :end_time, :schema_id, :monster_name,
                                    :gear_id, :food_id, :inventory_id, :loot_threshold, :skill_id, :quest_id, :ores, :search,
                                    :requirements_attributes => [:id, :level, :skill_id, :task])

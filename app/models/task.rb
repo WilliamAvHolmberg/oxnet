@@ -125,4 +125,12 @@ class Task < ApplicationRecord
     end
     return false
   end
+
+  def self.gear
+    if read_attribute(:use_gear)
+      return read_attribute(:gear)
+    else
+      return Gear.find(1767) #hardcoded empty gear
+    end
+  end
 end

@@ -866,25 +866,65 @@ def get_average
   end
 end
 
-banned_slaves = []
+@time_started = 0
+def clock
+  @time_started = Time.now
+end
 
-accounts = Account.where(banned: true, created_at: DateTime.now.beginning_of_day..DateTime.now.end_of_day)
-slaves =  accounts.where(account_type_id: 1)
-mules = accounts.where(account_type_id: 2)
-logs = Log.where(account:slaves)
-slaves.each do |slave|
-  traded = []
-  traded.push("slave:#{slave.username}")
-  mules.each do |mule|
-    new_logs = logs.where("text like ?", "%new mule request from slave:#{slave.username}%")
-    new_logs.each do |log|
-      puts log.text
-      traded.push("mule: #{mule.username}")
+def unclock
+  time_spent = Time.now - @time_started
+  puts "Time spent:#{time_spent}"
+end
+
+def add_mule(mules, log)
+  mule = log.account.username
+  if !mules.include?(mule)
+    mules.push(mule)
+  end
+  return mules
+end
+
+def analyse_test
+
+  clock
+  slaves = Account.where(banned: true, created_at: DateTime.now.beginning_of_day- 2.days..DateTime.now.end_of_day)
+
+  only_nr1 = []
+  time_nr1 = 0
+  more_than_one = []
+  time_more = 0
+  slaves.each do |slave|
+    username = slave.username
+    puts "Slave: #{username}"
+    mules = []
+    MuleLog.where(mule: username).each do |log|
+      add_mule(mules, log)
+    end
+    if mules.length == 1 && mules[0] == "BlaGnomSk"
+      only_nr1.push(slave)
+      time_nr1 += (slave.time_online) if slave.time_online != nil
+    else
+      more_than_one.push(slave)
+      time_more += slave.time_online if slave.time_online != nil
     end
   end
-  banned_slaves.push(traded)
+
+  unclock
+
+
+  size = only_nr1.size
+  puts "#{size} only traded headmule and average time_online: #{time_nr1/size}"
+  size = more_than_one.size
+  puts "#{size} only traded headmule and average time_online: #{time_more/size}}"
 end
 
 
+accounts = Account.where(banned: false)
+schema = Schema.find(1)
 
-puts banned_slaves
+accounts.each do |acc|
+  puts acc.username
+  acc.update(schema: schema)
+end
+
+

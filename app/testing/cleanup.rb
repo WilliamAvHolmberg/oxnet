@@ -919,12 +919,14 @@ def analyse_test
 end
 
 
-schemas = Schema.where(default: false)
-
-schemas.each do |schema|
-  puts schema.name
-  accounts = Account.includes(:schema).where("schema.original_id IN (?)",schema.id)
+def test_generate_schema
+  schema_gen = GenerateSchema.new
+  accounts = Account.where(banned: false, created: true)
   accounts.each do |acc|
-    puts acc.username
+    new_schema = schema_gen.generate_schedule(acc)
+    acc.update(schema: new_schema)
   end
+
 end
+
+test_generate_schema

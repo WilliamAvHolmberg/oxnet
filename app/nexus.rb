@@ -475,7 +475,7 @@ def get_woodcutting_task_respond(task, account)
   break_condition = task.break_condition.name
   if break_condition == "TIME"
     task_duration = ((task.get_end_time - Time.now.change(:month => 1, :day => 1, :year => 2000))/60).round
-    level_goal = "99"
+    level_goal = 99
   elsif break_condition == "LEVEL" && task.break_after != nil
     task_duration = "999999"
     level_goal = task.break_after

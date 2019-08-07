@@ -49,19 +49,27 @@ class GenerateGear
   end
 
 
-  def generate_gear(account)
+  def generate_gear(account, need_gear, need_weapon, last_gear)
     slots = ["weapon", "legs","neck","chest","feet","head","hands","ring","cape","shield"]
     # sleep(0.01.seconds) #helped heaps with database issues
     gear = Gear.find_or_create_by(name: "#{account.username}")
+    puts "let gen gear"
     slots.each do |slot|
-
-      if slot == "weapon"
+      last_item = nil
+      if last_gear != nil
+        if last_gear.get_slot(slot) != nil
+          last_item = last_gear.get_slot(slot)
+        end
+      end
+      if slot == "weapon" && need_weapon
         item = get_best_weapon(account)
       elsif slot == "neck"
         amulets = [
             1725
           ]
         item = RsItem.find(amulets.sample) #amulet of str
+      elsif !need_gear && last_item != nil
+        item = last_item
       else
         item = get_best_armour(account,slot)
       end

@@ -70,11 +70,15 @@ class GenerateSchema
       # new_schema = Schema.find_by_name("#{account.username}'s Schema'")
       # if new_schema == nil
         new_schema = Schema.create
-        new_schema.update(name: "#{account.username}'s Schema'", original_id: account.schema.id)
+        new_schema.update(name: "#{account.username}'s Schema'")
+        if(account.schema.id != nil)
+          new_schema.update(original_id: account.schema.id)
+        end
       # end
       last_gear = nil
       last_weapon_type = 0
       last_armour_type = 0
+      generated_gear = false
       puts "#{account.schema.tasks.length} Available Tasks"
       task = nil
       while (task = account.schema.get_available_tasks(account).sample) != nil
@@ -99,13 +103,16 @@ class GenerateSchema
           stat = account.stats_find(task.skill_id)
 
           if task.task_type.name == "COMBAT"
+            need_weapon = current_weapon_type != last_weapon_type
+            need_gear = current_armour_type != last_armour_type
             if last_gear == nil && task.gear != nil
               puts "USE FIRST GEAR"
               last_gear = task.gear
               puts last_gear.get_formated_gear
             end
-            if  (last_gear == nil ||current_weapon_type != last_weapon_type || current_armour_type != last_armour_type)
-              gear = @generate_gear.generate_gear(account)
+            if  ((task.use_gear && !generated_gear) || need_weapon || need_gear)
+              gear = @generate_gear.generate_gear(account, need_gear, need_weapon, last_gear)
+              generated_gear = true
               if gear != nil
                 gear.update(name: "#{account}:#{task.name}")
                 puts "generating new gear"

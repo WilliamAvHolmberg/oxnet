@@ -39,6 +39,24 @@ class Gear< ApplicationRecord
             Ammunition:#{ammunition1}\n
             Ammunition Amount:#{ammunition_amount1}"
   end
+
+  def get_slot(slot)
+    json_gear = {
+        'head' =>  head,
+        'cape' => cape,
+        'neck' => neck,
+        'weapon' =>  weapon,
+        'chest' => chest,
+        'shield' =>shield,
+        'legs' => legs,
+        'hands' => hands,
+        'feet' => feet,
+        'ring' => ring,
+        'ammunition' => ammunition,
+        'ammunition_amount' => ammunition_amount
+    }
+    return json_gear[slot]
+  end
   
   
   def to_json

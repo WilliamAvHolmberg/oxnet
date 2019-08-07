@@ -6,13 +6,12 @@ p#notice = notice
       .card-header.card-header-primary
         h4.card-title
           i.fas.fa-trophy
-          = " " + @hiscore.skill.name + " Hiscores! (#{@accounts.length}) - Last Updated "
-          time class="timeago" datetime="#{Time.now.localtime}" = "Just Now"
+          = " Hiscore for most time spent online!"
       .card-body.table-responsive
         table.table.table-hover
           thead.text-warning
             th Username
-            th Level
+            th Total Level
             th Created
             th Time Online
             th Money Made
@@ -26,7 +25,7 @@ p#notice = notice
                 td
                   span class=(!account.is_available ? "online" : "offline")
                   a href=account_path(account) = account.username
-                td = account.stats.select{|skill| skill = @hiscore.skill }.first.level
+                td = account.get_total_level
                 td = formatted_duration(Time.now.utc - account.created_at) + " ago"
                 td = formatted_duration(account.time_online)
                 - if account.money_made != nil
@@ -37,9 +36,5 @@ p#notice = notice
                 td = 3600*money_made/ [(account.get_time_online || 1), 1].max
                 td = original_schema.name if original_schema != nil
                 td = account.computer.name
-
-      => link_to 'Edit', edit_hiscore_path(@hiscore)
-      '|
-      =< link_to 'Back', hiscores_path
 
       br

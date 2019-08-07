@@ -9,13 +9,21 @@ class HiscoresController < ApplicationController
     @hiscores = Hiscore.all
   end
 
+  def time_online
+    @accounts = Account.includes(:computer, :stats, :schema).where(created: true).where("time_online < 7200 ").order(time_online: :desc)
+    @schemas = Schema.where(default: false).all.to_a
+    # render json: JSON.pretty_generate(@accounts.as_json)
+    # @accounts = Account.includes(:computer, :stats).where(created: true, banned:false).select{|acc| acc.stats != nil && acc.stats.where(skill: @hiscore.skill).first != nil }.sort_by{|acc| acc.stats.where(skill: @hiscore.skill).first.level}.reverse
+  end
   # GET /hiscores/1
   # GET /hiscores/1.json
   def show
     @accounts = Account.includes(:computer, :stats).references(:stats).where(created: true, banned:false).where("stats.skill_id=#{@hiscore.skill.id}").order("stats.level DESC")
+    @schemas = Schema.where(default: false).all.to_a
     # render json: JSON.pretty_generate(@accounts.as_json)
     # @accounts = Account.includes(:computer, :stats).where(created: true, banned:false).select{|acc| acc.stats != nil && acc.stats.where(skill: @hiscore.skill).first != nil }.sort_by{|acc| acc.stats.where(skill: @hiscore.skill).first.level}.reverse
   end
+
 
   def show_all
     @hiscore = Hiscore.includes(:skill).find(params[:id])

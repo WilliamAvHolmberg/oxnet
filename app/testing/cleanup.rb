@@ -921,8 +921,10 @@ end
 
 def test_generate_schema
   schema_gen = GenerateSchema.new
+  good_schema = Schema.find(2000)
   accounts = Account.where(banned: false, created: true)
   accounts.each do |acc|
+    acc.update(schema: good_schema)
     new_schema = schema_gen.generate_schedule(acc)
     acc.update(schema: new_schema)
   end

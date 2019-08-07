@@ -919,12 +919,12 @@ def analyse_test
 end
 
 
-accounts = Account.where(banned: false)
-schema = Schema.find(1)
+schemas = Schema.where(default: false)
 
-accounts.each do |acc|
-  puts acc.username
-  acc.update(schema: schema)
+schemas.each do |schema|
+  puts schema.name
+  accounts = Account.includes(:schema).where("schema.original_id IN (?)",schema.id)
+  accounts.each do |acc|
+    puts acc.username
+  end
 end
-
-

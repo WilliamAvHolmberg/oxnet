@@ -61,17 +61,25 @@ class GenerateGear
           last_item = last_gear.get_slot(slot)
         end
       end
-      if slot == "weapon" && need_weapon
+
+
+      if slot == "weapon"
+        if !need_weapon && last_item != nil
+          item = last_item
+        elsif
         item = get_best_weapon(account)
+        end
       elsif slot == "neck"
         amulets = [
             1725
           ]
         item = RsItem.find(amulets.sample) #amulet of str
-      elsif !need_gear && last_item != nil
-        item = last_item
       else
-        item = get_best_armour(account,slot)
+        if !need_gear && last_item != nil
+          item = last_item
+        elsif
+          item = get_best_armour(account, slot)
+        end
       end
 
       if item != nil

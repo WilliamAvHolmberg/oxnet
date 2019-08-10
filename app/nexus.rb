@@ -498,30 +498,25 @@ def get_woodcutting_task_respond(task, account)
   return res
 end
 def get_tanning_task_respond(task, account)
-  task_type = task.task_type.name
-  #update_woodcutting_task(task, account)
-
-  break_condition = task.break_condition.name
-  if break_condition == "TIME"
-    task_duration = ((task.get_end_time - Time.now.change(:month => 1, :day => 1, :year => 2000))/60).round
-    level_goal = "99"
-  elsif break_condition == "LEVEL" && task.break_after != nil
-    task_duration = "999999"
-    level_goal = task.break_after
-  elsif break_condition == "TIME_OR_LEVEL"
-    task_duration = ((task.get_end_time - Time.now.change(:month => 1, :day => 1, :year => 2000))/60).round
-    level_goal = task.break_after
-    puts task_duration
+  if task.bank_area != nil then bank_area = task.bank_area.coordinates else bank_area = "none" end
+  if task.action_area != nil then action_area = task.action_area.coordinates else action_area = "none" end
+  if task.gear != nil
+    gear = task.gear.to_json
+  else
+    gear = Gear.empty
   end
-  if task.inventory != nil then inventory = task.inventory.get_parsed_message else inventory ="none" end
+  json_respond = {
+      respond_type: "task_respond",
+      task_type:task.task_type.name,
+      task_id: task.id,
+      gear: gear,
+      break_condition: task.break_condition_to_json,
+      mule_threshold: task.mule_threshold
+  }
   log = Log.new(computer_id: nil, account_id: account.id, text:"Task Handed Out: #{task.name}")
   log.save
-
-  hideID = 1739
-  withdrawQty = 2400 / 4
-
-  puts "sending resp"
-  res = "task_respond:1:#{task_type}:#{task.id}:#{break_condition}:#{task_duration}:#{level_goal}:#{hideID}:#{withdrawQty}"
+  res = json_respond.to_json
+  puts res
   return res
 end
 def get_fishing_task_respond(task, account)

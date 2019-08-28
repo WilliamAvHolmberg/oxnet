@@ -931,4 +931,13 @@ def test_generate_schema
 
 end
 
-test_generate_schema
+def money_made(acc)
+  return acc.get_total_money_deposited - acc.get_total_money_withdrawn
+end
+
+tasks = Task.where(created_at: Date.today-(1.day)..Date.today+(1.day))
+puts tasks.length
+tasks.each do |task|
+  puts task.name
+  task.update(loot_threshold:65)
+end

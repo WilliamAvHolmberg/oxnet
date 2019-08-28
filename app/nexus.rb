@@ -42,7 +42,7 @@ def getServerAddress(computer, proxy)
   if computer.ip.include?("217.215.154.111") && !proxy
     return "0.0.0.0"
   end
-  return "nexus.myftp.biz"
+  return "nexus.myftp.org"
   #return "oxnetdebug.ddns.net"
 end
 

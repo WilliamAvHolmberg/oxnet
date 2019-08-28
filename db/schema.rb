@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_10_143143) do
+ActiveRecord::Schema.define(version: 2019_08_05_162309) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -382,6 +382,8 @@ ActiveRecord::Schema.define(version: 2019_05_10_143143) do
     t.bigint "quest_id"
     t.bigint "skill_id"
     t.string "ores"
+    t.boolean "use_gear", default: false
+    t.integer "mule_threshold", default: 50000
     t.index ["action_area_id"], name: "index_tasks_on_action_area_id"
     t.index ["axe_id"], name: "index_tasks_on_axe_id"
     t.index ["bank_area_id"], name: "index_tasks_on_bank_area_id"

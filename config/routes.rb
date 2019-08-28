@@ -8,9 +8,17 @@ Rails.application.routes.draw do
       get '/', action: :dashboard, controller: 'nexus'
     end
   end
+  scope '/antiban' do
+    scope '/mule_connections' do
+      get '/', action: :view, controller: 'nexus'
+    end
+  end
   root :to => redirect('/nexus')
   resources :eco_systems
   resources :hiscores do
+    collection do
+      get 'time_online'
+    end
     member do
       get 'show_all'
     end
@@ -21,6 +29,7 @@ Rails.application.routes.draw do
   resources :stats
   resources :requirements
   resources :skills
+
   resources :nexus do
     member do
       get 'dashboard' => 'nexus/dashboard'
